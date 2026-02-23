@@ -40,7 +40,16 @@ Body:
   window.neuform.__NF_CONTACT_HELPERS__ = true;
 
   var dl = window.dataLayer = window.dataLayer || [];
-  dl.push({ event: 'nf_contact_view' });
+
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
+  if (canTrack()) dl.push({ event: 'nf_contact_view' });
 
   var $ = function(s, r){ return (r||document).querySelector(s); };
 
@@ -204,7 +213,7 @@ Body:
     var errs = validate();
     if (errs.length){
       say(errs[0]);
-      dl.push({
+      if (canTrack()) dl.push({
         event:'nf_lead_error',
         nf_error:'validation',
         nf_fields:{
@@ -249,7 +258,7 @@ Body:
     // IMPORTANT:
     // Do NOT fire GA4 generate_lead here (avoid double counting / false positives).
     // Fire conversion on the THANK YOU page only.
-    dl.push(Object.assign({ event:'nf_lead_submit_attempt' }, meta));
+    if (canTrack()) dl.push(Object.assign({ event:'nf_lead_submit_attempt' }, meta));
     setPending(meta);
   }, { capture: true });
 
@@ -267,6 +276,8 @@ Body:
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a) return;
+
+    if (!canTrack()) return;
 
     var hrefAttr = a.getAttribute('href') || '';
     var hrefLower = hrefAttr.toLowerCase();
@@ -323,7 +334,7 @@ Body:
     copyBtn.addEventListener('click', function(){
       try {
         navigator.clipboard.writeText(supportEmail);
-        dl.push({ event:'nf_copy', nf_field:'support_email' });
+        if (canTrack()) dl.push({ event:'nf_copy', nf_field:'support_email' });
       } catch(e){}
       say('Support email copied.');
     });

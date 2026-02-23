@@ -547,6 +547,25 @@ Body:
   });
 
   /* Analytics hook (guarded: real web env only) */
+  function canTrack() {
+    try {
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function' && window.neuform.consent.isGranted());
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function emitDlterExplainedView() {
+    if (!canTrack()) return;
+    if (window.NF_NL && NF_NL.analytics && typeof NF_NL.analytics.view === "function") {
+      NF_NL.analytics.view("dlter_explained", { section: "dlter" });
+      return;
+    }
+    if (window.dataLayer) {
+      window.dataLayer.push({ event: "nf_page_view", page_type: "dlter_explained" });
+    }
+  }
+
   function isTrackableEnv() {
     try {
       if (location.protocol !== "https:" && location.protocol !== "http:") return false;
@@ -562,11 +581,7 @@ Body:
 
   if (isTrackableEnv()) {
     try {
-      if (window.NF_NL && NF_NL.analytics && typeof NF_NL.analytics.view === "function") {
-        NF_NL.analytics.view("dlter_explained", { section: "dlter" });
-      } else if (window.dataLayer) {
-        window.dataLayer.push({ event: "nf_page_view", page_type: "dlter_explained" });
-      }
+      emitDlterExplainedView();
     } catch (e) {}
   }
 })();

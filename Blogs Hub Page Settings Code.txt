@@ -37,9 +37,22 @@ Body:
 -->
 <script>
 (function(){
+  'use strict';
+
+  if (window.__NF_BLOG_HUB_BOOTED__) return;
+  window.__NF_BLOG_HUB_BOOTED__ = true;
+
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function' && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
   /* ---------- helpers ---------- */
   var dl = window.dataLayer = window.dataLayer || [];
-  try{ dl.push({ event:'nf_blog_index_view' }); }catch(_){}
+  if (canTrack()) { try{ dl.push({ event:'nf_blog_index_view' }); }catch(_){} }
 
   var $  = function(s, r){ return (r||document).querySelector(s); };
   var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
@@ -52,6 +65,10 @@ Body:
 
   var PAGE_SIZE = 10;
   var grid = $('.blog_list'); if(!grid) return;
+  if (grid.dataset.nfBlogInit === '1') return;
+  grid.dataset.nfBlogInit = '1';
+
+  var blogIo = null;
 
   /* ---------- analytics ---------- */
   (function(){
@@ -75,6 +92,7 @@ Body:
           filters = null;
         }
 
+        if (!canTrack()) return;
         try{
           dl.push({
             event:'nf_blog_card_impression',
@@ -95,13 +113,16 @@ Body:
       });
     }, { threshold:0.3, rootMargin:'0px 0px -10% 0px' });
     cards.forEach(function(c){ io.observe(c); });
+    blogIo = io;
   })();
 
   // ✅ Updated: removed passive:true so you can safely preventDefault later if needed
   document.addEventListener('click',function(e){
     var card = e.target.closest && e.target.closest('.nf-blog-card, .nf-blog-tile, [data-blog-card]');
     if(!card) return;
-    var href = (card.querySelector('a[href]')||{}).href || '';
+    var clickedAnchor = e.target.closest && e.target.closest('a[href]');
+    if(!clickedAnchor || !card.contains(clickedAnchor)) return;
+    var href = clickedAnchor.href || '';
     if(!href) return;
 
     // capture current filter state (if available) for analytics
@@ -112,6 +133,7 @@ Body:
       filters = null;
     }
 
+    if (!canTrack()) return;
     try{
       dl.push({
         event:'nf_blog_card_click',
@@ -584,6 +606,10 @@ Body:
     writeUI(p);
     state.page = p.page || 1;
     apply(true);
+  });
+
+  window.addEventListener('pagehide', function(){
+    try{ if (blogIo && typeof blogIo.disconnect === 'function') blogIo.disconnect(); }catch(_){}
   });
 
   /* ---------- a11y: sr-only (if missing) ---------- */

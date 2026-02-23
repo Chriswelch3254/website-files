@@ -40,6 +40,14 @@ Body:
 
   var dl = window.dataLayer = window.dataLayer || [];
 
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
   /* =====================================================
      A) Lead Conversion (FALLBACK ONLY; strict + deduped)
      - This page is purchase-themed. Lead conversion may only fire here
@@ -142,7 +150,7 @@ Body:
     if (!once(dedupeKey)) return;
 
     // Fire canonical conversion event (no PII)
-    dl.push(Object.assign({
+    if (canTrack()) dl.push(Object.assign({
       event: 'nf_lead_submit',
       nf_lead_id: leadId,
       nf_method: 'contact_form',
@@ -150,7 +158,7 @@ Body:
     }, meta || {}));
 
     // GA4 conversion
-    if (typeof gtag === 'function') {
+    if (canTrack() && typeof gtag === 'function') {
       try {
         gtag('event', 'generate_lead', {
           lead_id: leadId,
@@ -166,7 +174,7 @@ Body:
     }
 
     // Meta Pixel conversion (dedupe via eventID)
-    if (typeof fbq === 'function') {
+    if (canTrack() && typeof fbq === 'function') {
       try {
         fbq('track', 'Lead', { lead_id: leadId }, { eventID: leadId });
       } catch(e) {}
@@ -187,7 +195,7 @@ Body:
   /* =====================================================
      B) Purchase thank-you page viewed
   ====================================================== */
-  dl.push({ event: 'nf_purchase_thankyou_view' });
+  if (canTrack()) dl.push({ event: 'nf_purchase_thankyou_view' });
 
   /* =====================================================
      C) Delegated click tracking for Thank You CTAs
@@ -200,6 +208,8 @@ Body:
   document.addEventListener('click', function(e){
     var node = closestAction(e.target);
     if (!node) return;
+
+    if (!canTrack()) return;
 
     var act   = node.getAttribute('data-thanks-action');
     var plan  = node.getAttribute('data-plan') || null;

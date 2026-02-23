@@ -89,6 +89,17 @@ Body:
 (function(){
   'use strict';
 
+  if (window.__NF_TRAINING_PLANS_BOOTED__) return;
+  window.__NF_TRAINING_PLANS_BOOTED__ = true;
+
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function' && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
   /* ==========================
      utils / setup
      ========================== */
@@ -262,7 +273,7 @@ Body:
   }
 
   function fireViewItemList(cards){
-    if (!cards || !cards.length) return;
+    if (!canTrack() || !cards || !cards.length) return;
     var gaItems = Array.prototype.map.call(cards, function(card, i){
       return buildGaItem(readPlan(card), i+1);
     });
@@ -282,6 +293,7 @@ Body:
         if (!entry.isIntersecting) return;
         var el = entry.target;
         if (!once(el)) return;
+        if (!canTrack()) return;
         var p = readPlan(el);
         push({
           event:       'nf_product_impression',
@@ -307,6 +319,11 @@ Body:
   }
 
   function fireSelectAndNavigate(item, dest){
+    if (!canTrack()){
+      window.location.href = dest;
+      return;
+    }
+
     // Always push NF event first (sync), then try gtag w/ callback.
     push({
       event:   'nf_plan_preview_open',
@@ -386,12 +403,12 @@ Body:
 
     // If modified click (new tab/window), do not block navigation. Still fire events best-effort.
     if (!isPlainLeftClick(e)){
-      if (typeof window.gtag === 'function'){
+      if (canTrack() && typeof window.gtag === 'function'){
         try{ window.gtag('event','select_item',{ items:[item] }); }catch(_){}
-      } else {
+      } else if (canTrack()) {
         push({ event:'select_item', items:[item], nf_dest: dest });
       }
-      push({
+      if (canTrack()) push({
         event: 'nf_plan_preview_open',
         nf_plan: p.plan,
         nf_sku: p.sku,
@@ -497,10 +514,12 @@ Body:
   function init(){
     var grid = document.querySelector('.nf-tiles');
     if (!grid) return;
+    if (grid.dataset.nfPlansInit === '1') return;
+    grid.dataset.nfPlansInit = '1';
 
     var wrapper = grid.closest('.nf-plans-grid') || grid.parentNode;
 
-    push({ event:'nf_plans_catalog_view' });
+    if (canTrack()) push({ event:'nf_plans_catalog_view' });
     document.addEventListener('click', onClick, { passive:false });
 
     scrubInternalNotes();
@@ -1007,28 +1026,28 @@ Body:
     if (searchEl){ searchEl.addEventListener('input', applyDebounced); }
     if (catSel){
       catSel.addEventListener('change', function(){
-        push({ event:'nf_catalog_filter', nf_filter_key:'category', nf_filter_value:catSel.value || '' });
+        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'category', nf_filter_value:catSel.value || '' });
         state.page = 1;
         apply(true);
       });
     }
     if (daysSel){
       daysSel.addEventListener('change', function(){
-        push({ event:'nf_catalog_filter', nf_filter_key:'days_per_week', nf_filter_value:daysSel.value || '' });
+        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'days_per_week', nf_filter_value:daysSel.value || '' });
         state.page = 1;
         apply(true);
       });
     }
     if (equipSel){
       equipSel.addEventListener('change', function(){
-        push({ event:'nf_catalog_filter', nf_filter_key:'equipment', nf_filter_value:equipSel.value || '' });
+        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'equipment', nf_filter_value:equipSel.value || '' });
         state.page = 1;
         apply(true);
       });
     }
     if (sortSel){
       sortSel.addEventListener('change', function(){
-        push({ event:'nf_catalog_filter', nf_filter_key:'sort', nf_filter_value:sortSel.value || '' });
+        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'sort', nf_filter_value:sortSel.value || '' });
         state.page = 1;
         apply(true);
       });
@@ -1044,7 +1063,7 @@ Body:
       if (equipSel) equipSel.value = '';
       if (sortSel)  sortSel.value  = 'position';
 
-      push({ event:'nf_catalog_filter', nf_filter_key:'clear', nf_filter_value:'' });
+      if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'clear', nf_filter_value:'' });
       state.page = 1;
       apply(true);
     });
@@ -1070,6 +1089,10 @@ Body:
     if (window.NF_PLANS && typeof window.NF_PLANS.updateFromUrl === 'function'){
       window.NF_PLANS.updateFromUrl(true);
     }
+  });
+
+  window.addEventListener('pagehide', function(){
+    try{ if (io && typeof io.disconnect === 'function') io.disconnect(); }catch(_){}
   });
 
   /* ==========================
@@ -1105,6 +1128,7 @@ Body:
     nfScrollBuckets.forEach(function(pct){
       if (!nfScrollFired[pct] && depth >= pct){
         nfScrollFired[pct] = true;
+        if (!canTrack()) return;
         push({
           event: 'nf_plans_scroll_depth',
           nf_page: 'training_plans',

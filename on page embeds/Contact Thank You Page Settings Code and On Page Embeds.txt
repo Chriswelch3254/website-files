@@ -54,6 +54,14 @@ Head:
 
   var dl = window.dataLayer = window.dataLayer || [];
 
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
   function qp(n) {
     try { return new URLSearchParams(window.location.search).get(n) || ""; }
     catch (e) { return ""; }
@@ -178,7 +186,7 @@ Head:
   ssDel("nf.leadMeta");
 
   // GA4: generate_lead
-  if (typeof gtag === "function") {
+  if (canTrack() && typeof gtag === "function") {
     try {
       gtag("event", "generate_lead", {
         lead_id: leadId,
@@ -199,7 +207,7 @@ Head:
   }
 
   // Meta Pixel: Lead
-  if (typeof fbq === "function") {
+  if (canTrack() && typeof fbq === "function") {
     try {
       fbq("track", "Lead", {
         lead_id: leadId,
@@ -217,7 +225,7 @@ Head:
   }
 
   // Custom dataLayer event for QA/retargeting (single authoritative fire)
-  dl.push({
+  if (canTrack()) dl.push({
     event: "nf_lead_submit",
     nf_lead_id: leadId,
     nf_method: "contact_form",
@@ -250,8 +258,16 @@ Body:
 
   var dl = window.dataLayer = window.dataLayer || [];
 
+  function canTrack(){
+    try{
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
+    }catch(_){
+      return false;
+    }
+  }
+
   // 1) Mark page view
-  dl.push({ event: 'nf_contact_thanks_view' });
+  if (canTrack()) dl.push({ event: 'nf_contact_thanks_view' });
 
   // ===== Helper: domain-only extraction (no raw email logged) =====
   function emailDomain(v){
@@ -282,6 +298,8 @@ Body:
   document.addEventListener('click', function(e){
     var node = closestAction(e.target);
     if (!node) return;
+
+    if (!canTrack()) return;
 
     var act  = node.getAttribute('data-cty-action');
     var dest = node.getAttribute('data-dest') || (node.tagName === 'A' ? node.getAttribute('href') : null);
@@ -316,12 +334,15 @@ Body:
   // 3) Tiny API if you prefer direct calls from HTML
   window.NFContactTY = {
     open: function(dest){
+      if (!canTrack()) return;
       dl.push({ event:'nf_cty_open', nf_dest: dest||null });
     },
     social: function(net, dest){
+      if (!canTrack()) return;
       dl.push({ event:'nf_social_follow', nf_network: net||null, nf_dest: dest||null });
     },
     email: function(address){
+      if (!canTrack()) return;
       // ✅ NO RAW EMAIL IN dataLayer
       dl.push({
         event:'nf_support_click',
@@ -330,6 +351,7 @@ Body:
       });
     },
     download: function(file){
+      if (!canTrack()) return;
       dl.push({ event:'nf_download_click', nf_file: file||null, nf_context:'contact_thanks' });
     }
   };
