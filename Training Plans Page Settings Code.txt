@@ -1009,6 +1009,20 @@ Body:
       return cmpMap[sortKey] || cmpMap.position;
     }
 
+    function normalizeHubMedia(gridRoot){
+      try{
+        if (!gridRoot || !gridRoot.querySelectorAll) return;
+        var imgs = gridRoot.querySelectorAll('img');
+        imgs.forEach(function(img){
+          if (!img || !img.closest) return;
+          if (img.closest('.hero, [class*="hero"], .nf-hero, .banner, [class*="banner"]')) return;
+          if (img.matches('[data-no-lazy], [loading], [fetchpriority="high"]')) return;
+          if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+          if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+        });
+      }catch(_){ }
+    }
+
     function apply(replaceURL, dir, focusTarget){
       scrubInternalNotes();
       grid.classList.add('is-updating');
@@ -1058,6 +1072,7 @@ Body:
         q: s.q, cat: s.cat, days: s.days, equip: s.equip, sort: s.sort, p: state.page
       });
       requestAnimationFrame(function(){
+        normalizeHubMedia(grid);
         grid.classList.remove('is-updating');
         grid.removeAttribute('aria-busy');
         restorePagerFocus(focusTarget);

@@ -152,15 +152,33 @@ Body:
     });
   }
 
+  function normalizeHubMedia(root){
+    try{
+      var scope = root && root.querySelectorAll ? root : document;
+      var imgs = scope.querySelectorAll('.nf-review-card img');
+      imgs.forEach(function(img){
+        if (!img || !img.closest) return;
+        if (img.closest('.hero, [class*="hero"], .nf-hero, .banner, [class*="banner"]')) return;
+        if (img.matches('[data-no-lazy], [loading], [fetchpriority="high"]')) return;
+        if (!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+        if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+      });
+    }catch(_){ }
+  }
+
   // Run once on load + after sitewide reviews loader renders
   if (document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', applyStarA11y, { once:true });
   } else {
     applyStarA11y();
+    normalizeHubMedia(document);
   }
   document.addEventListener('nf:reviews-ready', function(){
     // slight defer to allow DOM inserts
-    setTimeout(applyStarA11y, 0);
+    setTimeout(function(){
+      applyStarA11y();
+      normalizeHubMedia(document);
+    }, 0);
   });
 
   // ===== 1) Review/Testimonial impressions (fire once per card) =====
@@ -187,6 +205,7 @@ Body:
       });
     }, { threshold: 0.35 });
     cards.forEach(function(c){ io.observe(c); });
+    window.addEventListener('pagehide', function(){ try{ io.disconnect(); }catch(_){} }, { once:true });
   })();
 
   // ===== 2) Filter/sort/search tracking =====

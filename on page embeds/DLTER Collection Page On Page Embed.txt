@@ -191,8 +191,13 @@ document.addEventListener("dlter:accessState",function(e){
 
 /* MutationObserver fallback */
 (function(){
+  var obs=null;
+  function cleanup(){
+    try{ if(obs) obs.disconnect(); }catch(e){}
+    obs=null;
+  }
   try{
-    var obs=new MutationObserver(function(){
+    obs=new MutationObserver(function(){
       var unlocked=document.body.classList.contains("dlter-blueprint-unlocked");
       if(unlocked!==state.unlocked){
         state.unlocked=unlocked;
@@ -201,6 +206,7 @@ document.addEventListener("dlter:accessState",function(e){
     });
     obs.observe(document.body,{attributes:true,attributeFilter:["class"]});
   }catch(e){}
+  window.addEventListener("pagehide",cleanup,{once:true});
 })();
 
 function syncMemberOnce(){

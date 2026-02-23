@@ -512,6 +512,7 @@ Embed 1:
   opacity:.94;
 }
 @media (prefers-reduced-motion: reduce){
+  .blog_list.is-updating .nf-page-track { transition: none !important; }
   .nf-page{transition:none;}
   .nf-page.enter-from-right,
   .nf-page.leave-to-left{transform:none;opacity:1;}

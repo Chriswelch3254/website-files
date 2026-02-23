@@ -1033,6 +1033,7 @@ Embed 1:
 
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce){
+  .nf-tiles.is-updating .nf-page-track { transition: none !important; }
   .nf-page,
   .nf-card,
   .nf-pager,

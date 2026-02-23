@@ -743,6 +743,20 @@ Body:
     } catch(_){}
   }
 
+  function normalizeHubMedia(root){
+    try{
+      var scope = root && root.querySelectorAll ? root : document;
+      var imgs = scope.querySelectorAll('.nf-tool-card img');
+      imgs.forEach(function(img){
+        if (!img || !img.closest) return;
+        if (img.closest('.hero, [class*="hero"], .nf-hero, .banner, [class*="banner"]')) return;
+        if (img.matches('[data-no-lazy], [loading], [fetchpriority="high"]')) return;
+        if (!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+        if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+      });
+    }catch(_){ }
+  }
+
   // ===== A) Auto-tag Tools Hub cards for analytics (fills missing only) =====
   (function(){
     var links = $$('.tool-card-link');
@@ -785,6 +799,7 @@ Body:
       if (!existingName) card.setAttribute('data-tool-name', name);
       if (!existingCat)  card.setAttribute('data-tool-cat',  cat);
     });
+    normalizeHubMedia(document);
   })();
 
   // ===== 1) Tool card impressions (fire once per card) =====
@@ -814,6 +829,7 @@ Body:
     }, { threshold: 0.35 });
 
     cards.forEach(function(c){ io.observe(c); });
+    window.addEventListener('pagehide', function(){ try{ io.disconnect(); }catch(_){} }, { once:true });
   })();
 
   // ===== 2–7) Click tracking (open/run/copy/handoff/filter/outbound) =====
@@ -992,6 +1008,7 @@ Body:
     }, { threshold: 0.1 });
 
     lazy.forEach(function(ifr){ io.observe(ifr); });
+    window.addEventListener('pagehide', function(){ try{ io.disconnect(); }catch(_){} }, { once:true });
   })();
 
   // c) Hero underline reacts to pointer position
