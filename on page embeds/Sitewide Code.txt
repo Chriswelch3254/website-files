@@ -457,6 +457,40 @@ Footer:
 
 <!-- Disabled / gated buy CTA accessibility & perf -->
 <style>
+  :root{
+    --nf-radius-card:20px;
+    --nf-radius-btn:12px;
+    --nf-shadow-card:0 8px 20px rgba(0,0,0,.36);
+    --nf-shadow-card-hover:0 12px 28px rgba(0,0,0,.46);
+    --nf-border-subtle:1px solid rgba(255,255,255,.10);
+    --nf-bg-surface:rgba(0,0,0,.85);
+    --nf-bg-surface-2:rgba(0,0,0,.78);
+    --nf-text:#e9f3f7;
+    --nf-text-muted:#9fb4c2;
+    --nf-primary:#3498db;
+    --nf-primary-contrast:#ffffff;
+    --nf-focus:#00D1C7;
+    --nf-space-card-pad:20px;
+    --nf-space-card-gap:24px;
+    --nf-btn-pad-y:12px;
+    --nf-btn-pad-x:20px;
+    --nf-btn-font:800 15px/1 Inter, system-ui;
+    --nf-btn-transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    --nf-badge-radius:999px;
+    --nf-badge-pad:4px 10px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:not([tabindex="-1"]):focus-visible{
+    outline:2px solid var(--nf-focus);
+    outline-offset:2px;
+  }
+
   /* Generic “disabled” contract for any buy button surface */
   .buy-btn[aria-disabled="true"],
   #buy-btn[aria-disabled="true"],
@@ -1554,4 +1588,3 @@ document.addEventListener('DOMContentLoaded', function(){
   }, { capture:true, passive:false });
 })();
 </script>
-

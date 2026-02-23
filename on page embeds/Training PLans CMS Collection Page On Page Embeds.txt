@@ -287,12 +287,15 @@ Embed 1:
   border:1px solid var(--blue-24);
   font:800 13px/1 Inter, system-ui;
   font-variant-numeric:tabular-nums;
+  white-space: nowrap;
 }
 .nf-price .nf-price-msrp{
   text-decoration: line-through;
   text-decoration-color: #e11d48;
   text-decoration-thickness: 2px;
-  margin-left:6px;
+  margin-left: 0;
+  font-weight:700;
+  display:inline;
   opacity:.75;
 }
 .nf-price--waitlist{
@@ -300,6 +303,11 @@ Embed 1:
   background:var(--nf-surface-2);
   color:var(--nf-blue);
   border:1px solid var(--blue-45);
+  border-radius:var(--nf-badge-radius);
+  padding:var(--nf-badge-pad);
+  font-variant-numeric: normal;
+  justify-content: center;
+  letter-spacing:.02em;
 }
 .nf-btn{
   appearance:none; border:none; cursor:pointer;
@@ -345,6 +353,7 @@ Embed 1:
 [data-waitlist="Y"] .nf-cta--default .nf-price.nf-price--waitlist{ display:inline-flex; }
 
 .nf-price .nf-price-msrp:empty{ display:none !important; }
+.nf-price .nf-price-msrp.hide-when-empty:empty{ display:none !important; }
 
 /* ===== Add-On switcher ===== */
 .nf-cta--add-on-switcher{ display:none; gap:12px; flex-wrap:wrap; }
