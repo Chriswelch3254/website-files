@@ -14,10 +14,10 @@ Embed 1:
 /* ===== Design tokens ===== */
 :root{
   --nf-bg:#0b0f12;
-  --nf-surface:#0f1418;
-  --nf-surface-2:#0c1216;
-  --nf-ink:#e9f3f7; --nf-muted:#9fb4c2;
-  --nf-blue:#3498db;
+  --nf-surface:var(--nf-bg-surface);
+  --nf-surface-2:var(--nf-bg-surface-2);
+  --nf-ink:var(--nf-text); --nf-muted:var(--nf-text-muted);
+  --nf-blue:var(--nf-primary);
 
   --blue-08:rgba(52,152,219,.08);
   --blue-10:rgba(52,152,219,.10);
@@ -30,19 +30,19 @@ Embed 1:
   --blue-55:rgba(52,152,219,.55);
 
   --nf-line:#1a2a33;
-  --nf-shadow:0 8px 20px rgba(0,0,0,.36);
-  --nf-shadow-hover:0 12px 28px rgba(0,0,0,.46);
-  --nf-radius:20px;
+  --nf-shadow:var(--nf-shadow-card);
+  --nf-shadow-hover:var(--nf-shadow-card-hover);
+  --nf-radius:var(--nf-radius-card);
 
   --title-fs: clamp(19px, 1.6vw, 22px);
   --body-fs:  clamp(14px, 1.05vw, 15px);
   --title-lh:1.22; --body-lh:1.5;
 
   --stack-8:8px; --stack-10:10px; --stack-12:12px;
-  --gap-md:24px; --gap-lg:24px; --gap-xl:24px;
+  --gap-md:var(--nf-space-card-gap); --gap-lg:var(--nf-space-card-gap); --gap-xl:var(--nf-space-card-gap);
 
   /* slightly tighter, still premium */
-  --card-pad:20px;
+  --card-pad:var(--nf-space-card-pad);
   --card-minh:390px;
 
   --chip-size:36px; --chip-radius:12px;
@@ -114,7 +114,7 @@ Embed 1:
   padding:var(--card-pad);
   border-radius:var(--nf-radius);
   color:var(--nf-ink);
-  background:rgba(0,0,0,.85);
+  background:var(--nf-bg-surface);
   border:1px solid var(--nf-line);
   box-shadow:var(--nf-shadow);
   transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, filter .25s ease;
@@ -216,7 +216,7 @@ Embed 1:
 .nf-tag{
   font:700 clamp(var(--tag-fs), 1vw, calc(var(--tag-fs) + 1px))/1.12 Inter, system-ui;
   padding:4px var(--tag-pad-x);
-  border-radius:999px;
+  border-radius:var(--nf-badge-radius);
   min-height:var(--tag-h);
   height:auto;
   display:inline-flex; align-items:center; justify-content:center;
@@ -330,35 +330,45 @@ Embed 1:
 .nf-price{
   display:inline-flex; align-items:center; gap:8px;
   padding:9px 14px;
-  border-radius:999px;
+  border-radius:var(--nf-badge-radius);
   color:#e9f3f7;
   background:var(--blue-08);
   border:1px solid var(--blue-24);
   font:800 13px/1 Inter, system-ui;
   font-variant-numeric:tabular-nums;
+  white-space: nowrap;
 }
 .nf-price .nf-price-msrp{
   text-decoration: line-through;
   text-decoration-color: #e11d48;
   text-decoration-thickness: 2px;
-  margin-left:6px;
+  margin-left: 0;
+  font-weight:700;
+  display:inline;
   opacity:.75;
 }
+.nf-price .nf-price-msrp:empty{ display:none !important; }
+.nf-price .nf-price-msrp.hide-when-empty:empty{ display:none !important; }
 .nf-price--waitlist{
   display:none;
   background:var(--nf-surface-2);
   color:var(--nf-blue);
   border:1px solid var(--blue-45);
+  border-radius:var(--nf-badge-radius);
+  padding:var(--nf-badge-pad);
+  font-variant-numeric: normal;
+  justify-content: center;
+  letter-spacing:.02em;
 }
 .nf-btn{
   appearance:none; border:none; cursor:pointer;
-  padding:12px 20px;
-  border-radius:12px;
-  font:800 15px/1 Inter, system-ui;
-  color:#fff;
-  background:linear-gradient(180deg, var(--nf-blue), #2d86c2);
+  padding:var(--nf-btn-pad-y) var(--nf-btn-pad-x);
+  border-radius:var(--nf-radius-btn);
+  font:var(--nf-btn-font);
+  color:var(--nf-primary-contrast);
+  background:linear-gradient(180deg, var(--nf-primary), #2d86c2);
   box-shadow:0 6px 16px var(--blue-30);
-  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  transition:var(--nf-btn-transition);
   position:relative; z-index:3;
   white-space:nowrap;
 }
@@ -445,13 +455,13 @@ Embed 2:
     --nf-shadow: var(--nf-shadow, 0 8px 20px rgba(0,0,0,.36));
     --nf-shadow-hover: var(--nf-shadow-hover, 0 12px 28px rgba(0,0,0,.46));
 
-    --nf-radius: 26px;
+    --nf-radius: var(--nf-radius-card);
 
-    --nf-card: rgba(0,0,0,.85);
-    --nf-ink: rgba(255,255,255,.92);
-    --nf-muted: rgba(159,180,194,.82);
+    --nf-card: var(--nf-bg-surface);
+    --nf-ink: var(--nf-text);
+    --nf-muted: var(--nf-text-muted);
 
-    --nf-btn: #3498db;
+    --nf-btn: var(--nf-primary);
   }
 
   .nf-auto-home__card{
@@ -493,7 +503,7 @@ Embed 2:
     top:12px;
     bottom:12px;
     width:3px;
-    border-radius:999px;
+    border-radius:var(--nf-badge-radius);
     background: linear-gradient(180deg, rgba(52,152,219,.85), rgba(52,152,219,.18));
     opacity:.95;
     pointer-events:none;
@@ -514,7 +524,7 @@ Embed 2:
   }
 
   .nf-auto-home__card:focus-visible{
-    outline: 2px solid rgba(52,152,219,.65);
+    outline:2px solid var(--nf-focus);
     outline-offset: 3px;
   }
 
@@ -635,7 +645,7 @@ Embed 2:
     border-radius: 16px;
 
     font: 950 14px/1 Inter, system-ui;
-    color:#fff;
+    color:var(--nf-primary-contrast);
 
     background: var(--nf-btn);
     box-shadow: 0 12px 26px rgba(52,152,219,.22);

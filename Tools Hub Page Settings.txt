@@ -94,13 +94,13 @@ body {
   --dm-text-secondary: rgba(229,231,235,0.88);
   --dm-text-muted: rgba(148,163,184,0.9);
 
-  --nf-blue: #3498db;
+  --nf-blue: var(--nf-primary);
   --nf-blue-soft: rgba(52,152,219,0.18);
   --nf-gold: #facc15;
 
-  --nf-radius-lg: 18px;
-  --nf-radius: 14px;
-  --nf-radius-sm: 10px;
+  --nf-radius-lg: var(--nf-radius-card);
+  --nf-radius: var(--nf-radius-btn);
+  --nf-radius-sm: var(--nf-radius-btn);
   --nf-gutter: clamp(1rem, 3vw, 1.75rem);
   --nf-container-max: 1120px;
 
@@ -143,7 +143,7 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: calc(var(--nf-space-card-gap) * 0.75);
 }
 
 /* =========================
@@ -158,7 +158,7 @@ body {
   background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
   backdrop-filter: var(--nf-glass-blur);
   -webkit-backdrop-filter: var(--nf-glass-blur);
-  box-shadow: var(--nf-glass-shadow);
+  box-shadow: var(--nf-shadow-card-hover);
 
   padding: clamp(18px, 2.6vh, 26px) clamp(18px, 3vw, 30px);
   margin: 0 auto;
@@ -199,8 +199,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 14px 4px;
-  border-radius: 999px;
+  padding: var(--nf-badge-pad);
+  border-radius: var(--nf-badge-radius);
   border: 1px solid rgba(148,163,184,0.6);
   background: rgba(15,23,42,0.95);
   font-size: 11px;
@@ -236,7 +236,7 @@ body {
   bottom: -12px;
   width: 220px;
   height: 2px;
-  border-radius: 999px;
+  border-radius: var(--nf-badge-radius);
   transform: translateX(-50%) scaleX(0.45);
   transform-origin: var(--hero-underline-origin-x) 50%;
   background:
@@ -288,7 +288,7 @@ body {
 .lab.cards.section .lab-cards-section {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: var(--nf-space-card-gap);
   width: 100%;
 }
 
@@ -309,19 +309,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  border-radius: 999px;
+  gap: calc(var(--nf-space-card-gap) * 0.75);
+  border-radius: var(--nf-radius-card);
   border: 1px solid rgba(15,23,42,0.9);
   background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
-  padding: 18px 22px;
-  box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+  padding: var(--nf-space-card-pad);
+  box-shadow: var(--nf-shadow-card);
   position: relative;
   overflow: hidden;
-  transition:
-    transform 0.2s ease-out,
-    box-shadow 0.2s ease-out,
-    border-color 0.2s ease-out,
-    background 0.2s ease-out;
+  transition: transform .2s ease-out, box-shadow .2s ease-out, border-color .2s ease-out, background .2s ease-out;
   backdrop-filter: var(--nf-glass-blur);
   -webkit-backdrop-filter: var(--nf-glass-blur);
 
@@ -363,18 +359,19 @@ body {
 /* Hover lift + color glow */
 .tool-card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--nf-shadow-card-hover);
   background: linear-gradient(135deg, rgba(15,23,42,1), rgba(15,23,42,0.98));
 }
 
 .tool-card--nutrition:hover {
   box-shadow:
-    0 20px 45px rgba(15,23,42,0.9),
+    var(--nf-shadow-card-hover),
     0 0 0 1px rgba(52,152,219,0.65);
 }
 
 .tool-card--identity:hover {
   box-shadow:
-    0 20px 45px rgba(15,23,42,0.9),
+    var(--nf-shadow-card-hover),
     0 0 0 1px rgba(250,204,21,0.75);
 }
 
@@ -401,7 +398,7 @@ body {
 .tool-card-title span {
   font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--dm-text-muted);
   margin-right: 8px;
@@ -411,7 +408,7 @@ body {
 .tool-card-subtitle {
   font-size: 13.5px;
   line-height: 1.65;
-  color: rgba(229, 231, 235, 0.92);
+  color: var(--nf-text-muted, rgba(229, 231, 235, 0.92));
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -425,7 +422,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  border-radius: var(--nf-radius-btn);
   border: 1px solid rgba(148,163,184,0.8);
   width: 34px;
   height: 34px;
@@ -443,23 +440,24 @@ body {
 }
 
 .tool-card:hover .tool-card-arrow {
-  transform: translateX(2px);
+  transform: translateX(1px);
   border-color: rgba(52,152,219,0.95);
-  box-shadow: 0 0 20px rgba(52,152,219,0.7);
+  box-shadow: 0 0 14px rgba(52,152,219,0.6);
 }
 
 .tool-card--identity:hover .tool-card-arrow {
   border-color: rgba(250,204,21,0.95);
-  box-shadow: 0 0 22px rgba(250,204,21,0.7);
+  box-shadow: 0 0 16px rgba(250,204,21,0.62);
 }
 
 .tool-card-link:focus-visible .tool-card,
 .tool-card-link:focus-visible {
-  outline: 2px solid var(--nf-blue);
+  outline: 2px solid var(--nf-focus);
   outline-offset: 3px;
   box-shadow:
-    0 0 0 1px rgba(52,152,219,0.9),
-    0 0 18px rgba(52,152,219,0.65);
+    var(--nf-shadow-card-hover),
+    0 0 0 1px rgba(52,152,219,0.65),
+    0 0 14px rgba(52,152,219,0.45);
 }
 
 /* =========================
@@ -501,7 +499,7 @@ body {
 
 @media (max-width: 640px) {
   .tools.section { padding: 38px 0 64px; }
-  .lab.cards.section .lab-cards-section { gap: 16px; }
+  .lab.cards.section .lab-cards-section { gap: calc(var(--nf-space-card-gap) * 0.75); }
   .tool-card-link { justify-content: stretch; }
   .tools-hero-card { text-align: center; max-width: 100%; }
   .tools-hero-heading::after { width: 170px; }
@@ -510,8 +508,8 @@ body {
     max-width: none;
     flex-direction: row;
     align-items: flex-start;
-    padding: 16px 16px;
-    border-radius: 18px;
+    padding: calc(var(--nf-space-card-pad) * 0.8);
+    border-radius: var(--nf-radius-card);
   }
 
   .tool-card-text { max-width: calc(100% - 56px); }
@@ -578,7 +576,7 @@ body {
   .lab.cards.section .lab-cards-section{
     display:grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: calc(var(--nf-space-card-gap) * 0.75);
     align-items: stretch;
     width: 100%;
     max-width: 920px;
@@ -590,8 +588,8 @@ body {
   .tool-card{
     max-width: none;
     height: 100%;
-    border-radius: 18px;
-    padding: 20px 20px;
+    border-radius: var(--nf-radius-card);
+    padding: var(--nf-space-card-pad);
   }
 
   .tool-card-arrow{
@@ -650,9 +648,11 @@ body {
 
 .tool-chip{
   font-size:11px;
+  font-weight:600;
+  letter-spacing:.01em;
   line-height:1;
-  padding:6px 9px;
-  border-radius:999px;
+  padding:var(--nf-badge-pad);
+  border-radius:var(--nf-badge-radius);
   border:1px solid rgba(148,163,184,0.25);
   background: rgba(2,6,23,0.35);
   color: rgba(229,231,235,0.88);
@@ -666,7 +666,7 @@ body {
   top:12px;
   bottom:12px;
   width:3px;
-  border-radius:999px;
+  border-radius:var(--nf-badge-radius);
   opacity:0.75;
   pointer-events:none;
   background: rgba(148,163,184,0.35);
