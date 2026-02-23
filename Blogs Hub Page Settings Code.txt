@@ -476,6 +476,36 @@ Body:
   var labels=[].slice.call(pagerTop.querySelectorAll('.nf-page-label'))
                 .concat([].slice.call(pagerBot.querySelectorAll('.nf-page-label')));
 
+  function restorePagerFocus(target){
+    if (!target) return;
+
+    var preferred = target.button;
+    if (preferred && preferred.isConnected && !preferred.disabled){
+      preferred.focus();
+      return;
+    }
+
+    var fallback = null;
+    if (target.pager && target.pager.querySelector){
+      fallback = target.dir === 'prev'
+        ? target.pager.querySelector('.nf-next:not([disabled])')
+        : target.pager.querySelector('.nf-prev:not([disabled])');
+    }
+    if (!fallback){
+      fallback = (pagerTop.querySelector('.nf-prev:not([disabled]), .nf-next:not([disabled])')
+        || pagerBot.querySelector('.nf-prev:not([disabled]), .nf-next:not([disabled])'));
+    }
+    if (fallback){
+      fallback.focus();
+      return;
+    }
+
+    var container = target.pager || pagerTop || pagerBot;
+    if (!container) return;
+    if (!container.hasAttribute('tabindex')) container.setAttribute('tabindex', '-1');
+    container.focus();
+  }
+
   var state = { page:1, totalPages:1 }, current=null, applying=false;
 
   function buildPage(items){
@@ -531,7 +561,7 @@ Body:
     nextBtns.forEach(function(b){ b.disabled=disabledNext; b.setAttribute('aria-disabled', String(disabledNext)); });
   }
 
-  function apply(replaceURL,dir){
+  function apply(replaceURL,dir,focusTarget){
     if(applying) return; applying = true;
     grid.classList.add('is-updating');
     grid.setAttribute('aria-busy','true');
@@ -590,12 +620,23 @@ Body:
     requestAnimationFrame(function(){
       grid.classList.remove('is-updating');
       grid.removeAttribute('aria-busy');
+      restorePagerFocus(focusTarget);
     });
   }
 
   /* ---- pager controls ---- */
-  function prev(){ if(state.page>1){ state.page--; apply(false,'prev'); } }
-  function next(){ if(state.page<state.totalPages){ state.page++; apply(false,'next'); } }
+  function prev(e){
+    if(state.page>1){
+      state.page--;
+      apply(false,'prev',{ button:e&&e.currentTarget, pager:(e&&e.currentTarget&&e.currentTarget.closest&&e.currentTarget.closest('.nf-pager'))||pagerTop, dir:'prev' });
+    }
+  }
+  function next(e){
+    if(state.page<state.totalPages){
+      state.page++;
+      apply(false,'next',{ button:e&&e.currentTarget, pager:(e&&e.currentTarget&&e.currentTarget.closest&&e.currentTarget.closest('.nf-pager'))||pagerTop, dir:'next' });
+    }
+  }
   prevBtns.forEach(function(b){ b.addEventListener('click', prev); });
   nextBtns.forEach(function(b){ b.addEventListener('click', next); });
 

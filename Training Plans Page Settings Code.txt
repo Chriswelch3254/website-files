@@ -908,6 +908,35 @@ Body:
     var nextBtns = Array.prototype.slice.call(pager.querySelectorAll('.nf-next'));
     var labels   = Array.prototype.slice.call(pager.querySelectorAll('.nf-page-label'));
 
+    function restorePagerFocus(target){
+      if (!target) return;
+
+      var preferred = target.button;
+      if (preferred && preferred.isConnected && !preferred.disabled){
+        preferred.focus();
+        return;
+      }
+
+      var fallback = null;
+      if (target.pager && target.pager.querySelector){
+        fallback = target.dir === 'prev'
+          ? target.pager.querySelector('.nf-next:not([disabled])')
+          : target.pager.querySelector('.nf-prev:not([disabled])');
+      }
+      if (!fallback){
+        fallback = pager.querySelector('.nf-prev:not([disabled]), .nf-next:not([disabled])');
+      }
+      if (fallback){
+        fallback.focus();
+        return;
+      }
+
+      var container = target.pager || pager;
+      if (!container) return;
+      if (!container.hasAttribute('tabindex')) container.setAttribute('tabindex', '-1');
+      container.focus();
+    }
+
     function updatePagerUI(){
       labels.forEach(function(l){
         l.textContent = 'Page ' + state.page + ' of ' + state.totalPages;
@@ -929,8 +958,18 @@ Body:
       pager.style.display = hide ? 'none' : '';
     }
 
-    function prevPage(){ if (state.page > 1){ state.page--; apply(false,'prev'); } }
-    function nextPage(){ if (state.page < state.totalPages){ state.page++; apply(false,'next'); } }
+    function prevPage(e){
+      if (state.page > 1){
+        state.page--;
+        apply(false, 'prev', { button: e && e.currentTarget, pager: pager, dir: 'prev' });
+      }
+    }
+    function nextPage(e){
+      if (state.page < state.totalPages){
+        state.page++;
+        apply(false, 'next', { button: e && e.currentTarget, pager: pager, dir: 'next' });
+      }
+    }
 
     prevBtns.forEach(function(b){ b.addEventListener('click', prevPage); });
     nextBtns.forEach(function(b){ b.addEventListener('click', nextPage); });
@@ -970,7 +1009,7 @@ Body:
       return cmpMap[sortKey] || cmpMap.position;
     }
 
-    function apply(replaceURL, dir){
+    function apply(replaceURL, dir, focusTarget){
       scrubInternalNotes();
       grid.classList.add('is-updating');
       grid.setAttribute('aria-busy','true');
@@ -1021,6 +1060,7 @@ Body:
       requestAnimationFrame(function(){
         grid.classList.remove('is-updating');
         grid.removeAttribute('aria-busy');
+        restorePagerFocus(focusTarget);
       });
     }
 

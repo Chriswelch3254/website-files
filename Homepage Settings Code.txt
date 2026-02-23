@@ -556,6 +556,15 @@ Body:
     try{ mo.observe(root, { childList:true, subtree:true }); }catch(_){}
   }
 
+
+  window.addEventListener('pagehide', function(){
+    try{
+      if (mo && typeof mo.disconnect === 'function') mo.disconnect();
+    }catch(_){ }
+    mo = null;
+    scheduled = false;
+  });
+
   if (document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else {
