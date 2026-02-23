@@ -231,6 +231,10 @@ Embed 1:
 (function(){
   'use strict';
 
+  // Idempotence guard (prevents double-binding if embed is injected twice)
+  if (window.__NF_DLTER_QUIZ_MEMBER_BAR_GUARD__) return;
+  window.__NF_DLTER_QUIZ_MEMBER_BAR_GUARD__ = true;
+
   var bar        = document.getElementById('dlter-member-bar');
   if (!bar) return;
 
