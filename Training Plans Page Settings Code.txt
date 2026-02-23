@@ -92,20 +92,15 @@ Body:
   if (window.__NF_TRAINING_PLANS_BOOTED__) return;
   window.__NF_TRAINING_PLANS_BOOTED__ = true;
 
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function' && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
   /* ==========================
      utils / setup
      ========================== */
-  var dl = window.dataLayer = window.dataLayer || [];
   function push(evt){
-    try{ dl.push(evt); }catch(_){}
+    if (!evt || !evt.event) return false;
+    var name = evt.event;
+    var payload = Object.assign({}, evt);
+    delete payload.event;
+    return window.neuform.track(name, payload);
   }
 
   // global namespace for history helpers
@@ -273,15 +268,11 @@ Body:
   }
 
   function fireViewItemList(cards){
-    if (!canTrack() || !cards || !cards.length) return;
+    if (!window.neuform.canTrack() || !cards || !cards.length) return;
     var gaItems = Array.prototype.map.call(cards, function(card, i){
       return buildGaItem(readPlan(card), i+1);
     });
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'view_item_list', { items: gaItems });
-    } else {
-      push({ event:'view_item_list', items: gaItems });
-    }
+    push({ event:'view_item_list', items: gaItems });
   }
 
   /* impression observer */
@@ -293,8 +284,7 @@ Body:
         if (!entry.isIntersecting) return;
         var el = entry.target;
         if (!once(el)) return;
-        if (!canTrack()) return;
-        var p = readPlan(el);
+          var p = readPlan(el);
         push({
           event:       'nf_product_impression',
           nf_plan:     p.plan,
@@ -319,7 +309,7 @@ Body:
   }
 
   function fireSelectAndNavigate(item, dest){
-    if (!canTrack()){
+    if (!window.neuform.canTrack()){
       window.location.href = dest;
       return;
     }
@@ -344,21 +334,6 @@ Body:
     // Failsafe: never hang navigation
     var hardTimeout = setTimeout(go, 800);
 
-    if (typeof window.gtag === 'function'){
-      try{
-        window.gtag('event', 'select_item', {
-          items: [item],
-          event_callback: function(){
-            clearTimeout(hardTimeout);
-            go();
-          },
-          event_timeout: 650
-        });
-        return;
-      }catch(_){}
-    }
-
-    // GTM-only fallback: allow one paint/frame for tags to pick up, then navigate
     push({ event:'select_item', items:[item], nf_dest: dest });
     requestAnimationFrame(function(){
       clearTimeout(hardTimeout);
@@ -403,12 +378,10 @@ Body:
 
     // If modified click (new tab/window), do not block navigation. Still fire events best-effort.
     if (!isPlainLeftClick(e)){
-      if (canTrack() && typeof window.gtag === 'function'){
-        try{ window.gtag('event','select_item',{ items:[item] }); }catch(_){}
-      } else if (canTrack()) {
+      if (window.neuform.canTrack()) {
         push({ event:'select_item', items:[item], nf_dest: dest });
       }
-      if (canTrack()) push({
+      if (window.neuform.canTrack()) push({
         event: 'nf_plan_preview_open',
         nf_plan: p.plan,
         nf_sku: p.sku,
@@ -519,7 +492,7 @@ Body:
 
     var wrapper = grid.closest('.nf-plans-grid') || grid.parentNode;
 
-    if (canTrack()) push({ event:'nf_plans_catalog_view' });
+    if (window.neuform.canTrack()) window.neuform.trackOnce('view.training_plans', 'nf_plans_catalog_view');
     document.addEventListener('click', onClick, { passive:false });
 
     scrubInternalNotes();
@@ -757,6 +730,30 @@ Body:
       }catch(_){}
     }
 
+    var FILTERS_KEY = 'nf.filters.training_plans.v1';
+
+    function hasUrlParams(){
+      try { return new URLSearchParams(window.location.search).toString().length > 0; }
+      catch(_){ return false; }
+    }
+
+    function saveFilterState(s){
+      try { sessionStorage.setItem(FILTERS_KEY, JSON.stringify(s)); } catch(_){}
+    }
+
+    function loadFilterState(){
+      try {
+        var raw = sessionStorage.getItem(FILTERS_KEY);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        return (obj && typeof obj === 'object') ? obj : null;
+      } catch(_){ return null; }
+    }
+
+    function clearFilterState(){
+      try { sessionStorage.removeItem(FILTERS_KEY); } catch(_){}
+    }
+
     function writeUI(s){
       if (searchEl) searchEl.value = s.q || '';
       if (catSel)   catSel.value   = s.cat || '';
@@ -824,14 +821,28 @@ Body:
     }
 
     function swapPage(newPage, dir){
+      var h = Math.ceil(track.getBoundingClientRect().height || 0);
+      var locked = false;
+      if (h > 0){
+        track.style.minHeight = h + 'px';
+        locked = true;
+      }
+      function unlockHeight(){
+        if (!locked) return;
+        locked = false;
+        track.style.minHeight = '';
+      }
+
       if (prefersReducedMotion){
         if (currentPageEl) removePageEl(currentPageEl);
         newPage.className = 'nf-page enter-to-center';
         track.appendChild(newPage);
         currentPageEl = newPage;
+        requestAnimationFrame(unlockHeight);
         return;
       }
 
+      var hadOld = !!currentPageEl;
       if (currentPageEl){
         currentPageEl.classList.remove('enter-from-right','enter-to-center','leave-to-left','leave-to-right');
         currentPageEl.classList.add(dir === 'prev' ? 'leave-to-right' : 'leave-to-left');
@@ -842,6 +853,7 @@ Body:
           if (killed) return;
           killed = true;
           removePageEl(old);
+          unlockHeight();
         }, 350);
 
         old.addEventListener('transitionend', function(e){
@@ -850,6 +862,7 @@ Body:
             killed = true;
             clearTimeout(killAfter);
             removePageEl(old);
+            unlockHeight();
           }
         }, { once:true });
       }
@@ -859,6 +872,9 @@ Body:
       newPage.classList.remove('enter-from-right');
       newPage.classList.add('enter-to-center');
       currentPageEl = newPage;
+      if (!hadOld){
+        requestAnimationFrame(function(){ setTimeout(unlockHeight, 180); });
+      }
     }
 
     function makePager(){
@@ -956,6 +972,8 @@ Body:
 
     function apply(replaceURL, dir){
       scrubInternalNotes();
+      grid.classList.add('is-updating');
+      grid.setAttribute('aria-busy','true');
 
       var s = readUI();
       syncClearButton(s);
@@ -997,6 +1015,13 @@ Body:
       updatePagerUI();
 
       fireViewItemList(pageItems.map(function(t){ return t.el; }));
+      saveFilterState({
+        q: s.q, cat: s.cat, days: s.days, equip: s.equip, sort: s.sort, p: state.page
+      });
+      requestAnimationFrame(function(){
+        grid.classList.remove('is-updating');
+        grid.removeAttribute('aria-busy');
+      });
     }
 
     var handleResize = debounce(function(){
@@ -1015,7 +1040,7 @@ Body:
       if (state.page > state.totalPages) state.page = state.totalPages;
 
       apply(true);
-    }, 180);
+    }, 140);
     window.addEventListener('resize', handleResize);
 
     var applyDebounced = debounce(function(){
@@ -1026,30 +1051,30 @@ Body:
     if (searchEl){ searchEl.addEventListener('input', applyDebounced); }
     if (catSel){
       catSel.addEventListener('change', function(){
-        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'category', nf_filter_value:catSel.value || '' });
+        if (window.neuform.canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'category', nf_filter_value:catSel.value || '' });
         state.page = 1;
-        apply(true);
+        applyDebounced();
       });
     }
     if (daysSel){
       daysSel.addEventListener('change', function(){
-        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'days_per_week', nf_filter_value:daysSel.value || '' });
+        if (window.neuform.canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'days_per_week', nf_filter_value:daysSel.value || '' });
         state.page = 1;
-        apply(true);
+        applyDebounced();
       });
     }
     if (equipSel){
       equipSel.addEventListener('change', function(){
-        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'equipment', nf_filter_value:equipSel.value || '' });
+        if (window.neuform.canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'equipment', nf_filter_value:equipSel.value || '' });
         state.page = 1;
-        apply(true);
+        applyDebounced();
       });
     }
     if (sortSel){
       sortSel.addEventListener('change', function(){
-        if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'sort', nf_filter_value:sortSel.value || '' });
+        if (window.neuform.canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'sort', nf_filter_value:sortSel.value || '' });
         state.page = 1;
-        apply(true);
+        applyDebounced();
       });
     }
 
@@ -1063,8 +1088,9 @@ Body:
       if (equipSel) equipSel.value = '';
       if (sortSel)  sortSel.value  = 'position';
 
-      if (canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'clear', nf_filter_value:'' });
+      if (window.neuform.canTrack()) push({ event:'nf_catalog_filter', nf_filter_key:'clear', nf_filter_value:'' });
       state.page = 1;
+      clearFilterState();
       apply(true);
     });
 
@@ -1076,7 +1102,11 @@ Body:
       apply(!!replaceURL);
     };
 
-    NF_PLANS.updateFromUrl(true);
+    var initial = hasUrlParams() ? getParams() : (loadFilterState() || getParams());
+    state.page = initial.p || initial.page || 1;
+    writeUI(initial);
+    syncClearButton(readUI());
+    apply(true);
   }
 
   if (document.readyState === 'loading'){
@@ -1093,6 +1123,8 @@ Body:
 
   window.addEventListener('pagehide', function(){
     try{ if (io && typeof io.disconnect === 'function') io.disconnect(); }catch(_){}
+    try{ window.removeEventListener('resize', handleResize); }catch(_){}
+    try{ window.removeEventListener('scroll', handleScrollDepth); }catch(_){}
   });
 
   /* ==========================
@@ -1117,7 +1149,7 @@ Body:
       doc.clientHeight, doc.scrollHeight, doc.offsetHeight
     );
 
-    if (!fullHeight) return;
+    if (!fullHeight || fullHeight <= viewport + 2) return;
 
     var depth = (scrollTop + viewport) / fullHeight * 100;
     if (!isFinite(depth)) return;
@@ -1128,8 +1160,7 @@ Body:
     nfScrollBuckets.forEach(function(pct){
       if (!nfScrollFired[pct] && depth >= pct){
         nfScrollFired[pct] = true;
-        if (!canTrack()) return;
-        push({
+          push({
           event: 'nf_plans_scroll_depth',
           nf_page: 'training_plans',
           nf_scroll_percent: pct

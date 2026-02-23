@@ -264,7 +264,7 @@ Embed 1:
 
   opacity:0;
   transform:translateX(12px);
-  transition:opacity .22s ease, transform .22s ease;
+  transition:opacity .14s ease;
 }
 
 .nf-page.enter-to-center{
@@ -388,6 +388,14 @@ Embed 1:
   color:#d3e2ee; /* brighter for better legibility */
   min-width:110px;
   text-align:center;
+}
+
+.nf-tiles.is-updating .nf-page-track,
+.nf-tiles.is-updating .nf-pager,
+.nf-tiles.is-updating .nf-pager .nf-prev,
+.nf-tiles.is-updating .nf-pager .nf-next{
+  pointer-events:none;
+  opacity:.94;
 }
 
 /* ==========================================
@@ -1396,23 +1404,14 @@ Embed 2:
 
       // GTM/GA4-friendly
       try{
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'nf_auto_plan_cta_click',
+        window.neuform.track('nf_auto_plan_cta_click', {
           nf_location: 'training_plans_featured',
           nf_dest: dest
         });
       }catch(_){}
 
       // optional gtag
-      if (typeof window.gtag === 'function'){
-        try{
-          window.gtag('event','nf_auto_plan_cta_click', {
-            nf_location: 'training_plans_featured',
-            nf_dest: dest
-          });
-        }catch(_){}
-      }
+
     }, { passive:true });
   }
 

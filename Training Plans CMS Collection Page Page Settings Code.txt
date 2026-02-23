@@ -5,8 +5,13 @@ Body:
 (function(){
   'use strict';
 
-  var dl = window.dataLayer = window.dataLayer || [];
-  function push(evt){ try{ dl.push(evt); }catch(_){} }
+  function push(evt){
+    if (!evt || !evt.event) return false;
+    var name = evt.event;
+    var payload = Object.assign({}, evt);
+    delete payload.event;
+    return window.neuform.track(name, payload);
+  }
 
   function toBool(v){
     if (v == null) return false;
@@ -152,11 +157,7 @@ Body:
       };
     });
 
-    if (typeof gtag === 'function') {
-      try { gtag('event', 'view_item_list', { items: gaItems }); } catch(_){}
-    } else {
-      push({ event: 'view_item_list', items: gaItems });
-    }
+    push({ event: 'view_item_list', items: gaItems });
   }
 
   var io;
@@ -268,15 +269,12 @@ Body:
         item_list_id: LIST_ID,
         item_list_name: LIST_NAME
       };
-      if (typeof gtag === 'function') {
-        try {
-          gtag('event', 'begin_checkout', {
-            items: [item],
-            currency: p.currency,
-            value: p.price || undefined
-          });
-        } catch(_){}
-      }
+      push({
+        event: 'begin_checkout',
+        items: [item],
+        currency: p.currency,
+        value: p.price || undefined
+      });
 
       push({
         event: 'nf_buy_click',
@@ -312,11 +310,7 @@ Body:
         item_list_name: LIST_NAME,
         currency: p.currency
       };
-      if (typeof gtag === 'function') {
-        try { gtag('event', 'select_item', { items: [item2] }); } catch(_){}
-      } else {
-        push({ event: 'select_item', items: [item2], nf_dest: dest });
-      }
+      push({ event: 'select_item', items: [item2], nf_dest: dest });
       push({
         event: 'nf_plan_preview_open',
         nf_plan: p.plan,
@@ -370,7 +364,7 @@ Body:
 
   function init(){
     if (!initialized){
-      push({ event: 'nf_plans_catalog_view' });
+      window.neuform.trackOnce('view.training_plans_cms', 'nf_plans_catalog_view');
       document.addEventListener('click', onClick, { passive: false });
 
       document.addEventListener('keydown', function(e){
@@ -472,8 +466,13 @@ Body:
 (function(){
   'use strict';
 
-  var dl = window.dataLayer = window.dataLayer || [];
-  function push(evt){ try{ dl.push(evt); }catch(_){} }
+  function push(evt){
+    if (!evt || !evt.event) return false;
+    var name = evt.event;
+    var payload = Object.assign({}, evt);
+    delete payload.event;
+    return window.neuform.track(name, payload);
+  }
 
   function toBool(v){
     if (v == null) return false;
@@ -616,14 +615,11 @@ Body:
   );
   if (!buttons.length) return;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
   var io = null;
   if ('IntersectionObserver' in window){
     io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        dl.push({
-          event: entry.isIntersecting ? 'nf_sticky_cta_show' : 'nf_sticky_cta_hide',
+        window.neuform.track(entry.isIntersecting ? 'nf_sticky_cta_show' : 'nf_sticky_cta_hide', {
           nf_component: 'plans_sticky_cta'
         });
       });
@@ -647,15 +643,12 @@ Body:
         (btn.textContent || '').trim() ||
         'Sticky CTA';
 
-      dl.push({
-        event: 'nf_buy_click',
+      window.neuform.track('nf_buy_click', {
         nf_source: 'sticky_cta',
         nf_label: label
       });
 
-      if (typeof gtag === 'function'){
-        try { gtag('event', 'begin_checkout'); } catch(_){}
-      }
+      window.neuform.track('begin_checkout');
     });
   });
 })();

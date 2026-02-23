@@ -128,8 +128,7 @@ Embed 1:
 
     // Optional analytics marker (no PII)
     safe(function () {
-      (window.dataLayer = window.dataLayer || []).push({
-        event: "nf_ap_unlock_redirect",
+      window.neuform.track('nf_ap_unlock_redirect', {
         nf_access_window_mins: 60,
         nf_access_until: untilISO
       });

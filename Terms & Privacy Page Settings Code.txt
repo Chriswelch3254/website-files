@@ -178,8 +178,7 @@ Body:
 <!-- NeuForm — Terms & Privacy Helpers -->
 <script>
 (function(){
-  var dl = window.dataLayer = window.dataLayer || [];
-  dl.push({ event: 'nf_terms_privacy_view' });
+  window.neuform.trackOnce('view.terms_privacy', 'nf_terms_privacy_view');
 
   var $  = function(s, r){ return (r || document).querySelector(s); };
   var $$ = function(s, r){ return Array.from((r || document).querySelectorAll(s)); };
@@ -234,7 +233,7 @@ Body:
           map[id].classList.add('active');
 
           if (!seen[id]) {
-            dl.push({ event: 'nf_toc_section_view', nf_section: id });
+            window.neuform.track('nf_toc_section_view', { nf_section: id });
             seen[id] = 1;
           }
         }
@@ -263,30 +262,27 @@ Body:
     var isDMCA = a.matches('[data-legal="dmca"], a[href*="dmca"]');
 
     if (isExternal){
-      dl.push({
-        event: 'nf_outbound_click',
+      window.neuform.track('nf_outbound_click', {
         nf_url: safeOutbound(href) || null,
         nf_context: 'terms_privacy'
       });
     }
 
     if (isMail){
-      dl.push({
-        event: 'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel: 'email',
         nf_email_domain: emailDomain(href)
       });
     }
 
     if (isTel){
-      dl.push({
-        event: 'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel: 'phone'
       });
     }
 
     if (isDMCA){
-      dl.push({ event: 'nf_dmca_click', nf_dest: safeOutbound(href) || href });
+      window.neuform.track('nf_dmca_click', { nf_dest: safeOutbound(href) || href });
     }
   }, { passive: true });
 
@@ -337,7 +333,7 @@ Body:
         localStorage.setItem('nf.cookie.ok', granted ? '1' : '0');
       } catch(e){}
 
-      dl.push({ event: 'nf_cookie_pref_update', nf_granted: !!granted, nf_source: 'privacy_center_fallback' });
+      window.neuform.track('nf_cookie_pref_update', { nf_granted: !!granted, nf_source: 'privacy_center_fallback' });
     }
 
     function updateConsent(granted){
@@ -354,7 +350,7 @@ Body:
 
       if (act === 'open-center'){
         if (center) center.hidden = false;
-        dl.push({ event: 'nf_privacy_center_open' });
+        window.neuform.track('nf_privacy_center_open');
         return;
       }
       if (act === 'accept-all'){
@@ -378,7 +374,7 @@ Body:
         var center = $('#privacy-center');
         if (center) {
           center.hidden = false;
-          dl.push({ event: 'nf_privacy_center_open' });
+          window.neuform.track('nf_privacy_center_open');
         }
       });
     }
@@ -391,7 +387,7 @@ Body:
 
     printBtn.addEventListener('click', function(e){
       e.preventDefault();
-      dl.push({ event: 'nf_print_click', nf_page: 'terms_privacy' });
+      window.neuform.track('nf_print_click', { nf_page: 'terms_privacy' });
       try { window.print(); } catch(e){}
     });
   })();
@@ -413,8 +409,7 @@ Body:
     t.setAttribute('tabindex','0');
 
     function goMail(){
-      dl.push({
-        event:'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel:'email',
         nf_email_domain: String(d || '').toLowerCase().trim() || null
       });
