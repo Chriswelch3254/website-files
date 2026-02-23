@@ -40,8 +40,7 @@ Body:
   if (window.__NF_ABOUT_HELPERS__) return;
   window.__NF_ABOUT_HELPERS__ = true;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-  dl.push({ event: 'nf_about_view' });
+  window.neuform.trackOnce('view.about', 'nf_about_view');
 
   var $  = function(s, r){ return (r||document).querySelector(s); };
   var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
@@ -78,7 +77,7 @@ Body:
       entries.forEach(function(entry){
         if (!seen && entry.isIntersecting){
           seen = true; io.disconnect();
-          dl.push({ event: evt });
+          window.neuform.track(evt);
         }
       });
     }, { threshold: 0.3 }).observe(el);
@@ -99,15 +98,15 @@ Body:
       var expand = e.target.closest && e.target.closest('[data-proof-expand]');
       var star = e.target.closest && e.target.closest('[data-star-rating]'); // optional
 
-      if (next){ dl.push({ event:'nf_testimonial_nav', nf_dir:'next' }); }
-      if (prev){ dl.push({ event:'nf_testimonial_nav', nf_dir:'prev' }); }
+      if (next){ window.neuform.track('nf_testimonial_nav', { nf_dir:'next' }); }
+      if (prev){ window.neuform.track('nf_testimonial_nav', { nf_dir:'prev' }); }
       if (expand){
         var tid = expand.getAttribute('data-proof-expand') || null;
-        dl.push({ event:'nf_testimonial_expand', nf_id: tid });
+        window.neuform.track('nf_testimonial_expand', { nf_id: tid });
       }
       if (star){
         var val = Number(star.getAttribute('data-star-rating')||0) || 0;
-        dl.push({ event:'nf_star_rating_view', nf_value: val, nf_context:'about' });
+        window.neuform.track('nf_star_rating_view', { nf_value: val, nf_context:'about' });
       }
     }, { passive:true });
   }
@@ -121,26 +120,26 @@ Body:
     v.addEventListener('play', function(){
       if(!started){
         started=true;
-        dl.push({ event:'nf_video_start', nf_video:id, nf_page:'about' });
+        window.neuform.track('nf_video_start', { nf_video:id, nf_page:'about' });
       }
     });
     v.addEventListener('timeupdate', function(){
       var p = (v.currentTime / Math.max(1, v.duration)) * 100;
       if(!quartiles[25] && p>=25){
         quartiles[25]=true;
-        dl.push({ event:'nf_video_q25', nf_video:id, nf_page:'about' });
+        window.neuform.track('nf_video_q25', { nf_video:id, nf_page:'about' });
       }
       if(!quartiles[50] && p>=50){
         quartiles[50]=true;
-        dl.push({ event:'nf_video_q50', nf_video:id, nf_page:'about' });
+        window.neuform.track('nf_video_q50', { nf_video:id, nf_page:'about' });
       }
       if(!quartiles[75] && p>=75){
         quartiles[75]=true;
-        dl.push({ event:'nf_video_q75', nf_video:id, nf_page:'about' });
+        window.neuform.track('nf_video_q75', { nf_video:id, nf_page:'about' });
       }
     });
     v.addEventListener('ended', function(){
-      dl.push({ event:'nf_video_complete', nf_video:id, nf_page:'about' });
+      window.neuform.track('nf_video_complete', { nf_video:id, nf_page:'about' });
     });
   }
   wireHTMLVideo('about-video'); // call this if you use a native video element
@@ -157,8 +156,7 @@ Body:
     var meta = outboundMetaFromHref(href);
 
     if (social){
-      dl.push({
-        event:'nf_social_follow',
+      window.neuform.track('nf_social_follow', {
         nf_network: social,
         nf_dest: meta ? meta.url : (href ? href : null),
         nf_context:'about'
@@ -167,8 +165,7 @@ Body:
     }
 
     if (meta){
-      dl.push({
-        event:'nf_outbound_click',
+      window.neuform.track('nf_outbound_click', {
         nf_url: meta.url,     // hostname + pathname only
         nf_host: meta.host,
         nf_path: meta.path,
@@ -184,7 +181,7 @@ Body:
     if (!node) return;
     var dest = node.getAttribute('data-about-cta');
     var href = node.tagName === 'A' ? node.getAttribute('href') : (node.getAttribute('data-href') || null);
-    dl.push({ event:'nf_about_cta_click', nf_dest: dest, nf_href: href });
+    window.neuform.track('nf_about_cta_click', { nf_dest: dest, nf_href: href });
   }, { passive:true });
 
   /** 6) Optional: reveal “Reply within 24h” note after a short dwell **/

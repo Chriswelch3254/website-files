@@ -702,22 +702,13 @@ Embed 2:
       var dest = card.getAttribute('href') || '/automatic-plan';
 
       try{
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'nf_auto_plan_cta_click',
+        window.neuform.track('nf_auto_plan_cta_click', {
           nf_location: 'home_hero_below',
           nf_dest: dest
         });
       }catch(_){}
 
-      if (typeof window.gtag === 'function'){
-        try{
-          window.gtag('event','nf_auto_plan_cta_click', {
-            nf_location: 'home_hero_below',
-            nf_dest: dest
-          });
-        }catch(_){}
-      }
+
     }, { passive:true });
   }
 

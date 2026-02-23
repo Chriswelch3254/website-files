@@ -38,16 +38,6 @@ Body:
   if (window.__NF_THANKYOU_HELPERS__) return;
   window.__NF_THANKYOU_HELPERS__ = true;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
   /* =====================================================
      A) Lead Conversion (FALLBACK ONLY; strict + deduped)
      - This page is purchase-themed. Lead conversion may only fire here
@@ -150,17 +140,16 @@ Body:
     if (!once(dedupeKey)) return;
 
     // Fire canonical conversion event (no PII)
-    if (canTrack()) dl.push(Object.assign({
-      event: 'nf_lead_submit',
+    if (window.neuform.canTrack()) window.neuform.track('nf_lead_submit', Object.assign({
       nf_lead_id: leadId,
       nf_method: 'contact_form',
       nf_source: 'thankyou_fallback'
     }, meta || {}));
 
     // GA4 conversion
-    if (canTrack() && typeof gtag === 'function') {
+    if (window.neuform.canTrack()) {
       try {
-        gtag('event', 'generate_lead', {
+        window.neuform.track('generate_lead', {
           lead_id: leadId,
           method: 'contact_form',
 
@@ -174,9 +163,9 @@ Body:
     }
 
     // Meta Pixel conversion (dedupe via eventID)
-    if (canTrack() && typeof fbq === 'function') {
+    if (window.neuform.canTrack()) {
       try {
-        fbq('track', 'Lead', { lead_id: leadId }, { eventID: leadId });
+        window.neuform.track('Lead', { lead_id: leadId, eventID: leadId });
       } catch(e) {}
     }
 
@@ -195,7 +184,7 @@ Body:
   /* =====================================================
      B) Purchase thank-you page viewed
   ====================================================== */
-  if (canTrack()) dl.push({ event: 'nf_purchase_thankyou_view' });
+  if (window.neuform.canTrack()) window.neuform.trackOnce('view.purchase_thankyou', 'nf_purchase_thankyou_view');
 
   /* =====================================================
      C) Delegated click tracking for Thank You CTAs
@@ -209,7 +198,7 @@ Body:
     var node = closestAction(e.target);
     if (!node) return;
 
-    if (!canTrack()) return;
+    if (!window.neuform.canTrack()) return;
 
     var act   = node.getAttribute('data-thanks-action');
     var plan  = node.getAttribute('data-plan') || null;
@@ -220,20 +209,20 @@ Body:
 
     switch(act){
       case 'download':
-        dl.push({ event: 'nf_download_click', nf_plan: plan, nf_file: file });
+        window.neuform.track('nf_download_click', { nf_plan: plan, nf_file: file });
         break;
 
       case 'open':
-        dl.push({ event: 'nf_thankyou_open', nf_dest: dest });
+        window.neuform.track('nf_thankyou_open', { nf_dest: dest });
         break;
 
       case 'add_pack':
-        dl.push({ event: 'nf_post_purchase_nudge', nf_attach_pack: true, nf_pack: pack || 'warmup_stretch' });
+        window.neuform.track('nf_post_purchase_nudge', { nf_attach_pack: true, nf_pack: pack || 'warmup_stretch' });
         try { sessionStorage.setItem('nf.attach_pack', '1'); } catch(e){}
         break;
 
       case 'support':
-        dl.push({ event: 'nf_support_click', nf_channel: node.getAttribute('data-channel') || 'email' });
+        window.neuform.track('nf_support_click', { nf_channel: node.getAttribute('data-channel') || 'email' });
         break;
 
       case 'copy':
@@ -250,7 +239,7 @@ Body:
           try {
             navigator.clipboard.writeText(val);
             // ✅ Only length is tracked (no copied value)
-            dl.push({ event: 'nf_copy', nf_field: field || 'unknown', nf_len: String(val).length });
+            window.neuform.track('nf_copy', { nf_field: field || 'unknown', nf_len: String(val).length });
           } catch(e){}
         })();
         break;

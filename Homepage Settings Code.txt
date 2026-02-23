@@ -107,7 +107,6 @@ Body:
     else document.addEventListener('DOMContentLoaded', fn);
   }
 
-  var dl = window.dataLayer = window.dataLayer || [];
   window.neuform = window.neuform || {};
 
   // Prevent double-binding if this embed is pasted twice
@@ -219,11 +218,14 @@ Body:
       );
       if (!fullHeight) return;
 
-      var depth = (window.scrollY + window.innerHeight) / fullHeight;
+      var viewport = window.innerHeight || doc.clientHeight || 0;
+      if (fullHeight <= viewport + 2) return;
 
-      if (!fired25 && depth>0.25){ dl.push({event:'nf_scroll_25'}); fired25=true; }
-      if (!fired50 && depth>0.5){ dl.push({event:'nf_scroll_50'}); fired50=true; }
-      if (!fired75 && depth>0.75){ dl.push({event:'nf_scroll_75'}); fired75=true; }
+      var depth = (window.scrollY + viewport) / fullHeight;
+
+      if (!fired25 && depth>0.25){ window.neuform.track('nf_scroll_25'); fired25=true; }
+      if (!fired50 && depth>0.5){ window.neuform.track('nf_scroll_50'); fired50=true; }
+      if (!fired75 && depth>0.75){ window.neuform.track('nf_scroll_75'); fired75=true; }
     }, { passive:true });
   }
 
@@ -246,11 +248,11 @@ Body:
 
       // ✅ Never log raw email/phone values
       if (lower.indexOf('mailto:') === 0){
-        dl.push({ event:'nf_support_click', nf_channel:'email', nf_email_domain: emailDomain(href) });
+        window.neuform.track('nf_support_click', { nf_channel:'email', nf_email_domain: emailDomain(href) });
         return;
       }
       if (lower.indexOf('tel:') === 0){
-        dl.push({ event:'nf_support_click', nf_channel:'phone' });
+        window.neuform.track('nf_support_click', { nf_channel:'phone' });
         return;
       }
 
@@ -259,7 +261,7 @@ Body:
       if (!u.hostname || u.hostname === location.hostname) return;
 
       // ✅ Sanitize external URL logging (no query/hash)
-      dl.push({ event:'nf_outbound_click', nf_host:u.hostname, nf_path:u.pathname });
+      window.neuform.track('nf_outbound_click', { nf_host:u.hostname, nf_path:u.pathname });
     });
   }
 
@@ -291,7 +293,7 @@ Body:
     trackScrollDepth();
     trackOutbound();
 
-    dl.push({event:'nf_page_loaded', nf_path: location.pathname });
+    window.neuform.track('nf_page_loaded', { nf_path: location.pathname });
   });
 
 })();
@@ -307,9 +309,12 @@ Body:
   window.__NF_HOME_PLANS_TRACKING__ = true;
 
   // ---------- utils / setup ----------
-  var dl = window.dataLayer = window.dataLayer || [];
   function push(evt){
-    try{ dl.push(evt); }catch(_){}
+    if (!evt || !evt.event) return false;
+    var name = evt.event;
+    var payload = Object.assign({}, evt);
+    delete payload.event;
+    return window.neuform.track(name, payload);
   }
   function toBool(v){
     if (v == null) return false;
@@ -374,11 +379,7 @@ Body:
         currency: p.currency
       };
     });
-    if (typeof gtag === 'function') {
-      try { gtag('event', 'view_item_list', { items: gaItems }); } catch(_){}
-    } else {
-      push({ event: 'view_item_list', items: gaItems });
-    }
+    push({ event: 'view_item_list', items: gaItems });
   }
 
   var io;
@@ -438,11 +439,7 @@ Body:
         item_list_name: LIST_NAME,
         currency: p.currency
       };
-      if (typeof gtag === 'function') {
-        try { gtag('event', 'select_item', { items: [item] }); } catch(_){}
-      } else {
-        push({ event: 'select_item', items: [item], nf_dest: dest });
-      }
+      push({ event: 'select_item', items: [item], nf_dest: dest });
       push({
         event: 'nf_plan_preview_open',
         nf_plan: p.plan,
@@ -494,7 +491,7 @@ Body:
 
   function init(){
     if (!initialized){
-      push({ event: 'nf_plans_catalog_view' });
+      window.neuform.trackOnce('view.home_featured_plans', 'nf_plans_catalog_view');
       // ✅ no passive click flag (not needed; avoids future footgun)
       document.addEventListener('click', onClick);
 

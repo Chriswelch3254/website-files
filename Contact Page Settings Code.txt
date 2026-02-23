@@ -39,17 +39,7 @@ Body:
   if (window.neuform.__NF_CONTACT_HELPERS__) return;
   window.neuform.__NF_CONTACT_HELPERS__ = true;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
-  if (canTrack()) dl.push({ event: 'nf_contact_view' });
+  if (window.neuform.canTrack()) window.neuform.trackOnce('view.contact', 'nf_contact_view');
 
   var $ = function(s, r){ return (r||document).querySelector(s); };
 
@@ -213,8 +203,7 @@ Body:
     var errs = validate();
     if (errs.length){
       say(errs[0]);
-      if (canTrack()) dl.push({
-        event:'nf_lead_error',
+      if (window.neuform.canTrack()) window.neuform.track('nf_lead_error', {
         nf_error:'validation',
         nf_fields:{
           name: !!nameEl,
@@ -258,7 +247,7 @@ Body:
     // IMPORTANT:
     // Do NOT fire GA4 generate_lead here (avoid double counting / false positives).
     // Fire conversion on the THANK YOU page only.
-    if (canTrack()) dl.push(Object.assign({ event:'nf_lead_submit_attempt' }, meta));
+    if (window.neuform.canTrack()) window.neuform.track('nf_lead_submit_attempt', Object.assign({}, meta));
     setPending(meta);
   }, { capture: true });
 
@@ -277,7 +266,7 @@ Body:
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a) return;
 
-    if (!canTrack()) return;
+    if (!window.neuform.canTrack()) return;
 
     var hrefAttr = a.getAttribute('href') || '';
     var hrefLower = hrefAttr.toLowerCase();
@@ -288,23 +277,20 @@ Body:
       var dom = '';
       if (addr && addr.indexOf('@') > -1) dom = String(addr.split('@').pop() || '').toLowerCase();
 
-      dl.push({
-        event:'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel:'email',
         nf_email_domain: dom || null
       });
 
     } else if (hrefLower.indexOf('tel:') === 0) {
       // ✅ NO RAW PHONE IN dataLayer
-      dl.push({
-        event:'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel:'phone'
       });
 
     } else if (a.hostname && a.hostname !== location.hostname) {
       var safe = safeOutboundUrl(a);
-      dl.push({
-        event:'nf_outbound_click',
+      window.neuform.track('nf_outbound_click', {
         nf_url: safe || null,
         nf_host: a.hostname || null,
         nf_path: a.pathname || null,
@@ -334,7 +320,7 @@ Body:
     copyBtn.addEventListener('click', function(){
       try {
         navigator.clipboard.writeText(supportEmail);
-        if (canTrack()) dl.push({ event:'nf_copy', nf_field:'support_email' });
+        if (window.neuform.canTrack()) window.neuform.track('nf_copy', { nf_field:'support_email' });
       } catch(e){}
       say('Support email copied.');
     });

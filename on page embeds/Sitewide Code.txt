@@ -551,6 +551,12 @@ Footer:
   if (nf.__NF_FOOTER_CORE_BOOTED__) return;
   nf.__NF_FOOTER_CORE_BOOTED__ = true;
 
+  /* ---------- NeuForm Web Module Standard v1 ----------
+     - Emit analytics via window.neuform.track / window.neuform.trackOnce only
+     - Require idempotent boot/root guards for page modules
+     - Disconnect long-lived observers/listeners on pagehide
+  -------------------------------------------------------- */
+
   /* ---------- Safe storage + dataLayer ---------- */
   nf.storage = nf.storage || {};
   nf.storage.get = nf.storage.get || function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } };
@@ -564,6 +570,41 @@ Footer:
       return true;
     } catch(e){
       return false;
+    }
+  };
+
+  window.neuform.canTrack = window.neuform.canTrack || function(){
+    try {
+      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
+    } catch(e){
+      return false;
+    }
+  };
+
+  window.neuform.track = window.neuform.track || function(eventName, payload){
+    if (!eventName || typeof eventName !== "string") return false;
+    if (!window.neuform.canTrack()) return false;
+
+    var obj = Object.assign({}, payload || {});
+    obj.event = eventName;
+
+    try {
+      (window.dataLayer = window.dataLayer || []).push(obj);
+      return true;
+    } catch(e){
+      return false;
+    }
+  };
+
+  window.neuform.trackOnce = window.neuform.trackOnce || function(key, eventName, payload){
+    var tKey = "nf.trackOnce." + String(key == null ? "" : key);
+    try {
+      if (sessionStorage.getItem(tKey)) return false;
+      var ok = window.neuform.track(eventName, payload);
+      if (ok) sessionStorage.setItem(tKey, "1");
+      return ok;
+    } catch(e){
+      return window.neuform.track(eventName, payload);
     }
   };
 

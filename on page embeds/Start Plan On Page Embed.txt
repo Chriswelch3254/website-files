@@ -753,7 +753,7 @@
             safe(function(){ sessionStorage.setItem("nf_sp_focus_intake", "1"); });
 
             safe(function(){
-              (window.dataLayer = window.dataLayer || []).push({ event:"nf_start_plan_access_detected" });
+              window.neuform.track('nf_start_plan_access_detected');
             });
 
             setTimeout(function(){

@@ -33,15 +33,14 @@ Head:
 <!-- Analytics helpers: mark reviews view + simple review events -->
 <script>
   (function(){
-    var dl = window.dataLayer = window.dataLayer || [];
     // page view marker for audiences
-    dl.push({ event: 'nf_reviews_view' });
+    window.neuform.trackOnce('view.reviews', 'nf_reviews_view');
 
     // Optional helpers you can bind to UI
     window.NFReviews = {
-      start: function(plan){ dl.push({ event:'nf_review_start', nf_plan: plan || null }); },
+      start: function(plan){ window.neuform.track('nf_review_start', { nf_plan: plan || null }); },
       submit: function(plan, rating){
-        dl.push({ event:'nf_review_submit', nf_plan: plan || null, nf_rating: rating || null });
+        window.neuform.track('nf_review_submit', { nf_plan: plan || null, nf_rating: rating || null });
       }
     };
   })();
@@ -52,7 +51,6 @@ Body:
 <!-- NeuForm — Reviews Page Helpers -->
 <script>
 (function(){
-  var dl = window.dataLayer = window.dataLayer || [];
 
   var $  = function(s, r){ return (r||document).querySelector(s); };
   var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
@@ -178,8 +176,7 @@ Body:
         if (!id || seen.has(id)) return;
         seen.add(id);
 
-        dl.push({
-          event: 'nf_review_card_impression',
+        window.neuform.track('nf_review_card_impression', {
           nf_review_id: id,
           // ✅ Removed nf_name (PII)
           nf_plan: el.getAttribute('data-plan') || null,
@@ -196,12 +193,12 @@ Body:
   document.addEventListener('click', function(e){
     var f = e.target.closest && e.target.closest('[data-review-filter]');
     if (f){
-      dl.push({ event:'nf_review_filter', nf_filter: f.getAttribute('data-review-filter') || '(unknown)' });
+      window.neuform.track('nf_review_filter', { nf_filter: f.getAttribute('data-review-filter') || '(unknown)' });
       return;
     }
     var s = e.target.closest && e.target.closest('[data-review-sort]');
     if (s){
-      dl.push({ event:'nf_review_sort', nf_sort: s.getAttribute('data-review-sort') || '(unknown)' });
+      window.neuform.track('nf_review_sort', { nf_sort: s.getAttribute('data-review-sort') || '(unknown)' });
     }
   }, { passive:true });
 
@@ -218,8 +215,7 @@ Body:
         last = q;
 
         var m = qMeta(q);
-        dl.push({
-          event:'nf_review_search',
+        window.neuform.track('nf_review_search', {
           // ✅ Removed nf_query (can contain PII)
           nf_len: m.len,
           nf_empty: m.empty,
@@ -233,8 +229,7 @@ Body:
       if (e.key === 'Enter'){
         var q = (input.value || '').trim();
         var m = qMeta(q);
-        dl.push({
-          event:'nf_review_search',
+        window.neuform.track('nf_review_search', {
           nf_len: m.len,
           nf_empty: m.empty,
           nf_has_at: m.has_at,
@@ -253,7 +248,7 @@ Body:
     if (!host) return;
     var val = Number(star.getAttribute('data-star') || 0);
     if (val){
-      dl.push({ event:'nf_review_star_select', nf_stars: val });
+      window.neuform.track('nf_review_star_select', { nf_stars: val });
     }
   }, { passive:true });
 
@@ -276,8 +271,7 @@ Body:
       var stars = Number(starsEl ? starsEl.value : 0) || null;
       var quoteLen = quoteEl ? String(quoteEl.value || '').trim().length : null;
 
-      dl.push({
-        event:'nf_review_submit',
+      window.neuform.track('nf_review_submit', {
         nf_review_id: getReviewId(),
         nf_plan: plan,
         nf_stars: stars,
@@ -293,7 +287,7 @@ Body:
     var btn = e.target.closest && e.target.closest('[data-review-submit]');
     if (!btn) return;
     // Button-only submission (non-form), emit a generic event
-    dl.push({ event:'nf_review_submit_click' });
+    window.neuform.track('nf_review_submit_click');
   }, { passive:true });
 
   // ===== 5) Helpful / unhelpful votes on individual reviews =====
@@ -303,7 +297,7 @@ Body:
     var card = btn.closest('.nf-review-card');
     var id   = card ? (card.getAttribute('data-id') || card.id || null) : null;
     var val  = btn.getAttribute('data-review-helpful') || 'yes';
-    dl.push({ event:'nf_review_helpful', nf_review_id: id, nf_value: val });
+    window.neuform.track('nf_review_helpful', { nf_review_id: id, nf_value: val });
     // Optional: mark locally to prevent double voting
     try { if (id) localStorage.setItem('nf.help.'+id, val); } catch(_){}
   }, { passive:true });
@@ -319,8 +313,7 @@ Body:
     a.setAttribute('target','_blank');
     a.setAttribute('rel','noopener noreferrer');
 
-    dl.push({
-      event: 'nf_outbound_click',
+    window.neuform.track('nf_outbound_click', {
       nf_url: meta.url,       // hostname + pathname (no query/hash)
       nf_host: meta.host,
       nf_path: meta.path,
@@ -335,8 +328,7 @@ Body:
 
     var meta = outboundMetaFromHref(s.getAttribute('href')) || null;
 
-    dl.push({
-      event:'nf_social_follow',
+    window.neuform.track('nf_social_follow', {
       nf_network: s.getAttribute('data-social'),
       nf_dest: meta ? meta.url : (s.getAttribute('href') || null),
       nf_context:'reviews'

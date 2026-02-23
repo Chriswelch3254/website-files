@@ -36,16 +36,12 @@ Head:
   (function(){
     "use strict";
 
-    var dl = window.dataLayer = window.dataLayer || [];
-
     // Idempotent + resilient: no self-references like NFTools.track
     var api = window.NFTools = window.NFTools || {};
     api.__v = api.__v || "revG";
 
     api.track = api.track || function(action, detail){
-      // Prevent detail from overwriting event name
-      var payload = Object.assign({}, detail || {}, { event: action });
-      try { dl.push(payload); } catch(_){}
+      window.neuform.track(action, detail || {});
     };
 
     // Convenience wrappers you can call from onclick handlers
@@ -62,7 +58,7 @@ Head:
     // Mark page view (deduped)
     if (!window.__NF_TOOLS_VIEW_FIRED__) {
       window.__NF_TOOLS_VIEW_FIRED__ = true;
-      dl.push({ event: 'nf_tools_view' });
+      window.neuform.track('nf_tools_view');
     }
   })();
 </script>
@@ -694,8 +690,6 @@ Body:
   if (window.__NF_TOOLS_HUB_HELPERS__) return;
   window.__NF_TOOLS_HUB_HELPERS__ = "revG";
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
@@ -706,11 +700,7 @@ Body:
         return;
       }
     } catch(_){}
-    try{
-      var payload = Object.assign({}, detail || {});
-      payload.event = action;
-      dl.push(payload);
-    } catch(_){}
+    window.neuform.track(action, detail || {});
   }
 
   function parseUrl(href){

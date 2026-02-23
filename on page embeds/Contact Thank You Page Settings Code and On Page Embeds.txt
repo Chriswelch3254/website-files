@@ -52,16 +52,6 @@ Head:
   if (window.neuform.__NF_CONTACT_TY_LEAD__) return;
   window.neuform.__NF_CONTACT_TY_LEAD__ = true;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
   function qp(n) {
     try { return new URLSearchParams(window.location.search).get(n) || ""; }
     catch (e) { return ""; }
@@ -186,9 +176,9 @@ Head:
   ssDel("nf.leadMeta");
 
   // GA4: generate_lead
-  if (canTrack() && typeof gtag === "function") {
+  if (window.neuform.canTrack()) {
     try {
-      gtag("event", "generate_lead", {
+      window.neuform.track('generate_lead', {
         lead_id: leadId,
         method: "contact_form",
         utm_source: utm.utm_source || null,
@@ -207,9 +197,9 @@ Head:
   }
 
   // Meta Pixel: Lead
-  if (canTrack() && typeof fbq === "function") {
+  if (window.neuform.canTrack()) {
     try {
-      fbq("track", "Lead", {
+      window.neuform.track('Lead', {
         lead_id: leadId,
         utm_source: utm.utm_source || null,
         utm_medium: utm.utm_medium || null,
@@ -225,8 +215,7 @@ Head:
   }
 
   // Custom dataLayer event for QA/retargeting (single authoritative fire)
-  if (canTrack()) dl.push({
-    event: "nf_lead_submit",
+  if (window.neuform.canTrack()) window.neuform.track('nf_lead_submit', {
     nf_lead_id: leadId,
     nf_method: "contact_form",
 
@@ -256,18 +245,8 @@ Body:
   if (window.neuform.__NF_CONTACT_TY_HELPERS__) return;
   window.neuform.__NF_CONTACT_TY_HELPERS__ = true;
 
-  var dl = window.dataLayer = window.dataLayer || [];
-
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function" && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
   // 1) Mark page view
-  if (canTrack()) dl.push({ event: 'nf_contact_thanks_view' });
+  if (window.neuform.canTrack()) window.neuform.trackOnce('view.contact_thanks', 'nf_contact_thanks_view');
 
   // ===== Helper: domain-only extraction (no raw email logged) =====
   function emailDomain(v){
@@ -299,7 +278,7 @@ Body:
     var node = closestAction(e.target);
     if (!node) return;
 
-    if (!canTrack()) return;
+    if (!window.neuform.canTrack()) return;
 
     var act  = node.getAttribute('data-cty-action');
     var dest = node.getAttribute('data-dest') || (node.tagName === 'A' ? node.getAttribute('href') : null);
@@ -309,24 +288,23 @@ Body:
 
     switch(act){
       case 'open':
-        dl.push({ event:'nf_cty_open', nf_dest: dest });
+        window.neuform.track('nf_cty_open', { nf_dest: dest });
         break;
 
       case 'social':
-        dl.push({ event:'nf_social_follow', nf_network: net, nf_dest: dest });
+        window.neuform.track('nf_social_follow', { nf_network: net, nf_dest: dest });
         break;
 
       case 'email':
         // ✅ NO RAW EMAIL IN dataLayer
-        dl.push({
-          event:'nf_support_click',
+        window.neuform.track('nf_support_click', {
           nf_channel:'email',
           nf_email_domain: emailDomain(mail)
         });
         break;
 
       case 'download':
-        dl.push({ event:'nf_download_click', nf_file: file, nf_context:'contact_thanks' });
+        window.neuform.track('nf_download_click', { nf_file: file, nf_context:'contact_thanks' });
         break;
     }
   }, { passive:true });
@@ -334,25 +312,24 @@ Body:
   // 3) Tiny API if you prefer direct calls from HTML
   window.NFContactTY = {
     open: function(dest){
-      if (!canTrack()) return;
-      dl.push({ event:'nf_cty_open', nf_dest: dest||null });
+      if (!window.neuform.canTrack()) return;
+      window.neuform.track('nf_cty_open', { nf_dest: dest||null });
     },
     social: function(net, dest){
-      if (!canTrack()) return;
-      dl.push({ event:'nf_social_follow', nf_network: net||null, nf_dest: dest||null });
+      if (!window.neuform.canTrack()) return;
+      window.neuform.track('nf_social_follow', { nf_network: net||null, nf_dest: dest||null });
     },
     email: function(address){
-      if (!canTrack()) return;
+      if (!window.neuform.canTrack()) return;
       // ✅ NO RAW EMAIL IN dataLayer
-      dl.push({
-        event:'nf_support_click',
+      window.neuform.track('nf_support_click', {
         nf_channel:'email',
         nf_email_domain: emailDomain(address)
       });
     },
     download: function(file){
-      if (!canTrack()) return;
-      dl.push({ event:'nf_download_click', nf_file: file||null, nf_context:'contact_thanks' });
+      if (!window.neuform.canTrack()) return;
+      window.neuform.track('nf_download_click', { nf_file: file||null, nf_context:'contact_thanks' });
     }
   };
 

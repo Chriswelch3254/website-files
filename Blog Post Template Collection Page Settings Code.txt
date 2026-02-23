@@ -42,17 +42,6 @@ Update:
 <script>
 (function(){
   // ---------- dataLayer ----------
-  var dl = window.dataLayer = window.dataLayer || [];
-  function push(evt){ try{ dl.push(evt); }catch(_){} }
-
-  function canTrack(){
-    try{
-      return !!(window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function' && window.neuform.consent.isGranted());
-    }catch(_){
-      return false;
-    }
-  }
-
   // ---------- helpers ----------
   var $  = (s,el)=> (el||document).querySelector(s);
   var $$ = (s,el)=> Array.from((el||document).querySelectorAll(s));
@@ -370,9 +359,8 @@ Update:
       btn.setAttribute('aria-label', ctaLabel);
 
       btn.addEventListener('click', function(){
-        if (!canTrack()) return;
-        push({
-          event:'blog_cta_click',
+        if (!window.neuform.canTrack()) return;
+        window.neuform.track('blog_cta_click', {
           blog_slug:slug,
           blog_title:title,
           cta_label:ctaLabel,
@@ -420,8 +408,7 @@ Update:
   })();
 
   // ---------- analytics ----------
-  if (canTrack()) push({
-    event: 'page_context',
+  if (window.neuform.canTrack()) window.neuform.track('page_context', {
     page_type: 'blog_article',
     blog: {
       title, slug, primary_category: primaryCat, secondary_category: secondaryCat,
