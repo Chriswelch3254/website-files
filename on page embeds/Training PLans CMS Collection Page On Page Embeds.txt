@@ -1,0 +1,1517 @@
+Training PLans CMS Collection Page On Page Embeds
+Embed 1:
+<style>
+/* ==========================================
+   NeuForm Premium Card v6.0.0 — Plan CMS Page
+   • Aligns styling/tokens with Training Plans catalog v6.0.0
+   • Bullet clamping fix (no conflicting display rules)
+   • Tag layout improved (less truncation)
+   • Reduced-motion safe transitions
+   ========================================== */
+
+/* ===== Design tokens ===== */
+:root{
+  --nf-bg:#0b0f12;
+  --nf-surface:#0f1418;
+  --nf-surface-2:#0c1216;
+  --nf-ink:#e9f3f7; --nf-muted:#9fb4c2;
+  --nf-blue:#3498db;
+
+  --blue-08:rgba(52,152,219,.08);
+  --blue-10:rgba(52,152,219,.10);
+  --blue-12:rgba(52,152,219,.12);
+  --blue-20:rgba(52,152,219,.20);
+  --blue-24:rgba(52,152,219,.24);
+  --blue-30:rgba(52,152,219,.30);
+  --blue-35:rgba(52,152,219,.35);
+  --blue-45:rgba(52,152,219,.45);
+  --blue-55:rgba(52,152,219,.55);
+
+  --nf-line:#1a2a33;
+  --nf-shadow:0 8px 20px rgba(0,0,0,.36);
+  --nf-shadow-hover:0 12px 28px rgba(0,0,0,.46);
+  --nf-radius:20px;
+
+  --title-fs: clamp(19px, 1.6vw, 22px);
+  --body-fs:  clamp(14px, 1.05vw, 15px);
+  --title-lh:1.22; --body-lh:1.5;
+
+  --stack-8:8px; --stack-10:10px; --stack-12:12px;
+  --gap-md:24px; --gap-lg:24px; --gap-xl:24px;
+
+  /* slightly tighter, still premium */
+  --card-pad:20px;
+  --card-minh:390px;
+
+  --chip-size:36px; --chip-radius:12px;
+
+  /* TAGS: tuned for long labels */
+  --tag-h:28px;
+  --tag-fs:11px;      /* slightly smaller for long labels */
+  --tag-pad-x:4px;    /* tighter padding to reduce truncation */
+
+  /* allow an extra line per bullet to reduce truncation */
+  --bullet-lines:3;
+
+  /* bullet dot indent (for absolute-position bullet glyph) */
+  --bullet-indent:14px;
+}
+
+/* ===== Equal-width grid ===== */
+.nf-tiles{
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:var(--gap-md);
+  align-items:stretch;
+  grid-auto-rows:1fr;
+}
+@media (min-width:768px){
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--gap-lg);
+}
+@media (min-width:1360px){
+  .nf-tiles{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:var(--gap-xl);
+  }
+}
+
+/* ===== Card ===== */
+.nf-card{
+  position:relative; isolation:isolate;
+  display:flex; flex-direction:column;
+  min-height:var(--card-minh);
+  padding:var(--card-pad);
+  border-radius:var(--nf-radius);
+  color:var(--nf-ink);
+  background:rgba(0,0,0,.85);
+  border:1px solid var(--nf-line);
+  box-shadow:var(--nf-shadow);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, filter .25s ease;
+  overflow:hidden;
+}
+@media (hover:hover){
+  .nf-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--blue-45);
+    box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+    filter:saturate(1.03);
+  }
+}
+.nf-card:focus-within{
+  transform:translateY(-2px);
+  border-color:var(--blue-45);
+  box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+}
+
+/* ===== Ambient glow ===== */
+.nf-ring{
+  position:absolute; inset:-52% -52% auto auto; z-index:-1; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,255,255,.04), transparent 65%);
+  filter:blur(28px);
+  width:100%; height:100%;
+  transform:translate(-30%,-30%);
+}
+
+/* ===== Header ===== */
+.nf-top{
+  display:flex;
+  align-items:flex-start; /* better alignment with multi-line titles */
+  justify-content:space-between;
+  gap:var(--stack-12);
+}
+.nf-title{
+  margin:0;
+  font:800 var(--title-fs)/var(--title-lh) "Plus Jakarta Sans", Inter, system-ui;
+  letter-spacing:.2px;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+
+  min-height:calc(3 * 1em * var(--title-lh));
+}
+.nf-sub{
+  margin:6px 0 10px;
+  font:600 var(--body-fs)/var(--body-lh) Inter, system-ui;
+  color:rgba(159,180,194,.9);
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+}
+
+/* ===== Corner chip ===== */
+.nf-chip{
+  display:grid; place-items:center;
+  width:var(--chip-size); height:var(--chip-size);
+  border-radius:var(--chip-radius);
+  background:linear-gradient(180deg, var(--blue-12), rgba(0,0,0,.12));
+  border:1px solid var(--blue-45);
+  margin-top:2px;
+}
+.nf-chip svg{ width:18px; height:18px; fill:var(--nf-blue); }
+
+/* ===== Tags ===== */
+.nf-tags--3x{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:4px;
+  align-items:center;
+  grid-auto-flow:dense;
+  overflow:visible;
+  width:100%;
+  -webkit-mask-image:none;
+          mask-image:none;
+}
+@media (min-width:768px){
+  .nf-tags--3x{
+    display:flex !important;
+    flex-wrap:wrap;
+    justify-content:flex-start;
+    align-items:center;
+    gap:4px;
+    width:100%;
+    -webkit-mask-image:none;
+            mask-image:none;
+  }
+  .nf-tags--3x .nf-tag{
+    flex:0 0 auto;
+    min-width:0;
+    padding:3px 6px;
+  }
+}
+.nf-tag{
+  font:700 clamp(var(--tag-fs), 1vw, calc(var(--tag-fs) + 1px))/1.12 Inter, system-ui;
+  padding:4px var(--tag-pad-x);
+  border-radius:999px;
+  min-height:var(--tag-h);
+  height:auto;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#f0f6ff;
+  background:var(--blue-35);
+  border:1px solid var(--blue-55);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+  min-width:0;
+  letter-spacing:-0.015em;
+}
+
+/* ===== Description section ===== */
+.nf-description-section{ margin-top:14px; }
+.nf-description-section .nf-richtext{ display:none; }
+.nf-description-section .nf-list{ display:grid; }
+
+.nf-richtext{
+  font:600 var(--body-fs)/1.58 Inter, system-ui;
+  color:#cfe2ee;
+  max-height:180px;
+  overflow:auto;
+  padding-right:6px;
+  -webkit-mask-image:linear-gradient(180deg,#000 88%,transparent);
+          mask-image:linear-gradient(180deg,#000 88%,transparent);
+}
+.nf-richtext p{ margin:.35em 0; }
+.nf-richtext ul{ margin:.35em 0 .35em 1.1em; }
+.nf-richtext li{ margin:.2em 0; }
+.nf-richtext strong,b{ color:#f3fbff; }
+
+/* ===== Bullets (FIXED) ===== */
+.nf-list{
+  margin:14px 0 0; padding:0; list-style:none;
+  display:grid; gap:9px;
+  --li-lh:1.5;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom, #000 99%, transparent);
+          mask-image:linear-gradient(to bottom, #000 99%, transparent);
+}
+.nf-list li{
+  position:relative;
+  margin:0;
+  padding-left:var(--bullet-indent);
+  line-height:var(--li-lh);
+  color:#cfe2ee;
+  font-weight:500;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--bullet-lines);
+  overflow:hidden;
+
+  line-clamp:var(--bullet-lines);
+}
+.nf-list li::before{
+  content:"•";
+  position:absolute;
+  left:0;
+  top:.12em;
+  color:var(--nf-blue);
+}
+.nf-list li strong{
+  color:#f3fbff;
+  font-weight:800;
+}
+
+/* ===== Footer / CTA ===== */
+.nf-foot{ margin-top:auto; position:relative; }
+.nf-foot::before{
+  content:""; display:block; height:1px; background:var(--blue-12);
+  margin:12px 0 10px;
+}
+.nf-cta-wrapper{ display:block; }
+.nf-cta{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap; min-height:50px;
+}
+.nf-helper-line{
+  display:block;
+  margin-top:6px;
+  font:500 12.5px/1.35 Inter, system-ui;
+  color:var(--nf-muted);
+  text-align:center;
+  opacity:.92;
+}
+.nf-helper-line:empty{ display:none; }
+
+/* ===== Price & CTA button ===== */
+.nf-price{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  color:#e9f3f7;
+  background:var(--blue-08);
+  border:1px solid var(--blue-24);
+  font:800 13px/1 Inter, system-ui;
+  font-variant-numeric:tabular-nums;
+}
+.nf-price .nf-price-msrp{
+  text-decoration: line-through;
+  text-decoration-color: #e11d48;
+  text-decoration-thickness: 2px;
+  margin-left:6px;
+  opacity:.75;
+}
+.nf-price--waitlist{
+  display:none;
+  background:var(--nf-surface-2);
+  color:var(--nf-blue);
+  border:1px solid var(--blue-45);
+}
+.nf-btn{
+  appearance:none; border:none; cursor:pointer;
+  padding:12px 20px;
+  border-radius:12px;
+  font:800 15px/1 Inter, system-ui;
+  color:#fff;
+  background:linear-gradient(180deg, var(--nf-blue), #2d86c2);
+  box-shadow:0 6px 16px var(--blue-30);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  position:relative; z-index:3;
+  white-space:nowrap;
+}
+@media (hover:hover){
+  .nf-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px var(--blue-30); filter:saturate(1.05); }
+}
+
+/* ===== Misc ===== */
+.hide-when-empty:empty{ display:none !important; }
+
+.nf-stretched-link{ position:relative; z-index:2; text-decoration:none; color:inherit; }
+.nf-stretched-link::after{
+  content:""; position:absolute; inset:calc(-1 * var(--card-pad));
+  z-index:1; pointer-events:auto;
+}
+[data-is-product-page="true"] .nf-stretched-link::after{ display:none; }
+[data-is-product-page="true"] .nf-stretched-link{ cursor:default; }
+
+/* ===== Waitlist logic ===== */
+[data-waitlist="true"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="True"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="1"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="yes"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="Yes"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="y"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="Y"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="true"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="True"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="1"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="yes"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="Yes"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="y"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="Y"] .nf-cta--default .nf-price.nf-price--waitlist{ display:inline-flex; }
+
+.nf-price .nf-price-msrp:empty{ display:none !important; }
+
+/* ===== Add-On switcher ===== */
+.nf-cta--add-on-switcher{ display:none; gap:12px; flex-wrap:wrap; }
+[data-has-add-on="true"] .nf-cta--add-on-switcher{ display:flex; align-items:center; }
+[data-has-add-on="true"] .nf-cta--default{ display:none; }
+
+.nf-add-on-switcher{
+  display:flex; align-items:center; gap:10px;
+  background:var(--blue-08);
+  border:1px solid var(--blue-24);
+  border-radius:12px;
+  padding:10px 12px;
+  position:relative; z-index:3;
+}
+.nf-add-on-label{ display:flex; flex-direction:column; gap:2px; }
+.nf-add-on-header{ font:800 13px/1 Inter, system-ui; color:#e9f3f7; }
+.nf-add-on-text{ font:600 12.5px/1.2 Inter, system-ui; color:var(--nf-muted); }
+
+.nf-add-on-checkbox{
+  appearance:none; -webkit-appearance:none; outline:none; cursor:pointer;
+  width:38px; height:22px; border-radius:999px;
+  background:rgba(255,255,255,.12);
+  border:1px solid var(--blue-24);
+  position:relative; transition:background .2s ease, border-color .2s ease;
+}
+.nf-add-on-checkbox::after{
+  content:""; position:absolute; top:2px; left:2px;
+  width:18px; height:18px; border-radius:50%;
+  background:#e9f3f7; transition:transform .2s ease;
+}
+.nf-add-on-checkbox:checked{
+  background:var(--nf-blue); border-color:#2d86c2;
+}
+.nf-add-on-checkbox:checked::after{ transform:translateX(16px); }
+
+/* ===== Terms gate ===== */
+.nf-terms-gate{
+  display:none; gap:8px; align-items:center;
+  margin-top:10px;
+  font:600 12.5px/1.45 Inter, system-ui;
+  color:var(--nf-muted);
+  position:relative; z-index:3;
+}
+.nf-terms-gate input[type="checkbox"]{
+  width:16px; height:16px; accent-color:var(--nf-blue);
+}
+[data-terms-required="true"] .nf-terms-gate{ display:flex; }
+
+.nf-btn--gated{
+  opacity:.5; pointer-events:none; cursor:not-allowed; filter:grayscale(.25);
+}
+
+/* ===== Mode switching ===== */
+[data-is-product-page="true"] .nf-description-section .nf-richtext{ display:block; }
+[data-is-product-page="true"] .nf-description-section .nf-list{ display:none; }
+
+/* ===== Mobile ===== */
+@media (max-width:767px){
+  .nf-card{ --card-minh:auto; padding:16px; height:auto; }
+  .nf-cta{ flex-direction:column; align-items:stretch; }
+  .nf-btn{ width:100%; text-align:center; }
+  .nf-add-on-switcher{ align-items:flex-start; }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce){
+  .nf-card, .nf-btn{ transition:none !important; transform:none !important; }
+  @media (hover:hover){
+    .nf-card:hover, .nf-btn:hover{ transform:none !important; }
+  }
+}
+</style>
+
+<style>
+  /* =========================================================
+     NeuForm — Training Plan Reviews Section (Template) v1
+     Works with:
+       - Sitewide rating widget (#rating-<planSlug>) from Google Sheet
+       - Webflow CMS Testimonials list (filtered by Plan reference)
+     ========================================================= */
+
+  :root{
+    --nf-blue:#3498db;
+    --nf-ink:#e9f3f7;
+    --nf-muted:rgba(233,243,247,.74);
+
+    --nf-glass-a:rgba(7,9,11,.78);
+    --nf-glass-b:rgba(7,9,11,.46);
+
+    --nf-border:rgba(255,255,255,.11);
+    --nf-shadow:0 18px 60px rgba(0,0,0,.55);
+    --nf-shadow-soft:0 16px 44px rgba(0,0,0,.50);
+
+    --nf-radius:18px;
+    --nf-radius-lg:24px;
+
+    --nf-ease:cubic-bezier(.2,.8,.2,1);
+    --nf-dur:180ms;
+
+    --nf-max: 980px;
+    --nf-gap: 14px;
+  }
+
+  .nf-pr{
+    width:100%;
+    padding: clamp(24px, 4vw, 40px) 16px 10px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .nf-pr__inner{
+    width:min(var(--nf-max), 100%);
+  }
+
+  .nf-pr__hero{
+    position:relative;
+    overflow:hidden;
+
+    border-radius: var(--nf-radius-lg);
+    padding: 22px 20px;
+
+    background: linear-gradient(180deg, var(--nf-glass-a), var(--nf-glass-b));
+    border: 1px solid var(--nf-border);
+    box-shadow: var(--nf-shadow);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .nf-pr__hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(860px 280px at 50% 0%,
+        rgba(52,152,219,.14) 0%,
+        rgba(52,152,219,0) 62%),
+      linear-gradient(180deg,
+        rgba(255,255,255,.08) 0%,
+        rgba(255,255,255,0) 52%);
+    opacity:.92;
+  }
+
+  .nf-pr__hero > *{ position:relative; z-index:1; }
+
+  .nf-pr__title{
+    margin:0 0 6px;
+    color:var(--nf-ink);
+    font-weight:900;
+    font-size: clamp(20px, 2.2vw, 26px);
+    line-height:1.15;
+  }
+
+  .nf-pr__sub{
+    margin:0 0 12px;
+    color:var(--nf-muted);
+    font-size: 14px;
+    line-height: 1.45;
+    max-width: 60ch;
+  }
+
+  .nf-pr__rating{
+    margin: 6px 0 12px;
+  }
+
+  .nf-pr__cta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top: 6px;
+  }
+
+  .nf-pr__btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding: 10px 14px;
+    min-height: 40px;
+
+    border-radius: 12px;
+    text-decoration:none;
+
+    font-weight: 850;
+    font-size: 13px;
+    letter-spacing: .01em;
+
+    transition:
+      transform var(--nf-dur) var(--nf-ease),
+      box-shadow var(--nf-dur) var(--nf-ease),
+      background var(--nf-dur) var(--nf-ease),
+      border-color var(--nf-dur) var(--nf-ease),
+      filter var(--nf-dur) var(--nf-ease);
+  }
+
+  .nf-pr__btn:hover{ transform: translateY(-1px); }
+  .nf-pr__btn:active{ transform: translateY(1px); }
+
+  .nf-pr__btn--primary{
+    background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(33,125,187,.98));
+    color:#050607;
+    box-shadow: 0 14px 30px rgba(52,152,219,.20);
+  }
+
+  .nf-pr__btn--ghost{
+    background: rgba(255,255,255,.07);
+    color: var(--nf-ink);
+    border: 1px solid rgba(255,255,255,.14);
+  }
+
+  /* CMS list wrapper */
+  .nf-pr__list-slot{
+    width:min(var(--nf-max), 100%);
+    margin: 12px auto 0;
+    padding: 0 16px;
+  }
+
+  /* Grid */
+  .nf-pr__grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--nf-gap);
+    align-items: stretch;
+  }
+
+  /* Review card */
+  .nf-pr__card{
+    position:relative;
+    overflow:hidden;
+
+    display:block;
+    text-decoration:none;
+    color:inherit;
+
+    padding: 16px 16px 14px;
+    border-radius: var(--nf-radius);
+    background: linear-gradient(180deg, rgba(7,9,11,.74), rgba(7,9,11,.50));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: var(--nf-shadow-soft);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    transition:
+      transform var(--nf-dur) var(--nf-ease),
+      box-shadow var(--nf-dur) var(--nf-ease),
+      border-color var(--nf-dur) var(--nf-ease);
+  }
+
+  .nf-pr__card:hover{
+    transform: translateY(-2px);
+    border-color: rgba(52,152,219,.34);
+    box-shadow: 0 26px 72px rgba(0,0,0,.60);
+  }
+
+  .nf-pr__name{
+    margin:0 0 8px;
+    color:var(--nf-ink);
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .nf-pr__quote{
+    margin:0 0 10px;
+    color: rgba(233,243,247,.92);
+    font-size: 14px;
+    line-height: 1.55;
+    display:-webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+  }
+
+  .nf-pr__metrics{
+    margin:0;
+    padding-top:10px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    color: rgba(233,243,247,.70);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 767px){
+    .nf-pr{ padding: 22px 14px 8px; }
+    .nf-pr__list-slot{ padding: 0 14px; }
+    .nf-pr__grid{ grid-template-columns: 1fr; gap: 12px; }
+  }
+</style>
+
+Embed 2:
+<!-- NeuForm Premium Card — v5.1 HTML (catalog + product modes, 2025-11-07)
+     Fixes:
+       • Correct field bindings (Has Add-On Option, Terms Required)
+       • Enables add-on + terms gate on all tiles, not just product pages
+       • Keeps waitlist + helper behaviors intact
+       • Future-proofs for aria-disabled and gating logic
+-->
+<article
+  class="nf-card"
+  role="article"
+  data-plan-card
+  data-is-product-page="false"
+  data-has-add-on="{{wf {&quot;path&quot;:&quot;add-on-label&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-terms-required="{{wf {&quot;path&quot;:&quot;terms-required&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-plan="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-price="{{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-sku="{{wf {&quot;path&quot;:&quot;sku-product-id&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-position="{{wf {&quot;path&quot;:&quot;sort-weight&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-waitlist="{{wf {&quot;path&quot;:&quot;is-waitlist-only&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  aria-labelledby="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+>
+  <div class="nf-ring" aria-hidden="true"></div>
+
+  <div class="nf-top">
+    <header>
+      <!-- Stretched-link → training plan page -->
+      <a
+        class="nf-stretched-link"
+        href="/training-plans/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        data-action="preview"
+        aria-label="See details — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        title="See details"
+      >
+        <h3
+          class="nf-title"
+          id="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        >
+          {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </h3>
+        <p class="nf-sub">
+          {{wf {&quot;path&quot;:&quot;goal-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </p>
+      </a>
+    </header>
+
+    <!-- Category chip -->
+    <div class="nf-chip" title="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <rect x="3"  y="9"  width="3"  height="6" rx="1"></rect>
+        <rect x="18" y="9"  width="3"  height="6" rx="1"></rect>
+        <rect x="7"  y="10.5" width="10" height="3" rx="1.5"></rect>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tags row -->
+  <div class="nf-tags nf-tags--3x" aria-label="Key specs">
+    <span
+      class="nf-tag nf-days"
+      data-days="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      title="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split"
+    >
+      {{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split
+    </span>
+
+    <span class="nf-tag" title="{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+      {{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </span>
+
+    <span class="nf-tag hide-when-empty" title="{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+      {{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </span>
+  </div>
+
+  <!-- Description section -->
+  <div class="nf-description-section">
+    <div class="nf-richtext hide-when-empty"><!-- Rich Text element (bound to Description) goes here --></div>
+
+    <ul class="nf-list" aria-label="Highlights">
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-1&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-3&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-4&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="nf-foot">
+    <div class="nf-cta-wrapper">
+
+      <!-- Default CTA -->
+      <div class="nf-cta nf-cta--default">
+        <div class="nf-price nf-price--waitlist">WAITLIST</div>
+        <div class="nf-price" aria-label="Price">
+          ${{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}
+          <span class="nf-price-msrp hide-when-empty">
+            ${{wf {&quot;path&quot;:&quot;original-price-msrp&quot;,&quot;type&quot;:&quot;Number&quot;\} }}
+          </span>
+        </div>
+
+        <a
+          class="nf-btn"
+          href="{{wf {&quot;path&quot;:&quot;stripe-link-base&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-action="buy"
+          aria-disabled="false"
+          aria-label="{{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          title="{{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        >
+          {{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </a>
+      </div>
+
+      <!-- Add-On Switcher CTA -->
+      <div class="nf-cta nf-cta--add-on-switcher">
+        <div class="nf-add-on-switcher">
+          <input type="checkbox" class="nf-add-on-checkbox" id="addon-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+          <label class="nf-add-on-label" for="addon-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+            <span class="nf-add-on-header hide-when-empty">{{wf {&quot;path&quot;:&quot;add-on-header&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</span>
+            <span class="nf-add-on-text hide-when-empty">{{wf {&quot;path&quot;:&quot;add-on-text&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</span>
+          </label>
+        </div>
+
+        <a
+          class="nf-btn nf-btn--add-on"
+          href="{{wf {&quot;path&quot;:&quot;stripe-link-base&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-base-url="{{wf {&quot;path&quot;:&quot;stripe-link-base&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-bundle-url="{{wf {&quot;path&quot;:&quot;stripe-link-bundle&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-action="buy"
+          aria-disabled="false"
+          aria-label="Checkout — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          title="Checkout"
+        >
+          {{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Terms gate -->
+    <div class="nf-terms-gate hide-when-empty">
+      <input type="checkbox" id="terms-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}" class="nf-terms-checkbox">
+      <label for="terms-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+        {{wf {&quot;path&quot;:&quot;terms-notice&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+      </label>
+    </div>
+
+    <small class="nf-helper-line hide-when-empty">
+      {{wf {&quot;path&quot;:&quot;tile-helper&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </small>
+  </div>
+</article>
+
+Embed 3:
+<style>
+/* ==========================================================
+   NeuForm — FAQ Component Styles (v2.0, 2025-11-14)
+   • Stronger, tighter tile-style glow on hover/open
+   • Open card clearly separated from next in the stack
+   • Answer panel with limited line-length for easier reading
+   • Soft fade/slide on answer; respects reduced-motion
+   ========================================================== */
+
+/* ----- Section wrapper ----- */
+.nf-faq-section{
+  padding: 16px 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 1200px){
+  .nf-faq-section{
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+}
+
+/* ----- Container inside section ----- */
+.nf-faq-container{
+  width: 100%;
+  max-width: 940px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* heading ↔ list */
+}
+
+/* ----- Heading ----- */
+.nf-faq-heading{
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--nf-ink);
+  letter-spacing: .02em;
+  margin: 0;
+}
+
+/* ----- List of items ----- */
+.nf-faq-list{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;          /* separation between cards */
+  margin-top: 6px;    /* extra space under heading pill */
+}
+
+/* ----- Single FAQ item (card) ----- */
+.nf-faq-item{
+  background: var(--nf-surface);
+  border: 1px solid var(--nf-border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(
+    --nf-shadow,
+    0 8px 22px rgba(0,0,0,.35)
+  );
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    transform .22s ease;
+  will-change: transform, box-shadow;
+}
+
+/* Hover lift + stronger, tighter glow */
+.nf-faq-item:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.2);
+  box-shadow:
+    var(--nf-shadow, 0 10px 30px rgba(0,0,0,.55)),
+    0 0 0 1px rgba(255,255,255,.08),
+    0 0 24px rgba(52,152,219,.45); /* tighter blue halo */
+}
+
+/* Open state — card reacts when its dropdown is open */
+.nf-faq-item:has(.nf-faq-accordion.w--open){
+  background: var(--nf-surface-2);
+  border-color: rgba(52,152,219,.9);
+  box-shadow:
+    0 18px 46px rgba(0,0,0,.72),
+    0 0 0 1px rgba(52,152,219,.55),
+    0 0 36px rgba(52,152,219,.60);
+  border-top-color: rgba(255,255,255,.25); /* subtle top highlight */
+  margin-bottom: 4px; /* extra separation before next card */
+}
+
+/* ----- Header (toggle) ----- */
+.nf-faq-header{
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--nf-ink);
+  background: transparent;
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .18s ease;
+}
+
+.nf-faq-header:hover{
+  background: rgba(255,255,255,.03);
+}
+
+/* Header when its dropdown is open */
+.nf-faq-accordion.w--open .nf-faq-header{
+  background: rgba(52,152,219,.08);
+}
+
+/* Focus ring for keyboard users */
+.nf-faq-header:focus-visible{
+  box-shadow: 0 0 0 1px var(--nf-ring), 0 0 0 3px rgba(52,152,219,.4);
+  background: rgba(52,152,219,.08);
+}
+
+/* ----- Question text ----- */
+.nf-faq-question{
+  flex: 1 1 auto;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--nf-ink);
+  margin: 0;
+  letter-spacing: .01em;
+}
+
+/* Slight emphasis when open */
+.nf-faq-accordion.w--open .nf-faq-question{
+  font-weight: 650;
+  color: #f3f7fb;
+}
+
+/* ----- Icon ----- */
+.nf-faq-icon{
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform .25s cubic-bezier(.4,0,.2,1),
+    color .22s ease;
+  transform-origin: center;
+  color: var(--nf-blue);
+}
+
+/* Rotate icon when open */
+.nf-faq-accordion.w--open .nf-faq-icon{
+  transform: rotate(180deg);
+  color: #5cb3f0;
+}
+
+/* Slight highlight on hover even when closed */
+.nf-faq-item:hover .nf-faq-icon{
+  color: #5cb3f0;
+}
+
+/* ----- Body (answer container) ----- */
+.nf-faq-body{
+  /* Slightly different surface so it reads as an inner panel */
+  background: radial-gradient(circle at top left,
+    rgba(255,255,255,.05),
+    rgba(255,255,255,0)
+  );
+  border-top: 1px solid var(--nf-border);
+  padding: 8px 20px 16px 20px; /* tight gap under header, comfy bottom */
+  color: var(--nf-muted);
+  font-size: 15px;
+  line-height: 1.7;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+
+  /* Soft motion (Webflow controls display) */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity .18s ease-out,
+    transform .18s ease-out;
+}
+
+/* When dropdown list itself is open, reveal the body */
+.nf-faq-body.w--open{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----- Answer ----- */
+.nf-faq-answer{
+  margin: 10px auto 0;
+  color: #d0dde6;     /* brighter for legibility */
+  font-weight: 500;
+  max-width: 78ch;   /* limit line-length for easier reading */
+}
+
+/* Lists inside answers */
+.nf-faq-answer ul,
+.nf-faq-answer ol{
+  margin: 8px 0 0 1.25em;
+  padding: 0;
+}
+
+.nf-faq-answer li{
+  margin-bottom: 4px;
+}
+
+/* Links inside answers */
+.nf-faq-answer a{
+  color: var(--nf-blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.nf-faq-answer a:hover{
+  text-decoration-thickness: 2px;
+}
+
+/* ==========================================================
+   Active / tap feedback
+   ========================================================== */
+.nf-faq-header:active{
+  background: rgba(255,255,255,.05);
+}
+
+/* ==========================================================
+   Reduced motion
+   ========================================================== */
+@media (prefers-reduced-motion: reduce){
+  .nf-faq-item,
+  .nf-faq-header,
+  .nf-faq-icon,
+  .nf-faq-body{
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .nf-faq-body,
+  .nf-faq-body.w--open{
+    opacity: 1;
+  }
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+@media (max-width: 767px){
+
+  .nf-faq-section{
+    padding: 48px 14px;
+  }
+
+  .nf-faq-heading{
+    font-size: 26px;
+  }
+
+  .nf-faq-container{
+    gap: 20px;
+  }
+
+  .nf-faq-list{
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .nf-faq-header{
+    min-height: 48px;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .nf-faq-question{
+    font-size: 16px;
+  }
+
+  .nf-faq-icon{
+    width: 20px;
+    height: 20px;
+  }
+
+  .nf-faq-body{
+    padding: 8px 16px 16px 16px;
+    font-size: 14px;
+  }
+
+  .nf-faq-answer{
+    max-width: none;  /* full width on small screens */
+  }
+}
+</style>
+
+Embed 4:
+<!-- NeuForm — Plan Reviews (Embed + Scoped CSS) v1.4
+     IMPORTANT:
+     - This embed renders the header only.
+     - Add the Testimonials Collection List as a SIBLING element directly under this embed.
+     - Apply these classes to the Collection List:
+         Wrapper: nf-pr__list-slot
+         List:    nf-pr__grid
+         Card:    nf-pr__card  (Link Block → Current Testimonial)
+         Name:    nf-pr__name
+         Quote:   nf-pr__quote
+         Metrics: nf-pr__metrics
+-->
+
+<style>
+  /* =========================================================
+     MODULE TOKENS
+     Applied to BOTH:
+     - .nf-pr (hero wrapper)
+     - .nf-pr__list-slot (sibling CMS wrapper)
+     So siblings share the same variables WITHOUT using :root.
+     ========================================================= */
+  .nf-pr,
+  .nf-pr__list-slot{
+    --nf-pr-max: 980px;
+    --nf-pr-max-single: 860px; /* makes 1-review layout feel premium */
+    --nf-pr-gap: 14px;
+
+    --nf-pr-ink: var(--nf-ink, #e9f3f7);
+    --nf-pr-muted: var(--nf-muted, rgba(233,243,247,.74));
+    --nf-pr-blue: var(--nf-blue, #3498db);
+
+    --nf-pr-line: var(--nf-line, rgba(255,255,255,.11));
+    --nf-pr-shadow: var(--nf-shadow, 0 8px 20px rgba(0,0,0,.36));
+    --nf-pr-shadow-hover: var(--nf-shadow-hover, 0 12px 28px rgba(0,0,0,.46));
+
+    --nf-pr-radius: var(--nf-radius, 20px);
+    --nf-pr-card-radius: 18px;
+
+    --nf-pr-glass-a: rgba(0,0,0,.86);
+    --nf-pr-glass-b: rgba(0,0,0,.72);
+
+    --nf-pr-focus: var(--nf-focus, #00D1C7);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* predictable sizing */
+  .nf-pr, .nf-pr * ,
+  .nf-pr__list-slot, .nf-pr__list-slot *{
+    box-sizing:border-box;
+  }
+
+  /* =========================
+     HERO WRAPPER (embed section)
+     ========================= */
+  .nf-pr{
+    width:100%;
+    padding: clamp(22px, 3.5vw, 34px) 16px 10px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .nf-pr__inner{ width:min(var(--nf-pr-max), 100%); }
+
+  .nf-pr__hero{
+    position:relative;
+    overflow:hidden;
+
+    border-radius: var(--nf-pr-radius);
+    padding: 20px 20px 18px;
+
+    background: linear-gradient(180deg, var(--nf-pr-glass-a), var(--nf-pr-glass-b));
+    border: 1px solid var(--nf-pr-line);
+    box-shadow: var(--nf-pr-shadow);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    isolation:isolate; /* keeps overlays tidy */
+  }
+
+  .nf-pr__hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(780px 240px at 50% 0%,
+        rgba(52,152,219,.14) 0%,
+        rgba(52,152,219,0) 62%),
+      linear-gradient(180deg,
+        rgba(255,255,255,.06) 0%,
+        rgba(255,255,255,0) 55%);
+    opacity:.9;
+    z-index:0;
+  }
+  .nf-pr__hero > *{ position:relative; z-index:1; }
+
+  .nf-pr__title{
+    margin:0 0 6px;
+    color:var(--nf-pr-ink);
+    font:900 clamp(18px, 2vw, 22px)/1.15 "Plus Jakarta Sans", Inter, system-ui;
+    letter-spacing:.2px;
+  }
+
+  .nf-pr__sub{
+    margin:0 0 12px;
+    color:rgba(159,180,194,.86);
+    font:600 14px/1.45 Inter, system-ui;
+    max-width: 60ch;
+  }
+
+  .nf-pr__rating{ margin: 6px 0 12px; }
+
+  /* Rating badge */
+  .nf-pr .nf-rating-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  .nf-pr .nf-stars{
+    position:relative;
+    display:inline-block;
+    line-height:1;
+    letter-spacing:2px;
+    font-size:12.5px;
+    height: 1em;
+  }
+  .nf-pr .nf-stars--bg{ display:block; color: rgba(233,243,247,.22); }
+  .nf-pr .nf-stars--fg{
+    display:block;
+    position:absolute;
+    top:0; left:0;
+    overflow:hidden;
+    white-space:nowrap;
+    width:0%;
+    color: rgba(233,243,247,.92);
+  }
+  .nf-pr .nf-score{ color: rgba(233,243,247,.92); font-weight:800; font-size:12.5px; }
+  .nf-pr .nf-count{ color: rgba(233,243,247,.70); font-weight:800; font-size:12.5px; }
+
+  .nf-pr__trust{
+    margin-top:4px;
+    color: rgba(159,180,194,.90);
+    font:600 12px/1.3 Inter, system-ui;
+  }
+
+  .nf-pr__cta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top: 6px;
+  }
+
+  .nf-pr__btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding: 10px 14px;
+    min-height: 40px;
+
+    border-radius: 12px;
+    text-decoration:none;
+
+    font:800 13px/1 Inter, system-ui;
+    letter-spacing: .01em;
+
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease, background .18s ease, border-color .18s ease;
+    will-change: transform;
+  }
+  .nf-pr__btn:hover{ transform: translateY(-1px); }
+  .nf-pr__btn:focus-visible{
+    outline: 2px solid var(--nf-pr-focus);
+    outline-offset: 2px;
+  }
+
+  .nf-pr__btn--primary{
+    background: linear-gradient(180deg, var(--nf-pr-blue), #2d86c2);
+    color:#fff;
+    box-shadow:0 10px 22px rgba(52,152,219,.30);
+  }
+
+  .nf-pr__btn--ghost{
+    background: rgba(255,255,255,.07);
+    color: var(--nf-pr-ink);
+    border: 1px solid rgba(255,255,255,.14);
+  }
+  .nf-pr__btn--ghost:hover{
+    background: rgba(255,255,255,.09);
+    border-color: rgba(255,255,255,.18);
+  }
+
+  /* =========================================================
+     SIBLING CMS LIST STYLES
+     ========================================================= */
+
+  .nf-pr__list-slot{
+    /* hard constrain width even as a sibling */
+    width: min(var(--nf-pr-max), 100%);
+    margin: 18px auto 0; /* was 12px — gives the review room to feel like “evidence” */
+    padding: 0 16px;
+  }
+
+  /* Default to a “featured” layout (1 column, narrower lane) */
+  .nf-pr__grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: var(--nf-pr-gap);
+    align-items: stretch;
+
+    max-width: var(--nf-pr-max-single);
+    margin: 0 auto;
+  }
+
+  /* If you have multiple reviews, allow 2-up on desktop */
+  @media (min-width: 992px){
+    .nf-pr__grid{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: var(--nf-pr-max);
+    }
+  }
+
+  .nf-pr__list-slot .w-dyn-empty{
+    background:
+      radial-gradient(680px 220px at 30% 0%, rgba(52,152,219,.10), transparent 60%),
+      linear-gradient(180deg, rgba(0,0,0,.84), rgba(0,0,0,.74));
+    border: 1px solid var(--nf-pr-line);
+    border-radius: var(--nf-pr-radius);
+    padding: 16px 16px;
+    color: rgba(159,180,194,.92);
+    font:600 13px/1.5 Inter, system-ui;
+  }
+
+  .nf-pr__card{
+    position:relative;
+    overflow:hidden;
+
+    display:block;
+    text-decoration:none;
+    color:inherit;
+
+    padding: 18px 18px 16px;
+    border-radius: var(--nf-pr-card-radius);
+
+    /* less “flat box”, more premium */
+    background:
+      radial-gradient(680px 220px at 30% 0%, rgba(52,152,219,.11), transparent 62%),
+      linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.78));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: var(--nf-pr-shadow);
+
+    transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, filter .22s ease;
+    will-change: transform;
+  }
+
+  /* Decorative quote mark (subtle) */
+  .nf-pr__card::before{
+    content:"“";
+    position:absolute;
+    top: 6px;
+    right: 14px;
+    pointer-events:none;
+    font: 900 56px/1 Georgia, serif;
+    color: rgba(52,152,219,.12);
+    transform: translateY(-6px);
+  }
+
+  /* subtle inner highlight ring */
+  .nf-pr__card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    opacity:.9;
+  }
+
+  @media (hover:hover){
+    .nf-pr__card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(52,152,219,.45);
+      box-shadow: var(--nf-pr-shadow-hover), 0 0 0 1px rgba(52,152,219,.10) inset;
+      filter:saturate(1.03);
+    }
+  }
+
+  .nf-pr__card:focus-visible{
+    outline: 2px solid var(--nf-pr-focus);
+    outline-offset: 3px;
+  }
+
+  .nf-pr__name{
+    margin:0 0 6px; /* tighter so name+quote read as one unit */
+    color:var(--nf-pr-ink);
+    font:900 14px/1.2 Inter, system-ui;
+    letter-spacing:.2px;
+  }
+
+  /* Quote becomes “less boxy” + more readable */
+  .nf-pr__quote{
+    margin:0 0 12px;
+    color:#d3e5f0;
+    font:500 14px/1.6 Inter, system-ui;
+
+    padding-left: 12px;
+    position: relative;
+
+    display:-webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+
+    text-wrap: pretty;
+  }
+
+  .nf-pr__quote::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:2px;
+    bottom:2px;
+    width:2px;
+    border-radius:2px;
+    background: rgba(52,152,219,.45);
+  }
+
+  /* Show a touch more quote on larger screens */
+  @media (min-width: 992px){
+    .nf-pr__quote{ -webkit-line-clamp: 5; }
+  }
+
+  /* Metrics → pills (more premium than a single string) */
+  .nf-pr__metrics{
+    margin:0;
+    padding-top:12px;
+    border-top: 1px solid rgba(52,152,219,.14);
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+
+    /* fallback if metrics is plain text (no spans) */
+    color: rgba(159,180,194,.92);
+    font:600 12.5px/1.45 Inter, system-ui;
+  }
+
+  .nf-pr__metrics span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:4px 8px;
+    border-radius:999px;
+
+    /* slightly stronger so “numbers” read as proof */
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(52,152,219,.25);
+
+    color: rgba(233,243,247,.94);
+    font:800 12px/1.2 Inter, system-ui;
+    white-space:nowrap;
+    letter-spacing:.1px;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .nf-pr__btn,
+    .nf-pr__card{
+      transition:none !important;
+      transform:none !important;
+    }
+    .nf-pr__btn:hover,
+    .nf-pr__card:hover{
+      transform:none !important;
+    }
+  }
+
+  @media (max-width: 767px){
+    .nf-pr{ padding: 20px 14px 8px; }
+    .nf-pr__list-slot{ padding: 0 14px; }
+    .nf-pr__grid{ gap: 12px; }
+  }
+</style>
+
+<section class="nf-pr" aria-labelledby="nf-pr-title">
+  <div class="nf-pr__inner">
+    <header class="nf-pr__hero">
+      <h2 id="nf-pr-title" class="nf-pr__title">Client Results</h2>
+      <p class="nf-pr__sub">Real outcomes from lifters who ran this exact plan.</p>
+
+      <!-- Plan rating badge (powered by your SITEWIDE Google Sheet reviews script) -->
+      <div class="nf-pr__rating">
+        <div
+          id="rating-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          class="nf-rating-badge"
+          role="img"
+          aria-label="Loading rating…"
+        >
+          <span class="nf-stars" aria-hidden="true">
+            <span class="nf-stars--bg">★★★★★</span>
+            <span class="nf-stars--fg">★★★★★</span>
+          </span>
+          <span class="nf-score">—/5</span>
+          <span class="nf-count">(— reviews)</span>
+        </div>
+        <div class="nf-pr__trust">Verified NeuForm clients</div>
+      </div>
+
+      <div class="nf-pr__cta" aria-label="Results actions">
+        <a class="nf-pr__btn nf-pr__btn--primary" href="/review">Share Your Results</a>
+        <a class="nf-pr__btn nf-pr__btn--ghost" href="/results">View All Results</a>
+      </div>
+    </header>
+  </div>
+</section>

@@ -1,0 +1,1081 @@
+DLTER Quiz Page On Page Embeds
+Embed 1:
+<style>
+  /* DLTER Member Bar — matches quiz card brightness */
+  .dlter-auth-bar {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 12px;
+    max-width: var(--nf-container-max, 1200px);
+    padding: 8px 14px;
+    padding-left: var(--nf-gutter, 16px);
+    padding-right: var(--nf-gutter, 16px);
+    border-radius: var(--nf-radius-lg, 20px);
+
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      0 22px 55px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(15,23,42,0.8);
+    border: 1px solid rgba(148,163,184,0.35);
+    position: relative;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+
+  .dlter-auth-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%);
+    opacity: 0.35;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+  }
+
+  .dlter-auth-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    color: var(--dm-text-primary, #e5e7eb);
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+  }
+
+  .dlter-auth-email {
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dlter-auth-plan {
+    font-size: 0.8rem;
+    color: var(--dm-text-secondary, #cbd5f5);
+    opacity: 0.9;
+    white-space: nowrap;
+  }
+
+  .dlter-auth-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  .dlter-auth-badge--guest {
+    background: rgba(31,41,55,0.9);
+    color: rgba(156,163,175,0.95);
+    border: 1px solid rgba(55,65,81,0.9);
+  }
+
+  /* Repurposed as "signed-in" (no global premium on quiz page) */
+  .dlter-auth-badge--member {
+    background: rgba(52,152,219,0.12);
+    color: rgba(229,231,235,0.92);
+    border: 1px solid rgba(52,152,219,0.45);
+    box-shadow:
+      0 0 0 1px rgba(52,152,219,0.12),
+      0 0 10px rgba(52,152,219,0.18);
+  }
+
+  .dlter-auth-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 1;
+  }
+
+  .dlter-auth-actions [hidden] {
+    display: none !important;
+  }
+
+  .dlter-auth-actions button.btn {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    border-radius: 999px;
+    padding: 6px 12px;
+    min-height: 30px;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-weight: 600;
+    border: 1px solid rgba(148,163,184,0.5) !important;
+    background: rgba(15,23,42,0.95) !important;
+    color: var(--dm-text-primary, #e5e7eb) !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      background .16s ease-out,
+      border-color .16s ease-out,
+      box-shadow .16s ease-out,
+      transform .16s ease-out,
+      opacity .16s ease-out;
+  }
+
+  .dlter-auth-actions button.btn:hover {
+    background: rgba(30,64,175,0.65) !important;
+    border-color: rgba(129,140,248,0.7) !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+    transform: translateY(-0.5px);
+  }
+
+  .dlter-auth-actions button.btn.ghost {
+    background: transparent !important;
+    border-color: rgba(148,163,184,0.6) !important;
+  }
+
+  .dlter-auth-actions button.btn.primary {
+    background: var(--dm-accent-primary, #3498db) !important;
+    border-color: var(--dm-accent-primary, #3498db) !important;
+    color: #020617 !important;
+    box-shadow: 0 10px 24px rgba(52,152,219,0.55);
+  }
+
+  .dlter-auth-actions button.btn.primary:hover {
+    background: var(--dm-accent-primary-hover, #2980b9) !important;
+    border-color: var(--dm-accent-primary-hover, #2980b9) !important;
+  }
+
+  @media (max-width: 768px) {
+    .dlter-auth-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .dlter-auth-info,
+    .dlter-auth-actions {
+      justify-content: center;
+    }
+
+    .dlter-auth-plan {
+      display: block;
+      white-space: normal;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dlter-auth-bar,
+    .dlter-auth-actions button.btn {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<div id="dlter-member-bar" class="dlter-auth-bar" aria-live="polite">
+  <div class="dlter-auth-info">
+    <span id="dlter-user-email" class="dlter-auth-email">Guest mode</span>
+    <span id="dlter-user-plan-copy" class="dlter-auth-plan">
+      · Take the quiz to discover your Reality Type
+    </span>
+    <span id="dlter-user-badge" class="dlter-auth-badge dlter-auth-badge--guest">
+      Guest
+    </span>
+  </div>
+
+  <div class="dlter-auth-actions">
+    <!-- Guest actions -->
+    <div id="dlter-guest-actions">
+      <button
+        id="dlter-login-btn"
+        type="button"
+        class="btn ghost tiny"
+        data-ms-modal="login"
+        data-ms-redirect="current-url"
+      >
+        Log in
+      </button>
+      <button
+        id="dlter-signup-btn"
+        type="button"
+        class="btn primary tiny"
+        data-ms-modal="signup"
+        data-ms-redirect="current-url"
+      >
+        Create account
+      </button>
+    </div>
+
+    <!-- Member actions -->
+    <div id="dlter-member-actions" hidden>
+      <button
+        id="dlter-profile-btn"
+        type="button"
+        class="btn ghost tiny"
+        data-ms-modal="profile"
+      >
+        Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var bar        = document.getElementById('dlter-member-bar');
+  if (!bar) return;
+
+  var emailSpan  = document.getElementById('dlter-user-email');
+  var planSpan   = document.getElementById('dlter-user-plan-copy');
+  var badge      = document.getElementById('dlter-user-badge');
+  var guestBox   = document.getElementById('dlter-guest-actions');
+  var memberBox  = document.getElementById('dlter-member-actions');
+
+  function applyGuest(){
+    bar.style.display = 'flex';
+    if (emailSpan) emailSpan.textContent = 'Guest mode';
+    if (planSpan)  planSpan.textContent  = '· Take the quiz to discover your Reality Type';
+
+    if (badge){
+      badge.textContent = 'Guest';
+      badge.className   = 'dlter-auth-badge dlter-auth-badge--guest';
+    }
+
+    if (guestBox)  guestBox.hidden  = false;
+    if (memberBox) memberBox.hidden = true;
+  }
+
+  function applyMember(member){
+    bar.style.display = 'flex';
+
+    var email = (member && (member.email || (member.auth && member.auth.email))) || 'Member';
+
+    if (guestBox)  guestBox.hidden  = true;
+    if (memberBox) memberBox.hidden = false;
+
+    if (emailSpan) emailSpan.textContent = email;
+
+    if (badge){
+      badge.textContent = 'Member';
+      badge.className   = 'dlter-auth-badge dlter-auth-badge--member';
+    }
+
+    if (planSpan){
+      planSpan.textContent = '· Quiz + type pages available · Blueprints unlock per Reality Type';
+    }
+  }
+
+  // Show guest bar immediately
+  applyGuest();
+
+  function syncOnce(){
+    var ms = window.$memberstackDom || window.MemberStack || null;
+    if (!ms || typeof ms.getCurrentMember !== 'function') return false;
+
+    ms.getCurrentMember()
+      .then(function(res){
+        var member = res && res.data;
+        if (!member) applyGuest();
+        else applyMember(member);
+      })
+      .catch(function(){
+        applyGuest();
+      });
+
+    return true;
+  }
+
+  // Try immediately, then poll a bit in case Memberstack loads late
+  if (!syncOnce()){
+    var attempts = 0;
+    var poll = setInterval(function(){
+      attempts++;
+      if (syncOnce() || attempts > 20){
+        clearInterval(poll);
+      }
+    }, 250);
+  }
+
+  // If user logs in via modal, refresh bar when they return focus
+  window.addEventListener('focus', function(){
+    syncOnce();
+  });
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible') syncOnce();
+  });
+})();
+</script>
+
+Embed 2:
+<!-- Embed 2: DLTER Type Links strip (brightness matched to card) -->
+<style>
+  /* DLTER Type Links strip under member bar */
+  .dlter-type-links {
+    max-width: var(--nf-container-max, 1200px);
+    margin: 0 auto 20px;
+    padding: 0 var(--nf-gutter, 16px);
+  }
+
+  .dlter-type-links-inner {
+    position: relative;
+    border-radius: var(--nf-radius-lg, 20px);
+    padding: 12px 14px 14px;
+
+    /* Match quiz card brightness */
+    background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      0 22px 55px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(15,23,42,0.8);
+    border: 1px solid rgba(148,163,184,0.35);
+    overflow: hidden;
+  }
+
+  .dlter-type-links-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%);
+    opacity: 0.35;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+  }
+
+  /* Header: GRID prevents title/hint collision and never overlaps */
+  .dlter-type-links-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .dlter-type-links-header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: 14px;
+    }
+  }
+
+  .dlter-type-links-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dm-text-primary, #e5e7eb);
+    min-width: 0;
+  }
+
+  /* UPDATED: right-side meta stack (hint + explained CTA) */
+  .dlter-type-links-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 768px) {
+    .dlter-type-links-meta {
+      align-items: flex-end;
+    }
+  }
+
+  .dlter-type-links-hint {
+    font-size: 0.8rem;
+    color: var(--dm-text-secondary, #cbd5f5);
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .dlter-type-links-hint {
+      text-align: right;
+      max-width: 56ch; /* prevents it from bulldozing the title */
+    }
+  }
+
+  /* UPDATED: use a unique class name so it doesn't interfere with the quiz header pill
+     (prevents style + tracking collisions with .dlter-explained-pill used elsewhere). */
+  .dlter-type-links-explained-pill{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    white-space: nowrap;
+
+    color: rgba(249,250,251,0.92);
+    background: rgba(15,23,42,0.72);
+    border: 1px solid rgba(252,211,77,0.30);
+
+    box-shadow:
+      0 10px 22px rgba(0,0,0,0.35),
+      0 0 0 1px rgba(252,211,77,0.10);
+
+    transition:
+      transform 0.18s ease-out,
+      box-shadow 0.18s ease-out,
+      border-color 0.18s ease-out,
+      background 0.18s ease-out,
+      color 0.18s ease-out;
+  }
+
+  .dlter-type-links-explained-pill:hover{
+    border-color: rgba(252,211,77,0.65);
+    background: rgba(15,23,42,0.88);
+    transform: translateY(-1px);
+    box-shadow:
+      0 14px 30px rgba(0,0,0,0.45),
+      0 0 0 1px rgba(252,211,77,0.18);
+    color: rgba(255,255,255,0.98);
+  }
+
+  .dlter-type-links-explained-pill:focus-visible{
+    outline: 2px solid rgba(52,152,219,0.90);
+    outline-offset: 3px;
+  }
+
+  /* Grid of tiles */
+  .dlter-type-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .dlter-type-tile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.98);
+    border: 1px solid rgba(31,41,55,0.9);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition:
+      background 0.16s ease-out,
+      border-color 0.16s ease-out,
+      box-shadow 0.16s ease-out,
+      transform 0.12s ease-out;
+
+    /* critical for ellipsis/truncation inside grid */
+    min-width: 0;
+  }
+
+  /* Accessibility: show the same affordance on keyboard focus */
+  .dlter-type-tile:focus-within {
+    background: rgba(30,64,175,0.85);
+    border-color: rgba(96,165,250,0.85);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+  }
+
+  .dlter-type-tile:hover {
+    background: rgba(30,64,175,0.85);
+    border-color: rgba(96,165,250,0.85);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.9);
+    transform: translateY(-1px);
+  }
+
+  .dlter-type-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(56,189,248,0.9), rgba(129,140,248,0.9));
+    box-shadow: 0 0 10px rgba(56,189,248,0.9);
+    flex-shrink: 0;
+  }
+
+  /* Link row: allow truncation safely */
+  .dlter-type-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    text-decoration: none;
+    color: var(--dm-text-secondary, #cbd5f5);
+    font-size: 0.8rem;
+
+    /* critical for ellipsis inside flex/grid */
+    min-width: 0;
+  }
+
+  /* Keyboard focus ring */
+  .dlter-type-link:focus-visible {
+    outline: 2px solid rgba(52,152,219,0.9);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+
+  .dlter-type-name {
+    font-weight: 600;
+    color: var(--dm-text-primary, #e5e7eb);
+
+    /* truncate long names */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  .dlter-type-code {
+    opacity: 0.8;
+    font-size: 0.74rem;
+
+    /* truncate long codes in tight tiles */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  /* Mobile pass: reduce columns sooner (Webflow-standard breakpoints) */
+  @media (max-width: 991px) {
+    .dlter-type-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .dlter-type-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 479px) {
+    .dlter-type-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="dlter-type-links" aria-labelledby="dlter-type-links-title">
+  <div class="dlter-type-links-inner">
+    <div class="dlter-type-links-header">
+      <p id="dlter-type-links-title" class="dlter-type-links-title">
+        Browse all DLTER Reality Types
+      </p>
+
+      <!-- UPDATED: hint + DLTER Explained CTA (so users can reach Explained easily) -->
+      <div class="dlter-type-links-meta">
+        <p class="dlter-type-links-hint">
+          Each type page includes a free snapshot. Blueprints unlock per Reality Type.
+        </p>
+
+        <a
+          class="dlter-type-links-explained-pill"
+          href="/dlter-explained"
+          aria-label="Read DLTER Explained"
+        >
+          Read DLTER Explained →
+        </a>
+      </div>
+    </div>
+
+    <div class="dlter-type-list">
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/inner-frameworker">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Inner Frameworker</span>
+          <span class="dlter-type-code">IN–ST–FX</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/internal-alchemist">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Internal Alchemist</span>
+          <span class="dlter-type-code">IN–FL–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/dimensional-flowweaver">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Dimensional Flowweaver</span>
+          <span class="dlter-type-code">EX–FL–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/external-catalyst">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">External Catalyst</span>
+          <span class="dlter-type-code">EX–FL–FX</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/reality-architect">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Reality Architect</span>
+          <span class="dlter-type-code">EX–ST–FX</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/structured-empathic-lens">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Structured Empathic Lens</span>
+          <span class="dlter-type-code">IN–ST–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/analytical-evolver">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Analytical Evolver</span>
+          <span class="dlter-type-code">EX–ST–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/fluxbound-weaver">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Fluxbound Weaver</span>
+          <span class="dlter-type-code">IN–FL–FX</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/axis-synthesizer">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Axis Synthesizer</span>
+          <span class="dlter-type-code">IN–(ST/FL)–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/resonant-fieldholder">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Resonant Fieldholder</span>
+          <span class="dlter-type-code">EX–(ST/FL)–TR</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/dimensional-anchor">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Dimensional Anchor</span>
+          <span class="dlter-type-code">(IN/EX)–ST–FX</span>
+        </a>
+      </div>
+
+      <div class="dlter-type-tile">
+        <a class="dlter-type-link" href="/dlter-reality-types/horizon-breaker">
+          <span class="dlter-type-pill-dot"></span>
+          <span class="dlter-type-name">Horizon Breaker</span>
+          <span class="dlter-type-code">(IN/EX)–FL–TR</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+Embed 3:
+<div class="nf-lab-container" data-dlter-quiz-embed>
+  <noscript>
+    <style>
+      [data-dlter-quiz-embed] .card{ display:none !important; }
+      [data-dlter-quiz-embed] .dlter-noscript{
+        max-width:720px;
+        margin:40px auto 0;
+        padding:16px 18px;
+        border:1px solid rgba(148,163,184,.25);
+        border-radius:14px;
+        background:rgba(2,6,23,.55);
+        color:#e5e7eb;
+        font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+        line-height:1.55;
+        text-align:left;
+      }
+      [data-dlter-quiz-embed] .dlter-noscript a{
+        color:rgba(252,211,77,.95);
+        text-decoration:none;
+        border-bottom:1px solid rgba(252,211,77,.35);
+        padding-bottom:2px;
+        font-weight:800;
+      }
+      [data-dlter-quiz-embed] .dlter-noscript a:hover{
+        border-bottom-color:rgba(252,211,77,.70);
+      }
+    </style>
+
+    <div class="dlter-noscript" role="status" aria-live="polite">
+      <div style="font-weight:900;margin-bottom:6px;">JavaScript is required</div>
+      <div style="opacity:.9;margin-bottom:10px;">
+        This quiz needs JavaScript to load the questions and calculate your DLTER Reality Type.
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <a href="/dlter-explained">Read DLTER Explained →</a>
+        <span style="opacity:.65;">•</span>
+        <a href="/contact">Contact support →</a>
+      </div>
+    </div>
+  </noscript>
+
+  <div class="card dlter-quiz-card" role="region" aria-labelledby="dlter-quiz-title">
+    <div class="dlter-quiz-shell">
+      <header class="dlter-header">
+        <div class="dlter-badge">
+          <span class="dlter-badge-dot" aria-hidden="true"></span>
+          <span>DLTER System · Identity Geometry</span>
+        </div>
+
+        <h1 id="dlter-quiz-title" class="dlter-quiz-title">DLTER Reality Types Quiz</h1>
+
+        <p class="dlter-quiz-intro" id="dlter-quiz-intro">
+          Answer each statement from 1 (Strongly Disagree) to 5 (Strongly Agree).
+          At the end you’ll see which DLTER Reality Type your identity geometry is closest to.
+        </p>
+
+        <div class="dlter-explained-row" role="note" aria-label="Learn about the DLTER framework">
+          <span class="dlter-explained-kicker">Curious what this is based on?</span>
+
+          <a
+            class="dlter-explained-pill"
+            href="/dlter-explained"
+            aria-label="Read DLTER Explained"
+            title="Read DLTER Explained"
+            data-dlter-explained-link
+          >
+            Read DLTER Explained →
+          </a>
+        </div>
+
+        <p class="dlter-progress-hint" id="dlter-progress-hint">
+          24 questions · approx. 4–6 minutes
+        </p>
+
+        <div class="dlter-status-row">
+          <span
+            class="dlter-progress-count"
+            id="dlter-progress-count"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            0 of 24 answered
+          </span>
+
+          <div class="dlter-current-section-pill" aria-label="Current section">
+            <span class="dlter-axis-icon" aria-hidden="true"></span>
+            <span id="dlter-current-section-label">Perception Axis</span>
+          </div>
+        </div>
+
+        <div class="dlter-progress-bar" aria-hidden="true">
+          <div class="dlter-progress-bar-fill"></div>
+        </div>
+
+        <p
+          id="dlter-geometry-preview"
+          class="dlter-progress-hint"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+      </header>
+
+      <form
+        id="dlter-quiz-form"
+        aria-describedby="dlter-quiz-intro dlter-progress-hint dlter-error"
+      >
+        <div id="dlter-quiz-questions"></div>
+
+        <div class="actions">
+          <button id="dlter-submit" class="btn primary tiny" type="submit">
+            See My DLTER Reality Type
+          </button>
+        </div>
+
+        <p id="dlter-error" aria-live="polite"></p>
+      </form>
+
+      <div
+        id="dlter-result"
+        role="region"
+        aria-label="Your DLTER result"
+        aria-live="polite"
+        aria-atomic="true"
+        tabindex="-1"
+      ></div>
+
+      <div
+        id="dlter-save-row"
+        class="dlter-save-row"
+        hidden
+        role="region"
+        aria-label="Save your DLTER result"
+      >
+        <div class="dlter-save-left">
+          <div class="dlter-save-title">Save your result</div>
+          <div class="dlter-save-sub" id="dlter-save-help">
+            Save to your account (free). One per member. You can update it later by saving again.
+          </div>
+        </div>
+
+        <div class="dlter-save-right">
+          <button
+            type="button"
+            id="dlter-save-result"
+            class="dlter-save-btn"
+            aria-label="Save my DLTER Reality Type"
+            aria-describedby="dlter-save-help dlter-save-status"
+            data-ms-redirect="current-url"
+          >
+            <span data-dlter-save-label>Save my result</span>
+          </button>
+
+          <span
+            id="dlter-save-status"
+            class="dlter-save-status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* ==============================
+       Scoped guard (prevents bleed)
+       ============================== */
+    [data-dlter-quiz-embed] .dlter-explained-row,
+    [data-dlter-quiz-embed] .dlter-save-row{
+      box-sizing: border-box;
+    }
+
+    /* IMPORTANT: ensure [hidden] always wins even though .dlter-save-row sets display:flex */
+    [data-dlter-quiz-embed] [hidden]{
+      display: none !important;
+    }
+
+    /* H1 should match existing title spacing */
+    [data-dlter-quiz-embed] .dlter-quiz-title{
+      margin: 0;
+    }
+
+    /* DLTER Explained micro-row */
+    [data-dlter-quiz-embed] .dlter-explained-row{
+      margin: 0.45rem 0 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    [data-dlter-quiz-embed] .dlter-explained-kicker{
+      font-size: 0.82rem;
+      color: var(--dm-text-disabled);
+      line-height: 1.35;
+    }
+
+    [data-dlter-quiz-embed] .dlter-explained-pill{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.82rem;
+      line-height: 1.2;
+      white-space: nowrap;
+
+      color: rgba(249,250,251,0.92);
+      background: rgba(15,23,42,0.72);
+      border: 1px solid rgba(252,211,77,0.30);
+
+      box-shadow:
+        0 10px 22px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(252,211,77,0.10);
+
+      transition:
+        transform 0.18s ease-out,
+        box-shadow 0.18s ease-out,
+        border-color 0.18s ease-out,
+        background 0.18s ease-out,
+        color 0.18s ease-out;
+    }
+
+    [data-dlter-quiz-embed] .dlter-explained-pill:hover{
+      border-color: rgba(252,211,77,0.65);
+      background: rgba(15,23,42,0.88);
+      transform: translateY(-1px);
+      box-shadow:
+        0 14px 30px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(252,211,77,0.18);
+      color: rgba(255,255,255,0.98);
+    }
+
+    [data-dlter-quiz-embed] .dlter-explained-pill:active{
+      transform: translateY(0px);
+    }
+
+    [data-dlter-quiz-embed] .dlter-explained-pill:focus-visible{
+      outline: 2px solid rgba(52,152,219,0.90);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 640px){
+      [data-dlter-quiz-embed] .dlter-explained-row{
+        justify-content: center;
+        text-align: center;
+        gap: 8px;
+      }
+      [data-dlter-quiz-embed] .dlter-explained-kicker{
+        width: 100%;
+      }
+    }
+
+    /* ==============================
+       Save Result Row (member-only)
+       ============================== */
+    [data-dlter-quiz-embed] .dlter-save-row{
+      margin-top: 14px;
+      padding: 12px 12px;
+      border-radius: var(--nf-radius-sm, 10px);
+      border: 1px solid rgba(148,163,184,0.35);
+      background: rgba(15,23,42,0.90);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.42);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-left{
+      min-width: 220px;
+      flex: 1 1 320px;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-title{
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(229,231,235,0.92);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-sub{
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--dm-text-disabled);
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-right{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      padding: 0.45rem 0.85rem;
+      min-height: 36px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      user-select: none;
+
+      color: rgba(249,250,251,0.95);
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(252,211,77,0.40);
+      box-shadow:
+        0 10px 22px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(252,211,77,0.10);
+
+      transition:
+        transform 0.16s ease-out,
+        box-shadow 0.16s ease-out,
+        border-color 0.16s ease-out,
+        background 0.16s ease-out,
+        color 0.16s ease-out;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-btn:hover{
+      border-color: rgba(252,211,77,0.70);
+      background: rgba(15,23,42,0.88);
+      transform: translateY(-1px);
+      box-shadow:
+        0 14px 30px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(252,211,77,0.18);
+      color: rgba(255,255,255,0.98);
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-btn:active{
+      transform: translateY(0px);
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-btn:focus-visible{
+      outline: 2px solid rgba(52,152,219,0.90);
+      outline-offset: 3px;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-btn[disabled],
+    [data-dlter-quiz-embed] .dlter-save-btn[aria-disabled="true"]{
+      opacity: 0.62;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    [data-dlter-quiz-embed] .dlter-save-status{
+      font-size: 0.82rem;
+      color: rgba(229,231,235,0.88);
+      min-height: 1em;
+      max-width: 52ch;
+    }
+
+    @media (max-width: 640px){
+      [data-dlter-quiz-embed] .dlter-save-row{
+        justify-content: center;
+        text-align: center;
+      }
+      [data-dlter-quiz-embed] .dlter-save-right{
+        width: 100%;
+        justify-content: center;
+      }
+      [data-dlter-quiz-embed] .dlter-save-status{
+        max-width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      [data-dlter-quiz-embed] .dlter-explained-pill,
+      [data-dlter-quiz-embed] .dlter-save-btn{
+        transition: none !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</div>

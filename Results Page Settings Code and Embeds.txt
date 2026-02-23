@@ -1,0 +1,128 @@
+Results Page Settings Code
+
+Head:
+<title>Client Results | NeuForm Fitness</title>
+<meta name="description" content="Real outcomes from NeuForm lifters—strength gains, recomposition wins, and plan-based progress. Browse client results and shareable testimonials." />
+<link rel="canonical" href="https://www.neuform-fitness.com/results" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="NeuForm Fitness" />
+<meta property="og:title" content="Client Results | NeuForm Fitness" />
+<meta property="og:description" content="Real outcomes from NeuForm lifters—proof that structure works." />
+<meta property="og:url" content="https://www.neuform-fitness.com/results" />
+<meta property="og:type" content="website" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Client Results | NeuForm Fitness" />
+<meta name="twitter:description" content="Real outcomes from NeuForm lifters—proof that structure works." />
+
+<meta name="theme-color" content="#050607" />
+
+
+
+Body:
+<script>
+(function(){
+  "use strict";
+
+  // Idempotence guard
+  if (window.__NF_RESULTS_COPY_LINK__) return;
+  window.__NF_RESULTS_COPY_LINK__ = true;
+
+  function ensureStatusNode(){
+    var id = "nf-results-copy-status";
+    var el = document.getElementById(id);
+    if (el) return el;
+
+    el = document.createElement("div");
+    el.id = id;
+    el.setAttribute("role","status");
+    el.setAttribute("aria-live","polite");
+    el.setAttribute("aria-atomic","true");
+
+    // sr-only (no dependency on global CSS)
+    el.style.position = "absolute";
+    el.style.width = "1px";
+    el.style.height = "1px";
+    el.style.padding = "0";
+    el.style.margin = "-1px";
+    el.style.overflow = "hidden";
+    el.style.clip = "rect(0,0,0,0)";
+    el.style.whiteSpace = "nowrap";
+    el.style.border = "0";
+
+    document.body.appendChild(el);
+    return el;
+  }
+
+  var statusEl = null;
+  function announce(msg){
+    try{
+      statusEl = statusEl || ensureStatusNode();
+      statusEl.textContent = msg || "";
+    }catch(_){}
+  }
+
+  function safeSameOriginUrl(raw){
+    try{
+      var u = new URL(String(raw || ""), window.location.origin);
+      if (u.origin !== window.location.origin) return "";
+      return u.href;
+    }catch(e){
+      return "";
+    }
+  }
+
+  function copyText(text){
+    if (!text) return Promise.reject();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  }
+
+  function flash(btn, msg){
+    var prev = btn.textContent;
+    btn.textContent = msg || "Copied ✓";
+    announce("Link copied.");
+    setTimeout(function(){
+      btn.textContent = prev;
+      announce("");
+    }, 1200);
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target && e.target.closest ? e.target.closest("[data-copy-link]") : null;
+    if(!btn) return;
+
+    e.preventDefault();
+
+    var raw =
+      btn.getAttribute("data-url") ||
+      btn.getAttribute("href") ||
+      "";
+
+    // ✅ Only copy same-origin URLs (prevents weird injected external links)
+    var url = safeSameOriginUrl(raw) || window.location.href;
+
+    copyText(url).then(function(){
+      flash(btn, "Copied ✓");
+    }).catch(function(){
+      announce("Copy failed. Manual copy prompt opened.");
+      window.prompt("Copy this link:", url);
+      setTimeout(function(){ announce(""); }, 1200);
+    });
+  });
+})();
+</script>
+

@@ -1,0 +1,281 @@
+Head:
+<title>Review Submitted | NeuForm Fitness</title>
+<meta name="description" content="Your review has been submitted to NeuForm Fitness. You can view client results or browse training plans." />
+
+<!-- Confirmation page should not be indexed -->
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="canonical" href="https://www.neuform-fitness.com/review-submitted" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Review Submitted | NeuForm Fitness" />
+<meta property="og:description" content="Thanks — your review has been submitted. View client results or browse training plans." />
+<meta property="og:url" content="https://www.neuform-fitness.com/review-submitted" />
+<meta property="og:type" content="website" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Review Submitted | NeuForm Fitness" />
+<meta name="twitter:description" content="Thanks — your review has been submitted. View client results or browse training plans." />
+
+<style>
+  /* ===========================
+     Review Submitted (scoped)
+     Minimal NeuForm-styled card
+     =========================== */
+
+  :root{
+    --nf-blue:#3498db;
+    --nf-ink:#e9f3f7;
+    --nf-muted:rgba(233,243,247,.75);
+    --nf-card:rgba(0,0,0,.60);
+    --nf-border:rgba(52,152,219,.22);
+    --nf-shadow:0 16px 60px rgba(0,0,0,.55);
+    --nf-radius:16px;
+  }
+
+  .nf-review-submitted{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:64px 16px;
+  }
+
+  .nf-review-submitted__card{
+    width:min(720px, 100%);
+    background:var(--nf-card);
+    border:1px solid var(--nf-border);
+    border-radius:var(--nf-radius);
+    box-shadow:var(--nf-shadow);
+    padding:28px 24px;
+    backdrop-filter: blur(10px);
+  }
+
+  .nf-review-submitted__badge{
+    width:44px; height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    background:rgba(52,152,219,.18);
+    border:1px solid rgba(52,152,219,.35);
+    color:var(--nf-ink);
+    font-weight:700;
+    margin-bottom:14px;
+  }
+
+  .nf-review-submitted__title{
+    margin:0 0 6px 0;
+    color:var(--nf-ink);
+    font-size:34px;
+    line-height:1.1;
+    letter-spacing:-0.02em;
+  }
+
+  .nf-review-submitted__subtitle{
+    margin:0 0 18px 0;
+    color:var(--nf-muted);
+    font-size:16px;
+    line-height:1.45;
+  }
+
+  .nf-review-submitted__actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:10px 0 14px 0;
+  }
+
+  .nf-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 16px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:14px;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nf-btn:active{ transform: translateY(1px); }
+
+  .nf-btn--primary{
+    background:linear-gradient(180deg, rgba(52,152,219,.95), rgba(33,125,187,.95));
+    color:#0b0f12;
+    box-shadow:0 12px 28px rgba(52,152,219,.22);
+  }
+
+  .nf-btn--primary:hover{
+    box-shadow:0 16px 36px rgba(52,152,219,.28);
+  }
+
+  .nf-btn--ghost{
+    background:rgba(255,255,255,.06);
+    color:var(--nf-ink);
+    border:1px solid rgba(255,255,255,.14);
+  }
+
+  .nf-btn--ghost:hover{
+    background:rgba(255,255,255,.09);
+  }
+
+  .nf-review-submitted__fineprint{
+    margin:0;
+    color:rgba(233,243,247,.62);
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  /* Visible redirect countdown (non-invasive) */
+  .nf-review-submitted__countdown{
+    margin-top:10px;
+    color:rgba(233,243,247,.62);
+    font-size:13px;
+    line-height:1.4;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+  }
+  .nf-review-submitted__countdown a{
+    color:rgba(233,243,247,.92);
+    font-weight:800;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .nf-review-submitted__countdown a:hover{
+    text-decoration-thickness: .12em;
+  }
+
+  @media (max-width: 480px){
+    .nf-review-submitted{ padding:44px 14px; }
+    .nf-review-submitted__title{ font-size:28px; }
+  }
+</style>
+
+Body:
+<script>
+(function(){
+  "use strict";
+
+  // Idempotence guard
+  if (window.__NF_REVIEW_SUBMITTED_REDIRECT__) return;
+  window.__NF_REVIEW_SUBMITTED_REDIRECT__ = true;
+
+  // Soft redirect after idle time (8s) + visible countdown + "Stay here" cancel.
+  var SECONDS = 8;
+  var DEST = "/results";
+
+  var remaining = SECONDS;
+  var intervalId = null;
+  var timeoutId = null;
+  var stopped = false;
+
+  function $(sel, root){ return (root || document).querySelector(sel); }
+
+  function ensureCountdownUI(){
+    var card = $('.nf-review-submitted__card') || $('.nf-review-submitted') || document.body;
+    if (!card) return null;
+
+    var wrap = document.getElementById('nf-review-redirect-countdown');
+    if (wrap) return wrap;
+
+    wrap = document.createElement('p');
+    wrap.id = 'nf-review-redirect-countdown';
+    wrap.className = 'nf-review-submitted__fineprint nf-review-submitted__countdown';
+    wrap.setAttribute('role','status');
+    wrap.setAttribute('aria-live','polite');
+    wrap.setAttribute('aria-atomic','true');
+
+    var msg = document.createElement('span');
+    msg.id = 'nf-review-redirect-msg';
+
+    var stay = document.createElement('a');
+    stay.href = '#';
+    stay.id = 'nf-review-redirect-stay';
+    stay.textContent = 'Stay on this page';
+    stay.addEventListener('click', function(e){
+      e.preventDefault();
+      stop('Auto-redirect cancelled.');
+      try { stay.style.display = 'none'; } catch(_) {}
+    }, { passive:false });
+
+    wrap.appendChild(msg);
+    wrap.appendChild(stay);
+
+    var actions = card.querySelector('.nf-review-submitted__actions');
+    if (actions && actions.parentNode){
+      actions.parentNode.insertBefore(wrap, actions.nextSibling);
+    } else {
+      card.appendChild(wrap);
+    }
+
+    return wrap;
+  }
+
+  function setMsg(text){
+    var el = document.getElementById('nf-review-redirect-msg');
+    if (el) el.textContent = text;
+  }
+
+  function stop(text){
+    if (stopped) return;
+    stopped = true;
+
+    if (intervalId) { try{ clearInterval(intervalId); }catch(_){} intervalId = null; }
+    if (timeoutId)  { try{ clearTimeout(timeoutId); }catch(_){} timeoutId = null; }
+
+    setMsg(text || 'Auto-redirect cancelled.');
+  }
+
+  // Cancel on meaningful interaction (scroll does NOT cancel — users scroll to read)
+  ["click","keydown","mousemove","touchstart"].forEach(function(evt){
+    window.addEventListener(evt, function(){
+      stop('Auto-redirect paused because you interacted with the page.');
+    }, { passive:true, once:true });
+  });
+
+  ensureCountdownUI();
+  setMsg('Redirecting to Results in ' + remaining + 's…');
+
+  intervalId = setInterval(function(){
+    if (stopped) return;
+    remaining = Math.max(0, remaining - 1);
+    setMsg('Redirecting to Results in ' + remaining + 's…');
+  }, 1000);
+
+  timeoutId = setTimeout(function(){
+    if (stopped) return;
+    try { window.location.href = DEST; } catch(e){}
+  }, SECONDS * 1000);
+
+})();
+</script>
+
+Embed:
+<div class="nf-review-submitted">
+  <div class="nf-review-submitted__card" role="region" aria-labelledby="nf-review-submitted-title">
+    <div class="nf-review-submitted__badge" aria-hidden="true">✓</div>
+
+    <h1 id="nf-review-submitted-title" class="nf-review-submitted__title">
+      Review submitted
+    </h1>
+
+    <p class="nf-review-submitted__subtitle">
+      Thanks — your result is now live (or will appear within ~60 seconds).
+    </p>
+
+    <div class="nf-review-submitted__actions">
+      <a class="nf-btn nf-btn--primary" href="/results">View Client Results</a>
+      <a class="nf-btn nf-btn--ghost" href="/training-plans">Browse Training Plans</a>
+    </div>
+
+    <p class="nf-review-submitted__fineprint">
+      If you don’t see it immediately, refresh the Results page in a few seconds.
+    </p>
+  </div>
+</div>

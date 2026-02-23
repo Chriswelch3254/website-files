@@ -1,0 +1,155 @@
+Head:
+<!-- Start Plan Unlock: canonical + theme -->
+<link rel="canonical" href="https://www.neuform-fitness.com/start-plan-unlock" />
+<meta name="theme-color" content="#3498db" />
+
+<!-- Functional redirect page: keep out of search -->
+<meta name="robots" content="noindex,nofollow,noarchive,max-image-preview:large" />
+
+
+Body:
+
+
+Embed 1:
+<!-- /start-plan-unlock — Embed 1 (updated)
+  Updates:
+  - Writes BOTH nf_ap_access_until (primary) + countdownDateTime (legacy) to the same ISO timestamp
+  - LocalStorage is the source of truth; sessionStorage is a best-effort mirror/fallback
+  - Shows a brief “Activating your plan access…” UI + loader before redirect
+  - Adds <noscript> fallback (meta refresh + manual link)
+  - Idempotent guard (prevents double-run if pasted twice)
+  - Reduced-motion safe spinner
+-->
+
+<noscript>
+  <meta http-equiv="refresh" content="0; url=/start-plan">
+  <div style="max-width:720px;margin:40px auto 0;padding:16px 18px;border:1px solid rgba(148,163,184,.25);border-radius:14px;background:rgba(2,6,23,.55);color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.55;">
+    <div style="font-weight:800;margin-bottom:6px;">JavaScript is disabled</div>
+    <div style="opacity:.9;margin-bottom:10px;">
+      We can’t automatically activate and redirect you without JavaScript.
+    </div>
+    <a href="/start-plan" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid rgba(52,152,219,.45);background:rgba(52,152,219,.12);color:#eaf6ff;text-decoration:none;font-weight:800;">
+      Continue to Start Plan
+    </a>
+  </div>
+</noscript>
+
+<div
+  id="nf-ap-unlock-ui"
+  aria-live="polite"
+  aria-atomic="true"
+  role="status"
+  style="max-width:720px;margin:48px auto 0;padding:18px 18px;border:1px solid rgba(148,163,184,.22);border-radius:16px;background:rgba(2,6,23,.55);color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.5;"
+>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div
+      class="nf-ap-spinner"
+      aria-hidden="true"
+      style="width:18px;height:18px;border-radius:999px;border:2px solid rgba(233,243,247,.22);border-top-color:rgba(233,243,247,.9);"
+    ></div>
+    <div>
+      <div style="font-weight:900;font-size:15px;">Activating your plan access…</div>
+      <div style="opacity:.85;font-size:13.5px;margin-top:2px;">Redirecting you to Start Plan.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;opacity:.85;font-size:13.5px;">
+    If you aren’t redirected automatically, <a href="/start-plan" style="color:rgba(233,243,247,.95);font-weight:900;">tap here</a>.
+  </div>
+</div>
+
+<style>
+  @keyframes nf-ap-spin { to { transform: rotate(360deg); } }
+  .nf-ap-spinner { animation: nf-ap-spin .85s linear infinite; }
+  @media (prefers-reduced-motion: reduce){
+    .nf-ap-spinner { animation: none; }
+  }
+</style>
+
+<script>
+  (function () {
+    "use strict";
+
+    // Idempotence guard (prevents double-run if embed is pasted twice)
+    if (window.__NF_AP_UNLOCK_BOOTED__) return;
+    window.__NF_AP_UNLOCK_BOOTED__ = true;
+
+    // Start Plan Unlock (1 hour)
+    // - UI-only timestamps (NOT enforcement)
+    // - Best-effort storage only (never block redirect)
+    // - Writes BOTH primary + legacy expiry keys for compatibility
+    // - LocalStorage is the source of truth; sessionStorage is a best-effort mirror
+
+    var WINDOW_MS = 60 * 60 * 1000;
+    var untilISO = new Date(Date.now() + WINDOW_MS).toISOString();
+    var nowISO = new Date().toISOString();
+
+    function safe(fn){ try { fn(); } catch(_){} }
+
+    // Prefer sitewide config if available; fall back safely
+    var nf = window.neuform || (window.neuform = {});
+    var keys = (nf.config && nf.config.storageKeys) ? nf.config.storageKeys : {};
+
+    var KEY_PRIMARY = keys.apExpiryPrimary || "nf_ap_access_until";
+    var KEY_LEGACY  = keys.apExpiryLegacy  || "countdownDateTime";
+    var KEY_SET_AT  = "nf_ap_access_set_at";
+
+    function tryDel(store, k){ try { store.removeItem(k); } catch(_){} }
+    function trySet(store, k, v){ try { store.setItem(k, v); } catch(_){} }
+
+    // Storage (best-effort)
+    safe(function () {
+      // Clear prior UI state (both stores)
+      safe(function(){
+        tryDel(localStorage, KEY_PRIMARY);
+        tryDel(localStorage, KEY_LEGACY);
+        tryDel(localStorage, KEY_SET_AT);
+      });
+      safe(function(){
+        tryDel(sessionStorage, KEY_PRIMARY);
+        tryDel(sessionStorage, KEY_LEGACY);
+        tryDel(sessionStorage, KEY_SET_AT);
+      });
+
+      // Write unified expiry (localStorage = source of truth)
+      safe(function(){
+        trySet(localStorage, KEY_PRIMARY, untilISO);
+        trySet(localStorage, KEY_LEGACY,  untilISO);
+        trySet(localStorage, KEY_SET_AT,  nowISO);
+      });
+
+      // Mirror to sessionStorage (fallback / private mode compatibility)
+      safe(function(){
+        trySet(sessionStorage, KEY_PRIMARY, untilISO);
+        trySet(sessionStorage, KEY_LEGACY,  untilISO);
+        trySet(sessionStorage, KEY_SET_AT,  nowISO);
+      });
+    });
+
+    // Optional analytics marker (no PII)
+    safe(function () {
+      (window.dataLayer = window.dataLayer || []).push({
+        event: "nf_ap_unlock_redirect",
+        nf_access_window_mins: 60,
+        nf_access_until: untilISO
+      });
+    });
+
+    function redirect(){
+      safe(function(){
+        try { window.location.replace("/start-plan"); }
+        catch(e){ window.location.href = "/start-plan"; }
+      });
+    }
+
+    // Give UI a beat to paint so users aren’t confused post-purchase
+    safe(function(){
+      if (typeof requestAnimationFrame === "function") {
+        requestAnimationFrame(function(){ setTimeout(redirect, 350); });
+      } else {
+        setTimeout(redirect, 350);
+      }
+    });
+
+  })();
+</script>

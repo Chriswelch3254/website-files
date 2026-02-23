@@ -1,0 +1,112 @@
+Tools Hub On Page Embeds
+Embed 1:
+<section
+  class="tools-hero-card"
+  data-nf-section="tools-hero"
+  aria-labelledby="tools-hero-heading"
+  aria-describedby="tools-hero-subtitle"
+>
+  <div class="tools-hero-label">NeuForm Labs</div>
+
+  <h1 class="tools-hero-heading" id="tools-hero-heading">
+    NeuForm Tools &amp; Calculators
+  </h1>
+
+  <p class="tools-hero-subtitle" id="tools-hero-subtitle">
+    Plan smarter in minutes. Use SmartMeal OS to dial in calories and macros, or take the DLTER Reality Types Quiz for training-mindset insights.
+    More tools are coming soon.
+  </p>
+</section>
+
+Embed 2:
+<div class="lab-cards-section">
+
+  <!-- Nutrition Lab -->
+  <a
+    href="/tools-nutrition-lab"
+    class="tool-card-link"
+    data-tool-open="true"
+    aria-label="Open Nutrition Lab: SmartMeal OS"
+  >
+    <div
+      class="tool-card tool-card--nutrition nf-tool-card"
+      data-tool-id="nutrition_lab"
+      data-tool-name="NeuForm Nutrition Lab"
+      data-tool-cat="nutrition"
+    >
+      <div class="tool-card-left">
+        <div class="tool-card-icon tool-card-icon--nutrition" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <path d="M7 3v8M10 3v8M7 7h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M14 3c2.2 0 4 1.8 4 4v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div class="tool-card-text">
+          <div class="tool-card-title">
+            <span>Nutrition Lab</span>
+            SmartMeal&nbsp;OS
+          </div>
+
+          <div class="tool-card-subtitle">
+            Calculate calories, macros, and meal splits to fuel hypertrophy, performance, and recovery.
+          </div>
+
+          <div class="tool-card-chips" aria-hidden="true">
+            <span class="tool-chip">Calories</span>
+            <span class="tool-chip">Macros</span>
+            <span class="tool-chip">Meal Splits</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card-arrow" aria-hidden="true">&rsaquo;</div>
+    </div>
+  </a>
+
+  <!-- Identity Lab / DLTER -->
+  <a
+    href="/dlter-quiz"
+    class="tool-card-link"
+    data-tool-open="true"
+    aria-label="Open Identity Lab: DLTER Reality Types"
+  >
+    <div
+      class="tool-card tool-card--identity nf-tool-card"
+      data-tool-id="identity_lab_dlter"
+      data-tool-name="DLTER Reality Types"
+      data-tool-cat="identity"
+    >
+      <div class="tool-card-left">
+        <div class="tool-card-icon tool-card-icon--identity" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <path d="M12 21s7-4.4 7-11a7 7 0 10-14 0c0 6.6 7 11 7 11z"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 10.2a1.8 1.8 0 100-3.6 1.8 1.8 0 000 3.6z"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="tool-card-text">
+          <div class="tool-card-title">
+            <span>Identity Lab</span>
+            DLTER&nbsp;Reality&nbsp;Types
+          </div>
+
+          <div class="tool-card-subtitle">
+            Discover your DLTER Reality Type and how perception + stability shape training, recovery, and growth.
+          </div>
+
+          <div class="tool-card-chips" aria-hidden="true">
+            <span class="tool-chip">Type Quiz</span>
+            <span class="tool-chip">Insights</span>
+            <span class="tool-chip">Training Mindset</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card-arrow" aria-hidden="true">&rsaquo;</div>
+    </div>
+  </a>
+
+</div>

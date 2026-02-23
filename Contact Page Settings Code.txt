@@ -1,0 +1,333 @@
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0b0f12">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/contact">
+<meta property="og:title" content="Contact NeuForm Fitness — We Reply Within 24 Hours">
+<meta property="og:description" content="Questions about training plans, tools, or an order? Send us a message—responses within 24 hours on weekdays.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — Contact">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact NeuForm Fitness — We Reply Within 24 Hours">
+<meta name="twitter:description" content="Questions about training plans, tools, or an order? Send us a message—responses within 24 hours on weekdays.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — Contact">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+
+Body:
+<!-- NeuForm — Contact Page Helpers -->
+<script>
+(function(){
+  "use strict";
+
+  window.neuform = window.neuform || {};
+  if (window.neuform.__NF_CONTACT_HELPERS__) return;
+  window.neuform.__NF_CONTACT_HELPERS__ = true;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  dl.push({ event: 'nf_contact_view' });
+
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+
+  // ===== 1) Wire the contact form (supports id="nf-contact" or [data-nf-contact]) =====
+  var form = $('#nf-contact') || $('[data-nf-contact]');
+  if (!form) return;
+
+  // Elements (optional ids/names shown; adjust to your inputs)
+  var statusEl  = $('#nf-contact-status'); // <div id="nf-contact-status" aria-live="polite"></div>
+  if (statusEl){
+    statusEl.setAttribute('role','status');
+    statusEl.setAttribute('aria-live','polite');
+    statusEl.setAttribute('aria-atomic','true');
+    statusEl.setAttribute('tabindex','-1');
+  }
+
+  var nameEl    = form.querySelector('[name="name"], [name="Name"], #name, #Name');
+  var emailEl   = form.querySelector('[name="email"], [name="Email"], #email, #Email');
+  var msgEl     = form.querySelector('[name="message"], [name="Message"], #message, #Message, textarea');
+  var planEl    = form.querySelector('[name="plan"], [name="topic"], [data-field="topic"]');
+  var newsEl    = form.querySelector('[name="newsletter"], [data-field="newsletter"]');
+
+  // Honeypot: add <input type="text" name="website" style="display:none"> or data-honeypot
+  var hpEl      = form.querySelector('[name="website"], [data-honeypot]');
+
+  // ===== 2) Helpers =====
+  function say(msg){
+    if (statusEl){
+      statusEl.textContent = msg;
+      try { statusEl.focus(); } catch(_){}
+    }
+  }
+  function len(v){ return (v||'').trim().length; }
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||'').trim()); }
+  function emailDomain(v){
+    try{
+      var s = String(v||'').trim();
+      if (!s || s.indexOf('@') === -1) return '';
+      return String(s.split('@').pop() || '').toLowerCase().trim();
+    }catch(e){ return ''; }
+  }
+  function isVisible(el){
+    try { return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length)); }
+    catch(e){ return false; }
+  }
+
+  // ===== 3) Submit state + double-submit guard (blocks only while submitting) =====
+  var SUBMIT_KEY = 'nf.contact.last';
+  var SUBMITTING_KEY = 'nf.contact.submitting';
+  var SUBMIT_WINDOW_MS = 5000;       // was 8000; reduced
+  var SUBMITTING_TTL_MS = 20000;     // safety unlock if Webflow never responds
+
+  function setSS(k,v){ try{ sessionStorage.setItem(k,v); } catch(e){} }
+  function getSS(k){ try{ return sessionStorage.getItem(k); } catch(e){ return null; } }
+  function delSS(k){ try{ sessionStorage.removeItem(k); } catch(e){} }
+
+  function markSubmitting(){
+    var now = String(Date.now());
+    setSS(SUBMIT_KEY, now);
+    setSS(SUBMITTING_KEY, now);
+  }
+
+  function clearSubmitting(){
+    delSS(SUBMITTING_KEY);
+  }
+
+  function isSubmitting(){
+    try{
+      var t = Number(getSS(SUBMITTING_KEY) || 0);
+      if (!t) return false;
+      if ((Date.now() - t) > SUBMITTING_TTL_MS){
+        clearSubmitting();
+        return false;
+      }
+      return true;
+    }catch(e){ return false; }
+  }
+
+  function recentlySubmitted(){
+    try{
+      var t = Number(getSS(SUBMIT_KEY) || 0);
+      return (Date.now() - t) < SUBMIT_WINDOW_MS;
+    }catch(e){ return false; }
+  }
+
+  // Watch Webflow success/fail UI to unlock re-submit
+  function watchWebflowOutcome(){
+    var wrap = form.closest('.w-form') || form.parentNode;
+    if (!wrap || wrap.__nfContactObserved) return;
+    wrap.__nfContactObserved = true;
+
+    function check(){
+      var done = wrap.querySelector('.w-form-done');
+      var fail = wrap.querySelector('.w-form-fail');
+      if (done && isVisible(done)) { clearSubmitting(); return true; }
+      if (fail && isVisible(fail)) { clearSubmitting(); return true; }
+      return false;
+    }
+
+    var mo = null;
+    try{
+      mo = new MutationObserver(function(){ check(); });
+      mo.observe(wrap, { subtree:true, childList:true, attributes:true });
+    }catch(_){}
+
+    var tries = 0;
+    var iv = setInterval(function(){
+      tries++;
+      var ended = check();
+      if (ended || !isSubmitting() || tries >= 60){ // 30s max
+        try{ clearInterval(iv); }catch(_){}
+        try{ if (mo) mo.disconnect(); }catch(_){}
+      }
+    }, 500);
+  }
+
+  // ===== 4) Lead meta + ID (non-PII) for TY dedupe =====
+  var PENDING_KEY = 'nf.leadPending';
+  var META_KEY    = 'nf.leadMeta';
+
+  // Canonical lead id key + legacy compatibility key
+  var LEAD_ID_KEY = 'nf.leadId';
+  var LEGACY_LEAD_ID_KEY = 'nf.lead_id';
+
+  function genLeadId(){
+    return 'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+  }
+
+  function getOrCreateLeadId(){
+    try{
+      var existing = getSS(LEAD_ID_KEY) || getSS(LEGACY_LEAD_ID_KEY);
+      if (existing) return existing;
+      var id = genLeadId();
+      setSS(LEAD_ID_KEY, id);
+      setSS(LEGACY_LEAD_ID_KEY, id);
+      return id;
+    }catch(e){
+      return 'lead_' + Date.now().toString(36);
+    }
+  }
+
+  function setPending(meta){
+    try{
+      setSS(PENDING_KEY, String(Date.now()));
+      setSS(META_KEY, JSON.stringify(meta || {}));
+    }catch(e){}
+  }
+
+  // ===== 5) Client-side validation (lightweight, no PII sent to analytics) =====
+  function validate(){
+    var errs = [];
+    if (nameEl && len(nameEl.value) < 2) errs.push('Please enter your name.');
+    if (emailEl && !validEmail(emailEl.value)) errs.push('Please enter a valid email.');
+    if (msgEl && len(msgEl.value) < 10) errs.push('Message should be at least 10 characters.');
+    if (hpEl && len(hpEl.value)) errs.push('Something went wrong. Please refresh and try again.');
+    return errs;
+  }
+
+  // ===== 6) Submit handling =====
+  form.addEventListener('submit', function(e){
+    var errs = validate();
+    if (errs.length){
+      say(errs[0]);
+      dl.push({
+        event:'nf_lead_error',
+        nf_error:'validation',
+        nf_fields:{
+          name: !!nameEl,
+          email: !!emailEl,
+          message: !!msgEl
+        }
+      });
+      e.preventDefault();
+      return;
+    }
+
+    // Only block a second submit if the first is still in-flight
+    if (recentlySubmitted() && isSubmitting()){
+      say('Sending…');
+      e.preventDefault();
+      return;
+    }
+
+    // Mark in-flight + start watching for Webflow done/fail
+    markSubmitting();
+    watchWebflowOutcome();
+
+    // UX: announce sending (does not block normal form handling)
+    say('Sending…');
+
+    // Build non-PII meta
+    var plan = planEl && planEl.value ? String(planEl.value).toLowerCase() : '';
+    var emDom = (emailEl && emailEl.value) ? emailDomain(emailEl.value) : '';
+    var leadId = getOrCreateLeadId();
+
+    var meta = {
+      nf_method: 'contact_form',
+      nf_lead_id: leadId,
+      nf_plan_interest: plan || null,
+      nf_name_len: nameEl ? len(nameEl.value) : null,
+      nf_email_domain: emDom || null,
+      nf_message_len: msgEl ? len(msgEl.value) : null,
+      nf_newsletter_optin: !!(newsEl && (newsEl.checked || newsEl.value === 'true'))
+    };
+
+    // IMPORTANT:
+    // Do NOT fire GA4 generate_lead here (avoid double counting / false positives).
+    // Fire conversion on the THANK YOU page only.
+    dl.push(Object.assign({ event:'nf_lead_submit_attempt' }, meta));
+    setPending(meta);
+  }, { capture: true });
+
+  // ===== 7) Link tracking inside the contact page (social, email, phone) =====
+  function safeOutboundUrl(a){
+    try{
+      var proto = String(a.protocol || '').toLowerCase();
+      if (proto !== 'http:' && proto !== 'https:') return '';
+      var host = a.hostname || '';
+      var path = a.pathname || '/';
+      return proto + '//' + host + path; // no query/hash
+    }catch(e){ return ''; }
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+
+    var hrefAttr = a.getAttribute('href') || '';
+    var hrefLower = hrefAttr.toLowerCase();
+
+    if (hrefLower.indexOf('mailto:') === 0) {
+      // ✅ NO RAW EMAIL IN dataLayer (domain-only)
+      var addr = (hrefAttr.replace(/^mailto:/i,'') || '').split('?')[0].trim();
+      var dom = '';
+      if (addr && addr.indexOf('@') > -1) dom = String(addr.split('@').pop() || '').toLowerCase();
+
+      dl.push({
+        event:'nf_support_click',
+        nf_channel:'email',
+        nf_email_domain: dom || null
+      });
+
+    } else if (hrefLower.indexOf('tel:') === 0) {
+      // ✅ NO RAW PHONE IN dataLayer
+      dl.push({
+        event:'nf_support_click',
+        nf_channel:'phone'
+      });
+
+    } else if (a.hostname && a.hostname !== location.hostname) {
+      var safe = safeOutboundUrl(a);
+      dl.push({
+        event:'nf_outbound_click',
+        nf_url: safe || null,
+        nf_host: a.hostname || null,
+        nf_path: a.pathname || null,
+        nf_context:'contact'
+      });
+    }
+  }, { passive:true });
+
+  // ===== 8) Small UX niceties =====
+  // a) Enter key submits when focused in textarea with Ctrl/Cmd+Enter
+  if (msgEl){
+    msgEl.addEventListener('keydown', function(e){
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+        form.requestSubmit ? form.requestSubmit() : form.submit();
+      }
+    });
+  }
+
+  // b) If you include a copy-email button: <button type="button" id="copy-support">Copy email</button>
+  var copyBtn = $('#copy-support');
+  var supportEmail = (function(){
+    var el = $('#support-email'); // optional <span id="support-email">hello@neuform-fitness.com</span>
+    return el ? (el.textContent || '').trim() : '';
+  })();
+
+  if (copyBtn && supportEmail){
+    copyBtn.addEventListener('click', function(){
+      try {
+        navigator.clipboard.writeText(supportEmail);
+        dl.push({ event:'nf_copy', nf_field:'support_email' });
+      } catch(e){}
+      say('Support email copied.');
+    });
+  }
+
+})();
+</script>

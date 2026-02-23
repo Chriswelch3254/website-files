@@ -1,0 +1,1121 @@
+Training Plans Page Settings Code:
+Head:
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0b0f12">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/training-plans">
+<meta property="og:title" content="Training Plans | 6-Week Strength, Hypertrophy &amp; Performance Programs | NeuForm Fitness">
+<meta property="og:description" content="Browse NeuForm’s evidence-based 6-week training plans—hypertrophy, strength, strength + hypertrophy, speed &amp; power, and functional fitness—with equipment notes and levels.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:secure_url" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness plan lineup — evidence-based 6-week programs">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Training Plans | 6-Week Strength, Hypertrophy &amp; Performance Programs | NeuForm Fitness">
+<meta name="twitter:description" content="Browse NeuForm’s evidence-based 6-week training plans—hypertrophy, strength, strength + hypertrophy, speed &amp; power, and functional fitness—with equipment notes and levels.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness plan lineup — evidence-based 6-week programs">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Link + focus styling (accessible) -->
+<style>
+  :root{
+    --nf-focus: #00D1C7;
+  }
+
+  /* Navigation & buttons */
+  .navbar a,
+  .btn,
+  .button {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  /* Preserve underlines in body copy for UX clarity */
+  .richtext a {
+    text-decoration: underline;
+  }
+
+  /* Visible focus outline for keyboard users (links + buttons + form controls) */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:not([tabindex="-1"]):focus-visible{
+    outline: 2px solid var(--nf-focus);
+    outline-offset: 2px;
+  }
+
+  /* Ensure stretched-link header shows as non-underlined link */
+  .nf-stretched-link {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    color: inherit;
+  }
+
+  /* Deterministic primary link selector (recommended) */
+  a[data-nf-plan-link]{
+    text-decoration: none !important;
+    border-bottom: none !important;
+    color: inherit;
+  }
+</style>
+
+
+Body:
+Body:
+<!-- Page settings → Body code (v4.6.1 — deterministic primary plan link; safe click interception; avoids wrong-link selection; no passive click listeners) -->
+
+<!-- NeuForm — Training Plans Catalog Scripts (v4.6.1) -->
+<script>
+(function(){
+  'use strict';
+
+  /* ==========================
+     utils / setup
+     ========================== */
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){
+    try{ dl.push(evt); }catch(_){}
+  }
+
+  // global namespace for history helpers
+  var NF_PLANS = window.NF_PLANS = window.NF_PLANS || {};
+
+  var LIST_ID   = 'training_plans';
+  var LIST_NAME = 'Training Plans Catalog';
+
+  var prefersReducedMotion = false;
+  try{
+    prefersReducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }catch(_){}
+
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+  function norm(s){
+    return String(s || '').toLowerCase().replace(/\s+/g,' ').trim();
+  }
+  function cleanSpaces(s){
+    return String(s || '').replace(/\s+/g,' ').trim();
+  }
+  function splitCSV(s){
+    return String(s || '')
+      .split(',')
+      .map(function(x){ return norm(x); })
+      .filter(Boolean);
+  }
+
+  function debounce(fn, ms){
+    var t;
+    return function(){
+      var args = arguments;
+      clearTimeout(t);
+      t = setTimeout(function(){ fn.apply(null, args); }, ms || 160);
+    };
+  }
+
+  function isPlainLeftClick(e){
+    // only intercept for normal left-click navigations
+    return !!e && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+  }
+
+  function absUrlMaybe(href){
+    href = cleanSpaces(href);
+    if (!href || href === '#') return '';
+    try{
+      return new URL(href, window.location.origin).href;
+    }catch(_){
+      return '';
+    }
+  }
+
+  function isProbablyInvalidDest(dest){
+    // Treat blank / hash / same-page as invalid for catalog navigation
+    if (!dest) return true;
+    if (dest === '#') return true;
+    if (dest === window.location.href) return true;
+    // ignore hash-only differences (same document)
+    if (dest.split('#')[0] === window.location.href.split('#')[0] && dest.indexOf('#') !== -1) return true;
+    return false;
+  }
+
+  function getCardPrimaryUrl(card){
+    try{
+      var d = (card && card.dataset) ? card.dataset : {};
+      return cleanSpaces(d.url || d.planUrl || d.planURL || d.planHref || '');
+    }catch(_){ return ''; }
+  }
+
+  function getPrimaryPlanLinkEl(card){
+    try{
+      // Preferred: explicit marker
+      var el =
+        card.querySelector('a[data-nf-plan-link][href]') ||
+        card.querySelector('a[data-plan-url][href]') ||
+        card.querySelector('.nf-stretched-link[href]') ||
+        card.querySelector('.nf-cta .nf-btn[href]');
+      if (el) return el;
+
+      // Heuristic fallback: same-origin link that looks like a plan page
+      var links = Array.prototype.slice.call(card.querySelectorAll('a[href]'));
+      if (!links.length) return null;
+
+      var origin = window.location.origin;
+      var candidates = [];
+      for (var i=0;i<links.length;i++){
+        var a = links[i];
+        var href = cleanSpaces(a.getAttribute('href') || '');
+        if (!href || href === '#') continue;
+        var abs = absUrlMaybe(href);
+        if (!abs) continue;
+        try{
+          var u = new URL(abs);
+          if (u.origin !== origin) continue;
+          candidates.push(a);
+          if (u.pathname.indexOf('/training-plans/') === 0) return a;
+        }catch(_){}
+      }
+      // If there is only one same-origin link, use it
+      if (candidates.length === 1) return candidates[0];
+      return null;
+    }catch(_){ return null; }
+  }
+
+  /* once-per-element guard (for impressions) */
+  var seen = (typeof WeakSet === 'function') ? new WeakSet() : null;
+  function once(el){
+    if (!seen) return true; // best-effort fallback
+    if (seen.has(el)) return false;
+    seen.add(el);
+    return true;
+  }
+
+  /* ==========================
+     plan reader (analytics + metadata)
+     ========================== */
+  function readPlan(el){
+    var d = (el && el.dataset) ? el.dataset : {};
+
+    var nameFromDom = '';
+    try{
+      var dn = el.querySelector('[data-name]');
+      if (dn) nameFromDom = (dn.getAttribute('data-name') || '').trim();
+      if (!nameFromDom){
+        var ip = el.querySelector('[itemprop="name"]');
+        if (ip) nameFromDom = (ip.textContent || '').trim();
+      }
+    }catch(_){}
+
+    var primaryLinkEl = getPrimaryPlanLinkEl(el);
+    var link = cleanSpaces(getCardPrimaryUrl(el) || (primaryLinkEl && (primaryLinkEl.getAttribute('href') || primaryLinkEl.href)) || '');
+    var abs = absUrlMaybe(link);
+
+    var price = Number(d.price || 0);
+    if (!isFinite(price) || price <= 0) price = null;
+
+    return {
+      plan: (d.plan || '').trim(),
+      name: (d.name || nameFromDom || '').trim(),
+      price: price,
+      sku: (d.sku || '').trim(),
+      position: Number(d.position || 0) || null,
+      url: abs || '',
+      waitlist: toBool(d.waitlist),
+      isProductPage: toBool(d.isProductPage),
+      currency: 'USD'
+    };
+  }
+
+  function buildGaItem(p, fallbackIndex){
+    var item = {
+      item_id:       p.sku || p.plan || ('plan_'+fallbackIndex),
+      item_name:     p.name || p.plan || 'Plan',
+      index:         p.position || fallbackIndex,
+      item_category: p.plan || undefined,
+      item_list_id:  LIST_ID,
+      item_list_name:LIST_NAME,
+      currency:      p.currency
+    };
+    if (p.price != null) item.price = p.price;
+    return item;
+  }
+
+  function fireViewItemList(cards){
+    if (!cards || !cards.length) return;
+    var gaItems = Array.prototype.map.call(cards, function(card, i){
+      return buildGaItem(readPlan(card), i+1);
+    });
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'view_item_list', { items: gaItems });
+    } else {
+      push({ event:'view_item_list', items: gaItems });
+    }
+  }
+
+  /* impression observer */
+  var io;
+  function ensureObserver(){
+    if (io || !('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (!once(el)) return;
+        var p = readPlan(el);
+        push({
+          event:       'nf_product_impression',
+          nf_plan:     p.plan,
+          nf_name:     p.name,
+          nf_price:    p.price,
+          nf_sku:      p.sku,
+          nf_position: p.position,
+          nf_dest:     p.url
+        });
+      });
+    }, { threshold:0.25, rootMargin:'60px 0px 60px 0px' });
+  }
+  function observeCards(cards){
+    ensureObserver();
+    if (!io || !cards) return;
+    cards.forEach(function(c){
+      if (!c.__nfObserved){
+        io.observe(c);
+        c.__nfObserved = true;
+      }
+    });
+  }
+
+  function fireSelectAndNavigate(item, dest){
+    // Always push NF event first (sync), then try gtag w/ callback.
+    push({
+      event:   'nf_plan_preview_open',
+      nf_plan: item.item_category,
+      nf_item_id: item.item_id,
+      nf_name: item.item_name,
+      nf_price:item.price != null ? item.price : null,
+      nf_dest: dest
+    });
+
+    var navigated = false;
+    function go(){
+      if (navigated) return;
+      navigated = true;
+      window.location.href = dest;
+    }
+
+    // Failsafe: never hang navigation
+    var hardTimeout = setTimeout(go, 800);
+
+    if (typeof window.gtag === 'function'){
+      try{
+        window.gtag('event', 'select_item', {
+          items: [item],
+          event_callback: function(){
+            clearTimeout(hardTimeout);
+            go();
+          },
+          event_timeout: 650
+        });
+        return;
+      }catch(_){}
+    }
+
+    // GTM-only fallback: allow one paint/frame for tags to pick up, then navigate
+    push({ event:'select_item', items:[item], nf_dest: dest });
+    requestAnimationFrame(function(){
+      clearTimeout(hardTimeout);
+      go();
+    });
+  }
+
+  /* click handling (catalog = "select item" → product page) */
+  function onClick(e){
+    var t = e.target;
+    if (!t || !t.closest) return;
+
+    // Never intercept Memberstack modal/checkout/action triggers
+    if (t.closest('[data-ms-price\\:add],[data-ms-modal],[data-ms-action]')) return;
+
+    var card = t.closest('[data-plan-card]') || t.closest('.plan-card,[class*="plan-card"]');
+    if (!card) return;
+
+    var actionEl = t.closest('[data-action]');
+    var action = actionEl ? (actionEl.getAttribute('data-action') || '') : '';
+
+    // Deterministic primary link:
+    // - Prefer data-nf-plan-link (recommended) / data-url / nf-stretched-link / CTA href
+    var primaryLinkEl = getPrimaryPlanLinkEl(card);
+    var clickedLink = t.closest('a[href]');
+
+    // Only handle explicit plan-open intents:
+    // - data-action="preview"|"buy"
+    // - clicking the primary plan link itself
+    var isPlanIntent = (action === 'preview' || action === 'buy') || (!!clickedLink && primaryLinkEl && clickedLink === primaryLinkEl);
+    if (!isPlanIntent) return;
+
+    var p = readPlan(card);
+
+    // Destination comes from card data-url first, then primary link, then readPlan url
+    var dest = absUrlMaybe(getCardPrimaryUrl(card) || (primaryLinkEl && (primaryLinkEl.getAttribute('href') || primaryLinkEl.href)) || p.url);
+
+    // If no valid destination, do not navigate or fire select.
+    if (isProbablyInvalidDest(dest)) return;
+
+    var item = buildGaItem(p, p.position || 1);
+
+    // If modified click (new tab/window), do not block navigation. Still fire events best-effort.
+    if (!isPlainLeftClick(e)){
+      if (typeof window.gtag === 'function'){
+        try{ window.gtag('event','select_item',{ items:[item] }); }catch(_){}
+      } else {
+        push({ event:'select_item', items:[item], nf_dest: dest });
+      }
+      push({
+        event: 'nf_plan_preview_open',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_dest: dest
+      });
+      return;
+    }
+
+    // Intercept normal navigation so analytics has time to flush
+    e.preventDefault();
+    fireSelectAndNavigate(item, dest);
+  }
+
+  /* scrub any helper/internal notes */
+  function scrubInternalNotes(){
+    try{
+      document.querySelectorAll('.nf-helper').forEach(function(n){
+        n.textContent = '';
+        n.style.display = 'none';
+      });
+    }catch(_){}
+  }
+
+  /* ==========================
+     Catalog filters + pager
+     ========================== */
+
+  // Dynamic page size: keep ~2 rows per page (1 col on mobile, 2 on tablet, 3 on desktop)
+  var PAGE_ROWS = 2;
+  function getPageSize(){
+    var w = window.innerWidth || document.documentElement.clientWidth || 1024;
+    var cols = 1;
+    if (w >= 1360) cols = 3;     // align with CSS breakpoint
+    else if (w >= 768) cols = 2;
+    return cols * PAGE_ROWS;
+  }
+  var PAGE_SIZE = getPageSize(); // updated on resize
+
+  // Robust release-date parsing:
+  // - Prefer ISO/timestamp-like strings if present
+  // - Fallback: "MMM DD, YYYY" parsing (stable across browsers/locales)
+  var MONTHS = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+  function parseReleaseDate(el){
+    var d = (el && el.dataset) ? el.dataset : {};
+    var raw = cleanSpaces(d.releaseIso || d.releaseISO || d.releaseTs || d.releaseTS || d.release || d.releaseDate || d.date || '');
+    if (!raw) return new Date(0);
+
+    // numeric timestamp?
+    if (/^\d{10,13}$/.test(raw)){
+      var n = Number(raw);
+      if (isFinite(n)){
+        if (raw.length === 10) n = n * 1000;
+        var dtNum = new Date(n);
+        if (!isNaN(dtNum.getTime())) return dtNum;
+      }
+    }
+
+    // built-in parse for ISO-like strings
+    var dt = new Date(raw);
+    if (!isNaN(dt.getTime())) return dt;
+
+    // "MMM DD, YYYY"
+    var m = /^([A-Za-z]{3})\s+(\d{1,2}),\s*(\d{4})$/.exec(raw);
+    if (m){
+      var mon = MONTHS[String(m[1] || '').toLowerCase()];
+      var day = parseInt(m[2], 10);
+      var yr  = parseInt(m[3], 10);
+      if (mon != null && isFinite(day) && isFinite(yr)){
+        var safe = new Date(Date.UTC(yr, mon, day, 0, 0, 0));
+        if (!isNaN(safe.getTime())) return safe;
+      }
+    }
+    return new Date(0);
+  }
+
+  // Labels: preserve acronyms (HIIT/RPE/1RM) and use nicer casing when CMS values are all-lowercase
+  var ACRONYMS = {
+    'hiit':'HIIT',
+    'rpe':'RPE',
+    '1rm':'1RM',
+    'rm':'RM',
+    'amrap':'AMRAP',
+    'emom':'EMOM'
+  };
+  function formatLabel(raw){
+    raw = cleanSpaces(raw);
+    if (!raw) return '';
+    // If user already typed capitals, trust it.
+    if (/[A-Z]/.test(raw)) return raw;
+
+    // Otherwise title-case, with acronym exceptions
+    return raw.split(' ').map(function(word){
+      var w = word;
+      var key = w.toLowerCase();
+      if (ACRONYMS[key]) return ACRONYMS[key];
+      // keep symbols like + / & as-is
+      if (/^[+\/&]$/.test(w)) return w;
+      return key.charAt(0).toUpperCase() + key.slice(1);
+    }).join(' ');
+  }
+
+  function init(){
+    var grid = document.querySelector('.nf-tiles');
+    if (!grid) return;
+
+    var wrapper = grid.closest('.nf-plans-grid') || grid.parentNode;
+
+    push({ event:'nf_plans_catalog_view' });
+    document.addEventListener('click', onClick, { passive:false });
+
+    scrubInternalNotes();
+
+    /* ----- skeleton: empty + page track ----- */
+    var empty = grid.querySelector('.nf-empty');
+    if (!empty){
+      empty = document.createElement('div');
+      empty.className = 'nf-empty';
+      empty.textContent = 'No training plans match your filters.';
+      grid.appendChild(empty);
+    }
+
+    var track = grid.querySelector('.nf-page-track');
+    if (!track){
+      track = document.createElement('div');
+      track.className = 'nf-page-track';
+      grid.insertBefore(track, empty);
+    }
+
+    // move all cards into track (initially as loose children)
+    var rawCards = Array.prototype.slice.call(grid.querySelectorAll('[data-plan-card]'));
+    rawCards.forEach(function(el){
+      if (el.parentElement !== track) track.appendChild(el);
+    });
+
+    /* ----- read tiles into JS objects ----- */
+    var cardNodes = Array.prototype.slice.call(track.querySelectorAll('[data-plan-card]'));
+    var tiles = cardNodes.map(function(el){
+      var d = el.dataset || {};
+      var meta = readPlan(el);
+
+      var rawCategory = cleanSpaces(d.plan || d.category || d.categoryFocus || '');
+      var rawEquip    = cleanSpaces(d.equipment || d.equipmentNeeded || '');
+      var rawGoal     = cleanSpaces(d.goal || d.tagline || d.goalTagline || '');
+      var rawStyle    = cleanSpaces(d.style || d.trainingStyle || '');
+      var rawAudience = cleanSpaces(d.level || d.audience || d.audienceLevel || '');
+
+      var category = norm(rawCategory);
+      var goal     = norm(rawGoal);
+      var style    = norm(rawStyle);
+      var audience = norm(rawAudience);
+      var equip    = norm(rawEquip);
+
+      var daysNum  = parseInt(d.days || d.daysPerWeek || '', 10);
+      var days     = (isFinite(daysNum) ? daysNum : null);
+
+      var tags     = splitCSV(d.tags || d.keywords || '');
+      var date     = parseReleaseDate(el);
+
+      // Normalized URL for safety/SEO/utilities
+      var url = absUrlMaybe(getCardPrimaryUrl(el) || meta.url || '');
+
+      return {
+        el:          el,
+        name:        norm(meta.name || d.name || ''),
+        rawName:     (meta.name || d.name || '').trim(),
+        plan:        norm(d.plan || ''),
+        category:    category,
+        rawCategory: rawCategory,
+        goal:        goal,
+        style:       style,
+        audience:    audience,
+        equip:       equip,
+        rawEquip:    rawEquip,
+        days:        days,
+        tags:        tags,
+        price:       meta.price,
+        position:    meta.position || 0,
+        date:        date,
+        url:         url
+      };
+    });
+
+    if (!tiles.length) return;
+
+    // IMPORTANT: remove loose cards from the track so only .nf-page elements are direct children
+    cardNodes.forEach(function(el){
+      if (el.parentElement === track) track.removeChild(el);
+    });
+
+    observeCards(tiles.map(function(t){ return t.el; }));
+
+    /* ----- controls skeleton (blog-style ribbon) ----- */
+    var controls = document.getElementById('nf-controls');
+    if (!controls){
+      controls = document.createElement('div');
+      controls.id = 'nf-controls';
+      controls.className = 'nf-controls nf-controls--plans';
+      controls.innerHTML =
+        '<div class="nf-ribbon">'
+          +'<div class="nf-ctrl-wrap filters">'
+            +'<span class="nf-cell nf-cell--search"><input id="nf-q" type="search" placeholder="Search plans…" aria-label="Search training plans"></span>'
+            +'<span class="nf-cell"><select id="nf-cat" aria-label="Category / focus"><option value="">All focuses</option></select></span>'
+            +'<span class="nf-cell"><select id="nf-days" aria-label="Days per week"><option value="">All splits</option></select></span>'
+            +'<span class="nf-cell"><select id="nf-equip" aria-label="Equipment"><option value="">All equipment</option></select></span>'
+            +'<span class="nf-cell"><select id="nf-sort" aria-label="Sort">'
+              +'<option value="position">Recommended</option>'
+              +'<option value="priceAsc">Price (Low→High)</option>'
+              +'<option value="priceDesc">Price (High→Low)</option>'
+              +'<option value="daysAsc">Days / Week (Low→High)</option>'
+              +'<option value="daysDesc">Days / Week (High→Low)</option>'
+              +'<option value="az">Name A–Z</option>'
+              +'<option value="za">Name Z–A</option>'
+            +'</select></span>'
+          +'</div>'
+          +'<div class="nf-ctrl-wrap util"></div>'
+        +'</div>';
+      wrapper.insertBefore(controls, wrapper.firstChild);
+    } else {
+      if (!controls.classList.contains('nf-controls')) controls.classList.add('nf-controls');
+      if (!controls.classList.contains('nf-controls--plans')) controls.classList.add('nf-controls--plans');
+    }
+
+    var utilWrap = controls.querySelector('.util');
+    var clearBtn = document.getElementById('nf-clear');
+    if (!clearBtn){
+      clearBtn = document.createElement('button');
+      clearBtn.id = 'nf-clear';
+      clearBtn.type = 'button';
+      clearBtn.textContent = 'Clear';
+      clearBtn.setAttribute('aria-label','Clear all filters');
+      utilWrap.appendChild(clearBtn);
+    }
+
+    var resultEl2 = document.getElementById('nf-result');
+    if (!resultEl2){
+      resultEl2 = document.createElement('span');
+      resultEl2.id = 'nf-result';
+      resultEl2.className = 'nf-result';
+      resultEl2.setAttribute('aria-live','polite');
+      utilWrap.appendChild(resultEl2);
+    }
+
+    var catSel   = document.getElementById('nf-cat');
+    var daysSel  = document.getElementById('nf-days');
+    var equipSel = document.getElementById('nf-equip');
+    var sortSel  = document.getElementById('nf-sort');
+    var searchEl = document.getElementById('nf-q');
+
+    /* ----- populate selects from tiles (acronym-safe labels) ----- */
+    function addOptionsFromMap(sel, valueToLabel){
+      if (!sel) return;
+      var entries = Object.keys(valueToLabel).map(function(k){
+        return { value:k, label:valueToLabel[k] };
+      });
+      entries.sort(function(a,b){
+        return a.label.localeCompare(b.label);
+      });
+      entries.forEach(function(ent){
+        var opt = document.createElement('option');
+        opt.value = ent.value;
+        opt.textContent = ent.label;
+        sel.appendChild(opt);
+      });
+    }
+
+    function hideIfSingleton(sel){
+      if (!sel) return;
+      var real = Array.prototype.filter.call(sel.options, function(o){ return o.value !== ''; });
+      if (real.length <= 1){
+        sel.setAttribute('hidden','');
+        sel.setAttribute('aria-hidden','true');
+        sel.disabled = true;
+      } else {
+        sel.removeAttribute('hidden');
+        sel.removeAttribute('aria-hidden');
+        sel.disabled = false;
+      }
+    }
+
+    // Build maps: normalized value -> best display label
+    var catMap = {};
+    var equipMap = {};
+    tiles.forEach(function(t){
+      if (t.category && !catMap[t.category]){
+        catMap[t.category] = formatLabel(t.rawCategory || t.category);
+      }
+      if (t.equip && !equipMap[t.equip]){
+        equipMap[t.equip] = formatLabel(t.rawEquip || t.equip);
+      }
+    });
+
+    // Days: numeric options, sorted numeric
+    function rebuildDaysOptions(){
+      if (!daysSel) return;
+      var set = {};
+      tiles.forEach(function(t){
+        if (t.days != null && isFinite(t.days)) set[String(t.days)] = true;
+      });
+      var vals = Object.keys(set).map(function(v){ return parseInt(v,10); }).filter(function(n){ return isFinite(n); });
+      vals.sort(function(a,b){ return a - b; });
+      vals.forEach(function(n){
+        var opt = document.createElement('option');
+        opt.value = String(n);
+        opt.textContent = n + (n === 1 ? ' day / week' : ' days / week');
+        daysSel.appendChild(opt);
+      });
+    }
+
+    // Populate (keep the initial "All ..." option at index 0)
+    if (catSel) addOptionsFromMap(catSel, catMap);
+    if (equipSel) addOptionsFromMap(equipSel, equipMap);
+    if (daysSel) rebuildDaysOptions();
+
+    hideIfSingleton(catSel);
+    hideIfSingleton(daysSel);
+    hideIfSingleton(equipSel);
+
+    /* ----- URL params / state ----- */
+    function getParams(){
+      var p = new URLSearchParams(window.location.search);
+      var n = parseInt(p.get('p'),10);
+      return {
+        q:     p.get('q') || '',
+        cat:   norm(p.get('cat')   || ''),
+        days:  norm(p.get('days')  || ''),
+        equip: norm(p.get('equip') || ''),
+        sort:  p.get('sort') || 'position',
+        page:  (isFinite(n) && n > 0) ? n : 1
+      };
+    }
+
+    function setParams(s, replace){
+      var p = new URLSearchParams();
+      if (s.q)     p.set('q', s.q);
+      if (s.cat)   p.set('cat', s.cat);
+      if (s.days)  p.set('days', s.days);
+      if (s.equip) p.set('equip', s.equip);
+      if (s.sort && s.sort !== 'position') p.set('sort', s.sort);
+      if (s.page && s.page > 1) p.set('p', String(s.page));
+      var url = window.location.pathname + (p.toString() ? ('?'+p.toString()) : '');
+      try{
+        (replace ? history.replaceState : history.pushState).call(history, null, '', url);
+      }catch(_){}
+    }
+
+    function writeUI(s){
+      if (searchEl) searchEl.value = s.q || '';
+      if (catSel)   catSel.value   = s.cat || '';
+      if (daysSel)  daysSel.value  = s.days || '';
+      if (equipSel) equipSel.value = s.equip || '';
+      if (sortSel)  sortSel.value  = s.sort || 'position';
+    }
+
+    function readUI(){
+      return {
+        q:     (searchEl && searchEl.value || '').trim(),
+        cat:   norm(catSel && catSel.value || ''),
+        days:  norm(daysSel && daysSel.value || ''),
+        equip: norm(equipSel && equipSel.value || ''),
+        sort:  (sortSel && sortSel.value) || 'position'
+      };
+    }
+
+    function isDefaultUIState(s){
+      return !s.q && !s.cat && !s.days && !s.equip && (!s.sort || s.sort === 'position');
+    }
+
+    function syncClearButton(s){
+      if (!clearBtn) return;
+      var active = !isDefaultUIState(s);
+      clearBtn.disabled = !active;
+      clearBtn.setAttribute('aria-disabled', String(!active));
+      clearBtn.dataset.active = active ? 'true' : 'false';
+    }
+
+    /* ----- matching & sorting ----- */
+    function matches(t, s){
+      var q = norm(s.q);
+
+      var qHit = !q ||
+        (t.name && t.name.indexOf(q) !== -1) ||
+        (t.goal && t.goal.indexOf(q) !== -1) ||
+        (t.tags && t.tags.some(function(tag){ return tag.indexOf(q) !== -1; }));
+
+      var catHit = !s.cat ||
+        t.category === s.cat ||
+        t.plan === s.cat;
+
+      var daysHit = !s.days ||
+        (t.days != null && String(t.days) === s.days);
+
+      var equipHit = !s.equip ||
+        t.equip === s.equip;
+
+      return qHit && catHit && daysHit && equipHit;
+    }
+
+    var state = { page:1, totalPages:1, lastShownCount:0 };
+    var currentPageEl = null;
+
+    function buildPage(items){
+      var page = document.createElement('div');
+      page.className = 'nf-page enter-from-right';
+      items.forEach(function(t){ page.appendChild(t.el); });
+      return page;
+    }
+
+    function removePageEl(el){
+      try{ if (el && el.parentElement === track) track.removeChild(el); }catch(_){}
+    }
+
+    function swapPage(newPage, dir){
+      if (prefersReducedMotion){
+        if (currentPageEl) removePageEl(currentPageEl);
+        newPage.className = 'nf-page enter-to-center';
+        track.appendChild(newPage);
+        currentPageEl = newPage;
+        return;
+      }
+
+      if (currentPageEl){
+        currentPageEl.classList.remove('enter-from-right','enter-to-center','leave-to-left','leave-to-right');
+        currentPageEl.classList.add(dir === 'prev' ? 'leave-to-right' : 'leave-to-left');
+        var old = currentPageEl;
+
+        var killed = false;
+        var killAfter = setTimeout(function(){
+          if (killed) return;
+          killed = true;
+          removePageEl(old);
+        }, 350);
+
+        old.addEventListener('transitionend', function(e){
+          if (killed) return;
+          if (e.propertyName === 'transform' || e.propertyName === 'opacity'){
+            killed = true;
+            clearTimeout(killAfter);
+            removePageEl(old);
+          }
+        }, { once:true });
+      }
+
+      track.appendChild(newPage);
+      void newPage.offsetWidth;
+      newPage.classList.remove('enter-from-right');
+      newPage.classList.add('enter-to-center');
+      currentPageEl = newPage;
+    }
+
+    function makePager(){
+      var p = document.createElement('div');
+      p.className = 'nf-pager';
+      p.innerHTML =
+        '<button type="button" class="nf-prev" aria-label="Previous page">←</button>'
+        +'<span class="nf-page-label" aria-live="polite">Page 1</span>'
+        +'<button type="button" class="nf-next" aria-label="Next page">→</button>';
+      return p;
+    }
+
+    var existingPagers = wrapper.querySelectorAll('.nf-pager');
+    var pager;
+
+    if (existingPagers.length){
+      pager = existingPagers[existingPagers.length - 1];
+      for (var i = 0; i < existingPagers.length - 1; i++){
+        var node = existingPagers[i];
+        if (node && node.parentNode) node.parentNode.removeChild(node);
+      }
+      if (pager.parentNode !== wrapper || pager.previousSibling !== grid){
+        wrapper.insertBefore(pager, grid.nextSibling);
+      }
+    } else {
+      pager = makePager();
+      wrapper.insertBefore(pager, grid.nextSibling);
+    }
+
+    var prevBtns = Array.prototype.slice.call(pager.querySelectorAll('.nf-prev'));
+    var nextBtns = Array.prototype.slice.call(pager.querySelectorAll('.nf-next'));
+    var labels   = Array.prototype.slice.call(pager.querySelectorAll('.nf-page-label'));
+
+    function updatePagerUI(){
+      labels.forEach(function(l){
+        l.textContent = 'Page ' + state.page + ' of ' + state.totalPages;
+      });
+
+      var disabledPrev = state.page <= 1;
+      var disabledNext = state.totalPages <= 1 || state.page >= state.totalPages;
+
+      prevBtns.forEach(function(b){
+        b.disabled = disabledPrev;
+        b.setAttribute('aria-disabled', String(disabledPrev));
+      });
+      nextBtns.forEach(function(b){
+        b.disabled = disabledNext;
+        b.setAttribute('aria-disabled', String(disabledNext));
+      });
+
+      var hide = (state.totalPages <= 1) || (state.lastShownCount === 0);
+      pager.style.display = hide ? 'none' : '';
+    }
+
+    function prevPage(){ if (state.page > 1){ state.page--; apply(false,'prev'); } }
+    function nextPage(){ if (state.page < state.totalPages){ state.page++; apply(false,'next'); } }
+
+    prevBtns.forEach(function(b){ b.addEventListener('click', prevPage); });
+    nextBtns.forEach(function(b){ b.addEventListener('click', nextPage); });
+
+    function getComparator(sortKey){
+      var cmpMap = {
+        position: function(a,b){ return (a.position - b.position) || (b.date - a.date); },
+        priceAsc: function(a,b){
+          var ap = (a.price == null) ? Infinity : a.price;
+          var bp = (b.price == null) ? Infinity : b.price;
+          return (ap - bp) || (a.position - b.position);
+        },
+        priceDesc: function(a,b){
+          var ap = (a.price == null) ? -Infinity : a.price;
+          var bp = (b.price == null) ? -Infinity : b.price;
+          return (bp - ap) || (a.position - b.position);
+        },
+        daysAsc: function(a,b){
+          var ad = (a.days == null) ? Infinity : a.days;
+          var bd = (b.days == null) ? Infinity : b.days;
+          return (ad - bd) || (a.position - b.position);
+        },
+        daysDesc: function(a,b){
+          var ad = (a.days == null) ? -Infinity : a.days;
+          var bd = (b.days == null) ? -Infinity : b.days;
+          return (bd - ad) || (a.position - b.position);
+        },
+        az: function(a,b){
+          var c = a.rawName.localeCompare(b.rawName);
+          return c || (a.position - b.position);
+        },
+        za: function(a,b){
+          var c = b.rawName.localeCompare(a.rawName);
+          return c || (a.position - b.position);
+        }
+      };
+      return cmpMap[sortKey] || cmpMap.position;
+    }
+
+    function apply(replaceURL, dir){
+      scrubInternalNotes();
+
+      var s = readUI();
+      syncClearButton(s);
+
+      var shown = tiles.filter(function(t){ return matches(t, s); });
+      shown.sort(getComparator(s.sort));
+
+      state.lastShownCount = shown.length;
+      state.totalPages = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
+
+      if (state.page > state.totalPages) state.page = state.totalPages;
+      if (state.page < 1) state.page = 1;
+
+      var start = (state.page - 1) * PAGE_SIZE;
+      var end   = start + PAGE_SIZE;
+      var pageItems = shown.slice(start, end);
+
+      var newPage = buildPage(pageItems);
+      swapPage(newPage, dir || 'next');
+
+      var emptyNow = shown.length === 0;
+      empty.classList.toggle('show', emptyNow);
+
+      if (resultEl2){
+        resultEl2.textContent = emptyNow
+          ? 'No training plans match your filters.'
+          : 'Showing ' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + '.';
+      }
+
+      setParams({
+        q: s.q,
+        cat: s.cat,
+        days: s.days,
+        equip: s.equip,
+        sort: s.sort,
+        page: state.page
+      }, !!replaceURL);
+
+      updatePagerUI();
+
+      fireViewItemList(pageItems.map(function(t){ return t.el; }));
+    }
+
+    var handleResize = debounce(function(){
+      var oldSize = PAGE_SIZE;
+      var newSize = getPageSize();
+      if (!newSize || newSize === oldSize) return;
+
+      var firstVisibleIndex = (state.page - 1) * oldSize;
+      PAGE_SIZE = newSize;
+
+      var shownCount = state.lastShownCount || tiles.length;
+      state.totalPages = Math.max(1, Math.ceil(shownCount / PAGE_SIZE));
+      state.page = Math.floor(firstVisibleIndex / PAGE_SIZE) + 1;
+
+      if (state.page < 1) state.page = 1;
+      if (state.page > state.totalPages) state.page = state.totalPages;
+
+      apply(true);
+    }, 180);
+    window.addEventListener('resize', handleResize);
+
+    var applyDebounced = debounce(function(){
+      state.page = 1;
+      apply(true);
+    }, 140);
+
+    if (searchEl){ searchEl.addEventListener('input', applyDebounced); }
+    if (catSel){
+      catSel.addEventListener('change', function(){
+        push({ event:'nf_catalog_filter', nf_filter_key:'category', nf_filter_value:catSel.value || '' });
+        state.page = 1;
+        apply(true);
+      });
+    }
+    if (daysSel){
+      daysSel.addEventListener('change', function(){
+        push({ event:'nf_catalog_filter', nf_filter_key:'days_per_week', nf_filter_value:daysSel.value || '' });
+        state.page = 1;
+        apply(true);
+      });
+    }
+    if (equipSel){
+      equipSel.addEventListener('change', function(){
+        push({ event:'nf_catalog_filter', nf_filter_key:'equipment', nf_filter_value:equipSel.value || '' });
+        state.page = 1;
+        apply(true);
+      });
+    }
+    if (sortSel){
+      sortSel.addEventListener('change', function(){
+        push({ event:'nf_catalog_filter', nf_filter_key:'sort', nf_filter_value:sortSel.value || '' });
+        state.page = 1;
+        apply(true);
+      });
+    }
+
+    clearBtn.addEventListener('click', function(){
+      var s = readUI();
+      if (isDefaultUIState(s)) return;
+
+      if (searchEl) searchEl.value = '';
+      if (catSel)   catSel.value   = '';
+      if (daysSel)  daysSel.value  = '';
+      if (equipSel) equipSel.value = '';
+      if (sortSel)  sortSel.value  = 'position';
+
+      push({ event:'nf_catalog_filter', nf_filter_key:'clear', nf_filter_value:'' });
+      state.page = 1;
+      apply(true);
+    });
+
+    NF_PLANS.updateFromUrl = function(replaceURL){
+      var s = getParams();
+      state.page = s.page || 1;
+      writeUI(s);
+      syncClearButton(readUI());
+      apply(!!replaceURL);
+    };
+
+    NF_PLANS.updateFromUrl(true);
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('popstate', function(){
+    if (window.NF_PLANS && typeof window.NF_PLANS.updateFromUrl === 'function'){
+      window.NF_PLANS.updateFromUrl(true);
+    }
+  });
+
+  /* ==========================
+     Scroll-depth analytics (Training Plans)
+     ========================== */
+  var nfScrollBuckets = [25, 50, 75, 100];
+  var nfScrollFired = { 25:false, 50:false, 75:false, 100:false };
+
+  function trackScrollDepth(){
+    var doc = document.documentElement || document.body;
+    if (!doc) return;
+
+    var body = document.body || doc;
+    var scrollTop = window.pageYOffset ||
+                    doc.scrollTop ||
+                    body.scrollTop ||
+                    0;
+    var viewport = window.innerHeight || doc.clientHeight || 0;
+
+    var fullHeight = Math.max(
+      body.scrollHeight, body.offsetHeight,
+      doc.clientHeight, doc.scrollHeight, doc.offsetHeight
+    );
+
+    if (!fullHeight) return;
+
+    var depth = (scrollTop + viewport) / fullHeight * 100;
+    if (!isFinite(depth)) return;
+
+    if (depth < 0) depth = 0;
+    if (depth > 100) depth = 100;
+
+    nfScrollBuckets.forEach(function(pct){
+      if (!nfScrollFired[pct] && depth >= pct){
+        nfScrollFired[pct] = true;
+        push({
+          event: 'nf_plans_scroll_depth',
+          nf_page: 'training_plans',
+          nf_scroll_percent: pct
+        });
+      }
+    });
+  }
+
+  var handleScrollDepth = debounce(trackScrollDepth, 180);
+  window.addEventListener('scroll', handleScrollDepth);
+  trackScrollDepth();
+})();
+</script>

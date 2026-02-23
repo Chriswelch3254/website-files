@@ -1,0 +1,1020 @@
+Head:
+<style id="nf-library-styles">
+  /* =========================================================
+     NeuForm Library (scoped) — v2.1 (dark/glass aesthetic + DLTER accents)
+     Matches site: dark surfaces, blue accent, premium cards.
+     ========================================================= */
+
+  /* Variables scoped to the library only */
+  #nf-library-root{
+    /* Palette (dark) */
+    --nf-bg:#0b0f12;
+    --nf-surface: rgba(15, 20, 24, 0.65);
+    --nf-card: rgba(0, 0, 0, 0.78);
+    --nf-line:#1a2a33;
+
+    /* Text */
+    --nf-ink:#e9f3f7;
+    --nf-muted:#9fb4c2;
+
+    /* Accent */
+    --nf-blue:#3498db;
+    --nf-blue-dark:#217dbb;
+    --nf-focus: rgba(52, 152, 219, 0.35);
+
+    /* DLTER accent (gold) */
+    --nf-gold:#fcd34d;
+    --nf-gold-20: rgba(252,211,77,0.20);
+    --nf-gold-28: rgba(252,211,77,0.28);
+    --nf-gold-45: rgba(252,211,77,0.45);
+
+    /* Radius + shadow */
+    --nf-radius:20px;
+    --nf-radius-sm:14px;
+    --nf-shadow: 0 8px 20px rgba(0,0,0,0.36);
+    --nf-shadow-hover: 0 12px 28px rgba(0,0,0,0.46);
+
+    /* Glass blur */
+    --nf-blur: blur(10px);
+
+    /* Fonts */
+    --nf-title-font: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+    --nf-body-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+  }
+
+  /* Safety: scope box sizing */
+  #nf-library-root,
+  #nf-library-root *{
+    box-sizing:border-box;
+  }
+
+  /* Base layout */
+  #nf-library-root .nf-lib-wrap{
+    width:100%;
+    max-width:1100px;
+    margin:0 auto;
+    padding: clamp(24px, 6vh, 56px) 14px clamp(44px, 8vh, 76px);
+    font-family: var(--nf-body-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color:var(--nf-ink);
+    position:relative;
+    z-index:1;
+  }
+
+  /* Header */
+  #nf-library-root .nf-lib-header{
+    display:flex;
+    gap:14px;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+
+  #nf-library-root .nf-lib-title{
+    margin:0;
+    font-family: var(--nf-title-font);
+    font-size: clamp(28px, 3.2vw, 36px);
+    line-height:1.05;
+    font-weight:900;
+    letter-spacing:-0.03em;
+    color:var(--nf-ink);
+    text-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    overflow-wrap:anywhere; /* safer wrapping for long titles */
+  }
+
+  #nf-library-root .nf-lib-sub{
+    margin:8px 0 0 0;
+    color: rgba(233,243,247,0.78);
+    font-size:14px;
+    line-height:1.55;
+    max-width: 62ch;
+  }
+
+  #nf-library-root .nf-lib-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  /* Badge pill */
+  #nf-library-root .nf-badge{
+    font-size:12px;
+    font-weight:900;
+    color: var(--nf-ink);
+    background: rgba(15, 20, 24, 0.6);
+    border: 1px solid rgba(52,152,219,0.35);
+    padding: 7px 10px;
+    border-radius:999px;
+    letter-spacing:0.02em;
+    white-space:nowrap;
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.28);
+  }
+
+  /* Toolbar (search + count) */
+  #nf-library-root .nf-lib-toolbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin: 12px 0 18px;
+  }
+
+  #nf-library-root .nf-count{
+    font-size:13px;
+    color: rgba(233,243,247,0.72);
+    font-weight:800;
+  }
+
+  #nf-library-root .nf-search{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:min(440px, 100%);
+  }
+
+  #nf-library-root .nf-search input{
+    width:100%;
+    padding:10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(26,42,51,0.9);
+    background: rgba(0,0,0,0.55);
+    color: var(--nf-ink);
+    outline:none;
+    transition: box-shadow 140ms ease, border-color 140ms ease, background 140ms ease, transform 140ms ease;
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+  }
+
+  #nf-library-root .nf-search input::placeholder{
+    color: rgba(233,243,247,0.55);
+  }
+
+  #nf-library-root .nf-search input:focus{
+    border-color: rgba(52,152,219,0.55);
+    box-shadow: 0 0 0 4px var(--nf-focus);
+    background: rgba(0,0,0,0.65);
+  }
+
+  /* Buttons */
+  #nf-library-root .nf-btn{
+    -webkit-appearance:none;
+    appearance:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    text-decoration:none;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 1;
+    cursor:pointer;
+    border: 1px solid rgba(26,42,51,0.95);
+    user-select:none;
+    transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease, border-color 140ms ease, opacity 140ms ease, filter 140ms ease;
+    will-change: transform;
+    background: rgba(15, 20, 24, 0.55);
+    color: var(--nf-ink);
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+  }
+
+  #nf-library-root .nf-btn:focus{ outline:none; }
+  #nf-library-root .nf-btn:focus-visible{ box-shadow: 0 0 0 4px var(--nf-focus); }
+
+  #nf-library-root .nf-btn:hover{
+    transform: translateY(-1px);
+    border-color: rgba(52,152,219,0.45);
+    box-shadow: 0 14px 24px rgba(0,0,0,0.42);
+  }
+
+  #nf-library-root .nf-btn:active{ transform: translateY(0px); }
+
+  #nf-library-root .nf-btn-primary{
+    background: var(--nf-blue);
+    border-color: rgba(52,152,219,0.85);
+    color: #fff;
+    box-shadow: 0 10px 18px rgba(52, 152, 219, 0.18);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  #nf-library-root .nf-btn-primary:hover{
+    background: var(--nf-blue-dark);
+    border-color: rgba(52,152,219,0.95);
+    box-shadow: 0 14px 24px rgba(52, 152, 219, 0.22);
+  }
+
+  #nf-library-root .nf-btn-ghost{
+    background: rgba(15, 20, 24, 0.55);
+    color: var(--nf-ink);
+  }
+
+  #nf-library-root .nf-btn-disabled{
+    opacity:0.55;
+    cursor:not-allowed;
+    box-shadow:none !important;
+    transform:none !important;
+    pointer-events:none;
+    filter: grayscale(0.6);
+  }
+
+  /* Grid + cards */
+  #nf-library-root .nf-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:14px;
+  }
+
+  #nf-library-root .nf-card{
+    grid-column: span 12;
+    position:relative;
+    overflow:hidden;
+    background: var(--nf-card);
+    border: 1px solid rgba(26,42,51,0.95);
+    border-radius: var(--nf-radius);
+    padding: 18px;
+    box-shadow: var(--nf-shadow);
+    color: var(--nf-ink);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, filter 180ms ease;
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+  }
+
+  #nf-library-root .nf-card .nf-ring{
+    position:absolute;
+    inset:-60% -60% auto auto;
+    z-index:0;
+    pointer-events:none;
+    background: radial-gradient(closest-side, rgba(255,255,255,0.06), transparent 65%);
+    filter: blur(26px);
+    width:100%;
+    height:100%;
+    transform: translate(-28%,-28%);
+  }
+
+  #nf-library-root .nf-card > *{
+    position:relative;
+    z-index:1;
+  }
+
+  #nf-library-root .nf-card:hover{
+    transform: translateY(-2px);
+    box-shadow: var(--nf-shadow-hover), 0 0 0 1px rgba(52,152,219,0.10) inset;
+    border-color: rgba(52,152,219,0.45);
+    filter: saturate(1.03);
+  }
+
+  @media(min-width:720px){ #nf-library-root .nf-card{ grid-column: span 6; } }
+  @media(min-width:980px){ #nf-library-root .nf-card{ grid-column: span 4; } }
+
+  #nf-library-root .nf-card h3{
+    margin:0 0 8px 0;
+    font-family: var(--nf-title-font);
+    font-size: 18px;
+    line-height: 1.25;
+    letter-spacing:-0.02em;
+    font-weight: 900;
+    overflow-wrap:anywhere; /* long names won't overflow */
+  }
+
+  #nf-library-root .nf-card p{
+    margin:0 0 14px 0;
+    color: rgba(233,243,247,0.74);
+    font-size: 13.5px;
+    line-height:1.6;
+    font-weight: 600;
+  }
+
+  #nf-library-root .nf-links{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  #nf-library-root .nf-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(26,42,51,0.95);
+    background: rgba(15, 20, 24, 0.45);
+    color: rgba(233,243,247,0.9);
+    text-decoration:none;
+    font-weight: 900;
+    font-size: 12.5px;
+    transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+  }
+
+  #nf-library-root .nf-link:hover{
+    border-color: rgba(52,152,219,0.45);
+    background: rgba(15, 20, 24, 0.62);
+    transform: translateY(-1px);
+  }
+
+  #nf-library-root .nf-link:focus-visible{
+    box-shadow: 0 0 0 4px var(--nf-focus);
+    outline:none;
+  }
+
+  /* Info boxes */
+  #nf-library-root .nf-box{
+    margin: 14px 0 0 0;
+    padding: 14px;
+    border: 1px solid rgba(26,42,51,0.95);
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: var(--nf-radius-sm);
+    color: var(--nf-ink);
+    backdrop-filter: var(--nf-blur);
+    -webkit-backdrop-filter: var(--nf-blur);
+  }
+
+  #nf-library-root .nf-box strong{
+    display:block;
+    margin-bottom:6px;
+    font-family: var(--nf-title-font);
+    letter-spacing:-0.01em;
+  }
+
+  #nf-library-root .nf-hide{ display:none!important; }
+
+  /* Loading skeleton (dark) */
+  #nf-library-root .nf-skel{
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,0.05) 25%,
+      rgba(255,255,255,0.09) 37%,
+      rgba(255,255,255,0.05) 63%
+    );
+    background-size: 400% 100%;
+    animation: nfShimmer 1.2s ease-in-out infinite;
+    border-radius: 12px;
+  }
+
+  @keyframes nfShimmer{
+    0%{ background-position: 100% 0; }
+    100%{ background-position: 0 0; }
+  }
+
+  #nf-library-root .nf-skel-title{ height:16px; width:72%; margin-bottom:12px; }
+  #nf-library-root .nf-skel-line{ height:12px; width:92%; margin-bottom:9px; opacity:0.9; }
+  #nf-library-root .nf-skel-line.short{ width:74%; }
+  #nf-library-root .nf-skel-btn{ height:38px; width:150px; margin-top:12px; }
+
+  /* NEW: DLTER visual accent (gold border) */
+  #nf-library-root .nf-card[data-sku^="dlter_blueprint"]{
+    border-color: var(--nf-gold-28);
+  }
+  #nf-library-root .nf-card[data-sku^="dlter_blueprint"]:hover{
+    border-color: var(--nf-gold-45);
+    box-shadow: var(--nf-shadow-hover), 0 0 0 1px rgba(252,211,77,0.12) inset;
+  }
+
+  /* NEW: Mobile tap target boost */
+  @media (max-width: 480px){
+    #nf-library-root .nf-btn{ padding: 12px 16px; }
+    #nf-library-root .nf-link{ padding: 10px 12px; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    #nf-library-root .nf-btn,
+    #nf-library-root .nf-card{ transition:none; }
+    #nf-library-root .nf-btn:hover,
+    #nf-library-root .nf-btn:active{ transform:none; }
+    #nf-library-root .nf-card:hover{ transform:none; }
+    #nf-library-root .nf-skel{ animation:none; }
+  }
+</style>
+
+Body:
+<script>
+(function(){
+  "use strict";
+
+  var ROOT_ID = "nf-library-root";
+  var root = document.getElementById(ROOT_ID);
+  if(!root) return;
+
+  // Prevent double-run if pasted twice
+  if(root.dataset.nfMounted === "1") return;
+  root.dataset.nfMounted = "1";
+
+  function setBusy(on){
+    try { root.setAttribute("aria-busy", on ? "true" : "false"); } catch(e){}
+  }
+
+  // =========================
+  // 1) CONFIG — FINAL URLs
+  // =========================
+  var NF_LIBRARY = {
+    items: {
+      fat_loss: {
+        title: "6-Week Fat-Loss Plan",
+        desc: "A structured 6-week fat loss program with progression.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/691791919da92fd3e96b969d_6-%20Week%20Fat%20Loss-2.pdf"
+      },
+      beginner_intro: {
+        title: "6-Week Beginner Intro Plan",
+        desc: "Foundations + consistency building for new lifters.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c2e86d480b1e3646badaec_NeuForm%20Fitness%206-Week%20Beginner%20Plan.pdf"
+      },
+      speed_power: {
+        title: "6-Week Speed & Power Program",
+        desc: "Explosiveness + athletic performance focus.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a48453003524827aa52ec6_8e93f670d60b9a2bfc08ba0ed23a3045_6%20week%204%20day%20a%20week%20sprinter%2Cjumper%20plan.pdf"
+      },
+      bodyweight: {
+        title: "6-Week Functional Bodyweight Program",
+        desc: "Strength + movement quality with bodyweight progressions.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845362adc2b5e68f2935_b964fca2765d0feb6ad26b565d6337cb_6%20Week%204%20daya%20week%20functional%20fitness%20plan.pdf"
+      },
+      strength: {
+        title: "6-Week Strength Plan",
+        desc: "Progressive strength plan with clear structure.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a48453e9e02e8ab53f7e8f_83537215fbbd6376d25e6135a3f5bee2_6-Week%20Strength%20Training%20Plan%20with%201RM%20Attempts.pdf"
+      },
+      hypertrophy_5day: {
+        title: "6-Week Hypertrophy Plan (5-Day)",
+        desc: "High-quality 5-day split for muscle growth.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4844d1dc6f63e57c292d5_1bc67cd6698664ff83b655bd79bf75d7_6-Week_Advanced_Hypertrophy_Plan-3.pdf"
+      },
+      strength_hypertrophy: {
+        title: "Strength + Hypertrophy Plan",
+        desc: "Balanced plan combining strength and size work.",
+        primaryLabel: "Download Plan",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a484536e99f1b15de6d468_f2b32a9c334802eaea43f33c9deb26b9_6-Week%20Strength%20and%20Hypertrophy%20Training%20%20Plan%20with%201RM%20Attempts.pdf"
+      },
+      mobility_pack: {
+        title: "Dynamic Warm-Up + Static Stretch Pack",
+        desc: "Warm-up + recovery tools to support your training.",
+        primaryLabel: "Download Pack",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845ef889cc7c74d5531e_03a6063b57893f0bbe971d04f1ae954e_Dynamic%20stretching%20routine.pdf",
+        links: [
+          { label: "Dynamic Warm-Up (PDF)", url: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845ef889cc7c74d5531e_03a6063b57893f0bbe971d04f1ae954e_Dynamic%20stretching%20routine.pdf" },
+          { label: "Static Stretching (PDF)", url: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845efad9acc0126f30d1_4667aff1ad01771149106ddb1149940f_Static%20stretching%20routine.pdf" }
+        ]
+      },
+      dynamic_warmup: {
+        title: "Full-Body Dynamic Warm-Up",
+        desc: "A complete warm-up routine for any session.",
+        primaryLabel: "Download Routine",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845ef889cc7c74d5531e_03a6063b57893f0bbe971d04f1ae954e_Dynamic%20stretching%20routine.pdf"
+      },
+      static_stretch: {
+        title: "Full-Body Static Stretching Routine",
+        desc: "A complete static stretching routine for recovery.",
+        primaryLabel: "Download Routine",
+        primaryUrl: "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68a4845efad9acc0126f30d1_4667aff1ad01771149106ddb1149940f_Static%20stretching%20routine.pdf"
+      },
+
+      /* =========================
+         DLTER Blueprints (Identity Lab)
+         IMPORTANT: underscore SKUs (matches normalizeSku)
+         ========================= */
+      dlter_blueprint_inner_frameworker: {
+        title: "DLTER Blueprint — Inner Frameworker",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/inner-frameworker"
+      },
+      dlter_blueprint_internal_alchemist: {
+        title: "DLTER Blueprint — Internal Alchemist",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/internal-alchemist"
+      },
+      dlter_blueprint_dimensional_flowweaver: {
+        title: "DLTER Blueprint — Dimensional Flowweaver",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/dimensional-flowweaver"
+      },
+      dlter_blueprint_external_catalyst: {
+        title: "DLTER Blueprint — External Catalyst",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/external-catalyst"
+      },
+      dlter_blueprint_reality_architect: {
+        title: "DLTER Blueprint — Reality Architect",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/reality-architect"
+      },
+      dlter_blueprint_structured_empathic_lens: {
+        title: "DLTER Blueprint — Structured Empathic Lens",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/structured-empathic-lens"
+      },
+      dlter_blueprint_analytical_evolver: {
+        title: "DLTER Blueprint — Analytical Evolver",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/analytical-evolver"
+      },
+      dlter_blueprint_fluxbound_weaver: {
+        title: "DLTER Blueprint — Fluxbound Weaver",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/fluxbound-weaver"
+      },
+      dlter_blueprint_axis_synthesizer: {
+        title: "DLTER Blueprint — Axis Synthesizer",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/axis_synthesizer"
+      },
+      dlter_blueprint_resonant_fieldholder: {
+        title: "DLTER Blueprint — Resonant Fieldholder",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/resonant-fieldholder"
+      },
+      dlter_blueprint_dimensional_anchor: {
+        title: "DLTER Blueprint — Dimensional Anchor",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/dimensional-anchor"
+      },
+      dlter_blueprint_horizon_breaker: {
+        title: "DLTER Blueprint — Horizon Breaker",
+        desc: "Open your unlocked DLTER Reality Blueprint for this type.",
+        primaryLabel: "Open Blueprint",
+        primaryUrl: "https://www.neuform-fitness.com/dlter-reality-types/horizon-breaker"
+      }
+    },
+
+    entitlementsFieldId: "entitlements",
+
+    // Memberstack modal + fallbacks
+    loginUrlFallback: "/login",
+    signupUrlFallback: "/signup",
+    accountUrlFallback: "/account",
+
+    siteUrl: "https://www.neuform-fitness.com",
+    memberstackWaitMs: 9000,
+    debug: false
+  };
+
+  var KNOWN_SKUS = Object.create(null);
+  Object.keys(NF_LIBRARY.items || {}).forEach(function(k){ KNOWN_SKUS[k] = 1; });
+
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  function el(tag, attrs, children){
+    var node = document.createElement(tag);
+    if(attrs){
+      Object.keys(attrs).forEach(function(k){
+        if(k === "class") node.className = attrs[k];
+        else if(k === "text") node.textContent = attrs[k];
+        else node.setAttribute(k, attrs[k]);
+      });
+    }
+    (children || []).forEach(function(c){
+      if(typeof c === "string") node.appendChild(document.createTextNode(c));
+      else if(c) node.appendChild(c);
+    });
+    return node;
+  }
+
+  function normalizeSku(s){
+    s = String(s == null ? "" : s).trim();
+    if(!s) return "";
+    s = s.toLowerCase();
+    // common cleanup: spaces/hyphens -> underscores
+    s = s.replace(/\s+/g, "_").replace(/-+/g, "_");
+    return s;
+  }
+
+  function safeSplitEntitlements(raw){
+    if(!raw) return [];
+    if(Array.isArray(raw)){
+      return raw.map(normalizeSku).filter(Boolean);
+    }
+    if(raw && typeof raw === "object"){
+      try{
+        return Object.keys(raw)
+          .filter(function(k){ return !!raw[k]; })
+          .map(normalizeSku)
+          .filter(Boolean);
+      }catch(e){
+        return [];
+      }
+    }
+    raw = String(raw).trim();
+    if(!raw) return [];
+    try{
+      if(raw[0] === "[" || raw[0] === "{"){
+        var parsed = JSON.parse(raw);
+        return safeSplitEntitlements(parsed);
+      }
+    }catch(e){}
+    return raw
+      .split(/,|\r?\n/)
+      .map(normalizeSku)
+      .filter(Boolean);
+  }
+
+  async function waitForMemberstack(timeoutMs){
+    var start = Date.now();
+    while(Date.now() - start < timeoutMs){
+      if(window.$memberstackDom && typeof window.$memberstackDom.getCurrentMember === "function"){
+        return window.$memberstackDom;
+      }
+      await sleep(150);
+    }
+    return null;
+  }
+
+  function openModal(keys, options){
+    var ms = window.$memberstackDom;
+    keys = Array.isArray(keys) ? keys : [keys];
+
+    if(ms && typeof ms.openModal === "function"){
+      for(var i=0;i<keys.length;i++){
+        try{
+          var out = ms.openModal(keys[i], options);
+          if(out && typeof out.catch === "function") out.catch(function(){});
+          return true;
+        }catch(e){}
+      }
+    }
+    return false;
+  }
+
+  function openLogin(){
+    if(openModal(["LOGIN"])) return true;
+    window.location.href = NF_LIBRARY.loginUrlFallback;
+    return false;
+  }
+
+  function openSignup(){
+    if(openModal(["SIGNUP"])) return true;
+    window.location.href = NF_LIBRARY.signupUrlFallback;
+    return false;
+  }
+
+  function openAccount(){
+    // Memberstack uses PROFILE modal for account on your site
+    if(openModal(["PROFILE","ACCOUNT","SETTINGS"])) return true;
+    window.location.href = NF_LIBRARY.accountUrlFallback;
+    return false;
+  }
+
+  function hasOwn(obj, key){
+    try { return !!(obj && Object.prototype.hasOwnProperty.call(obj, key)); }
+    catch(e){ return false; }
+  }
+
+  function getEntitlementsInfo(memberRes){
+    var key = NF_LIBRARY.entitlementsFieldId;
+
+    try{
+      var cf1 = memberRes && memberRes.data && memberRes.data.customFields;
+      if (cf1 && hasOwn(cf1, key)) return { found: true, raw: cf1[key] };
+    }catch(e){}
+
+    try{
+      var cf2 = memberRes && memberRes.customFields;
+      if (cf2 && hasOwn(cf2, key)) return { found: true, raw: cf2[key] };
+    }catch(e2){}
+
+    try{
+      var cf3 = memberRes && memberRes.data && memberRes.data.data && memberRes.data.data.customFields;
+      if (cf3 && hasOwn(cf3, key)) return { found: true, raw: cf3[key] };
+    }catch(e3){}
+
+    return { found: false, raw: "" };
+  }
+
+  function renderShell(){
+    root.innerHTML = "";
+    setBusy(true);
+
+    var wrap = el("div",{class:"nf-lib-wrap"},[]);
+    var header = el("div",{class:"nf-lib-header"},[]);
+
+    var left = el("div",{},[
+      el("h1",{class:"nf-lib-title"},["Your Library"]),
+      el("p",{class:"nf-lib-sub"},["Access your purchased plans, packs, and DLTER Blueprints anytime."])
+    ]);
+
+    var actions = el("div",{class:"nf-lib-actions", id:"nf-lib-actions"},[]);
+    header.appendChild(left);
+    header.appendChild(actions);
+
+    var toolbar = el("div",{class:"nf-lib-toolbar nf-hide", id:"nf-lib-toolbar"},[]);
+    var searchWrap = el("div",{class:"nf-search"},[
+      el("input",{ id:"nf-lib-search", type:"search", placeholder:"Search your library…", autocomplete:"off", "aria-label":"Search your library" })
+    ]);
+    var count = el("div",{class:"nf-count", id:"nf-lib-count", text:""},[]);
+    toolbar.appendChild(searchWrap);
+    toolbar.appendChild(count);
+
+    var grid = el("div",{class:"nf-grid", id:"nf-lib-grid"},[]);
+
+    var empty = el("div",{class:"nf-box nf-hide", id:"nf-lib-empty"},[
+      el("strong",{},["No purchases found yet."]),
+      el("div",{},["Once you purchase a plan, pack, or DLTER Blueprint, it will appear here automatically."])
+    ]);
+
+    var error = el("div",{class:"nf-box nf-hide", id:"nf-lib-error"},[
+      el("strong",{id:"nf-lib-error-title"},["Couldn’t load your library."]),
+      el("div",{id:"nf-lib-error-body"},["Please refresh the page or log out and back in."])
+    ]);
+
+    wrap.appendChild(header);
+    wrap.appendChild(toolbar);
+    wrap.appendChild(grid);
+    wrap.appendChild(empty);
+    wrap.appendChild(error);
+    root.appendChild(wrap);
+
+    return {
+      actions: actions,
+      toolbar: toolbar,
+      search: searchWrap.querySelector("input"),
+      count: count,
+      grid: grid,
+      empty: empty,
+      error: error
+    };
+  }
+
+  function setErrorBox(ui, title, body){
+    try{
+      var t = ui.error.querySelector("#nf-lib-error-title");
+      var b = ui.error.querySelector("#nf-lib-error-body");
+      if (t) t.textContent = String(title || "");
+      if (b) b.textContent = String(body || "");
+    }catch(e){}
+  }
+
+  function renderSkeleton(ui, n){
+    ui.grid.innerHTML = "";
+    ui.error.classList.add("nf-hide");
+    ui.empty.classList.add("nf-hide");
+    ui.count.textContent = "Loading…";
+    ui.toolbar.classList.add("nf-hide");
+    setBusy(true);
+
+    for(var i=0;i<n;i++){
+      ui.grid.appendChild(el("div",{class:"nf-card"},[
+        el("div",{class:"nf-ring","aria-hidden":"true"},[]),
+        el("div",{class:"nf-skel nf-skel-title"},[]),
+        el("div",{class:"nf-skel nf-skel-line"},[]),
+        el("div",{class:"nf-skel nf-skel-line short"},[]),
+        el("div",{class:"nf-skel nf-skel-btn"},[])
+      ]));
+    }
+  }
+
+  function renderLoggedOut(ui){
+    ui.actions.innerHTML = "";
+    ui.actions.appendChild(el("span",{class:"nf-badge"},["Login required"]));
+
+    var loginBtn = el("button",{class:"nf-btn nf-btn-primary", type:"button", "data-ms-modal":"login"},["Log in"]);
+    loginBtn.addEventListener("click", function(){ openLogin(); });
+    ui.actions.appendChild(loginBtn);
+
+    var signupBtn = el("button",{class:"nf-btn nf-btn-ghost", type:"button", "data-ms-modal":"signup"},["Create account"]);
+    signupBtn.addEventListener("click", function(){ openSignup(); });
+    ui.actions.appendChild(signupBtn);
+
+    ui.grid.innerHTML = "";
+    ui.toolbar.classList.add("nf-hide");
+    ui.count.textContent = "";
+    ui.error.classList.add("nf-hide");
+    ui.empty.classList.add("nf-hide");
+
+    ui.grid.appendChild(el("div",{class:"nf-card", style:"grid-column:span 12;"},[
+      el("div",{class:"nf-ring","aria-hidden":"true"},[]),
+      el("h3",{},["Please log in"]),
+      el("p",{},["Log in to view and access your purchased plans, packs, and DLTER Blueprints."])
+    ]));
+
+    setBusy(false);
+  }
+
+  function renderCards(ui, list, meta){
+    meta = meta || {};
+    var total = (typeof meta.total === "number") ? meta.total : list.length;
+    var q = (meta.query || "").trim();
+
+    ui.grid.innerHTML = "";
+    ui.error.classList.add("nf-hide");
+
+    if(q){
+      ui.count.textContent = "Showing " + list.length + " of " + total;
+    }else{
+      ui.count.textContent = total + " item" + (total === 1 ? "" : "s");
+    }
+
+    // Show toolbar if there are enough items OR user is searching
+    var showToolbar = (total >= 4) || !!q;
+    ui.toolbar.classList.toggle("nf-hide", !showToolbar);
+
+    if(!total){
+      ui.empty.classList.remove("nf-hide");
+      setBusy(false);
+      return;
+    }
+    ui.empty.classList.add("nf-hide");
+
+    if(!list.length){
+      ui.grid.appendChild(el("div",{class:"nf-card", style:"grid-column:span 12;"},[
+        el("div",{class:"nf-ring","aria-hidden":"true"},[]),
+        el("h3",{},["No matches"]),
+        el("p",{},["Try a different search term."])
+      ]));
+      setBusy(false);
+      return;
+    }
+
+    list.forEach(function(entry){
+      var item = entry.item;
+
+      var links = el("div",{class:"nf-links"},[]);
+      links.appendChild(
+        el("a",{class:"nf-btn nf-btn-primary", href:item.primaryUrl, target:"_blank", rel:"noopener noreferrer"},[item.primaryLabel])
+      );
+
+      if(item.links && item.links.length){
+        item.links.forEach(function(l){
+          if(!l || !l.url) return;
+          links.appendChild(
+            el("a",{class:"nf-link", href:l.url, target:"_blank", rel:"noopener noreferrer"},[l.label])
+          );
+        });
+      }
+
+      ui.grid.appendChild(el("div",{class:"nf-card", "data-sku": entry.sku},[
+        el("div",{class:"nf-ring","aria-hidden":"true"},[]),
+        el("h3",{},[item.title]),
+        el("p",{},[item.desc || ""]),
+        links
+      ]));
+    });
+
+    setBusy(false);
+  }
+
+  function renderEntitlementsMissing(ui){
+    ui.grid.innerHTML = "";
+    ui.toolbar.classList.add("nf-hide");
+    ui.count.textContent = "";
+    ui.empty.classList.add("nf-hide");
+
+    setErrorBox(
+      ui,
+      "We couldn’t verify your access.",
+      "Your account loaded, but your purchases couldn’t be verified. Please refresh. If this persists, contact support."
+    );
+
+    ui.error.classList.remove("nf-hide");
+    setBusy(false);
+  }
+
+  // ===== Auth change handling =====
+  // Refresh on login/logout AND on member updates (entitlements/plan changes) while already logged in.
+  function attachAuthRefresh(){
+    if(root.dataset.nfAuthRefreshBound === "1") return;
+    root.dataset.nfAuthRefreshBound = "1";
+
+    var lastReloadAt = 0;
+
+    function safeReload(){
+      var now = Date.now();
+      // prevent loops / rapid-fire events
+      if(now - lastReloadAt < 1200) return;
+      lastReloadAt = now;
+
+      setTimeout(function(){
+        window.location.reload();
+      }, 200);
+    }
+
+    window.addEventListener("memberstack.login", safeReload);
+    window.addEventListener("memberstack.logout", safeReload);
+    window.addEventListener("memberstack.member.updated", safeReload);
+  }
+
+  async function boot(){
+    attachAuthRefresh();
+
+    var ui = renderShell();
+    renderSkeleton(ui, 6);
+
+    var ms = await waitForMemberstack(NF_LIBRARY.memberstackWaitMs);
+    if(!ms){
+      renderLoggedOut(ui);
+      return;
+    }
+
+    try{
+      var memberRes = await ms.getCurrentMember();
+      if(!memberRes || !memberRes.data){
+        renderLoggedOut(ui);
+        return;
+      }
+
+      // Logged-in actions
+      ui.actions.innerHTML = "";
+      ui.actions.appendChild(el("span",{class:"nf-badge"},["Logged in"]));
+
+      var acctBtn = el("button",{class:"nf-btn nf-btn-ghost", type:"button", "data-ms-modal":"profile"},["Account"]);
+      acctBtn.addEventListener("click", function(){
+        openAccount();
+      });
+      ui.actions.appendChild(acctBtn);
+
+      ui.actions.appendChild(
+        el("a",{class:"nf-btn nf-btn-ghost", href: NF_LIBRARY.siteUrl, target:"_blank", rel:"noopener noreferrer"},["Visit neuform-fitness.com"])
+      );
+
+      // Entitlements -> owned items
+      var info = getEntitlementsInfo(memberRes);
+
+      // ✅ Critical: if the entitlements field can't be found, fail deterministically
+      if(!info.found){
+        if(NF_LIBRARY.debug && root.dataset.nfEntWarned !== "1"){
+          root.dataset.nfEntWarned = "1";
+          console.warn("[NF Library] Entitlements field not found on member object. Check entitlementsFieldId:", NF_LIBRARY.entitlementsFieldId);
+        }
+        renderEntitlementsMissing(ui);
+        return;
+      }
+
+      var entitlements = safeSplitEntitlements(info.raw);
+
+      // Medium: known SKU validation (debug-gated)
+      if(NF_LIBRARY.debug && root.dataset.nfUnknownSkuWarned !== "1"){
+        var unknown = entitlements.filter(function(sku){ return sku && !KNOWN_SKUS[sku]; });
+        if(unknown.length){
+          root.dataset.nfUnknownSkuWarned = "1";
+          console.warn("[NF Library] Unknown SKU(s) in entitlements (ignored):", unknown);
+        }
+      }
+
+      var seen = {};
+      var ownedAll = entitlements
+        .filter(function(sku){
+          if(!sku) return false;
+          if(seen[sku]) return false;
+          seen[sku] = 1;
+          return !!NF_LIBRARY.items[sku];
+        })
+        .map(function(sku){ return { sku: sku, item: NF_LIBRARY.items[sku] }; });
+
+      renderCards(ui, ownedAll, { total: ownedAll.length, query: "" });
+
+      ui.search.addEventListener("input", function(){
+        var q = (ui.search.value || "").trim().toLowerCase();
+        var filtered = ownedAll.filter(function(x){
+          var hay = (x.item.title + " " + (x.item.desc || "")).toLowerCase();
+          return !q || hay.indexOf(q) !== -1;
+        });
+        renderCards(ui, filtered, { total: ownedAll.length, query: q });
+      });
+
+    }catch(err){
+      if(NF_LIBRARY.debug) console.warn("[NF Library] boot error:", err);
+      setErrorBox(ui, "Couldn’t load your library.", "Please refresh the page or log out and back in.");
+      ui.error.classList.remove("nf-hide");
+      setBusy(false);
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+
+})();
+</script>
+
+Embed:
+<div id="nf-library-root" aria-live="polite" aria-busy="true"></div>
+
+Embed:
+<div id="nf-library-root" aria-live="polite" aria-busy="true"></div>

@@ -1,0 +1,573 @@
+DLTER Explained Page Settings Code
+Head:
+<!-- ==============================
+     DLTER Explained — Page Settings → Head (UPDATED · Rev 2.2)
+     Changes for new Webflow wrapper class:
+       - Wrapper Section now has class: dlterx-section (DIRECT child of <body>)
+       - All layout/theme “flow fixes” are now scoped to that wrapper only
+       - Avoids class-name collision with inner content sections (also named .dlterx-section)
+         by targeting: body > section.dlterx-section (wrapper-only)
+       - Moves dark overlay/vignette OFF body and ONTO the wrapper section
+     ============================== -->
+
+<meta charset="utf-8" />
+
+<script>
+  /* Deterministic scope marker (no :has dependency) */
+  try { document.documentElement.classList.add("dlterx-explained"); } catch (e) {}
+</script>
+
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta
+  name="description"
+  content="A calm, skimmable foundation for DLTER: the three axes, what it isn’t, and how the quiz produces useful results."
+/>
+<meta name="theme-color" content="#0b0f12" />
+<meta name="color-scheme" content="dark" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+
+<link rel="canonical" href="https://www.neuform-fitness.com/dlter-explained" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="NeuForm Fitness" />
+<meta property="og:title" content="DLTER Explained | The Framework Behind DLTER Reality Types" />
+<meta
+  property="og:description"
+  content="A calm, skimmable foundation for DLTER: the three axes, what it isn’t, and how the quiz produces useful results."
+/>
+<meta property="og:url" content="https://www.neuform-fitness.com/dlter-explained" />
+<meta
+  property="og:image"
+  content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c4b8dcb89d7048d1a6_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited%20-%20Edited.png"
+/>
+<meta
+  property="og:image:alt"
+  content="DLTER Explained — NeuForm Fitness. The framework behind DLTER Reality Types."
+/>
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="DLTER Explained | The Framework Behind DLTER Reality Types" />
+<meta
+  name="twitter:description"
+  content="A calm, skimmable foundation for DLTER: the three axes, what it isn’t, and how the quiz produces useful results."
+/>
+<meta
+  name="twitter:image"
+  content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c4b8dcb89d7048d1a6_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited%20-%20Edited.png"
+/>
+<meta
+  name="twitter:image:alt"
+  content="DLTER Explained — NeuForm Fitness. The framework behind DLTER Reality Types."
+/>
+
+<style>
+/* =========================================
+   DLTER Explained — Layout & Theme (Rev 2.2)
+   Scoped to wrapper ONLY:
+     html.dlterx-explained body > section.dlterx-section
+   ========================================= */
+
+/* -----------------------------------------
+   Design tokens (local to this page)
+----------------------------------------- */
+:root{
+  color-scheme: dark;
+
+  --nf-glass-bg: rgba(30, 41, 59, 0.7);
+  --nf-glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --nf-glass-blur: blur(12px);
+  --nf-glass-shadow: 0 18px 45px rgba(0,0,0,0.6);
+  --nf-glass-shadow-sm: 0 8px 24px rgba(0,0,0,0.45);
+
+  --dm-bg-primary: #020617;
+  --dm-surface-primary: #111827;
+  --dm-surface-secondary: #1f2937;
+  --dm-border: #4b5563;
+  --dm-border-subtle: rgba(148,163,184,0.35);
+  --dm-border-interactive: #3498db;
+
+  --dm-text-primary: rgba(249,250,251,0.92);
+  --dm-text-secondary: rgba(229,231,235,0.70);
+  --dm-text-disabled: rgba(148,163,184,0.62);
+  --dm-text-on-accent: #fff;
+
+  --dm-accent-primary: #3498db;
+  --dm-accent-primary-hover: #2980b9;
+  --dm-accent-soft: rgba(52,152,219,0.16);
+
+  --nf-gold: #FCD34D;
+
+  --dlter-axis-perception: #38bdf8;
+  --dlter-axis-emergence: #22c55e;
+  --dlter-axis-identity: #eab308;
+
+  --nf-radius: 14px;
+  --nf-radius-sm: 10px;
+  --nf-radius-lg: 20px;
+
+  --nf-2: 8px;
+  --nf-3: 12px;
+  --nf-4: 16px;
+  --nf-5: 20px;
+  --nf-6: 24px;
+  --nf-8: 32px;
+
+  --nf-container-max: 1200px;
+  --nf-gutter: clamp(12px, 4vw, 24px);
+  --nf-card-content-max: 920px;
+
+  /* Anchor/sticky alignment defaults */
+  --dlterx-anchor-offset: 88px;
+  --dlterx-sticky-top: 92px;
+  --dlterx-sticky-gap: 14px;
+}
+
+/* Smooth scroll only on this page (reduced-motion overrides below) */
+html.dlterx-explained{ scroll-behavior: smooth; }
+
+/* Base typography (safe, non-layout) */
+html.dlterx-explained body{
+  background-color: var(--dm-bg-primary);
+  color: var(--dm-text-secondary);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* =========================================================
+   WRAPPER-ONLY TARGET (avoids collision with inner .dlterx-section sections)
+   Wrapper is the Webflow Section that is a DIRECT child of <body>.
+   ========================================================= */
+html.dlterx-explained body > section.dlterx-section{
+  position: relative;
+  background-color: var(--dm-bg-primary);
+
+  /* Critical: prevent height clamps / overflow clipping INSIDE this wrapper */
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+
+  /* Helpful: contain the overlay stacking to this section */
+  isolation: isolate;
+}
+
+/* Dark overlay + vignette (scoped to wrapper, not body) */
+html.dlterx-explained body > section.dlterx-section::before,
+html.dlterx-explained body > section.dlterx-section::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+html.dlterx-explained body > section.dlterx-section::before{
+  background:
+    radial-gradient(circle at 20% -10%, rgba(15,23,42,0.65), transparent 55%),
+    radial-gradient(circle at 80% 110%, rgba(15,23,42,0.9), transparent 60%),
+    linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.95));
+  mix-blend-mode: multiply;
+}
+
+html.dlterx-explained body > section.dlterx-section::after{
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0,0,0,0.72), transparent 55%),
+    radial-gradient(circle at 0% 50%, rgba(0,0,0,0.62), transparent 55%),
+    radial-gradient(circle at 100% 50%, rgba(0,0,0,0.62), transparent 55%);
+}
+
+/* Ensure DLTER content sits above wrapper overlays */
+html.dlterx-explained body > section.dlterx-section > .nf{
+  position: relative;
+  z-index: 1;
+}
+html.dlterx-explained body > section.dlterx-section > .nf,
+html.dlterx-explained body > section.dlterx-section > .nf *{
+  box-sizing: border-box;
+}
+
+/* Headings inside DLTER wrapper */
+html.dlterx-explained body > section.dlterx-section .nf h1,
+html.dlterx-explained body > section.dlterx-section .nf h2,
+html.dlterx-explained body > section.dlterx-section .nf h3,
+html.dlterx-explained body > section.dlterx-section .nf h4{
+  font-family: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  color: var(--dm-text-primary);
+  font-weight: 700;
+}
+html.dlterx-explained body > section.dlterx-section .nf h1{
+  font-size: clamp(1.6rem, 1.35rem + 0.95vw, 2.2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+html.dlterx-explained body > section.dlterx-section .nf h2{
+  font-size: clamp(1.25rem, 1.18rem + .35vw, 1.6rem);
+  letter-spacing: -0.02em;
+}
+html.dlterx-explained body > section.dlterx-section .nf h3{
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(148,163,184,0.75);
+  margin-top: 1.2rem;
+}
+
+/* Container (within wrapper only) */
+html.dlterx-explained body > section.dlterx-section .nf-lab-container{
+  width: 100%;
+  max-width: var(--nf-container-max);
+  margin-inline: auto;
+  padding-left: var(--nf-gutter);
+  padding-right: var(--nf-gutter);
+  padding-top: clamp(36px, 7vh, 68px);
+  padding-bottom: clamp(120px, 12vh, 180px);
+  position: relative;
+
+  /* Critical: prevent internal overflow clipping */
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Ambient DLTER field (within wrapper only) */
+html.dlterx-explained body > section.dlterx-section .nf-lab-container::before{
+  content:"";
+  position:absolute;
+  inset:10% 5%;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(52,152,219,0.14), transparent 60%),
+    radial-gradient(circle at 80% 90%, rgba(148,163,184,0.18), transparent 65%);
+  filter: blur(18px);
+  opacity: 0.7;
+  z-index: 0;
+  pointer-events: none;
+}
+html.dlterx-explained body > section.dlterx-section .nf-lab-container::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(15,23,42,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,0.2) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Glass card (within wrapper only) */
+html.dlterx-explained body > section.dlterx-section .nf .card{
+  position: relative;
+  background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: var(--nf-radius-lg);
+  padding: clamp(18px, 3.5vw, 32px);
+  box-shadow:
+    0 22px 55px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(15,23,42,0.8);
+  border: 1px solid rgba(148,163,184,0.35);
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+
+  z-index: 1;
+}
+html.dlterx-explained body > section.dlterx-section .nf .card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: inherit;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%);
+  opacity: 0.35;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+/* Buttons (within wrapper only) */
+html.dlterx-explained body > section.dlterx-section .nf .btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  border-radius: var(--nf-radius-sm);
+  padding: 0.75rem 1.1rem;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--dm-surface-primary);
+  color: var(--dm-text-primary);
+  border: 1px solid var(--dm-border);
+  transition: all 0.18s ease-out;
+  text-decoration: none;
+}
+html.dlterx-explained body > section.dlterx-section .nf .btn:hover{
+  border-color: var(--dm-border-interactive);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  transform: translateY(-1px);
+}
+html.dlterx-explained body > section.dlterx-section .nf .btn.primary{
+  background: var(--dm-accent-primary);
+  color: var(--dm-text-on-accent);
+  border-color: var(--dm-accent-primary);
+  box-shadow: 0 12px 28px rgba(52,152,219,0.42);
+}
+html.dlterx-explained body > section.dlterx-section .nf .btn.primary:hover{
+  background: var(--dm-accent-primary-hover);
+  box-shadow: 0 14px 36px rgba(52,152,219,0.6);
+}
+html.dlterx-explained body > section.dlterx-section .nf .btn.tiny{
+  padding: 0.35rem 0.75rem;
+  min-height: 32px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+/* Helpers (within wrapper only) */
+html.dlterx-explained body > section.dlterx-section .dlter-explained-shell{
+  max-width: var(--nf-card-content-max);
+  margin: 0 auto;
+  padding: 1.15rem 0 1.35rem;
+}
+html.dlterx-explained body > section.dlterx-section .dlter-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.45);
+  background: rgba(15,23,42,0.9);
+  font-size: 0.7rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(148,163,184,0.85);
+  margin-bottom: 0.65rem;
+}
+html.dlterx-explained body > section.dlterx-section .dlter-badge-dot{
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--dm-accent-primary);
+  box-shadow: 0 0 12px rgba(52,152,219,0.9);
+}
+html.dlterx-explained body > section.dlterx-section .dlter-muted{
+  color: var(--dm-text-disabled);
+  font-size: 0.9rem;
+}
+html.dlterx-explained body > section.dlterx-section .dlter-link{
+  color: var(--nf-gold);
+  text-decoration:none;
+  font-weight: 600;
+}
+html.dlterx-explained body > section.dlterx-section .dlter-link:hover{ text-decoration: underline; }
+html.dlterx-explained body > section.dlterx-section .dlter-divider{
+  height: 1px;
+  width: 100%;
+  background: rgba(148,163,184,0.22);
+  margin: 18px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px){
+  html.dlterx-explained body > section.dlterx-section .nf-lab-container{
+    padding-top: 28px;
+    padding-bottom: 140px;
+  }
+  html.dlterx-explained body > section.dlterx-section .nf .card{
+    padding: 16px 14px 22px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  /* ✅ Explicitly disable smooth scrolling */
+  html.dlterx-explained{ scroll-behavior: auto !important; }
+
+  html.dlterx-explained *{
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+</style>
+
+Body:
+<!-- ==============================
+     (2) PAGE SETTINGS → BEFORE </body>  (UPDATED · Rev 2.1)
+     Updates applied:
+       - Unifies anchor offset with CSS var: --dlterx-anchor-offset (fallback 88)
+       - Wrapper-aware (reads the new Webflow wrapper: section.dlterx-section)
+       - Guards history.pushState (fallback to location.hash)
+       - Keeps scroll-lock release + scoped smooth-scroll interception
+       - (No sticky ancestor-walk; any future sticky fallback should stay bounded to the wrapper)
+     ============================== -->
+
+<script>
+(function () {
+  "use strict";
+
+  window.NF_NL = window.NF_NL || {};
+
+  var ROOT_ID = "dlterx-top";
+  var explainedRootEl = null;
+  try { explainedRootEl = document.getElementById(ROOT_ID); } catch (e) { explainedRootEl = null; }
+  if (!explainedRootEl) return;
+
+  /* New: wrapper section boundary (prevents future logic from touching navbar/global wrappers) */
+  var wrapperSection = null;
+  try { wrapperSection = explainedRootEl.closest && explainedRootEl.closest("section.dlterx-section"); } catch (e) { wrapperSection = null; }
+
+  /* Reduced motion */
+  try {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("nf-reduce-motion");
+    }
+  } catch (e) {}
+
+  /* Release scroll locks (Webflow interactions/modals/templates) */
+  function releaseScroll() {
+    try {
+      document.documentElement.style.overflowY = "auto";
+      document.documentElement.style.height = "auto";
+      document.body.style.overflowY = "auto";
+      document.body.style.height = "auto";
+
+      document.documentElement.classList.remove("w--overflow-hidden");
+      document.body.classList.remove("w--overflow-hidden");
+    } catch (e) {}
+  }
+
+  releaseScroll();
+  window.addEventListener("load", function () {
+    releaseScroll();
+    setTimeout(releaseScroll, 250);
+  });
+
+  /* Anchor smoothing + offset (CSS-var driven; fallback 88) */
+  function toNum(v) {
+    var n = parseFloat(String(v || "").trim().replace("px", ""));
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function getCssVarNumber(name, fallback) {
+    try {
+      var v = getComputedStyle(document.documentElement).getPropertyValue(name);
+      var n = toNum(v);
+      return n == null ? fallback : n;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function getScrollOffset() {
+    return getCssVarNumber("--dlterx-anchor-offset", 88);
+  }
+
+  function smoothScrollTo(el) {
+    if (!el) return;
+    var offset = getScrollOffset();
+    var y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+
+    // Clamp to document bounds
+    var maxY = Math.max(0, (document.documentElement.scrollHeight || 0) - window.innerHeight);
+    if (y < 0) y = 0;
+    if (y > maxY) y = maxY;
+
+    window.scrollTo({
+      top: y,
+      behavior: document.documentElement.classList.contains("nf-reduce-motion") ? "auto" : "smooth"
+    });
+  }
+
+  /* Scoped smooth-scroll interception (DLTER island only) */
+  function safePushHash(id) {
+    try {
+      history.pushState(null, "", "#" + id);
+    } catch (e) {
+      try { window.location.hash = id; } catch (e2) {}
+    }
+  }
+
+  function onExplainedAnchorClick(e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+
+    var link = t.closest('a[href^="#"]');
+    if (!link) return;
+
+    // Optional future-proof guard: if wrapper exists, ensure click is within it
+    try {
+      if (wrapperSection && !wrapperSection.contains(link)) return;
+    } catch (e0) {}
+
+    var href = link.getAttribute("href") || "";
+    if (!href || href === "#") return;
+
+    var id = href.slice(1);
+    if (!id) return;
+
+    var target = document.getElementById(id);
+    if (!target) return;
+
+    e.preventDefault();
+    safePushHash(id);
+    smoothScrollTo(target);
+  }
+
+  explainedRootEl.addEventListener("click", onExplainedAnchorClick);
+
+  function handleHash() {
+    var id = (window.location.hash || "").replace("#", "");
+    if (!id) return;
+
+    var target = document.getElementById(id);
+    if (!target) return;
+
+    setTimeout(function () { smoothScrollTo(target); }, 40);
+  }
+
+  window.addEventListener("load", handleHash);
+  window.addEventListener("hashchange", handleHash);
+
+  /* Back to quiz */
+  var QUIZ_URL = "/dlter-quiz";
+  document.addEventListener("click", function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest("[data-dlter-back-to-quiz]") : null;
+    if (!btn) return;
+    e.preventDefault();
+    window.location.href = QUIZ_URL;
+  });
+
+  /* Analytics hook (guarded: real web env only) */
+  function isTrackableEnv() {
+    try {
+      if (location.protocol !== "https:" && location.protocol !== "http:") return false;
+      var h = (location.hostname || "").toLowerCase();
+      if (!h) return false;
+      if (h === "localhost" || h === "127.0.0.1" || h === "[::1]") return false;
+      if (h.endsWith("webflow.io")) return false; // staging
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  if (isTrackableEnv()) {
+    try {
+      if (window.NF_NL && NF_NL.analytics && typeof NF_NL.analytics.view === "function") {
+        NF_NL.analytics.view("dlter_explained", { section: "dlter" });
+      } else if (window.dataLayer) {
+        window.dataLayer.push({ event: "nf_page_view", page_type: "dlter_explained" });
+      }
+    } catch (e) {}
+  }
+})();
+</script>

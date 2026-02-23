@@ -1,0 +1,568 @@
+Homepage Settings Code:
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0b0f12">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/">
+<meta property="og:title" content="Evidence-Based Hypertrophy &amp; Strength Training | NeuForm Fitness">
+<meta property="og:description" content="Build muscle and strength with 6-week evidence-based programs and free tools. Clear RPE guidance, joint-smart training, and practical progress tracking.">
+<!-- Tip: keep this image <300 KB for better LCP -->
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:secure_url" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — evidence-based hypertrophy and strength training">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evidence-Based Hypertrophy &amp; Strength Training | NeuForm Fitness">
+<meta name="twitter:description" content="Build muscle and strength with 6-week evidence-based programs and free tools. Clear RPE guidance, joint-smart training, and practical progress tracking.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — evidence-based hypertrophy and strength training">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Accessible link styling -->
+<style>
+  :root{
+    --nf-focus: #00D1C7;
+  }
+
+  /* Navigation & buttons */
+  .navbar a,
+  .btn,
+  .button {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  /* Preserve underlines in body copy for UX clarity */
+  .richtext a {
+    text-decoration: underline;
+  }
+
+  /* Visible focus outline for keyboard users */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:not([tabindex="-1"]):focus-visible {
+    outline: 2px solid var(--nf-focus);
+    outline-offset: 2px;
+    border-bottom: none !important;
+  }
+</style>
+
+<!-- Removed here to avoid duplicate graphs:
+     Organization + WebSite JSON-LD are emitted sitewide -->
+
+
+
+Body:
+<!-- CLS helper: if you can't edit the <img> markup right now, this reserves space -->
+<style>
+  /* Add this attribute to your hero <img>: <img data-hero-img ...> */
+  img[data-hero-img] {
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio: 1200 / 630;
+  }
+</style>
+<!-- When you edit the HTML, prefer explicit dimensions instead of the rule above:
+     <img id="hero-img" src="." alt="." width="1200" height="630" loading="eager" decoding="async"> -->
+
+<!-- NeuForm Homepage Tracking + UTM Capture (homepage-only embed; sitewide-ready module) -->
+<script>
+/**
+ * NeuForm Homepage Tracking Module
+ * Includes:
+ * 1) UTM + Page Data Autofill (first/last touch aware)
+ * 2) Storage is CONSENT-GATED (prefers sitewide window.neuform.consent when available)
+ * 3) Lightweight engagement tracking (scroll depth + outbound/support clicks)
+ *
+ * NOTE:
+ * - Consent Mode + cookie banner are handled in SITEWIDE code.
+ * - This embed currently runs on the HOMEPAGE only. If you want this behavior globally,
+ *   move this module into Sitewide Code.
+ */
+(function () {
+  'use strict';
+
+  function onReady(fn){
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  window.neuform = window.neuform || {};
+
+  // Prevent double-binding if this embed is pasted twice
+  if (window.neuform.__NF_CORE_TRACKING_LOADED__) return;
+  window.neuform.__NF_CORE_TRACKING_LOADED__ = true;
+
+  /** ---------- Consent gate (SITEWIDE API preferred) ---------- **/
+  function hasConsent(){
+    try{
+      if (window.neuform && window.neuform.consent) {
+        if (typeof window.neuform.consent.isGranted === 'function') return !!window.neuform.consent.isGranted();
+        if (typeof window.neuform.consent.get === 'function') return window.neuform.consent.get() === 'granted';
+      }
+    }catch(e){}
+    // Fallback: read keys if sitewide API isn't available for some reason
+    try{
+      var s = String(localStorage.getItem('nf.consent') || '').toLowerCase();
+      if (s === 'granted') return true;
+      if (s === 'denied') return false;
+      var l = localStorage.getItem('nf.cookie.ok');
+      return l === '1';
+    }catch(e2){
+      return false;
+    }
+  }
+
+  /** ---------- UTM Capture (CONSENT-GATED for storage) ---------- **/
+  var STORAGE_KEYS = { first:'neuform_first_touch', last:'neuform_last_touch' };
+  var UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','utm_source_platform'];
+  var FIELD_MAP = {
+    utm_source:'UTM_Source',utm_medium:'UTM_Medium',utm_campaign:'UTM_Campaign',utm_content:'UTM_Content',
+    utm_term:'UTM_Term',utm_id:'UTM_Id',utm_source_platform:'UTM_Source_Platform'
+  };
+  var PAGE_FIELDS = {
+    PageURL:function(){ return location.href; },
+    PagePath:function(){ return location.pathname+location.search; },
+    PageTitle:function(){ return document.title||''; },
+    PageReferrer:function(){ return document.referrer||''; }
+  };
+
+  function getParams(){
+    var p = new URLSearchParams(location.search), o = {};
+    UTM_KEYS.forEach(function(k){
+      var v = p.get(k);
+      if (v) o[k] = v.trim();
+    });
+    return o;
+  }
+
+  function saveFirstTouch(o){
+    if (!hasConsent()) return;
+    try{
+      if (!localStorage.getItem(STORAGE_KEYS.first)){
+        localStorage.setItem(
+          STORAGE_KEYS.first,
+          JSON.stringify({
+            ts:new Date().toISOString(),
+            landing_page:location.href,
+            referrer:document.referrer||'',
+            utm:o
+          })
+        );
+      }
+    }catch(e){}
+  }
+
+  function saveLastTouch(o){
+    if (!hasConsent()) return;
+    try{
+      sessionStorage.setItem(
+        STORAGE_KEYS.last,
+        JSON.stringify({
+          ts:new Date().toISOString(),
+          page:location.href,
+          utm:o
+        })
+      );
+    }catch(e){}
+  }
+
+  function readFirstTouch(){
+    if (!hasConsent()) return null;
+    try{
+      var s = localStorage.getItem(STORAGE_KEYS.first);
+      return s ? JSON.parse(s) : null;
+    }catch(e){ return null; }
+  }
+
+  function fillAllInputsByName(n,v){
+    if (!v) return;
+    try{
+      document
+        .querySelectorAll('input[name="'+CSS.escape(n)+'"]')
+        .forEach(function(el){ el.value = v; });
+    }catch(_){}
+  }
+
+  /** ---------- Engagement Tracking ---------- **/
+  function trackScrollDepth(){
+    var fired25=false, fired50=false, fired75=false;
+
+    window.addEventListener('scroll', function(){
+      var doc = document.documentElement || document.body;
+      var body = document.body || doc;
+
+      var fullHeight = Math.max(
+        body.scrollHeight, body.offsetHeight,
+        doc.clientHeight, doc.scrollHeight, doc.offsetHeight
+      );
+      if (!fullHeight) return;
+
+      var depth = (window.scrollY + window.innerHeight) / fullHeight;
+
+      if (!fired25 && depth>0.25){ dl.push({event:'nf_scroll_25'}); fired25=true; }
+      if (!fired50 && depth>0.5){ dl.push({event:'nf_scroll_50'}); fired50=true; }
+      if (!fired75 && depth>0.75){ dl.push({event:'nf_scroll_75'}); fired75=true; }
+    }, { passive:true });
+  }
+
+  function emailDomain(v){
+    try{
+      var s = String(v || '').trim().replace(/^mailto:/i,'').split('?')[0].trim();
+      if (!s || s.indexOf('@') === -1) return null;
+      var dom = String(s.split('@').pop() || '').toLowerCase().trim();
+      return dom || null;
+    }catch(e){ return null; }
+  }
+
+  function trackOutbound(){
+    document.addEventListener('click', function(e){
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a) return;
+
+      var href = a.getAttribute('href') || '';
+      var lower = String(href).toLowerCase();
+
+      // ✅ Never log raw email/phone values
+      if (lower.indexOf('mailto:') === 0){
+        dl.push({ event:'nf_support_click', nf_channel:'email', nf_email_domain: emailDomain(href) });
+        return;
+      }
+      if (lower.indexOf('tel:') === 0){
+        dl.push({ event:'nf_support_click', nf_channel:'phone' });
+        return;
+      }
+
+      var u;
+      try { u = new URL(href, location.origin); } catch(_){ return; }
+      if (!u.hostname || u.hostname === location.hostname) return;
+
+      // ✅ Sanitize external URL logging (no query/hash)
+      dl.push({ event:'nf_outbound_click', nf_host:u.hostname, nf_path:u.pathname });
+    });
+  }
+
+  /** ---------- Init ---------- **/
+  onReady(function(){
+    var utm = getParams();
+    if (Object.keys(utm).length){
+      saveFirstTouch(utm);
+      saveLastTouch(utm);
+    }
+    var first = readFirstTouch();
+
+    UTM_KEYS.forEach(function(k){
+      var name = FIELD_MAP[k];
+      if (!name) return;
+      var v = (utm[k] || '') || (first && first.utm ? first.utm[k] : '');
+      if (v) fillAllInputsByName(name, v);
+    });
+
+    Object.keys(PAGE_FIELDS).forEach(function(k){
+      fillAllInputsByName(k, PAGE_FIELDS[k]());
+    });
+
+    if (first){
+      fillAllInputsByName('LandingPage', first.landing_page || '');
+      fillAllInputsByName('First_PageReferrer', first.referrer || '');
+    }
+
+    trackScrollDepth();
+    trackOutbound();
+
+    dl.push({event:'nf_page_loaded', nf_path: location.pathname });
+  });
+
+})();
+</script>
+
+<!-- NeuForm — Featured Plans (Homepage) Tracking (v3.4.1 — product page navigation only) -->
+<script>
+(function(){
+  'use strict';
+
+  // Prevent double-binding if pasted twice
+  if (window.__NF_HOME_PLANS_TRACKING__) return;
+  window.__NF_HOME_PLANS_TRACKING__ = true;
+
+  // ---------- utils / setup ----------
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){
+    try{ dl.push(evt); }catch(_){}
+  }
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+
+  // once-per-element guard
+  var seen = new WeakSet();
+  function once(el){
+    if (seen.has(el)) return false;
+    seen.add(el);
+    return true;
+  }
+
+  function readPlan(el){
+    var d = el && el.dataset ? el.dataset : {};
+    var nameFromDom =
+      el.querySelector('[data-name]')?.getAttribute('data-name') ||
+      el.querySelector('[itemprop="name"]')?.textContent?.trim() || '';
+
+    // Prefer explicit primary marker when present
+    var primaryLinkEl =
+      el.querySelector('a[data-nf-plan-link][href]') ||
+      el.querySelector('.nf-stretched-link[href]') ||
+      el.querySelector('.nf-cta .nf-btn[href]') ||
+      el.querySelector('a[href]');
+
+    var link = (d.url || primaryLinkEl?.href || '').trim();
+
+    var price = Number(d.price || 0);
+    if (!isFinite(price) || price <= 0) price = null;
+
+    return {
+      plan: (d.plan || '').trim(),
+      name: (d.name || nameFromDom || '').trim(),
+      price: price,
+      sku: (d.sku || '').trim(),
+      position: Number(d.position || 0) || null,
+      url: link || location.href,
+      waitlist: toBool(d.waitlist),
+      isProductPage: toBool(d.isProductPage),
+      currency: 'USD'
+    };
+  }
+
+  var LIST_ID = 'training_plans';
+  var LIST_NAME = 'Training Plans Catalog';
+
+  function fireViewItemList(cards){
+    if (!cards.length) return;
+    var gaItems = Array.from(cards).map(function(card, i){
+      var p = readPlan(card);
+      return {
+        item_id: p.sku || p.plan || ('plan_'+(i+1)),
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || (i+1),
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+    });
+    if (typeof gtag === 'function') {
+      try { gtag('event', 'view_item_list', { items: gaItems }); } catch(_){}
+    } else {
+      push({ event: 'view_item_list', items: gaItems });
+    }
+  }
+
+  var io;
+  function ensureObserver(){
+    if (io || !('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (!once(el)) return;
+        var p = readPlan(el);
+        push({
+          event: 'nf_product_impression',
+          nf_plan: p.plan,
+          nf_name: p.name,
+          nf_price: p.price,
+          nf_sku: p.sku,
+          nf_position: p.position
+        });
+      });
+    }, { threshold: 0.25, rootMargin: '60px 0px 60px 0px' });
+  }
+
+  function observeCards(cards){
+    ensureObserver();
+    if (!io) return;
+    cards.forEach(function(c){
+      if (!c.__nfObserved){
+        io.observe(c);
+        c.__nfObserved = true;
+      }
+    });
+  }
+
+  function onClick(e){
+    var t = e.target;
+    var card = t.closest && (t.closest('[data-plan-card]') || t.closest('.plan-card,[class*="plan-card"]'));
+    if (!card) return;
+
+    var p = readPlan(card);
+    var actionEl = t.closest && t.closest('[data-action]');
+    var action = actionEl ? actionEl.getAttribute('data-action') : '';
+
+    var link = t.closest && t.closest('a[href]') ||
+               card.querySelector('.nf-stretched-link[href]') ||
+               card.querySelector('.nf-cta .nf-btn[href]');
+    var dest = (link && link.href) ? link.href : p.url;
+
+    if (action === 'preview' || (link && !actionEl) || action === 'buy'){
+      var item = {
+        item_id: p.sku || p.plan || 'plan',
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || undefined,
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+      if (typeof gtag === 'function') {
+        try { gtag('event', 'select_item', { items: [item] }); } catch(_){}
+      } else {
+        push({ event: 'select_item', items: [item], nf_dest: dest });
+      }
+      push({
+        event: 'nf_plan_preview_open',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_dest: dest
+      });
+    }
+  }
+
+  function bindChange(sel, key){
+    var el = document.querySelector(sel);
+    if (!el || el.__nfBound) return;
+    el.__nfBound = true;
+    el.addEventListener('change', function(){
+      push({ event: 'nf_catalog_filter', nf_filter_key: key, nf_filter_value: el.value });
+      setTimeout(initCards, 0);
+    }, { passive:true });
+  }
+
+  function scrubInternalNotes(){
+    try{
+      document.querySelectorAll('.nf-helper').forEach(function(n){
+        n.textContent = '';
+        n.style.display = 'none';
+      });
+    }catch(_){}
+  }
+
+  function getCards(){
+    var nodes = Array.from(document.querySelectorAll('[data-plan-card]'));
+    if (!nodes.length){
+      nodes = Array.from(document.querySelectorAll('.plan-card, [class*="plan-card"]'));
+    }
+    return nodes;
+  }
+
+  var initialized = false;
+
+  var scheduled = false;
+  function scheduleInitCards(){
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){
+      scheduled = false;
+      initCards();
+    });
+  }
+
+  function init(){
+    if (!initialized){
+      push({ event: 'nf_plans_catalog_view' });
+      // ✅ no passive click flag (not needed; avoids future footgun)
+      document.addEventListener('click', onClick);
+
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter') return;
+        var focus = document.activeElement;
+        var card = focus && focus.closest && (
+          focus.closest('[data-plan-card]') ||
+          focus.closest('.plan-card,[class*="plan-card"]')
+        );
+        if (!card) return;
+        var primary = card.querySelector('[data-action="preview"]');
+        if (primary && document.activeElement && primary.contains(document.activeElement)) {
+          primary.click();
+          e.preventDefault();
+        }
+      });
+
+      bindChange('[data-filter="goal"]', 'goal');
+      bindChange('[data-filter="days"]', 'days');
+      bindChange('[data-filter="equipment"]', 'equipment');
+      bindChange('[data-sort]', 'sort');
+      initialized = true;
+    }
+    initCards();
+    ensureMO();
+  }
+
+  function initCards(){
+    scrubInternalNotes();
+    var cards = getCards();
+    observeCards(cards);
+    fireViewItemList(cards);
+  }
+
+  function getCatalogRoot(){
+    return document.querySelector('[data-plans-grid]') ||
+           document.querySelector('[data-plans-list]') ||
+           document.querySelector('[data-plan-list]') ||
+           document.querySelector('.plans-grid') ||
+           document.querySelector('[data-plan-card]')?.parentElement ||
+           document.body;
+  }
+
+  var mo, moWarned = false;
+  function ensureMO(){
+    if (mo || !('MutationObserver' in window)) return;
+    var root = getCatalogRoot();
+
+    // Avoid observing body subtree on homepage
+    if (root === document.body){
+      if (!moWarned){
+        moWarned = true;
+        try { console.warn('[NF] Homepage plans root resolved to document.body; skipping MutationObserver.'); } catch(_){}
+      }
+      return;
+    }
+
+    mo = new MutationObserver(function(){
+      scheduleInitCards();
+    });
+    try{ mo.observe(root, { childList:true, subtree:true }); }catch(_){}
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

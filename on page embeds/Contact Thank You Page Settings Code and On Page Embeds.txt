@@ -1,0 +1,420 @@
+Contact Thank You Page Settings Code
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/contact-thank-you">
+<meta property="og:title" content="Thanks — We Got Your Message | NeuForm Fitness">
+<meta property="og:description" content="We received your message and typically reply within 24 hours on weekdays.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — thanks for contacting us">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Thanks — We Got Your Message | NeuForm Fitness">
+<meta name="twitter:description" content="We received your message and typically reply within 24 hours on weekdays.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — thanks for contacting us">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Keyboard focus visibility (failsafe if not already global) -->
+<style>
+:where(a, button, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid #00D1C7;
+  outline-offset: 2px;
+}
+</style>
+
+<!-- Lead tracking (GA4 + Meta + dataLayer custom) -->
+<script>
+/**
+ * NeuForm — Lead Event on Contact Thank-You (Single Source of Truth)
+ * Fires GA4 'generate_lead', Meta 'Lead', and dataLayer 'nf_lead_submit'.
+ * - Dedupe via nf.leadFiredId + nf.leadFiredTs
+ * - Clears nf.leadPending / nf.leadMeta to prevent /thank-you backfires
+ * - Uses Contact page-generated random lead id when present
+ */
+(function () {
+  "use strict";
+
+  window.neuform = window.neuform || {};
+  if (window.neuform.__NF_CONTACT_TY_LEAD__) return;
+  window.neuform.__NF_CONTACT_TY_LEAD__ = true;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  function qp(n) {
+    try { return new URLSearchParams(window.location.search).get(n) || ""; }
+    catch (e) { return ""; }
+  }
+
+  function ssGet(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
+  function ssSet(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
+  function ssDel(k){ try { sessionStorage.removeItem(k); } catch(e){} }
+
+  function once(key) {
+    try {
+      if (sessionStorage.getItem(key)) return false;
+      sessionStorage.setItem(key, "1");
+      return true;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function hasConsent(){
+    try{
+      if (window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === "function") {
+        return !!window.neuform.consent.isGranted();
+      }
+    }catch(_){}
+    try{
+      var s = String(localStorage.getItem("nf.consent") || "").toLowerCase();
+      if (s === "granted") return true;
+      if (s === "denied") return false;
+      return localStorage.getItem("nf.cookie.ok") === "1";
+    }catch(_2){
+      return false;
+    }
+  }
+
+  function readPersistedAttribution(){
+    // Read persisted UTMs/click IDs only if consent is granted
+    if (!hasConsent()) return null;
+    try{
+      var raw = localStorage.getItem("nf.utm.persist.v1");
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object") return null;
+      if (typeof obj.ts !== "number") return null;
+
+      // 30 days max age
+      if ((Date.now() - obj.ts) > (30 * 24 * 60 * 60 * 1000)) return null;
+
+      var params = obj.params && typeof obj.params === "object" ? obj.params : null;
+      return params || null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function fillMissing(target, src){
+    if (!src) return target;
+    for (var k in src){
+      if (!Object.prototype.hasOwnProperty.call(src, k)) continue;
+      if (target[k]) continue;
+      if (src[k]) target[k] = src[k];
+    }
+    return target;
+  }
+
+  function genLeadId(){
+    return "lead_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,10);
+  }
+
+  // Prefer Contact-page generated ID (non-PII), then URL lead_id, else generate
+  var leadId =
+    ssGet("nf.leadId") ||
+    ssGet("nf.lead_id") ||
+    qp("lead_id") ||
+    "";
+
+  if (!leadId) {
+    leadId = genLeadId();
+  }
+
+  // Persist both keys for compatibility
+  ssSet("nf.leadId", leadId);
+  ssSet("nf.lead_id", leadId);
+
+  // Unified dedupe (reload-safe)
+  var firedId = ssGet("nf.leadFiredId") || "";
+  if (firedId && firedId === leadId) return;
+
+  // Extra reload guard (legacy per-lead key)
+  var dedupeKey = "nf.lead.sent." + leadId;
+  if (!once(dedupeKey)) return;
+
+  // Pull safe meta from contact submit attempt (non-PII)
+  var leadMeta = {};
+  try { leadMeta = JSON.parse(ssGet("nf.leadMeta") || "{}") || {}; } catch(_) { leadMeta = {}; }
+
+  // UTM: query params first; fill missing from persisted attribution if available (never overwrites query)
+  var utm = {
+    utm_source: qp("utm_source"),
+    utm_medium: qp("utm_medium"),
+    utm_campaign: qp("utm_campaign"),
+    utm_term: qp("utm_term"),
+    utm_content: qp("utm_content")
+  };
+  var persisted = readPersistedAttribution();
+  if (persisted) {
+    fillMissing(utm, {
+      utm_source: persisted.utm_source || "",
+      utm_medium: persisted.utm_medium || "",
+      utm_campaign: persisted.utm_campaign || "",
+      utm_term: persisted.utm_term || "",
+      utm_content: persisted.utm_content || ""
+    });
+  }
+
+  // ✅ Communicate to all other scripts that conversion is complete + prevent /thank-you re-fire
+  var nowTs = String(Date.now());
+  ssSet("nf.leadFired", "1");      // legacy
+  ssSet("nf.leadFiredId", leadId);
+  ssSet("nf.leadFiredTs", nowTs);  // aligns with /thank-you style
+  ssDel("nf.leadPending");
+  ssDel("nf.leadMeta");
+
+  // GA4: generate_lead
+  if (typeof gtag === "function") {
+    try {
+      gtag("event", "generate_lead", {
+        lead_id: leadId,
+        method: "contact_form",
+        utm_source: utm.utm_source || null,
+        utm_medium: utm.utm_medium || null,
+        utm_campaign: utm.utm_campaign || null,
+        utm_term: utm.utm_term || null,
+        utm_content: utm.utm_content || null,
+
+        // safe meta (non-PII)
+        nf_plan_interest: leadMeta.nf_plan_interest || null,
+        nf_email_domain: leadMeta.nf_email_domain || null,
+        nf_message_len: (typeof leadMeta.nf_message_len === "number") ? leadMeta.nf_message_len : null,
+        nf_newsletter_optin: (typeof leadMeta.nf_newsletter_optin === "boolean") ? leadMeta.nf_newsletter_optin : null
+      });
+    } catch (e) {}
+  }
+
+  // Meta Pixel: Lead
+  if (typeof fbq === "function") {
+    try {
+      fbq("track", "Lead", {
+        lead_id: leadId,
+        utm_source: utm.utm_source || null,
+        utm_medium: utm.utm_medium || null,
+        utm_campaign: utm.utm_campaign || null,
+        utm_term: utm.utm_term || null,
+        utm_content: utm.utm_content || null,
+
+        // safe meta (non-PII)
+        nf_plan_interest: leadMeta.nf_plan_interest || null,
+        nf_email_domain: leadMeta.nf_email_domain || null
+      });
+    } catch (e) {}
+  }
+
+  // Custom dataLayer event for QA/retargeting (single authoritative fire)
+  dl.push({
+    event: "nf_lead_submit",
+    nf_lead_id: leadId,
+    nf_method: "contact_form",
+
+    nf_utm_source: utm.utm_source || null,
+    nf_utm_medium: utm.utm_medium || null,
+    nf_utm_campaign: utm.utm_campaign || null,
+    nf_utm_term: utm.utm_term || null,
+    nf_utm_content: utm.utm_content || null,
+
+    // safe meta (non-PII)
+    nf_plan_interest: leadMeta.nf_plan_interest || null,
+    nf_email_domain: leadMeta.nf_email_domain || null,
+    nf_message_len: (typeof leadMeta.nf_message_len === "number") ? leadMeta.nf_message_len : null,
+    nf_newsletter_optin: (typeof leadMeta.nf_newsletter_optin === "boolean") ? leadMeta.nf_newsletter_optin : null
+  });
+
+})();
+</script>
+
+Body:
+<!-- NeuForm — Contact Thank-You Helpers -->
+<script>
+(function(){
+  "use strict";
+
+  window.neuform = window.neuform || {};
+  if (window.neuform.__NF_CONTACT_TY_HELPERS__) return;
+  window.neuform.__NF_CONTACT_TY_HELPERS__ = true;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  // 1) Mark page view
+  dl.push({ event: 'nf_contact_thanks_view' });
+
+  // ===== Helper: domain-only extraction (no raw email logged) =====
+  function emailDomain(v){
+    try{
+      var s = String(v || '').trim();
+      s = s.replace(/^mailto:/i,'');
+      s = s.split('?')[0].trim();          // strip query params
+      if (!s || s.indexOf('@') === -1) return null;
+      var dom = String(s.split('@').pop() || '').toLowerCase().trim();
+      return dom || null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  // NOTE:
+  // Conversion fire happens ONLY in the HEAD script above.
+  // Do NOT emit nf_lead_submit (or generate_lead/Lead) from this body script.
+
+  // 2) Delegated click tracking for suggested next steps
+  // Add data-cty-action attributes to links/buttons in your markup:
+  //   data-cty-action="open"     data-dest="/training-plans|/tools|/blog"
+  //   data-cty-action="social"   data-network="instagram|facebook"
+  //   data-cty-action="email"    data-email="hello@domain"   (stored in HTML but NOT sent raw to analytics)
+  //   data-cty-action="download" data-file="/files/..."
+  function closestAction(el){ return el && el.closest ? el.closest('[data-cty-action]') : null; }
+
+  document.addEventListener('click', function(e){
+    var node = closestAction(e.target);
+    if (!node) return;
+
+    var act  = node.getAttribute('data-cty-action');
+    var dest = node.getAttribute('data-dest') || (node.tagName === 'A' ? node.getAttribute('href') : null);
+    var net  = node.getAttribute('data-network') || null;
+    var mail = node.getAttribute('data-email') || null;
+    var file = node.getAttribute('data-file') || null;
+
+    switch(act){
+      case 'open':
+        dl.push({ event:'nf_cty_open', nf_dest: dest });
+        break;
+
+      case 'social':
+        dl.push({ event:'nf_social_follow', nf_network: net, nf_dest: dest });
+        break;
+
+      case 'email':
+        // ✅ NO RAW EMAIL IN dataLayer
+        dl.push({
+          event:'nf_support_click',
+          nf_channel:'email',
+          nf_email_domain: emailDomain(mail)
+        });
+        break;
+
+      case 'download':
+        dl.push({ event:'nf_download_click', nf_file: file, nf_context:'contact_thanks' });
+        break;
+    }
+  }, { passive:true });
+
+  // 3) Tiny API if you prefer direct calls from HTML
+  window.NFContactTY = {
+    open: function(dest){
+      dl.push({ event:'nf_cty_open', nf_dest: dest||null });
+    },
+    social: function(net, dest){
+      dl.push({ event:'nf_social_follow', nf_network: net||null, nf_dest: dest||null });
+    },
+    email: function(address){
+      // ✅ NO RAW EMAIL IN dataLayer
+      dl.push({
+        event:'nf_support_click',
+        nf_channel:'email',
+        nf_email_domain: emailDomain(address)
+      });
+    },
+    download: function(file){
+      dl.push({ event:'nf_download_click', nf_file: file||null, nf_context:'contact_thanks' });
+    }
+  };
+
+  // 4) Optional: reveal a small reassurance message after a few seconds
+  //    (use an element with id="reply-window" to show "We usually reply within 24h")
+  (function(){
+    var el = document.getElementById('reply-window');
+    if (!el) return;
+    try { el.hidden = true; } catch(e){}
+    setTimeout(function(){
+      try { el.hidden = false; } catch(e){}
+    }, 2500);
+  })();
+
+})();
+</script>
+
+<div class="contact-ty-shell" role="main" aria-label="Contact confirmation">
+  <div
+    class="contact-ty-card"
+    role="region"
+    aria-labelledby="contact-ty-heading"
+  >
+    <div class="contact-ty-card-inner">
+      <h1 id="contact-ty-heading" class="contact-ty-heading">
+        Thank You for Contacting Us!
+      </h1>
+
+      <p class="contact-ty-body contact-ty-body--primary">
+        We’ve received your message and will reply to your email within
+        <strong>24 hours on weekdays</strong>. Please check your inbox&mdash;and
+        your spam or promotions folder&mdash;for a confirmation email.
+      </p>
+
+      <p class="contact-ty-body">
+        If you don’t see anything soon, you can email us directly at
+        <a
+          href="mailto:chriswelch.neuform@gmail.com"
+          data-cty-action="email"
+          data-email="chriswelch.neuform@gmail.com"
+        >
+          chriswelch.neuform@gmail.com
+        </a>.
+      </p>
+
+      <!-- Revealed by existing helper script after a short delay -->
+      <p id="reply-window" aria-live="polite" hidden>
+        We usually reply within 24 hours on weekdays.
+      </p>
+
+      <div class="contact-ty-next" aria-label="Next steps while you wait">
+        <div class="contact-ty-next-label">
+          While you’re here
+        </div>
+
+        <div class="contact-ty-actions">
+          <a
+            href="/training-plans"
+            class="contact-ty-btn"
+            data-cty-action="open"
+            data-dest="/training-plans"
+          >
+            <span>Browse Training Plans</span>
+          </a>
+
+          <a
+            href="/tools"
+            class="contact-ty-btn"
+            data-cty-action="open"
+            data-dest="/tools"
+          >
+            <span>Explore Free Tools</span>
+          </a>
+
+          <a
+            href="/blog"
+            class="contact-ty-btn"
+            data-cty-action="open"
+            data-dest="/blog"
+          >
+            <span>Read Training Guides</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

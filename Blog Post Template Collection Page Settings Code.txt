@@ -1,0 +1,463 @@
+Blog Post Template CMS Collection Page Page Settings Code
+
+Head:
+<!-- Viewport -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Robots (CMS-controlled) -->
+<meta name="robots" content="{{wf {&quot;path&quot;:&quot;indexing-control&quot;,&quot;type&quot;:&quot;Option&quot;\} }}">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/blog-posts/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+<meta property="og:title" content="{{wf {&quot;path&quot;:&quot;meta-title&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | NeuForm Fitness">
+<meta property="og:description" content="{{wf {&quot;path&quot;:&quot;meta-description&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{wf {&quot;path&quot;:&quot;meta-title&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | NeuForm Fitness">
+<meta name="twitter:description" content="{{wf {&quot;path&quot;:&quot;meta-description&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- NOTE:
+     Canonical/title/description MUST be managed via Webflow SEO fields + Publishing domain.
+     This page script will NOT inject/override canonical or robots.
+     JSON-LD is injected in the BODY by id (safe replace), and uses the page’s canonical URL from <link rel="canonical"> when present. -->
+
+
+Body:
+<!-- NeuForm — Blog Page Scripts (v1.8 • code-only hardening)
+Update:
+  • No longer requires data-nf-blog-section / data-nf-blog
+  • Auto-detects root via .nf-wrap and host via nearest section (or document)
+  • RTE clone falls back to .nf-body-rte/.nf-takeaways and will NOT blank content if slots are missing
+  • ensureVisibleForInit restores previous display state (no forced display:none)
+  • Read time / external links / takeaways hiding now support class fallbacks
+-->
+<script>
+(function(){
+  // ---------- dataLayer ----------
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){ try{ dl.push(evt); }catch(_){} }
+
+  // ---------- helpers ----------
+  var $  = (s,el)=> (el||document).querySelector(s);
+  var $$ = (s,el)=> Array.from((el||document).querySelectorAll(s));
+  var iso = (s)=>{
+    try{
+      if(!s || /^\s*$/.test(s)) return '';
+      var d = new Date(s);
+      if (isNaN(d.getTime())) return '';
+      return d.toISOString();
+    }catch(e){ return ''; }
+  };
+
+  function getCanonicalUrl(){
+    try{
+      var link = document.querySelector('link[rel="canonical"]');
+      var href = link && link.href ? String(link.href) : '';
+      if (href) return href.split('#')[0];
+    }catch(e){}
+    try{
+      return (location.origin + location.pathname + location.search).split('#')[0];
+    }catch(e2){
+      return (location.href || '').split('#')[0];
+    }
+  }
+
+  // Wait until a selector exists (CMS render timing safe)
+  function waitFor(sel, root, tries, gap, cb){
+    var n=0, max=(tries||80), delay=(gap||50);
+    (function loop(){
+      var el = (root||document).querySelector(sel);
+      if (el || n>=max) { cb(el); return; }
+      n++; setTimeout(loop, delay);
+    })();
+  }
+
+  // ---------- host/root detection (NO attr dependency) ----------
+  // Prefer explicit markers if present, otherwise infer from existing structure.
+  var root =
+    document.querySelector('[data-nf-blog]') ||
+    document.querySelector('.nf-wrap') ||
+    document.querySelector('.nf-article') ||
+    document.body;
+
+  var host =
+    document.querySelector('[data-nf-blog-section]') ||
+    (root && root.closest && root.closest('section')) ||
+    document;
+
+  // --- idempotence guard ---
+  if (root.__nfBlogInit) return;
+  root.__nfBlogInit = true;
+
+  // ---------- dataset ----------
+  var ds = root.dataset || {};
+  var title = ds.title || document.title;
+  var slug  = ds.slug  || location.pathname.replace(/^\/|\/$/g,'');
+  var primaryCat = ds.primaryCategory || '';
+  var secondaryCat = ds.secondaryCategory || '';
+  var tags = (ds.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
+  var author = ds.author || '';
+  var authorRole = ds.authorRole || '';
+  var published = ds.published || '';
+  var updated   = ds.updated   || '';
+  var readMins  = parseInt(ds.readMins||'',10);
+  var metaTitle = ds.metaTitle || '';
+  var metaDesc  = ds.metaDesc  || '';
+  var articleId = ds.articleId || '';
+  var convType  = ds.convType  || '';
+  var ctaHeader = ds.ctaHeader || '';
+  var ctaText   = ds.ctaText   || '';
+  var ctaLabel  = (ds.ctaLabel||'See the Plan →').trim();
+  var ctaHref   = (ds.ctaHref||'/training-plans').trim();
+  var videoUrl  = (ds.videoUrl||'').trim();
+  var audioUrl  = (ds.audioUrl||'').trim();
+
+  // ---------- RTE cloning (safe) ----------
+  function findSource(selectors){
+    for (var i=0;i<selectors.length;i++){
+      var el = $(selectors[i], host);
+      if (el) return el;
+    }
+    return null;
+  }
+
+  function ensureVisibleForInit(node){
+    if (!node) return function(){};
+    var prev = {
+      hiddenAttr: node.hasAttribute('hidden'),
+      display: node.style.display,
+      visibility: node.style.visibility,
+      opacity: node.style.opacity
+    };
+    node.removeAttribute('hidden');
+    node.style.visibility = 'hidden';
+    node.style.opacity = '0';
+    // important: do NOT force a new display mode; just let it be
+    if (node.style.display === 'none') node.style.display = '';
+    return function restore(){
+      node.style.visibility = prev.visibility || '';
+      node.style.opacity = prev.opacity || '';
+      node.style.display = prev.display || '';
+      if (prev.hiddenAttr) node.setAttribute('hidden','');
+    };
+  }
+
+  function lazyfyMedia(scope){
+    if(!scope) return;
+    $$('img', scope).forEach(function(img){
+      if(!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+      if(!img.decoding) img.decoding = 'async';
+    });
+    $$('iframe', scope).forEach(function(ifr){
+      if(!ifr.hasAttribute('loading')) ifr.setAttribute('loading','lazy');
+    });
+  }
+
+  function stripIdsFromTree(node){
+    if(!node || node.nodeType !== 1) return;
+    try{
+      if (node.hasAttribute('id')) node.removeAttribute('id');
+      $$('[id]', node).forEach(function(el){
+        try { el.removeAttribute('id'); } catch(_){}
+      });
+    }catch(e){}
+  }
+
+  // cloneRTE now:
+  //  • supports your current classes (.nf-body-rte, .nf-takeaways)
+  //  • if no destination slot exists, it will simply lazyfy the existing RTE and NOT hide anything
+  function cloneRTE(srcSelectors, destSelectors, after){
+    var srcWrap = findSource(srcSelectors);
+    if(!srcWrap) return;
+
+    // destination: first match wins (if none, we fail-soft)
+    var dest = null;
+    for (var i=0;i<destSelectors.length;i++){
+      dest = $(destSelectors[i], host);
+      if(dest) break;
+    }
+
+    var restore = ensureVisibleForInit(srcWrap);
+
+    // Rich Text element might be:
+    //  • a descendant .w-richtext, OR
+    //  • the srcWrap itself
+    var rte = srcWrap.classList && srcWrap.classList.contains('w-richtext') ? srcWrap : null;
+
+    if (rte){
+      // If we have a real destination and it’s not the same node, clone into it.
+      if (dest && dest !== srcWrap){
+        var clone = rte.cloneNode(true);
+        dest.innerHTML = '';
+        dest.appendChild(clone);
+        lazyfyMedia(clone);
+        stripIdsFromTree(rte);
+        restore();
+        if (typeof after === 'function') after(clone);
+      } else {
+        // No destination slot in DOM → just enhance existing content.
+        lazyfyMedia(rte);
+        restore();
+        if (typeof after === 'function') after(rte);
+      }
+      return;
+    }
+
+    waitFor('.w-richtext', srcWrap, 80, 50, function(found){
+      if(!found){ restore(); return; }
+
+      if (dest && dest !== srcWrap){
+        var clone = found.cloneNode(true);
+        dest.innerHTML = '';
+        dest.appendChild(clone);
+        lazyfyMedia(clone);
+        stripIdsFromTree(found);
+        restore();
+        if (typeof after === 'function') after(clone);
+      } else {
+        // No destination slot → enhance existing
+        lazyfyMedia(found);
+        restore();
+        if (typeof after === 'function') after(found);
+      }
+    });
+  }
+
+  // Body & Takeaways (attr-first, class fallback)
+  cloneRTE(
+    ['[data-rte-body]', '.nf-rte-body', '.nf-body-rte'],
+    ['[data-body-slot]', '.nf-body-slot', '.nf-body', '.nf-body-rte'],
+    updateReadTime
+  );
+
+  cloneRTE(
+    ['[data-rte-takeaways]', '.nf-rte-takeaways', '.nf-takeaways'],
+    ['[data-takeaways-slot]', '.nf-takeaways-slot', '.nf-takeaways'],
+    hideEmptyTakeaways
+  );
+
+  // ---------- read time ----------
+  function updateReadTime(){
+    var meter =
+      $('[data-read-time]', host) ||
+      $('.nf-read', host);
+
+    if(!meter) return;
+
+    if(readMins){
+      meter.textContent = readMins + '-min read';
+      return;
+    }
+
+    var bodyRte =
+      $('[data-body-slot] .w-richtext', host) ||
+      $('.nf-body-rte .w-richtext', host) ||
+      $('.nf-body-rte', host);
+
+    var txt = bodyRte ? (bodyRte.innerText || bodyRte.textContent || '') : '';
+    var words = (txt.match(/\S+/g)||[]).length;
+    var mins = Math.max(1, Math.round(words/225));
+    meter.textContent = mins + '-min read';
+  }
+
+  // ---------- hide takeaways box if empty ----------
+  function hideEmptyTakeaways(){
+    var slot =
+      $('[data-takeaways-slot]', host) ||
+      $('.nf-takeaways', host);
+
+    if(!slot) return;
+
+    var text = (slot.textContent||'').replace(/\s+/g,'').trim();
+    if(!text){
+      var wrap = slot.closest('.nf-takeaways') || slot;
+      wrap.setAttribute('style','display:none');
+    }
+  }
+
+  // ---------- dates (attr-first, class fallback) ----------
+  (function dates(){
+    var pub =
+      $('[data-date-published]', host) ||
+      $('.nf-date', host);
+
+    var upd =
+      $('[data-date-updated]', host) ||
+      $('[data-updated-wrap] [datetime], [data-updated-wrap]', host);
+
+    if(pub && published){
+      var d = new Date(published);
+      if (!isNaN(d.getTime())){
+        pub.textContent = d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+        var di = iso(published);
+        if (di) pub.setAttribute('datetime', di);
+      }
+    }
+
+    if(upd && updated){
+      var d2 = new Date(updated);
+      if (!isNaN(d2.getTime())){
+        // If upd is a container, write into it; otherwise write directly.
+        if (upd.nodeType === 1){
+          upd.textContent = 'Updated ' + d2.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+        }
+        var ui = iso(updated);
+        try{ if (ui && upd.setAttribute) upd.setAttribute('datetime', ui); }catch(e){}
+        var uw = upd.closest && upd.closest('[data-updated-wrap]');
+        if (uw && uw.classList) uw.classList.remove('hide');
+      }
+    }
+  })();
+
+  // ---------- external links safety (body + takeaways; attr + class fallback) ----------
+  (function externalize(){
+    var scopes = [
+      '[data-body-slot]',
+      '.nf-body-rte',
+      '[data-takeaways-slot]',
+      '.nf-takeaways'
+    ];
+    scopes.forEach(function(scopeSel){
+      $$(scopeSel + ' a', host).forEach(function(a){
+        var href = (a.getAttribute('href')||'').trim();
+        if(!href || href.startsWith('#') || href.startsWith('/') || href.startsWith(location.origin)) return;
+        a.setAttribute('target','_blank'); a.setAttribute('rel','noopener noreferrer');
+      });
+    });
+  })();
+
+  // ---------- auto-hide helpers ----------
+  (function autoHide(){
+    $$('[data-hide-when-empty]', host).forEach(function(box){
+      if((box.textContent||'').trim()==='') box.style.display='none';
+    });
+    $$('[data-hide-if-no-children]', host).forEach(function(w){
+      if(!w.querySelector('*')) w.style.display='none';
+    });
+  })();
+
+  // ---------- CTA ----------
+  (function cta(){
+    var btn = $('[data-cta-btn]', host);
+    var head = $('[data-cta-head]', host);
+    var copy = $('[data-cta-copy]', host);
+
+    if(head) head.textContent = ctaHeader;
+    if(copy) copy.textContent = ctaText;
+
+    if(btn){
+      btn.textContent = ctaLabel;
+      btn.setAttribute('href', ctaHref);
+
+      var isExternal = /^https?:\/\//i.test(ctaHref) && !ctaHref.startsWith(location.origin);
+      if(isExternal){ btn.setAttribute('target','_blank'); btn.setAttribute('rel','noopener noreferrer'); }
+      btn.setAttribute('aria-label', ctaLabel);
+
+      btn.addEventListener('click', function(){
+        push({
+          event:'blog_cta_click',
+          blog_slug:slug,
+          blog_title:title,
+          cta_label:ctaLabel,
+          cta_href:ctaHref,
+          conversion_tag: convType || null
+        });
+      }, { once:false, passive:true });
+    }
+  })();
+
+  // ---------- video/audio embeds ----------
+  (function embeds(){
+    var vWrap = $('[data-video-wrap]', host);
+    var aWrap = $('[data-audio-wrap]', host);
+
+    function ytOrVimeo(url){
+      if(/youtu\.be\/|youtube\.com\/watch/.test(url)){
+        var id = (url.match(/youtu\.be\/([^?&]+)/)||[])[1] || (url.match(/[?&]v=([^?&]+)/)||[])[1] || '';
+        if(id) return 'https://www.youtube.com/embed/' + encodeURIComponent(id);
+      }
+      var vm = url.match(/vimeo\.com\/(\d+)/);
+      if(vm) return 'https://player.vimeo.com/video/' + vm[1];
+      return '';
+    }
+
+    if(vWrap && videoUrl){
+      var src = ytOrVimeo(videoUrl);
+      if(src){
+        var ifr = document.createElement('iframe');
+        ifr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        ifr.setAttribute('allowfullscreen',''); ifr.title='Video'; ifr.src = src;
+        ifr.setAttribute('loading','lazy');
+        vWrap.innerHTML=''; vWrap.appendChild(ifr);
+      }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(videoUrl)){
+        var vid = document.createElement('video');
+        vid.controls = true; vid.src = videoUrl; vid.setAttribute('playsinline','');
+        vWrap.innerHTML=''; vWrap.appendChild(vid);
+      }
+    }
+
+    if(aWrap && audioUrl && /\.(mp3|m4a|ogg|wav|aac)(\?.*)?$/i.test(audioUrl)){
+      var au = document.createElement('audio'); au.controls = true; au.src = audioUrl;
+      aWrap.innerHTML=''; aWrap.appendChild(au);
+    }
+  })();
+
+  // ---------- analytics ----------
+  push({
+    event: 'page_context',
+    page_type: 'blog_article',
+    blog: {
+      title, slug, primary_category: primaryCat, secondary_category: secondaryCat,
+      tags, author, author_role: authorRole, published: published || null, updated: updated || null,
+      conversion_tag: convType || null,
+      canonical_url: getCanonicalUrl()
+    }
+  });
+
+  // ---------- JSON-LD ----------
+  (function jsonld(){
+    function addOrReplaceLd(id, obj){
+      var prev = document.getElementById(id);
+      var s = document.createElement('script'); s.type='application/ld+json'; s.id=id;
+      s.textContent = JSON.stringify(obj, null, 2);
+      if(prev) prev.replaceWith(s); else document.head.appendChild(s);
+    }
+
+    var canonUrl = getCanonicalUrl();
+
+    var ld = {
+      '@context':'https://schema.org',
+      '@type':'Article',
+      '@id': articleId || undefined,
+      'headline': metaTitle || title,
+      'name': title,
+      'datePublished': published ? iso(published) : undefined,
+      'dateModified' : updated   ? iso(updated)   : undefined,
+      'author': author ? { '@type':'Person', 'name': author, 'jobTitle': authorRole || undefined } : undefined,
+      'publisher': { '@type':'Organization', 'name':'NeuForm Fitness' },
+      'description': metaDesc || undefined,
+      'mainEntityOfPage': canonUrl
+    };
+    addOrReplaceLd('nf-article-jsonld', ld);
+
+    var bc = {
+      '@context':'https://schema.org',
+      '@type':'BreadcrumbList',
+      'itemListElement': [
+        { '@type':'ListItem', position:1, name:'Home', item: location.origin + '/' },
+        { '@type':'ListItem', position:2, name:'Blog', item: location.origin + '/blog' },
+        { '@type':'ListItem', position:3, name:title, item: canonUrl }
+      ]
+    };
+    addOrReplaceLd('nf-breadcrumbs-jsonld', bc);
+  })();
+})();
+</script>

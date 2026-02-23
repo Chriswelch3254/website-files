@@ -1,0 +1,127 @@
+Head:
+<!-- Start Plan (Intake): basic meta -->
+<meta name="theme-color" content="#3498db" />
+
+<!-- Gated / post-purchase: keep out of search, but allow crawling of internal links -->
+<meta name="robots" content="noindex,follow,noarchive,max-image-preview:large" />
+
+<!-- Start Plan page: sticky footer + DLTER-style "rocks + dark overlay" (SCOPED) -->
+<style>
+  /* =====================================================
+     Scoped page class (added in Body script):
+     body.nf-start-plan-page
+  ====================================================== */
+
+  /* Sticky footer layout (does NOT alter your nav styling) */
+  body.nf-start-plan-page{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    /* IMPORTANT:
+       Do NOT set `background: ...` here.
+       Your rock background is applied to body in Webflow and must remain untouched. */
+
+    overflow-x: hidden;
+
+    /* Create a stable stacking context for the overlay element */
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+  }
+
+  /* Push the actual footer to the bottom on short pages */
+  body.nf-start-plan-page footer,
+  body.nf-start-plan-page .w-footer,
+  body.nf-start-plan-page [role="contentinfo"]{
+    margin-top: auto;
+  }
+
+  /* DLTER-style overlay: dedicated element (NOT body::before) */
+  #nf-start-plan-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+      radial-gradient(1100px 620px at 18% 0%, rgba(52,152,219,.16), transparent 58%),
+      radial-gradient(900px 560px at 86% 10%, rgba(52,152,219,.10), transparent 60%),
+      linear-gradient(180deg, rgba(0,0,0,.58), rgba(0,0,0,.72) 42%, rgba(0,0,0,.82));
+  }
+
+  /* Keep common content wrappers transparent so the body rock shows through,
+     but do NOT touch nav/header so your navbar styling stays intact. */
+  body.nf-start-plan-page main,
+  body.nf-start-plan-page section:not(#nf-start-plan):not(header):not(nav),
+  body.nf-start-plan-page .w-section,
+  body.nf-start-plan-page .w-container,
+  body.nf-start-plan-page .w-layout-blockcontainer,
+  body.nf-start-plan-page .page-wrapper,
+  body.nf-start-plan-page .page-content,
+  body.nf-start-plan-page .main-wrapper,
+  body.nf-start-plan-page .wrapper{
+    background-color: transparent !important;
+  }
+</style>
+
+
+
+Body:
+<!-- ==============================
+     /start-plan → PAGE SETTINGS → BEFORE </body>  (UPDATED)
+     ============================== -->
+
+<script>
+(function () {
+  "use strict";
+
+  // Add stable page scope class
+  try { document.body.classList.add('nf-start-plan-page'); } catch(e) {}
+
+  // Keep the old class approach (useful if you want to scope anything else later)
+  try { document.body.classList.add('nf-sticky-footer'); } catch(e) {}
+
+  // Inject overlay element (dedicated layer; avoids body::before collisions)
+  (function ensureOverlay(){
+    try{
+      if (document.getElementById('nf-start-plan-overlay')) return;
+      var el = document.createElement('div');
+      el.id = 'nf-start-plan-overlay';
+      el.setAttribute('aria-hidden','true');
+
+      var b = document.body;
+      if (!b) return;
+
+      // Insert as first child for predictable paint order
+      if (b.firstChild) b.insertBefore(el, b.firstChild);
+      else b.appendChild(el);
+    }catch(e){}
+  })();
+
+  // Reduced motion flag (harmless + useful)
+  try {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("nf-reduce-motion");
+    }
+  } catch (e) {}
+
+  // Prevent jump-to-top on Memberstack anchors (href="#") while preserving normal hash links.
+  // IMPORTANT: Do NOT stop propagation. Memberstack relies on the click event to open modals / checkout.
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href="#"]') : null;
+    if (!a) return;
+
+    // Only intercept for Memberstack-driven anchors
+    if (
+      a.hasAttribute("data-ms-price:add") ||
+      a.hasAttribute("data-ms-modal") ||
+      a.hasAttribute("data-ms-action")
+    ) {
+      e.preventDefault();
+      // DO NOT: e.stopPropagation();
+    }
+  }, true);
+
+})();
+</script>

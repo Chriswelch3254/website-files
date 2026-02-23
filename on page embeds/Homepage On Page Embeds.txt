@@ -1,0 +1,850 @@
+Homepage On Page Embeds:
+
+Embed 1:
+<style>
+/* ==========================================
+   NeuForm Premium Card v6.0.0 — Homepage Tiles
+   • Aligns with Training Plans catalog v6.0.0
+   • Bullet clamping fix (no conflicting display rules)
+   • Tag layout: less truncation (flex-wrap on desktop)
+   • CSS-only toggle: Days vs Split Alt pill (no JS)
+   • Catalog safeguards — no add-on/terms on tiles, never gated buttons
+   ========================================== */
+
+/* ===== Design tokens ===== */
+:root{
+  --nf-bg:#0b0f12;
+  --nf-surface:#0f1418;
+  --nf-surface-2:#0c1216;
+  --nf-ink:#e9f3f7; --nf-muted:#9fb4c2;
+  --nf-blue:#3498db;
+
+  --blue-08:rgba(52,152,219,.08);
+  --blue-10:rgba(52,152,219,.10);
+  --blue-12:rgba(52,152,219,.12);
+  --blue-20:rgba(52,152,219,.20);
+  --blue-24:rgba(52,152,219,.24);
+  --blue-30:rgba(52,152,219,.30);
+  --blue-35:rgba(52,152,219,.35);
+  --blue-45:rgba(52,152,219,.45);
+  --blue-55:rgba(52,152,219,.55);
+
+  --nf-line:#1a2a33;
+  --nf-shadow:0 8px 20px rgba(0,0,0,.36);
+  --nf-shadow-hover:0 12px 28px rgba(0,0,0,.46);
+  --nf-radius:20px;
+
+  --title-fs: clamp(19px, 1.6vw, 22px);
+  --body-fs:  clamp(14px, 1.05vw, 15px);
+  --title-lh:1.22; --body-lh:1.5;
+
+  --stack-8:8px; --stack-10:10px; --stack-12:12px;
+  --gap-md:24px; --gap-lg:24px; --gap-xl:24px;
+
+  /* slightly tighter, still premium */
+  --card-pad:20px;
+  --card-minh:390px;
+
+  --chip-size:36px; --chip-radius:12px;
+
+  /* TAGS: tuned for long labels */
+  --tag-h:28px;
+  --tag-fs:11px;
+  --tag-pad-x:4px;
+
+  /* Bullets */
+  --bullet-lines:3;
+  --bullet-indent:14px;
+}
+
+/* ===== Equal-width, centered grid ===== */
+.nf-tiles{
+  display:grid;
+  grid-template-columns:repeat(1,minmax(260px, 1fr));
+  gap:var(--gap-md);
+  align-items:stretch;
+  grid-auto-rows:1fr;
+
+  max-width:1200px;
+  margin-left:auto;
+  margin-right:auto;
+  justify-content:center;
+  justify-items:stretch;
+}
+.nf-tiles > *{ height:100%; }
+
+@media (min-width:768px){
+  .nf-tiles{
+    grid-template-columns:repeat(auto-fit,minmax(280px, 1fr));
+    gap:var(--gap-lg);
+  }
+}
+@media (min-width:1280px){
+  .nf-tiles{
+    grid-template-columns:repeat(auto-fit,minmax(320px, 1fr));
+    gap:var(--gap-xl);
+  }
+}
+
+/* Center a single tile horizontally (modern + fallback) */
+@supports selector(.nf-tiles:has(> *)){
+  .nf-tiles:has(> *:only-child){
+    display:flex;
+    justify-content:center;
+    align-items:stretch;
+    gap:var(--gap-md);
+  }
+  @media (min-width:768px){
+    .nf-tiles:has(> *:only-child){ gap:var(--gap-lg); }
+  }
+  @media (min-width:1280px){
+    .nf-tiles:has(> *:only-child){ gap:var(--gap-xl); }
+  }
+}
+.nf-tiles > *:only-child{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* ===== Card ===== */
+.nf-card{
+  position:relative; isolation:isolate;
+  display:flex; flex-direction:column;
+  min-height:var(--card-minh);
+  padding:var(--card-pad);
+  border-radius:var(--nf-radius);
+  color:var(--nf-ink);
+  background:rgba(0,0,0,.85);
+  border:1px solid var(--nf-line);
+  box-shadow:var(--nf-shadow);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, filter .25s ease;
+  overflow:hidden;
+}
+@media (hover:hover){
+  .nf-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--blue-45);
+    box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+    filter:saturate(1.03);
+  }
+}
+.nf-card:focus-within{
+  transform:translateY(-2px);
+  border-color:var(--blue-45);
+  box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+}
+
+/* ===== Ambient glow ===== */
+.nf-ring{
+  position:absolute; inset:-52% -52% auto auto; z-index:-1; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,255,255,.04), transparent 65%);
+  filter:blur(28px);
+  width:100%; height:100%;
+  transform:translate(-30%,-30%);
+}
+
+/* ===== Header ===== */
+.nf-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:var(--stack-12);
+}
+.nf-title{
+  margin:0;
+  font:800 var(--title-fs)/var(--title-lh) "Plus Jakarta Sans", Inter, system-ui;
+  letter-spacing:.2px;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+
+  min-height:calc(3 * 1em * var(--title-lh));
+}
+.nf-sub{
+  margin:6px 0 10px;
+  font:600 var(--body-fs)/var(--body-lh) Inter, system-ui;
+  color:rgba(159,180,194,.90);
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+}
+
+/* ===== Corner chip ===== */
+.nf-chip{
+  display:grid; place-items:center;
+  width:var(--chip-size); height:var(--chip-size);
+  border-radius:var(--chip-radius);
+  background:linear-gradient(180deg, var(--blue-12), rgba(0,0,0,.12));
+  border:1px solid var(--blue-45);
+  margin-top:2px;
+}
+.nf-chip svg{ width:18px; height:18px; fill:var(--nf-blue); }
+
+/* ===== Tags ===== */
+.nf-tags--3x{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:4px;
+  align-items:center;
+  grid-auto-flow:dense;
+  overflow:visible;
+  width:100%;
+  -webkit-mask-image:none;
+          mask-image:none;
+}
+@media (min-width:768px){
+  .nf-tags--3x{
+    display:flex !important;
+    flex-wrap:wrap;
+    justify-content:flex-start;
+    align-items:center;
+    gap:4px;
+    width:100%;
+    -webkit-mask-image:none;
+            mask-image:none;
+  }
+  .nf-tags--3x .nf-tag{
+    flex:0 0 auto;
+    min-width:0;
+    padding:3px 6px;
+  }
+}
+.nf-tag{
+  font:700 clamp(var(--tag-fs), 1vw, calc(var(--tag-fs) + 1px))/1.12 Inter, system-ui;
+  padding:4px var(--tag-pad-x);
+  border-radius:999px;
+  min-height:var(--tag-h);
+  height:auto;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#f0f6ff;
+  background:var(--blue-35);
+  border:1px solid var(--blue-55);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+  min-width:0;
+  letter-spacing:-0.015em;
+}
+
+/* ===== Split pill toggle (no JS) ===== */
+.nf-days-pill, .nf-split-alt{ display:none; }
+
+/* Has Split = true → show Days pill; hide Alt */
+[data-has-split="true" i] .nf-days-pill{ display:inline-flex; }
+[data-has-split="true" i] .nf-split-alt{ display:none; }
+
+/* Guard: if days missing or zero, suppress Days pill even if has-split is true */
+[data-has-split] .nf-days-pill[data-days=""],
+[data-has-split] .nf-days-pill[data-days="0"]{ display:none; }
+
+/* Has Split = false/blank → hide Days; show Alt */
+[data-has-split="false" i] .nf-days-pill{ display:none; }
+[data-has-split="false" i] .nf-split-alt{ display:inline-flex; }
+[data-has-split="0"] .nf-days-pill{ display:none; }
+[data-has-split="0"] .nf-split-alt{ display:inline-flex; }
+[data-has-split=""] .nf-days-pill{ display:none; }
+[data-has-split=""] .nf-split-alt{ display:inline-flex; }
+
+/* ===== Description section ===== */
+.nf-description-section{ margin-top:14px; }
+.nf-description-section .nf-richtext{ display:none; }
+.nf-description-section .nf-list{ display:grid; }
+
+.nf-richtext{
+  font:600 var(--body-fs)/1.58 Inter, system-ui;
+  color:#cfe2ee;
+  max-height:180px;
+  overflow:auto;
+  padding-right:6px;
+  -webkit-mask-image:linear-gradient(180deg,#000 88%,transparent);
+          mask-image:linear-gradient(180deg,#000 88%,transparent);
+}
+.nf-richtext p{ margin:.35em 0; }
+.nf-richtext ul{ margin:.35em 0 .35em 1.1em; }
+.nf-richtext li{ margin:.2em 0; }
+.nf-richtext strong,b{ color:#f3fbff; }
+
+/* ===== Bullets (FIXED) ===== */
+.nf-list{
+  margin:14px 0 0; padding:0; list-style:none;
+  display:grid; gap:9px;
+  --li-lh:1.5;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom, #000 99%, transparent);
+          mask-image:linear-gradient(to bottom, #000 99%, transparent);
+}
+.nf-list li{
+  position:relative;
+  margin:0;
+  padding-left:var(--bullet-indent);
+  line-height:var(--li-lh);
+  color:#e2f0f8;
+  font-weight:500;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--bullet-lines);
+  overflow:hidden;
+
+  line-clamp:var(--bullet-lines);
+}
+.nf-list li::before{
+  content:"•";
+  position:absolute;
+  left:0;
+  top:.12em;
+  color:var(--nf-blue);
+}
+.nf-list li strong{
+  color:#f3fbff;
+  font-weight:800;
+}
+
+/* ===== Footer / CTA ===== */
+.nf-foot{ margin-top:auto; position:relative; }
+.nf-foot::before{
+  content:""; display:block; height:1px; background:var(--blue-12);
+  margin:12px 0 10px;
+}
+.nf-cta-wrapper{ display:block; }
+.nf-cta{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap; min-height:50px;
+}
+.nf-helper-line{
+  display:block;
+  margin-top:6px;
+  font:500 12.5px/1.35 Inter, system-ui;
+  color:var(--nf-muted);
+  text-align:center;
+  opacity:.92;
+}
+.nf-helper-line:empty{ display:none; }
+
+/* ===== Price & CTA button ===== */
+.nf-price{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  color:#e9f3f7;
+  background:var(--blue-08);
+  border:1px solid var(--blue-24);
+  font:800 13px/1 Inter, system-ui;
+  font-variant-numeric:tabular-nums;
+}
+.nf-price .nf-price-msrp{
+  text-decoration: line-through;
+  text-decoration-color: #e11d48;
+  text-decoration-thickness: 2px;
+  margin-left:6px;
+  opacity:.75;
+}
+.nf-price--waitlist{
+  display:none;
+  background:var(--nf-surface-2);
+  color:var(--nf-blue);
+  border:1px solid var(--blue-45);
+}
+.nf-btn{
+  appearance:none; border:none; cursor:pointer;
+  padding:12px 20px;
+  border-radius:12px;
+  font:800 15px/1 Inter, system-ui;
+  color:#fff;
+  background:linear-gradient(180deg, var(--nf-blue), #2d86c2);
+  box-shadow:0 6px 16px var(--blue-30);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  position:relative; z-index:3;
+  white-space:nowrap;
+}
+@media (hover:hover){
+  .nf-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px var(--blue-30); filter:saturate(1.05); }
+}
+
+.hide-when-empty:empty { display:none !important; }
+
+.nf-stretched-link{ position:relative; z-index:2; text-decoration:none; color:inherit; }
+.nf-stretched-link::after{
+  content:""; position:absolute; inset:calc(-1 * var(--card-pad));
+  z-index:1; pointer-events:auto;
+}
+[data-is-product-page="true"] .nf-stretched-link::after{ display:none; }
+[data-is-product-page="true"] .nf-stretched-link{ cursor:default; }
+
+/* Catalog safeguards */
+[data-is-product-page="false"] .nf-cta--add-on-switcher{ display:none !important; }
+[data-is-product-page="false"] .nf-terms-gate{ display:none !important; }
+[data-is-product-page="false"] .nf-btn--gated{
+  opacity:1 !important; pointer-events:auto !important; cursor:pointer !important; filter:none !important;
+}
+</style>
+
+
+Embed 2:
+<!-- NeuForm — Homepage CTA: Automatic Training Plan (compact) v1.2 (button solid #3498db) -->
+<div class="nf-auto-home" role="region" aria-label="Automatic Training Plan">
+  <a
+    class="nf-auto-home__card"
+    href="/automatic-plan"
+    data-nf-auto-home="card"
+    aria-label="Open the Automatic Training Plan page"
+  >
+    <div class="nf-auto-home__ring" aria-hidden="true"></div>
+
+    <div class="nf-auto-home__left">
+      <div class="nf-auto-home__pill">PERSONALIZED OPTION</div>
+
+      <h2 class="nf-auto-home__title">
+        Automatic Training Plan <span class="nf-auto-home__title-lite">(4 Weeks)</span>
+      </h2>
+
+      <p class="nf-auto-home__sub">
+        Built around your schedule, goals, and equipment —
+        <span class="nf-auto-home__sub-strong">sets, reps, and progression included</span>.
+      </p>
+
+      <div class="nf-auto-home__chips" aria-label="Highlights">
+        <span class="nf-auto-home__chip">5–7 min intake</span>
+        <span class="nf-auto-home__chip">Home or gym</span>
+        <span class="nf-auto-home__chip">Delivered ~12 hours</span>
+      </div>
+    </div>
+
+    <div class="nf-auto-home__right" aria-label="Call to action">
+      <div class="nf-auto-home__price" aria-label="Price">
+        <span class="nf-auto-home__price-main">$39</span>
+        <span class="nf-auto-home__price-sub">per plan</span>
+      </div>
+
+      <span class="nf-auto-home__btn" aria-hidden="true">
+        Build My Plan <span class="nf-auto-home__arrow" aria-hidden="true">→</span>
+      </span>
+
+      <div class="nf-auto-home__micro">
+        One-time purchase • Not a subscription
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  /* Scoped to homepage CTA only */
+  .nf-auto-home{
+    max-width: 1200px;
+    margin: 14px auto 18px;
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    --nf-blue: var(--nf-blue, #3498db);
+    --nf-line: var(--nf-line, rgba(255,255,255,.10));
+    --nf-shadow: var(--nf-shadow, 0 8px 20px rgba(0,0,0,.36));
+    --nf-shadow-hover: var(--nf-shadow-hover, 0 12px 28px rgba(0,0,0,.46));
+
+    --nf-radius: 26px;
+
+    --nf-card: rgba(0,0,0,.85);
+    --nf-ink: rgba(255,255,255,.92);
+    --nf-muted: rgba(159,180,194,.82);
+
+    --nf-btn: #3498db;
+  }
+
+  .nf-auto-home__card{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+
+    padding: 18px 18px;
+    border-radius: var(--nf-radius);
+
+    background: var(--nf-card);
+    border: 1px solid var(--nf-line);
+    box-shadow: var(--nf-shadow);
+    overflow:hidden;
+
+    text-decoration:none;
+    color: inherit;
+
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, filter .22s ease;
+  }
+
+  .nf-auto-home__ring{
+    position:absolute;
+    inset:-52% -52% auto auto;
+    width:100%;
+    height:100%;
+    background: radial-gradient(closest-side, rgba(255,255,255,.04), transparent 65%);
+    filter: blur(28px);
+    transform: translate(-30%,-30%);
+    pointer-events:none;
+  }
+
+  .nf-auto-home__card::after{
+    content:"";
+    position:absolute;
+    left:0;
+    top:12px;
+    bottom:12px;
+    width:3px;
+    border-radius:999px;
+    background: linear-gradient(180deg, rgba(52,152,219,.85), rgba(52,152,219,.18));
+    opacity:.95;
+    pointer-events:none;
+  }
+
+  @media (hover:hover){
+    .nf-auto-home__card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(52,152,219,.45);
+      box-shadow: var(--nf-shadow-hover), 0 0 0 1px rgba(52,152,219,.10) inset;
+      filter: saturate(1.03);
+    }
+    .nf-auto-home__card:hover .nf-auto-home__arrow{ transform: translateX(2px); }
+    .nf-auto-home__card:hover .nf-auto-home__btn{
+      box-shadow: 0 14px 30px rgba(52,152,219,.26);
+      filter: saturate(1.05);
+    }
+  }
+
+  .nf-auto-home__card:focus-visible{
+    outline: 2px solid rgba(52,152,219,.65);
+    outline-offset: 3px;
+  }
+
+  .nf-auto-home__left{
+    position:relative;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .nf-auto-home__pill{
+    align-self:flex-start;
+    font: 850 11px/1 Inter, system-ui;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color: rgba(255,255,255,.88);
+    background: rgba(52,152,219,.14);
+    border: 1px solid rgba(52,152,219,.28);
+    padding: 8px 10px;
+    border-radius: 999px;
+    width: fit-content;
+  }
+
+  .nf-auto-home__title{
+    margin:0;
+    font: 950 clamp(16px, 1.6vw, 20px)/1.12 "Plus Jakarta Sans", Inter, system-ui;
+    color: var(--nf-ink);
+    letter-spacing:.2px;
+  }
+
+  .nf-auto-home__title-lite{
+    font-weight: 850;
+    color: rgba(255,255,255,.78);
+  }
+
+  .nf-auto-home__sub{
+    margin:0;
+    font: 600 13.5px/1.45 Inter, system-ui;
+    color: var(--nf-muted);
+    max-width: 78ch;
+  }
+
+  .nf-auto-home__sub-strong{
+    color: rgba(255,255,255,.86);
+    font-weight: 750;
+  }
+
+  .nf-auto-home__chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:2px;
+  }
+
+  .nf-auto-home__chip{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font: 750 12.5px/1 Inter, system-ui;
+    color: rgba(255,255,255,.86);
+    padding: 8px 10px;
+    border-radius: 999px;
+
+    background: rgba(52,152,219,.10);
+    border: 1px solid rgba(52,152,219,.22);
+    white-space: nowrap;
+  }
+
+  .nf-auto-home__chip::before{
+    content:"•";
+    color: var(--nf-blue);
+    margin-right: 2px;
+  }
+
+  .nf-auto-home__right{
+    position:relative;
+    flex: 0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+
+  .nf-auto-home__price{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:2px;
+
+    background: rgba(52,152,219,.12);
+    border: 1px solid rgba(52,152,219,.28);
+    padding: 10px 12px;
+    border-radius: 999px;
+
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .nf-auto-home__price-main{
+    font: 950 18px/1 Inter, system-ui;
+    color: rgba(255,255,255,.95);
+  }
+
+  .nf-auto-home__price-sub{
+    font: 750 11px/1 Inter, system-ui;
+    color: rgba(255,255,255,.70);
+    letter-spacing:.02em;
+  }
+
+  .nf-auto-home__btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    padding: 12px 16px;
+    border-radius: 16px;
+
+    font: 950 14px/1 Inter, system-ui;
+    color:#fff;
+
+    background: var(--nf-btn);
+    box-shadow: 0 12px 26px rgba(52,152,219,.22);
+
+    white-space: nowrap;
+  }
+
+  .nf-auto-home__arrow{
+    display:inline-block;
+    transform: translateX(0);
+    transition: transform .18s ease;
+  }
+
+  .nf-auto-home__micro{
+    font: 650 12px/1.35 Inter, system-ui;
+    color: rgba(255,255,255,.62);
+    text-align:right;
+    max-width: 240px;
+  }
+
+  @media (max-width: 760px){
+    .nf-auto-home__card{
+      flex-direction: column;
+      align-items: stretch;
+      padding: 16px;
+      gap: 14px;
+    }
+
+    .nf-auto-home__right{
+      align-items: stretch;
+    }
+
+    .nf-auto-home__price{
+      align-items: flex-start;
+      width: fit-content;
+    }
+
+    .nf-auto-home__btn{
+      width: 100%;
+    }
+
+    .nf-auto-home__micro{
+      text-align: left;
+      max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nf-auto-home__card,
+    .nf-auto-home__arrow{
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+(function(){
+  function init(){
+    var card = document.querySelector('[data-nf-auto-home="card"]');
+    if (!card) return;
+
+    card.addEventListener('click', function(){
+      var dest = card.getAttribute('href') || '/automatic-plan';
+
+      try{
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'nf_auto_plan_cta_click',
+          nf_location: 'home_hero_below',
+          nf_dest: dest
+        });
+      }catch(_){}
+
+      if (typeof window.gtag === 'function'){
+        try{
+          window.gtag('event','nf_auto_plan_cta_click', {
+            nf_location: 'home_hero_below',
+            nf_dest: dest
+          });
+        }catch(_){}
+      }
+    }, { passive:true });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+
+Embed 3:
+<!-- UPDATED TILE (Homepage) — aligned primary link + deterministic marker -->
+<article
+  class="nf-card"
+  role="article"
+  data-plan-card
+  data-is-product-page="false"
+  data-has-add-on="false"
+  data-terms-required="false"
+  data-plan="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-price="{{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-sku="{{wf {&quot;path&quot;:&quot;sku-product-id&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-position="{{wf {&quot;path&quot;:&quot;sort-weight&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-waitlist="{{wf {&quot;path&quot;:&quot;is-waitlist-only&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-has-split="{{wf {&quot;path&quot;:&quot;has-split&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-split-alt="{{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-days="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-url="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  aria-labelledby="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+>
+  <div class="nf-ring" aria-hidden="true"></div>
+
+  <div class="nf-top">
+    <header>
+      <a
+        class="nf-stretched-link"
+        data-nf-plan-link
+        href="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        data-action="preview"
+        aria-label="See details — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        title="See details"
+      >
+        <h3
+          class="nf-title"
+          id="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        >
+          {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </h3>
+        <p class="nf-sub">
+          {{wf {&quot;path&quot;:&quot;goal-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </p>
+      </a>
+    </header>
+
+    <div class="nf-chip" title="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <rect x="3"  y="9"  width="3"  height="6" rx="1"></rect>
+        <rect x="18" y="9"  width="3"  height="6" rx="1"></rect>
+        <rect x="7"  y="10.5" width="10" height="3" rx="1.5"></rect>
+      </svg>
+    </div>
+  </div>
+
+  <div class="nf-tags nf-tags--3x" aria-label="Key specs">
+    <span
+      class="nf-tag nf-days nf-days-pill"
+      data-days="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      title="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split"
+    >
+      {{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split
+    </span>
+
+    <span
+      class="nf-tag nf-split-alt hide-when-empty"
+      title="{{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+    >
+      {{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </span>
+
+    <span class="nf-tag" title="{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+      {{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </span>
+
+    <span class="nf-tag hide-when-empty" title="{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+      {{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </span>
+  </div>
+
+  <div class="nf-description-section">
+    <div class="nf-richtext hide-when-empty"></div>
+    <ul class="nf-list" aria-label="Highlights">
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-1&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-3&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-4&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+    </ul>
+  </div>
+
+  <div class="nf-foot">
+    <div class="nf-cta-wrapper">
+      <div class="nf-cta nf-cta--default">
+        <div class="nf-price nf-price--waitlist">WAITLIST</div>
+        <div class="nf-price" aria-label="Price">
+          ${{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}
+          <span class="nf-price-msrp hide-when-empty">
+            ${{wf {&quot;path&quot;:&quot;original-price-msrp&quot;,&quot;type&quot;:&quot;Number&quot;\} }}
+          </span>
+        </div>
+        <a
+          class="nf-btn"
+          href="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-action="preview"
+          aria-disabled="false"
+          aria-label="See details — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          title="See details"
+        >
+          {{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </a>
+      </div>
+    </div>
+
+    <small class="nf-helper-line hide-when-empty">
+      {{wf {&quot;path&quot;:&quot;tile-helper&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </small>
+  </div>
+</article>

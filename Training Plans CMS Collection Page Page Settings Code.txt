@@ -1,0 +1,1421 @@
+Training Plans CMS Collection Page Page Settings
+Body:
+<!-- NeuForm — Training Plans Catalog Scripts (v3.3.1 — idempotent binds + scoped MO (bail on body) + a11y status + attr checks + cleanup) -->
+<script>
+(function(){
+  'use strict';
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){ try{ dl.push(evt); }catch(_){} }
+
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+
+  var seen = new WeakSet();
+  function once(el){ if(seen.has(el)) return false; seen.add(el); return true; }
+
+  function getFirstCard(){
+    return document.querySelector('[data-plan-card], .plan-card, [class*="plan-card"]');
+  }
+
+  function getCatalogRoot(){
+    var card = getFirstCard();
+    if (card){
+      return (
+        card.closest('[data-plans-grid]') ||
+        card.closest('[data-plans-list]') ||
+        card.closest('[data-plan-list]') ||
+        card.closest('[data-plan-catalog]') ||
+        card.closest('.plans-grid') ||
+        card.closest('.w-dyn-items') ||
+        card.closest('.w-dyn-list') ||
+        card.parentElement ||
+        document.body
+      );
+    }
+    return (
+      document.querySelector('[data-plans-grid]') ||
+      document.querySelector('[data-plans-list]') ||
+      document.querySelector('[data-plan-list]') ||
+      document.querySelector('[data-plan-catalog]') ||
+      document.querySelector('.plans-grid') ||
+      document.querySelector('.w-dyn-items') ||
+      document.querySelector('.w-dyn-list') ||
+      document.body
+    );
+  }
+
+  var REQUIRED_ATTRS = (function(){
+    try{
+      var nf = window.neuform;
+      var arr = nf && nf.config && nf.config.selectors && nf.config.selectors.planCardRequiredDataAttrs;
+      if (Array.isArray(arr) && arr.length) return arr.map(function(x){ return String(x||'').trim(); }).filter(Boolean);
+    }catch(_){}
+    return ['plan','sku'];
+  })();
+
+  var attrChecked = new WeakSet();
+  var missingWarnCount = 0;
+  var MISSING_WARN_MAX = 5;
+
+  function warnMissingAttrs(card, missing){
+    if (!missing || !missing.length) return;
+    if (attrChecked.has(card)) return;
+    attrChecked.add(card);
+
+    try{
+      console.warn('[NF] Plan card missing required data-* attributes:', missing, card);
+    }catch(_){}
+
+    if (missingWarnCount < MISSING_WARN_MAX){
+      missingWarnCount++;
+      push({
+        event:'nf_plan_card_missing_data',
+        nf_missing: missing.join(','),
+        nf_path: (location && location.pathname) ? location.pathname : ''
+      });
+    }
+  }
+
+  function validatePlanCard(card){
+    if (!card) return;
+    if (attrChecked.has(card)) return;
+
+    var d = card.dataset || {};
+    var missing = [];
+
+    for (var i=0;i<REQUIRED_ATTRS.length;i++){
+      var k = REQUIRED_ATTRS[i];
+      if (!k) continue;
+      var v = d[k];
+      if (v == null || String(v).trim() === '') missing.push(k);
+    }
+
+    if (missing.length) warnMissingAttrs(card, missing);
+    else attrChecked.add(card);
+  }
+
+  function readPlan(el){
+    var d = el && el.dataset ? el.dataset : {};
+
+    validatePlanCard(el);
+
+    var dn = el.querySelector && el.querySelector('[data-name]');
+    var ip = el.querySelector && el.querySelector('[itemprop="name"]');
+
+    var nameFromDom =
+      (dn && (dn.getAttribute('data-name') || '').trim()) ||
+      (ip && (ip.textContent || '').trim()) || '';
+
+    var linkEl = el.querySelector && el.querySelector('a[href]');
+    var link = linkEl ? linkEl.href : '';
+    var price = Number(d.price || 0);
+    if (!isFinite(price) || price <= 0) price = null;
+
+    return {
+      plan: (d.plan || '').trim(),
+      name: (d.name || nameFromDom || '').trim(),
+      price: price,
+      sku: (d.sku || '').trim(),
+      position: Number(d.position || 0) || null,
+      url: (d.url || link || location.href).trim(),
+      waitlist: toBool(d.waitlist),
+      currency: 'USD'
+    };
+  }
+
+  var LIST_ID = 'training_plans';
+  var LIST_NAME = 'Training Plans Catalog';
+
+  function fireViewItemList(cards){
+    if (!cards.length) return;
+
+    // ✅ scoped dedupe per list-id (future-proof)
+    window.__NF_VIEW_ITEM_LIST_FIRED__ = window.__NF_VIEW_ITEM_LIST_FIRED__ || {};
+    if (window.__NF_VIEW_ITEM_LIST_FIRED__[LIST_ID]) return;
+    window.__NF_VIEW_ITEM_LIST_FIRED__[LIST_ID] = true;
+
+    var gaItems = Array.from(cards).map(function(card, i){
+      var p = readPlan(card);
+      return {
+        item_id: p.sku || p.plan || ('plan_'+(i+1)),
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || (i+1),
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+    });
+
+    if (typeof gtag === 'function') {
+      try { gtag('event', 'view_item_list', { items: gaItems }); } catch(_){}
+    } else {
+      push({ event: 'view_item_list', items: gaItems });
+    }
+  }
+
+  var io;
+  function ensureObserver(){
+    if (io || !('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (!once(el)) return;
+        var p = readPlan(el);
+        push({
+          event: 'nf_product_impression',
+          nf_plan: p.plan,
+          nf_name: p.name,
+          nf_price: p.price,
+          nf_sku: p.sku,
+          nf_position: p.position
+        });
+      });
+    }, { threshold: 0.25, rootMargin: '60px 0px 60px 0px' });
+  }
+
+  function observeCards(cards){
+    ensureObserver();
+    if (!io) return;
+    cards.forEach(function(c){
+      if (!c.__nfObserved){ io.observe(c); c.__nfObserved = true; }
+    });
+  }
+
+  function isVisible(el){
+    if (!el) return false;
+    try{
+      if (el.getClientRects && el.getClientRects().length) return true;
+    }catch(_){}
+    return false;
+  }
+
+  var statusEl = null;
+  function ensureStatusEl(){
+    try{
+      if (statusEl && document.body && document.body.contains(statusEl)) return statusEl;
+      statusEl = document.getElementById('nf-plans-status');
+      if (statusEl) return statusEl;
+
+      statusEl = document.createElement('div');
+      statusEl.id = 'nf-plans-status';
+      statusEl.setAttribute('role','status');
+      statusEl.setAttribute('aria-live','polite');
+      statusEl.setAttribute('aria-atomic','true');
+      statusEl.style.position = 'absolute';
+      statusEl.style.width = '1px';
+      statusEl.style.height = '1px';
+      statusEl.style.padding = '0';
+      statusEl.style.margin = '-1px';
+      statusEl.style.overflow = 'hidden';
+      statusEl.style.clip = 'rect(0,0,0,0)';
+      statusEl.style.whiteSpace = 'nowrap';
+      statusEl.style.border = '0';
+
+      var root = getCatalogRoot();
+      var mount = (root && root.parentElement) ? root.parentElement : document.body;
+      (mount || document.body).appendChild(statusEl);
+      return statusEl;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function updateA11yStatus(cards){
+    var el = ensureStatusEl();
+    if (!el) return;
+
+    var visible = 0;
+    for (var i=0;i<cards.length;i++){
+      if (isVisible(cards[i])) visible++;
+    }
+
+    if (visible <= 0) el.textContent = 'No plans match your filters.';
+    else el.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' shown.';
+  }
+
+  function onClick(e){
+    var t = e.target;
+    var card = t.closest && (t.closest('[data-plan-card]') || t.closest('.plan-card,[class*="plan-card"]'));
+    if (!card) return;
+
+    var p = readPlan(card);
+    var actionEl = t.closest && t.closest('[data-action]');
+    var action = actionEl ? actionEl.getAttribute('data-action') : '';
+
+    if (action === 'buy') {
+      var terms = card.querySelector && card.querySelector('.nf-terms-checkbox');
+      if (terms && !terms.checked) {
+        e.preventDefault();
+        e.stopPropagation();
+        push({ event:'nf_terms_block', nf_card:p.sku || p.plan || 'plan' });
+        return;
+      }
+
+      var item = {
+        item_id: p.sku || p.plan || 'plan',
+        item_name: p.name || p.plan || 'Plan',
+        currency: p.currency,
+        price: p.price,
+        item_category: p.plan || undefined,
+        index: p.position || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME
+      };
+      if (typeof gtag === 'function') {
+        try {
+          gtag('event', 'begin_checkout', {
+            items: [item],
+            currency: p.currency,
+            value: p.price || undefined
+          });
+        } catch(_){}
+      }
+
+      push({
+        event: 'nf_buy_click',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_waitlist: p.waitlist
+      });
+
+      try {
+        sessionStorage.setItem('nf.last_order', JSON.stringify({
+          plan: p.name || p.plan,
+          sku: p.sku,
+          price: p.price,
+          currency: p.currency,
+          provisional_tx: 'nf_' + (p.sku || p.plan || 'unknown') + '_' + Date.now()
+        }));
+      } catch(_){}
+      return;
+    }
+
+    var link = t.closest && t.closest('a[href]');
+    var dest = (link && link.href) ? link.href : p.url;
+
+    if (action === 'preview' || (link && !actionEl)) {
+      var item2 = {
+        item_id: p.sku || p.plan || 'plan',
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || undefined,
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+      if (typeof gtag === 'function') {
+        try { gtag('event', 'select_item', { items: [item2] }); } catch(_){}
+      } else {
+        push({ event: 'select_item', items: [item2], nf_dest: dest });
+      }
+      push({
+        event: 'nf_plan_preview_open',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_dest: dest
+      });
+    }
+  }
+
+  function bindChange(sel, key){
+    var el = document.querySelector(sel);
+    if (!el || el.__nfBound) return;
+    el.__nfBound = true;
+    el.addEventListener('change', function(){
+      push({
+        event: 'nf_catalog_filter',
+        nf_filter_key: key,
+        nf_filter_value: el.value
+      });
+      setTimeout(scheduleInitCards, 0);
+    }, { passive:true });
+  }
+
+  function scrubInternalNotes(){
+    try{
+      document.querySelectorAll('.nf-helper').forEach(function(n){
+        n.textContent = '';
+        n.style.display = 'none';
+      });
+    }catch(_){ }
+  }
+
+  function getCards(){
+    var nodes = Array.from(document.querySelectorAll('[data-plan-card]'));
+    if (!nodes.length) nodes = Array.from(document.querySelectorAll('.plan-card, [class*="plan-card"]'));
+    return nodes;
+  }
+
+  var initialized = false;
+
+  var scheduled = false;
+  function scheduleInitCards(){
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){
+      scheduled = false;
+      initCards();
+    });
+  }
+
+  function init(){
+    if (!initialized){
+      push({ event: 'nf_plans_catalog_view' });
+      document.addEventListener('click', onClick, { passive: false });
+
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter') return;
+        var focus = document.activeElement;
+        var card = focus && focus.closest && (
+          focus.closest('[data-plan-card]') ||
+          focus.closest('.plan-card,[class*="plan-card"]')
+        );
+        if (!card) return;
+        var primary = card.querySelector && card.querySelector('[data-action="preview"]');
+        if (primary && document.activeElement && primary.contains(document.activeElement)) {
+          primary.click(); e.preventDefault();
+        }
+      });
+
+      bindChange('[data-filter="goal"]', 'goal');
+      bindChange('[data-filter="days"]', 'days');
+      bindChange('[data-filter="equipment"]', 'equipment');
+      bindChange('[data-sort]', 'sort');
+
+      window.addEventListener('pagehide', cleanup, { capture:true });
+      window.addEventListener('pageshow', function(e){
+        if (e && e.persisted) { ensureMO(); scheduleInitCards(); }
+      });
+
+      initialized = true;
+    }
+    initCards();
+    ensureMO();
+  }
+
+  function initCards(){
+    scrubInternalNotes();
+    var cards = getCards();
+    for (var i=0;i<cards.length;i++) validatePlanCard(cards[i]);
+    observeCards(cards);
+    fireViewItemList(cards);
+    updateA11yStatus(cards);
+  }
+
+  var mo;
+  var moRoot = null;
+  var moWarned = false;
+
+  function disconnectMO(){
+    if (mo){
+      try { mo.disconnect(); } catch(_){}
+      mo = null;
+      moRoot = null;
+    }
+  }
+
+  function ensureMO(){
+    if (mo || !('MutationObserver' in window)) return;
+
+    var root = getCatalogRoot();
+
+    // ✅ Critical fix: never observe document.body subtree (too expensive)
+    if (root === document.body){
+      if (!moWarned){
+        moWarned = true;
+        try { console.warn('[NF] Catalog root resolved to document.body; skipping MutationObserver to avoid performance issues.'); } catch(_){}
+      }
+      return;
+    }
+
+    moRoot = root;
+
+    mo = new MutationObserver(function(){
+      scheduleInitCards();
+    });
+
+    try{
+      mo.observe(root, { childList: true, subtree: true });
+    }catch(_){
+      disconnectMO();
+    }
+  }
+
+  function cleanup(){
+    disconnectMO();
+    if (io){
+      try { io.disconnect(); } catch(_){}
+      io = null;
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<!-- NeuForm — Add-On Switcher & Terms Gate (v3.6.2 — idempotent binds + throttled/scoped MO + cleanup) -->
+<script>
+(function(){
+  'use strict';
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){ try{ dl.push(evt); }catch(_){} }
+
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+
+  function getRoot(){
+    var any = document.querySelector('[data-plan-card]');
+    if (any){
+      return (
+        document.querySelector('[data-plan-card][data-is-product-page="true"]')?.closest('main') ||
+        any.closest('.w-dyn-list') ||
+        any.closest('.w-dyn-items') ||
+        any.parentElement ||
+        document.body
+      );
+    }
+    return document.body;
+  }
+
+  var scheduled = false;
+  function scheduleInit(){
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){
+      scheduled = false;
+      init();
+    });
+  }
+
+  function wireAddOn(card){
+    var checkbox = card.querySelector('.nf-add-on-checkbox');
+    var button   = card.querySelector('.nf-btn--add-on');
+    if (!checkbox || !button) return;
+    if (checkbox.__nfBound) return;
+    checkbox.__nfBound = true;
+
+    var baseUrl   = (button.dataset.baseUrl   || button.getAttribute('href') || '').trim();
+    var bundleUrl = (button.dataset.bundleUrl || '').trim();
+
+    if (baseUrl) button.href = baseUrl;
+    if (checkbox.checked && bundleUrl) button.href = bundleUrl;
+
+    checkbox.addEventListener('change', function(){
+      var useBundle = !!(checkbox.checked && bundleUrl);
+      button.href = useBundle ? bundleUrl : baseUrl;
+      button.dataset.activeUrl = button.href;
+
+      push({
+        event: 'nf_add_on_toggled',
+        nf_add_on_checked: checkbox.checked ? '1' : '0',
+        nf_component: 'plans_add_on_switcher'
+      });
+    }, { passive: true });
+  }
+
+  function wireTerms(card){
+    var terms = card.querySelector('.nf-terms-checkbox');
+    if (!terms) return;
+    if (terms.__nfBound) return;
+    terms.__nfBound = true;
+
+    var buttons = Array.from(card.querySelectorAll('.nf-btn--add-on, .nf-cta--default .nf-btn'));
+
+    function applyGate(on){
+      buttons.forEach(function(btn){
+        btn.classList.toggle('nf-btn--gated', on);
+      });
+    }
+
+    applyGate(!terms.checked);
+    terms.addEventListener('change', function(){ applyGate(!terms.checked); }, { passive: true });
+  }
+
+  function init(){
+    var cards = document.querySelectorAll('[data-plan-card]');
+    if (!cards.length) return;
+
+    cards.forEach(function(card){
+      var ds = card.dataset || {};
+      if (toBool(ds.hasAddOn))      wireAddOn(card);
+      if (toBool(ds.termsRequired)) wireTerms(card);
+    });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  var mo, moRoot;
+  var moWarned = false;
+
+  function disconnectMO(){
+    if (mo){
+      try { mo.disconnect(); } catch(_){}
+      mo = null;
+      moRoot = null;
+    }
+  }
+
+  function ensureMO(){
+    if (mo || !('MutationObserver' in window)) return;
+    moRoot = getRoot();
+
+    // ✅ Critical fix: never observe document.body subtree
+    if (moRoot === document.body){
+      if (!moWarned){
+        moWarned = true;
+        try { console.warn('[NF] Add-on/terms root resolved to document.body; skipping MutationObserver to avoid performance issues.'); } catch(_){}
+      }
+      return;
+    }
+
+    mo = new MutationObserver(function(){ scheduleInit(); });
+    try { mo.observe(moRoot, { childList:true, subtree:true }); }
+    catch(_){ disconnectMO(); }
+  }
+
+  ensureMO();
+
+  window.addEventListener('pagehide', function(){
+    disconnectMO();
+  }, { capture:true });
+
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { ensureMO(); scheduleInit(); }
+  });
+
+})();
+</script>
+
+<!-- Sticky CTA helper (idempotent) -->
+<script>
+(function(){
+  var buttons = Array.prototype.slice.call(
+    document.querySelectorAll('[data-sticky-cta]')
+  );
+  if (!buttons.length) return;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  var io = null;
+  if ('IntersectionObserver' in window){
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        dl.push({
+          event: entry.isIntersecting ? 'nf_sticky_cta_show' : 'nf_sticky_cta_hide',
+          nf_component: 'plans_sticky_cta'
+        });
+      });
+    }, { threshold: 0.1 });
+
+    window.addEventListener('pagehide', function(){
+      try { io.disconnect(); } catch(_){}
+      io = null;
+    }, { capture:true });
+  }
+
+  buttons.forEach(function(btn){
+    if (btn.__nfBound) return;
+    btn.__nfBound = true;
+
+    if (io) io.observe(btn);
+
+    btn.addEventListener('click', function(){
+      var label =
+        btn.getAttribute('aria-label') ||
+        (btn.textContent || '').trim() ||
+        'Sticky CTA';
+
+      dl.push({
+        event: 'nf_buy_click',
+        nf_source: 'sticky_cta',
+        nf_label: label
+      });
+
+      if (typeof gtag === 'function'){
+        try { gtag('event', 'begin_checkout'); } catch(_){}
+      }
+    });
+  });
+})();
+</script>
+
+<!-- NeuForm FAQ — accessibility helper (works with Webflow dropdowns) -->
+<script>
+(function(){
+  var accordions = Array.prototype.slice.call(
+    document.querySelectorAll('.nf-faq-accordion')
+  );
+  if (!accordions.length) return;
+
+  accordions.forEach(function(acc, index){
+    if (acc.__nfBound) return;
+    acc.__nfBound = true;
+
+    var header = acc.querySelector('.nf-faq-header');
+    if (!header) return;
+
+    var body = acc.querySelector('.nf-faq-body');
+
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+
+    if (body){
+      if (!body.id){
+        body.id = 'nf-faq-body-' + (index + 1);
+      }
+      header.setAttribute('aria-controls', body.id);
+    }
+
+    function syncExpanded(){
+      var isOpen = acc.classList.contains('w--open');
+      header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    syncExpanded();
+
+    header.addEventListener('click', function(){
+      setTimeout(syncExpanded, 0);
+    });
+
+    header.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
+        e.preventDefault();
+        header.click();
+      }
+    });
+  });
+})();
+</script>
+
+
+Body:
+<!-- NeuForm — Training Plans Catalog Scripts (v3.3.1 — idempotent binds + scoped MO (bail on body) + a11y status + attr checks + cleanup) -->
+<script>
+(function(){
+  'use strict';
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){ try{ dl.push(evt); }catch(_){} }
+
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+
+  var seen = new WeakSet();
+  function once(el){ if(seen.has(el)) return false; seen.add(el); return true; }
+
+  function getFirstCard(){
+    return document.querySelector('[data-plan-card], .plan-card, [class*="plan-card"]');
+  }
+
+  function getCatalogRoot(){
+    var card = getFirstCard();
+    if (card){
+      return (
+        card.closest('[data-plans-grid]') ||
+        card.closest('[data-plans-list]') ||
+        card.closest('[data-plan-list]') ||
+        card.closest('[data-plan-catalog]') ||
+        card.closest('.plans-grid') ||
+        card.closest('.w-dyn-items') ||
+        card.closest('.w-dyn-list') ||
+        card.parentElement ||
+        document.body
+      );
+    }
+    return (
+      document.querySelector('[data-plans-grid]') ||
+      document.querySelector('[data-plans-list]') ||
+      document.querySelector('[data-plan-list]') ||
+      document.querySelector('[data-plan-catalog]') ||
+      document.querySelector('.plans-grid') ||
+      document.querySelector('.w-dyn-items') ||
+      document.querySelector('.w-dyn-list') ||
+      document.body
+    );
+  }
+
+  var REQUIRED_ATTRS = (function(){
+    try{
+      var nf = window.neuform;
+      var arr = nf && nf.config && nf.config.selectors && nf.config.selectors.planCardRequiredDataAttrs;
+      if (Array.isArray(arr) && arr.length) return arr.map(function(x){ return String(x||'').trim(); }).filter(Boolean);
+    }catch(_){}
+    return ['plan','sku'];
+  })();
+
+  var attrChecked = new WeakSet();
+  var missingWarnCount = 0;
+  var MISSING_WARN_MAX = 5;
+
+  function warnMissingAttrs(card, missing){
+    if (!missing || !missing.length) return;
+    if (attrChecked.has(card)) return;
+    attrChecked.add(card);
+
+    try{
+      console.warn('[NF] Plan card missing required data-* attributes:', missing, card);
+    }catch(_){}
+
+    if (missingWarnCount < MISSING_WARN_MAX){
+      missingWarnCount++;
+      push({
+        event:'nf_plan_card_missing_data',
+        nf_missing: missing.join(','),
+        nf_path: (location && location.pathname) ? location.pathname : ''
+      });
+    }
+  }
+
+  function validatePlanCard(card){
+    if (!card) return;
+    if (attrChecked.has(card)) return;
+
+    var d = card.dataset || {};
+    var missing = [];
+
+    for (var i=0;i<REQUIRED_ATTRS.length;i++){
+      var k = REQUIRED_ATTRS[i];
+      if (!k) continue;
+      var v = d[k];
+      if (v == null || String(v).trim() === '') missing.push(k);
+    }
+
+    if (missing.length) warnMissingAttrs(card, missing);
+    else attrChecked.add(card);
+  }
+
+  function readPlan(el){
+    var d = el && el.dataset ? el.dataset : {};
+
+    validatePlanCard(el);
+
+    var dn = el.querySelector && el.querySelector('[data-name]');
+    var ip = el.querySelector && el.querySelector('[itemprop="name"]');
+
+    var nameFromDom =
+      (dn && (dn.getAttribute('data-name') || '').trim()) ||
+      (ip && (ip.textContent || '').trim()) || '';
+
+    var linkEl = el.querySelector && el.querySelector('a[href]');
+    var link = linkEl ? linkEl.href : '';
+    var price = Number(d.price || 0);
+    if (!isFinite(price) || price <= 0) price = null;
+
+    return {
+      plan: (d.plan || '').trim(),
+      name: (d.name || nameFromDom || '').trim(),
+      price: price,
+      sku: (d.sku || '').trim(),
+      position: Number(d.position || 0) || null,
+      url: (d.url || link || location.href).trim(),
+      waitlist: toBool(d.waitlist),
+      currency: 'USD'
+    };
+  }
+
+  var LIST_ID = 'training_plans';
+  var LIST_NAME = 'Training Plans Catalog';
+
+  function fireViewItemList(cards){
+    if (!cards.length) return;
+
+    // ✅ scoped dedupe per list-id (future-proof)
+    window.__NF_VIEW_ITEM_LIST_FIRED__ = window.__NF_VIEW_ITEM_LIST_FIRED__ || {};
+    if (window.__NF_VIEW_ITEM_LIST_FIRED__[LIST_ID]) return;
+    window.__NF_VIEW_ITEM_LIST_FIRED__[LIST_ID] = true;
+
+    var gaItems = Array.from(cards).map(function(card, i){
+      var p = readPlan(card);
+      return {
+        item_id: p.sku || p.plan || ('plan_'+(i+1)),
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || (i+1),
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+    });
+
+    if (typeof gtag === 'function') {
+      try { gtag('event', 'view_item_list', { items: gaItems }); } catch(_){}
+    } else {
+      push({ event: 'view_item_list', items: gaItems });
+    }
+  }
+
+  var io;
+  function ensureObserver(){
+    if (io || !('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (!once(el)) return;
+        var p = readPlan(el);
+        push({
+          event: 'nf_product_impression',
+          nf_plan: p.plan,
+          nf_name: p.name,
+          nf_price: p.price,
+          nf_sku: p.sku,
+          nf_position: p.position
+        });
+      });
+    }, { threshold: 0.25, rootMargin: '60px 0px 60px 0px' });
+  }
+
+  function observeCards(cards){
+    ensureObserver();
+    if (!io) return;
+    cards.forEach(function(c){
+      if (!c.__nfObserved){ io.observe(c); c.__nfObserved = true; }
+    });
+  }
+
+  function isVisible(el){
+    if (!el) return false;
+    try{
+      if (el.getClientRects && el.getClientRects().length) return true;
+    }catch(_){}
+    return false;
+  }
+
+  var statusEl = null;
+  function ensureStatusEl(){
+    try{
+      if (statusEl && document.body && document.body.contains(statusEl)) return statusEl;
+      statusEl = document.getElementById('nf-plans-status');
+      if (statusEl) return statusEl;
+
+      statusEl = document.createElement('div');
+      statusEl.id = 'nf-plans-status';
+      statusEl.setAttribute('role','status');
+      statusEl.setAttribute('aria-live','polite');
+      statusEl.setAttribute('aria-atomic','true');
+      statusEl.style.position = 'absolute';
+      statusEl.style.width = '1px';
+      statusEl.style.height = '1px';
+      statusEl.style.padding = '0';
+      statusEl.style.margin = '-1px';
+      statusEl.style.overflow = 'hidden';
+      statusEl.style.clip = 'rect(0,0,0,0)';
+      statusEl.style.whiteSpace = 'nowrap';
+      statusEl.style.border = '0';
+
+      var root = getCatalogRoot();
+      var mount = (root && root.parentElement) ? root.parentElement : document.body;
+      (mount || document.body).appendChild(statusEl);
+      return statusEl;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function updateA11yStatus(cards){
+    var el = ensureStatusEl();
+    if (!el) return;
+
+    var visible = 0;
+    for (var i=0;i<cards.length;i++){
+      if (isVisible(cards[i])) visible++;
+    }
+
+    if (visible <= 0) el.textContent = 'No plans match your filters.';
+    else el.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' shown.';
+  }
+
+  function onClick(e){
+    var t = e.target;
+    var card = t.closest && (t.closest('[data-plan-card]') || t.closest('.plan-card,[class*="plan-card"]'));
+    if (!card) return;
+
+    var p = readPlan(card);
+    var actionEl = t.closest && t.closest('[data-action]');
+    var action = actionEl ? actionEl.getAttribute('data-action') : '';
+
+    if (action === 'buy') {
+      var terms = card.querySelector && card.querySelector('.nf-terms-checkbox');
+      if (terms && !terms.checked) {
+        e.preventDefault();
+        e.stopPropagation();
+        push({ event:'nf_terms_block', nf_card:p.sku || p.plan || 'plan' });
+        return;
+      }
+
+      var item = {
+        item_id: p.sku || p.plan || 'plan',
+        item_name: p.name || p.plan || 'Plan',
+        currency: p.currency,
+        price: p.price,
+        item_category: p.plan || undefined,
+        index: p.position || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME
+      };
+      if (typeof gtag === 'function') {
+        try {
+          gtag('event', 'begin_checkout', {
+            items: [item],
+            currency: p.currency,
+            value: p.price || undefined
+          });
+        } catch(_){}
+      }
+
+      push({
+        event: 'nf_buy_click',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_waitlist: p.waitlist
+      });
+
+      try {
+        sessionStorage.setItem('nf.last_order', JSON.stringify({
+          plan: p.name || p.plan,
+          sku: p.sku,
+          price: p.price,
+          currency: p.currency,
+          provisional_tx: 'nf_' + (p.sku || p.plan || 'unknown') + '_' + Date.now()
+        }));
+      } catch(_){}
+      return;
+    }
+
+    var link = t.closest && t.closest('a[href]');
+    var dest = (link && link.href) ? link.href : p.url;
+
+    if (action === 'preview' || (link && !actionEl)) {
+      var item2 = {
+        item_id: p.sku || p.plan || 'plan',
+        item_name: p.name || p.plan || 'Plan',
+        price: p.price,
+        index: p.position || undefined,
+        item_category: p.plan || undefined,
+        item_list_id: LIST_ID,
+        item_list_name: LIST_NAME,
+        currency: p.currency
+      };
+      if (typeof gtag === 'function') {
+        try { gtag('event', 'select_item', { items: [item2] }); } catch(_){}
+      } else {
+        push({ event: 'select_item', items: [item2], nf_dest: dest });
+      }
+      push({
+        event: 'nf_plan_preview_open',
+        nf_plan: p.plan,
+        nf_sku: p.sku,
+        nf_price: p.price,
+        nf_dest: dest
+      });
+    }
+  }
+
+  function bindChange(sel, key){
+    var el = document.querySelector(sel);
+    if (!el || el.__nfBound) return;
+    el.__nfBound = true;
+    el.addEventListener('change', function(){
+      push({
+        event: 'nf_catalog_filter',
+        nf_filter_key: key,
+        nf_filter_value: el.value
+      });
+      setTimeout(scheduleInitCards, 0);
+    }, { passive:true });
+  }
+
+  function scrubInternalNotes(){
+    try{
+      document.querySelectorAll('.nf-helper').forEach(function(n){
+        n.textContent = '';
+        n.style.display = 'none';
+      });
+    }catch(_){ }
+  }
+
+  function getCards(){
+    var nodes = Array.from(document.querySelectorAll('[data-plan-card]'));
+    if (!nodes.length) nodes = Array.from(document.querySelectorAll('.plan-card, [class*="plan-card"]'));
+    return nodes;
+  }
+
+  var initialized = false;
+
+  var scheduled = false;
+  function scheduleInitCards(){
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){
+      scheduled = false;
+      initCards();
+    });
+  }
+
+  function init(){
+    if (!initialized){
+      push({ event: 'nf_plans_catalog_view' });
+      document.addEventListener('click', onClick, { passive: false });
+
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter') return;
+        var focus = document.activeElement;
+        var card = focus && focus.closest && (
+          focus.closest('[data-plan-card]') ||
+          focus.closest('.plan-card,[class*="plan-card"]')
+        );
+        if (!card) return;
+        var primary = card.querySelector && card.querySelector('[data-action="preview"]');
+        if (primary && document.activeElement && primary.contains(document.activeElement)) {
+          primary.click(); e.preventDefault();
+        }
+      });
+
+      bindChange('[data-filter="goal"]', 'goal');
+      bindChange('[data-filter="days"]', 'days');
+      bindChange('[data-filter="equipment"]', 'equipment');
+      bindChange('[data-sort]', 'sort');
+
+      window.addEventListener('pagehide', cleanup, { capture:true });
+      window.addEventListener('pageshow', function(e){
+        if (e && e.persisted) { ensureMO(); scheduleInitCards(); }
+      });
+
+      initialized = true;
+    }
+    initCards();
+    ensureMO();
+  }
+
+  function initCards(){
+    scrubInternalNotes();
+    var cards = getCards();
+    for (var i=0;i<cards.length;i++) validatePlanCard(cards[i]);
+    observeCards(cards);
+    fireViewItemList(cards);
+    updateA11yStatus(cards);
+  }
+
+  var mo;
+  var moRoot = null;
+  var moWarned = false;
+
+  function disconnectMO(){
+    if (mo){
+      try { mo.disconnect(); } catch(_){}
+      mo = null;
+      moRoot = null;
+    }
+  }
+
+  function ensureMO(){
+    if (mo || !('MutationObserver' in window)) return;
+
+    var root = getCatalogRoot();
+
+    // ✅ Critical fix: never observe document.body subtree (too expensive)
+    if (root === document.body){
+      if (!moWarned){
+        moWarned = true;
+        try { console.warn('[NF] Catalog root resolved to document.body; skipping MutationObserver to avoid performance issues.'); } catch(_){}
+      }
+      return;
+    }
+
+    moRoot = root;
+
+    mo = new MutationObserver(function(){
+      scheduleInitCards();
+    });
+
+    try{
+      mo.observe(root, { childList: true, subtree: true });
+    }catch(_){
+      disconnectMO();
+    }
+  }
+
+  function cleanup(){
+    disconnectMO();
+    if (io){
+      try { io.disconnect(); } catch(_){}
+      io = null;
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<!-- NeuForm — Add-On Switcher & Terms Gate (v3.6.2 — idempotent binds + throttled/scoped MO + cleanup) -->
+<script>
+(function(){
+  'use strict';
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  function push(evt){ try{ dl.push(evt); }catch(_){} }
+
+  function toBool(v){
+    if (v == null) return false;
+    var s = String(v).trim().toLowerCase();
+    return s === 'true' || s === '1' || s === 'yes' || s === 'y';
+  }
+
+  function getRoot(){
+    var any = document.querySelector('[data-plan-card]');
+    if (any){
+      return (
+        document.querySelector('[data-plan-card][data-is-product-page="true"]')?.closest('main') ||
+        any.closest('.w-dyn-list') ||
+        any.closest('.w-dyn-items') ||
+        any.parentElement ||
+        document.body
+      );
+    }
+    return document.body;
+  }
+
+  var scheduled = false;
+  function scheduleInit(){
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){
+      scheduled = false;
+      init();
+    });
+  }
+
+  function wireAddOn(card){
+    var checkbox = card.querySelector('.nf-add-on-checkbox');
+    var button   = card.querySelector('.nf-btn--add-on');
+    if (!checkbox || !button) return;
+    if (checkbox.__nfBound) return;
+    checkbox.__nfBound = true;
+
+    var baseUrl   = (button.dataset.baseUrl   || button.getAttribute('href') || '').trim();
+    var bundleUrl = (button.dataset.bundleUrl || '').trim();
+
+    if (baseUrl) button.href = baseUrl;
+    if (checkbox.checked && bundleUrl) button.href = bundleUrl;
+
+    checkbox.addEventListener('change', function(){
+      var useBundle = !!(checkbox.checked && bundleUrl);
+      button.href = useBundle ? bundleUrl : baseUrl;
+      button.dataset.activeUrl = button.href;
+
+      push({
+        event: 'nf_add_on_toggled',
+        nf_add_on_checked: checkbox.checked ? '1' : '0',
+        nf_component: 'plans_add_on_switcher'
+      });
+    }, { passive: true });
+  }
+
+  function wireTerms(card){
+    var terms = card.querySelector('.nf-terms-checkbox');
+    if (!terms) return;
+    if (terms.__nfBound) return;
+    terms.__nfBound = true;
+
+    var buttons = Array.from(card.querySelectorAll('.nf-btn--add-on, .nf-cta--default .nf-btn'));
+
+    function applyGate(on){
+      buttons.forEach(function(btn){
+        btn.classList.toggle('nf-btn--gated', on);
+      });
+    }
+
+    applyGate(!terms.checked);
+    terms.addEventListener('change', function(){ applyGate(!terms.checked); }, { passive: true });
+  }
+
+  function init(){
+    var cards = document.querySelectorAll('[data-plan-card]');
+    if (!cards.length) return;
+
+    cards.forEach(function(card){
+      var ds = card.dataset || {};
+      if (toBool(ds.hasAddOn))      wireAddOn(card);
+      if (toBool(ds.termsRequired)) wireTerms(card);
+    });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  var mo, moRoot;
+  var moWarned = false;
+
+  function disconnectMO(){
+    if (mo){
+      try { mo.disconnect(); } catch(_){}
+      mo = null;
+      moRoot = null;
+    }
+  }
+
+  function ensureMO(){
+    if (mo || !('MutationObserver' in window)) return;
+    moRoot = getRoot();
+
+    // ✅ Critical fix: never observe document.body subtree
+    if (moRoot === document.body){
+      if (!moWarned){
+        moWarned = true;
+        try { console.warn('[NF] Add-on/terms root resolved to document.body; skipping MutationObserver to avoid performance issues.'); } catch(_){}
+      }
+      return;
+    }
+
+    mo = new MutationObserver(function(){ scheduleInit(); });
+    try { mo.observe(moRoot, { childList:true, subtree:true }); }
+    catch(_){ disconnectMO(); }
+  }
+
+  ensureMO();
+
+  window.addEventListener('pagehide', function(){
+    disconnectMO();
+  }, { capture:true });
+
+  window.addEventListener('pageshow', function(e){
+    if (e && e.persisted) { ensureMO(); scheduleInit(); }
+  });
+
+})();
+</script>
+
+<!-- Sticky CTA helper (idempotent) -->
+<script>
+(function(){
+  var buttons = Array.prototype.slice.call(
+    document.querySelectorAll('[data-sticky-cta]')
+  );
+  if (!buttons.length) return;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  var io = null;
+  if ('IntersectionObserver' in window){
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        dl.push({
+          event: entry.isIntersecting ? 'nf_sticky_cta_show' : 'nf_sticky_cta_hide',
+          nf_component: 'plans_sticky_cta'
+        });
+      });
+    }, { threshold: 0.1 });
+
+    window.addEventListener('pagehide', function(){
+      try { io.disconnect(); } catch(_){}
+      io = null;
+    }, { capture:true });
+  }
+
+  buttons.forEach(function(btn){
+    if (btn.__nfBound) return;
+    btn.__nfBound = true;
+
+    if (io) io.observe(btn);
+
+    btn.addEventListener('click', function(){
+      var label =
+        btn.getAttribute('aria-label') ||
+        (btn.textContent || '').trim() ||
+        'Sticky CTA';
+
+      dl.push({
+        event: 'nf_buy_click',
+        nf_source: 'sticky_cta',
+        nf_label: label
+      });
+
+      if (typeof gtag === 'function'){
+        try { gtag('event', 'begin_checkout'); } catch(_){}
+      }
+    });
+  });
+})();
+</script>
+
+<!-- NeuForm FAQ — accessibility helper (works with Webflow dropdowns) -->
+<script>
+(function(){
+  var accordions = Array.prototype.slice.call(
+    document.querySelectorAll('.nf-faq-accordion')
+  );
+  if (!accordions.length) return;
+
+  accordions.forEach(function(acc, index){
+    if (acc.__nfBound) return;
+    acc.__nfBound = true;
+
+    var header = acc.querySelector('.nf-faq-header');
+    if (!header) return;
+
+    var body = acc.querySelector('.nf-faq-body');
+
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+
+    if (body){
+      if (!body.id){
+        body.id = 'nf-faq-body-' + (index + 1);
+      }
+      header.setAttribute('aria-controls', body.id);
+    }
+
+    function syncExpanded(){
+      var isOpen = acc.classList.contains('w--open');
+      header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    syncExpanded();
+
+    header.addEventListener('click', function(){
+      setTimeout(syncExpanded, 0);
+    });
+
+    header.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
+        e.preventDefault();
+        header.click();
+      }
+    });
+  });
+})();
+</script>

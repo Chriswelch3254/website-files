@@ -1,0 +1,799 @@
+<style> 
+  /* ============================
+     NeuForm — Start Plan (v5.6)
+     Scoped module: #nf-start-plan
+     ============================ */
+
+  #nf-start-plan{
+    --nf-blue: #3498db;
+    --nf-radius: 18px;
+    --nf-radius-sm: 14px;
+
+    --nf-border: rgba(255,255,255,.14);
+    --nf-border-2: rgba(255,255,255,.10);
+
+    --nf-surface: rgba(255,255,255,.06);
+    --nf-surface-2: rgba(255,255,255,.04);
+    --nf-surface-3: rgba(255,255,255,.03);
+
+    --nf-text: rgba(255,255,255,.92);
+    --nf-muted: rgba(255,255,255,.70);
+
+    --nf-shadow: 0 24px 70px rgba(0,0,0,.45);
+
+    /* DLTER-style overlay (transparent — rocks live behind it) */
+    --nf-overlay-top: rgba(0,0,0,.58);
+    --nf-overlay-mid: rgba(0,0,0,.72);
+    --nf-overlay-bot: rgba(0,0,0,.82);
+
+    font-family: inherit;
+    color: var(--nf-text);
+    text-rendering: geometricPrecision;
+
+    position: relative;
+    isolation: isolate;
+
+    /* IMPORTANT: do NOT paint a solid background here.
+       We want the site’s rock texture to remain visible underneath. */
+    background: transparent;
+
+    /* Full-bleed section so the overlay spans the entire viewport width */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    /* Section height */
+    min-height: 100vh;
+
+    /* Prevent rare horizontal scrollbars caused by 100vw */
+    overflow-x: clip;
+  }
+  @supports not (overflow: clip){
+    #nf-start-plan{ overflow-x: hidden; }
+  }
+
+  #nf-start-plan *{ box-sizing: border-box; }
+
+  /* IMPORTANT: fixes global site white-space weirdness that can break line wrapping */
+  #nf-start-plan p,
+  #nf-start-plan span,
+  #nf-start-plan li,
+  #nf-start-plan summary,
+  #nf-start-plan a{
+    white-space: normal !important;
+  }
+
+  /* Section overlay (semi-transparent black + subtle glow) */
+  #nf-start-plan::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+
+    /* Overlay only — no solid base color at the end */
+    background:
+      radial-gradient(1100px 620px at 18% 0%, rgba(52,152,219,.16), transparent 58%),
+      radial-gradient(820px 520px at 86% 10%, rgba(52,152,219,.10), transparent 60%),
+      linear-gradient(180deg, var(--nf-overlay-top), var(--nf-overlay-mid) 42%, var(--nf-overlay-bot));
+  }
+
+  /* ============================
+     Stage layer (full width)
+     ============================ */
+
+  #nf-start-plan .nf-wrap{
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: clamp(22px, 4.5vw, 54px) 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  #nf-start-plan .nf-shell{
+    width: 100%;
+
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
+    border-top: 1px solid var(--nf-border);
+    border-bottom: 1px solid var(--nf-border);
+
+    /* Slight surface tint, still transparent enough to feel integrated */
+    background: rgba(0,0,0,.10);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 -1px 0 rgba(0,0,0,.35);
+
+    overflow: hidden;
+  }
+
+  #nf-start-plan .nf-grid{
+    max-width: 1120px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 18px;
+
+    padding: 18px 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 920px){
+    #nf-start-plan .nf-grid{
+      grid-template-columns: 1fr;
+    }
+  }
+
+  #nf-start-plan .nf-card{
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius);
+    background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04));
+    box-shadow: var(--nf-shadow);
+    padding: 18px;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  @media (max-width: 920px){
+    #nf-start-plan .nf-card{
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.04));
+    }
+  }
+
+  #nf-start-plan .nf-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--nf-border);
+    background: rgba(52,152,219,.12);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #nf-start-plan h1{
+    margin: 14px 0 10px;
+    font-size: clamp(26px, 3.0vw, 40px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  #nf-start-plan .nf-sub{
+    margin: 0;
+    color: var(--nf-muted);
+    font-size: 15.5px;
+    line-height: 1.65;
+    max-width: 72ch;
+  }
+
+  #nf-start-plan .nf-steps{
+    margin-top: 14px;
+    display: grid;
+    gap: 10px;
+  }
+
+  #nf-start-plan .nf-step{
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 10px;
+    align-items: start;
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius-sm);
+    padding: 12px;
+    background: var(--nf-surface-2);
+  }
+
+  #nf-start-plan .nf-stepnum{
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    background: rgba(52,152,219,.18);
+    border: 1px solid rgba(52,152,219,.35);
+    color: var(--nf-text);
+  }
+
+  #nf-start-plan .nf-step b{ display:block; margin: 0 0 3px; }
+  #nf-start-plan .nf-step p{
+    margin: 0;
+    color: var(--nf-muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  #nf-start-plan .nf-note{
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: var(--nf-radius-sm);
+    border: 1px solid var(--nf-border-2);
+    background: var(--nf-surface-3);
+    color: var(--nf-muted);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  #nf-start-plan .nf-note b{ color: rgba(255,255,255,.86); }
+
+  /* Purchase activation helper (logged-in, no-access state) */
+  #nf-start-plan .nf-activate{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 6px;
+  }
+  #nf-start-plan .nf-spinner{
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,.20);
+    border-top-color: rgba(255,255,255,.86);
+    animation: nf-sp-spin .85s linear infinite;
+    flex: 0 0 auto;
+  }
+  #nf-start-plan .nf-fallback{
+    display: block;
+    margin-top: 6px;
+  }
+  @keyframes nf-sp-spin{ to{ transform: rotate(360deg); } }
+
+  #nf-start-plan .nf-formwrap{
+    margin-top: 14px;
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius-sm);
+    overflow: hidden;
+    background: rgba(0,0,0,.10);
+  }
+
+  #nf-start-plan .nf-formwrap iframe{
+    width: 100%;
+    height: 1150px;
+    border: 0;
+    display: block;
+    background: transparent;
+  }
+
+  @media (max-width: 640px){
+    #nf-start-plan .nf-formwrap iframe{ height: 1400px; }
+  }
+
+  #nf-start-plan .nf-btn{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px 14px;
+    border-radius: var(--nf-radius-sm);
+    font-weight: 900;
+    text-decoration: none;
+    border: 1px solid var(--nf-border);
+    cursor: pointer;
+    transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    user-select: none;
+  }
+
+  #nf-start-plan .nf-btn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 40px rgba(0,0,0,.28);
+  }
+
+  #nf-start-plan .nf-btn-primary{
+    background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(52,152,219,.78));
+    color: #fff;
+    border-color: rgba(52,152,219,.60);
+    box-shadow: 0 10px 34px rgba(52,152,219,.18);
+  }
+
+  #nf-start-plan .nf-btn-soft{
+    background: rgba(255,255,255,.05);
+    color: var(--nf-text);
+  }
+
+  #nf-start-plan .nf-links{
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    color: var(--nf-muted);
+    font-size: 13px;
+  }
+
+  #nf-start-plan .nf-actionlink{
+    color: var(--nf-muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,.18);
+    padding-bottom: 2px;
+  }
+
+  #nf-start-plan .nf-actionlink:hover{
+    color: var(--nf-text);
+    border-bottom-color: rgba(255,255,255,.35);
+  }
+
+  #nf-start-plan .nf-btn:focus-visible,
+  #nf-start-plan .nf-actionlink:focus-visible{
+    outline: 2px solid rgba(52,152,219,.55);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #nf-start-plan .nf-btn{ transition: none; }
+    #nf-start-plan .nf-btn:hover{ transform: none; filter: none; box-shadow: none; }
+    #nf-start-plan .nf-spinner{ animation: none; }
+  }
+</style>
+
+<section id="nf-start-plan" data-nf-focus-on-login="1">
+  <div class="nf-wrap">
+    <div class="nf-shell">
+      <div class="nf-grid">
+
+        <!-- MAIN (has intake access via Memberstack gated content) -->
+        <div class="nf-card" id="nf-start-plan-intake" data-ms-content="ap-intake-access" aria-label="Intake form">
+          <div class="nf-badge">Start Plan</div>
+          <h1 id="nf-start-plan-intake-heading">Complete your intake</h1>
+          <p class="nf-sub">
+            Fill out the intake carefully so your plan matches your schedule, goals, equipment, and constraints.
+            Your plan is delivered by email (usually within ~12 hours after submission).
+          </p>
+
+          <div class="nf-note">
+            <b>Pricing:</b> $39 per generated plan (purchase required each time).<br/>
+            <b>Access:</b> each purchase unlocks 1 hour of intake access.<br/>
+            <b>Reminder:</b> One submission = one plan. Need another plan later? Purchase again.
+          </div>
+
+          <div class="nf-steps" aria-label="How it works">
+            <div class="nf-step">
+              <div class="nf-stepnum">1</div>
+              <div>
+                <b>Complete the form</b>
+                <p>Most people finish in ~5–7 minutes. Answer accurately for best results.</p>
+              </div>
+            </div>
+            <div class="nf-step">
+              <div class="nf-stepnum">2</div>
+              <div>
+                <b>Submit</b>
+                <p>You’ll see a submission confirmation on the form when it’s done.</p>
+              </div>
+            </div>
+            <div class="nf-step">
+              <div class="nf-stepnum">3</div>
+              <div>
+                <b>Check your email</b>
+                <p>Delivery is usually within ~12 hours. Check Promotions/Spam if needed.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="nf-links" style="justify-content:flex-start; margin-top:10px;">
+            <a class="nf-actionlink"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSfi32PJSozm5SWzcjstNHbxzjaZVar8w7ImvJtVzz6_CdMuuA/viewform?usp=header"
+               target="_blank" rel="noopener noreferrer">
+              Having trouble loading? Open the form in a new tab →
+            </a>
+          </div>
+
+          <div class="nf-formwrap" aria-label="Google Form embed">
+            <iframe
+              title="NeuForm Automatic Plan Intake"
+              loading="lazy"
+              src="https://docs.google.com/forms/d/e/1FAIpQLSfi32PJSozm5SWzcjstNHbxzjaZVar8w7ImvJtVzz6_CdMuuA/viewform?embedded=true">
+            </iframe>
+          </div>
+
+          <div class="nf-note">
+            <b>Tip:</b> Use the same email you used at checkout so delivery is seamless.
+          </div>
+        </div>
+
+        <!-- MAIN (no intake access) -->
+        <div class="nf-card" id="nf-start-plan-locked" data-ms-content="!ap-intake-access" aria-label="Access required">
+          <div class="nf-badge">Start Plan</div>
+
+          <!-- Logged out -->
+          <div data-ms-content="!members">
+            <h2>Log in to access the intake</h2>
+            <p class="nf-sub">
+              This page is for purchasers. Log in with the <b>same email you used at checkout</b>, or purchase the Automatic Plan to unlock intake access.
+            </p>
+
+            <a class="nf-btn nf-btn-primary" data-ms-modal="login" href="#" role="button" aria-label="Log in">
+              Log in
+            </a>
+
+            <a class="nf-btn nf-btn-soft"
+               data-ms-modal="signup"
+               data-ms-price:add="prc_automatic-plan-jbwk0hc7"
+               href="#" role="button" aria-label="Buy the Automatic Plan">
+              Buy the Automatic Plan ($39)
+            </a>
+
+            <div class="nf-note">
+              <b>Pricing:</b> $39 per generated plan (purchase required each time).<br/>
+              <b>Access:</b> each purchase unlocks 1 hour of intake access.
+            </div>
+
+            <div class="nf-links" style="justify-content:flex-start;">
+              <a class="nf-actionlink" href="/automatic-plan">Back to Automatic Plan →</a>
+            </div>
+          </div>
+
+          <!-- Logged in (but no access) -->
+          <div id="nf-start-plan-loggedin-noaccess" data-ms-content="members">
+            <h2>Purchase required to start a new plan</h2>
+            <p class="nf-sub">
+              Each plan is <b>$39</b>. Each purchase unlocks <b>1 hour</b> of intake access to generate one plan.
+            </p>
+
+            <a class="nf-btn nf-btn-primary"
+               data-ms-price:add="prc_automatic-plan-jbwk0hc7"
+               href="#" role="button" aria-label="Buy another plan (39 dollars)">
+              Buy another plan ($39)
+            </a>
+
+            <div class="nf-links" style="justify-content:flex-start;">
+              <a class="nf-actionlink" data-ms-modal="profile" href="#">Account settings</a>
+              <span aria-hidden="true">•</span>
+              <a class="nf-actionlink" data-ms-action="logout" href="#">Log out</a>
+            </div>
+
+            <div class="nf-note" id="nf-sp-activation-note" role="status" aria-live="polite">
+              <b>Just purchased?</b>
+              <span class="nf-activate">
+                <span class="nf-spinner" data-nf-spinner aria-hidden="true" style="display:none;"></span>
+                <span data-nf-status>If you completed checkout, we’ll check for access automatically.</span>
+              </span>
+
+              <span class="nf-fallback" data-nf-fallback style="display:none;">
+                If you completed checkout, wait a moment then
+                <a class="nf-actionlink" href="#" data-nf-tryagain>try again</a>
+                or <a class="nf-actionlink" href="#" data-nf-refresh>refresh</a>.
+                If it still doesn’t unlock, revisit <a class="nf-actionlink" href="/start-plan-unlock">/start-plan-unlock</a>.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASIDE (always visible) -->
+        <aside class="nf-card" aria-label="Help and account">
+          <div class="nf-badge">Help</div>
+          <h2 style="font-size: clamp(20px, 2.2vw, 28px); margin-top: 12px;">Need anything?</h2>
+          <p class="nf-sub" style="font-size: 14.5px;">
+            If your plan email doesn’t arrive, check Promotions/Spam first. If it’s still missing, contact us and we’ll resend it.
+          </p>
+
+          <a class="nf-btn nf-btn-soft" href="/contact">Contact support</a>
+
+          <div class="nf-note">
+            <b>Delivery:</b> usually within ~12 hours after intake submission.<br/>
+            <b>Pricing:</b> $39 per generated plan (purchase required each time).<br/>
+            <b>Access:</b> each purchase unlocks 1 hour of intake access.
+          </div>
+
+          <div data-ms-content="members">
+            <div class="nf-links" style="justify-content:flex-start; margin-top:12px;">
+              <a class="nf-actionlink" data-ms-modal="profile" href="#">Account settings</a>
+              <span aria-hidden="true">•</span>
+              <a class="nf-actionlink" data-ms-action="logout" href="#">Log out</a>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  if (window.__NF_START_PLAN_POLL_BOOTED__) return;
+  window.__NF_START_PLAN_POLL_BOOTED__ = true;
+
+  var note = document.getElementById("nf-sp-activation-note");
+  if (!note) return;
+
+  var statusEl   = note.querySelector("[data-nf-status]");
+  var fallbackEl = note.querySelector("[data-nf-fallback]");
+  var spinnerEl  = note.querySelector("[data-nf-spinner]");
+  var refreshEl  = note.querySelector("[data-nf-refresh]");
+  var tryAgainEl = note.querySelector("[data-nf-tryagain]");
+
+  function safe(fn){ try { fn(); } catch(_){} }
+
+  function setText(el, txt){ if (el) el.textContent = String(txt || ""); }
+  function show(el, on){ if (el) el.style.display = on ? "" : "none"; }
+
+  function isVisible(el){
+    if (!el) return false;
+    var cs = null;
+    try { cs = window.getComputedStyle(el); } catch(_) {}
+    if (cs && (cs.display === "none" || cs.visibility === "hidden")) return false;
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  }
+
+  function storageGet(k){
+    try { return localStorage.getItem(k); } catch(e){
+      try { return sessionStorage.getItem(k); } catch(_) { return null; }
+    }
+  }
+
+  function parseISO(s){
+    if (!s) return null;
+    var d = new Date(String(s));
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function hasRecentUnlockMarker(){
+    var setAt = storageGet("nf_ap_access_set_at");
+    var d = parseISO(setAt);
+    if (!d) return false;
+    return (Date.now() - d.getTime()) <= (10 * 60 * 1000); // 10 minutes
+  }
+
+  function hasExpiryMarker(){
+    return !!(storageGet("nf_ap_access_until") || storageGet("countdownDateTime"));
+  }
+
+  function cameFromUnlock(){
+    try { return /\/start-plan-unlock/i.test(document.referrer || ""); } catch(e){ return false; }
+  }
+
+  function shouldPoll(){
+    return hasExpiryMarker() || hasRecentUnlockMarker() || cameFromUnlock();
+  }
+
+  function getPlanId(){
+    // Prefer sitewide config; warn loudly if missing and fall back (keeps you from silently breaking)
+    var fallback = "pln_automatic-plan-intake-access-1-hour--ic1a607rg";
+    try{
+      var nf = window.neuform;
+      var pid =
+        nf && nf.config &&
+        nf.config.memberstack &&
+        nf.config.memberstack.plans &&
+        nf.config.memberstack.plans.ap_intake_access_1h;
+
+      if (pid && typeof pid === "string") return pid;
+
+      try { console.warn("[NF Start Plan] Missing neuform.config.memberstack.plans.ap_intake_access_1h; using fallback plan id."); } catch(_) {}
+      return fallback;
+    }catch(e){
+      try { console.warn("[NF Start Plan] Error reading plan id; using fallback plan id.", e); } catch(_) {}
+      return fallback;
+    }
+  }
+
+  function waitForMemberstack(maxMs){
+    maxMs = maxMs || 6000;
+    var start = Date.now();
+    return new Promise(function(resolve){
+      (function loop(){
+        var ms = window.$memberstackDom;
+        if (ms && typeof ms.getCurrentMember === "function") return resolve(ms);
+        if (Date.now() - start >= maxMs) return resolve(null);
+        setTimeout(loop, 120);
+      })();
+    });
+  }
+
+  function extractPlanIds(mem){
+    var out = [];
+    if (!mem) return out;
+    var data = mem.data || mem;
+    if (!data) return out;
+
+    function add(x){
+      if (!x || typeof x !== "string") return;
+      out.push(x);
+    }
+
+    add(data.planId);
+    if (Array.isArray(data.planIds)) data.planIds.forEach(add);
+
+    var pcs = data.planConnections;
+    if (Array.isArray(pcs)){
+      pcs.forEach(function(p){
+        if (!p) return;
+        add(p.planId);
+        if (p.plan && typeof p.plan.id === "string") add(p.plan.id);
+        if (typeof p.id === "string" && p.id.indexOf("pln_") === 0) add(p.id);
+      });
+    }
+
+    var pls = data.plans;
+    if (Array.isArray(pls)){
+      pls.forEach(function(p){
+        if (!p) return;
+        add(p.planId);
+        if (typeof p.id === "string") add(p.id);
+      });
+    }
+
+    // De-dupe
+    var seen = {};
+    var uniq = [];
+    for (var i=0;i<out.length;i++){
+      var id = out[i];
+      if (!id || seen[id]) continue;
+      seen[id] = 1;
+      uniq.push(id);
+    }
+    return uniq;
+  }
+
+  function memberHasPlan(mem, planId){
+    var ids = extractPlanIds(mem);
+    for (var i=0;i<ids.length;i++){
+      if (ids[i] === planId) return true;
+    }
+    return false;
+  }
+
+  function focusIntakeIfFlagged(){
+    var shouldFocus = false;
+    safe(function(){
+      shouldFocus = (sessionStorage.getItem("nf_sp_focus_intake") === "1");
+      if (shouldFocus) sessionStorage.removeItem("nf_sp_focus_intake");
+    });
+    if (!shouldFocus) return;
+
+    var h = document.getElementById("nf-start-plan-intake-heading");
+    if (!h) return;
+
+    safe(function(){
+      var had = h.hasAttribute("tabindex");
+      if (!had) h.setAttribute("tabindex","-1");
+      try { h.focus({ preventScroll:false }); } catch(_) { try{ h.focus(); }catch(__){} }
+      if (!had) setTimeout(function(){ safe(function(){ h.removeAttribute("tabindex"); }); }, 300);
+    });
+  }
+
+  function isIntakeVisible(){
+    var el = document.getElementById("nf-start-plan-intake");
+    return isVisible(el);
+  }
+
+  // Manual refresh link inside fallback (reload)
+  if (refreshEl){
+    refreshEl.addEventListener("click", function(e){
+      e.preventDefault();
+      try { location.reload(); } catch(_) { location.href = location.href; }
+    });
+  }
+
+  var running = false;
+
+  async function run(opts){
+    opts = (opts && typeof opts === "object") ? opts : {};
+    var force = !!opts.force;
+
+    if (running) return;
+    running = true;
+
+    try{
+      // Only operate when this note is actually visible (logged-in / no access view)
+      if (!isVisible(note)) return;
+
+      // If access is already visible (rare state desync), just focus intake if flagged
+      if (isIntakeVisible()){
+        focusIntakeIfFlagged();
+        return;
+      }
+
+      // If this isn't a post-purchase flow, keep the original guidance as-is (no spinner)
+      if (!shouldPoll()){
+        show(spinnerEl, false);
+        show(fallbackEl, true);
+        setText(statusEl, "");
+        return;
+      }
+
+      // ✅ Throttle (FIXED): explicit early return (no throw inside safe)
+      var last = 0;
+      safe(function(){ last = Number(sessionStorage.getItem("nf_sp_last_poll") || "0"); });
+      if (!force && last && (Date.now() - last) < 8000){
+        show(spinnerEl, false);
+        show(fallbackEl, true);
+        setText(statusEl, "Just checked—try again in a moment.");
+        return;
+      }
+      safe(function(){ sessionStorage.setItem("nf_sp_last_poll", String(Date.now())); });
+
+      // Start polling (extended window: 15s hard cap)
+      show(fallbackEl, false);
+      show(spinnerEl, true);
+      setText(statusEl, "Checking for access…");
+
+      var ms = await waitForMemberstack(6000);
+      if (!ms){
+        show(spinnerEl, false);
+        show(fallbackEl, true);
+        setText(statusEl, "");
+        return;
+      }
+
+      var planId = getPlanId();
+      if (!planId || typeof planId !== "string" || planId.indexOf("pln_") !== 0){
+        try { console.warn("[NF Start Plan] Invalid plan id; cannot verify access.", planId); } catch(_) {}
+        show(spinnerEl, false);
+        show(fallbackEl, true);
+        setText(statusEl, "");
+        return;
+      }
+
+      var start = Date.now();
+      var maxMs = 15000;
+      var stepMs = 1000;
+
+      while (Date.now() - start < maxMs){
+        var remaining = Math.max(0, Math.ceil((maxMs - (Date.now() - start)) / 1000));
+        setText(statusEl, "Checking for access… " + remaining + "s");
+
+        try{
+          var mem = await ms.getCurrentMember();
+          if (mem && memberHasPlan(mem, planId)){
+            setText(statusEl, "Access activated. Loading your intake…");
+            show(spinnerEl, true);
+
+            safe(function(){ sessionStorage.setItem("nf_sp_focus_intake", "1"); });
+
+            safe(function(){
+              (window.dataLayer = window.dataLayer || []).push({ event:"nf_start_plan_access_detected" });
+            });
+
+            setTimeout(function(){
+              try { location.reload(); } catch(_) { location.href = location.href; }
+            }, 450);
+
+            return;
+          }
+        }catch(_e){}
+
+        await new Promise(function(r){ setTimeout(r, stepMs); });
+      }
+
+      // Poll window expired: show manual guidance as LAST resort
+      show(spinnerEl, false);
+      show(fallbackEl, true);
+      setText(statusEl, "");
+    } finally {
+      running = false;
+    }
+  }
+
+  // “Try again” without reload (re-runs run() and bypasses throttle once)
+  if (tryAgainEl){
+    tryAgainEl.addEventListener("click", function(e){
+      e.preventDefault();
+      run({ force:true });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function(){ run(); });
+  } else {
+    run();
+  }
+
+  // After a reload where access is visible, focus intake if we flagged it
+  safe(function(){
+    if (isIntakeVisible()) focusIntakeIfFlagged();
+  });
+
+})();
+</script>

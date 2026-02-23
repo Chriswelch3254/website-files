@@ -1,0 +1,679 @@
+Head:
+<style>
+  /* =========================================================
+     NeuForm — Testimonials Template (Detail Page) v6 (FINAL)
+     Goals:
+       ✅ Buttons ALWAYS render as premium buttons (never text links)
+       ✅ Deterministic targeting via data-nf-role (set by body JS)
+       ✅ No reliance on Webflow .w-button behaviors
+       ✅ Card stays premium, not a “bar”
+       ✅ NEW: Center the action buttons under the review
+     ========================================================= */
+
+  :root{
+    --nf-blue:#3498db;
+
+    --nf-ink:#e9f3f7;
+    --nf-muted:rgba(233,243,247,.74);
+
+    --nf-glass-a:rgba(7,9,11,.78);
+    --nf-glass-b:rgba(7,9,11,.46);
+
+    --nf-shadow:0 18px 60px rgba(0,0,0,.55);
+    --nf-shadow-soft:0 16px 44px rgba(0,0,0,.50);
+
+    --nf-radius:18px;
+    --nf-radius-lg:24px;
+
+    --nf-ease:cubic-bezier(.2,.8,.2,1);
+    --nf-dur:180ms;
+    --nf-focus:rgba(52,152,219,.92);
+
+    --nf-page-bg:#050607;
+
+    --nf-max: 900px;
+    --nf-card-max: 820px;
+
+    /* Button tokens */
+    --nf-btn-h:40px;
+    --nf-btn-r:12px;
+    --nf-btn-fs:13px;
+  }
+
+  body{
+    background-color:var(--nf-page-bg) !important;
+    color-scheme: dark;
+  }
+
+  /* =========================
+     Layout / Spotlight
+     ========================= */
+  .nf-tm{
+    width:100%;
+    padding: clamp(28px, 4.5vw, 68px) 16px clamp(78px, 8vw, 140px);
+    display:flex;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .nf-tm__inner{
+    width:min(var(--nf-max), 100%);
+    position:relative;
+    margin:0 auto;
+  }
+
+  .nf-tm__inner::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-22px;
+    transform:translateX(-50%);
+    width:min(900px, 92vw);
+    height: clamp(420px, 52vw, 600px);
+    pointer-events:none;
+    background:
+      radial-gradient(closest-side at 50% 16%,
+        rgba(0,0,0,.52) 0%,
+        rgba(0,0,0,.18) 60%,
+        rgba(0,0,0,0) 100%),
+      radial-gradient(closest-side at 50% 14%,
+        rgba(52,152,219,.14) 0%,
+        rgba(52,152,219,0) 65%),
+      radial-gradient(closest-side at 50% 10%,
+        rgba(255,255,255,.06) 0%,
+        rgba(255,255,255,0) 62%);
+    filter: blur(14px);
+    opacity:.72;
+    z-index:0;
+  }
+
+  .nf-tm__inner > *{ position:relative; z-index:1; }
+
+  /* =========================
+     Card
+     ========================= */
+  .nf-tm__card{
+    position:relative;
+    overflow:hidden;
+
+    max-width: var(--nf-card-max);
+    width: 100%;
+    margin: 0 auto;
+
+    border-radius: var(--nf-radius-lg);
+    padding: 28px 24px;
+
+    border: 1px solid transparent;
+    background:
+      linear-gradient(180deg, var(--nf-glass-a), var(--nf-glass-b)) padding-box,
+      linear-gradient(135deg,
+        rgba(255,255,255,.16) 0%,
+        rgba(255,255,255,.10) 20%,
+        rgba(52,152,219,.42) 52%,
+        rgba(255,255,255,.10) 80%,
+        rgba(255,255,255,.08) 100%) border-box;
+
+    box-shadow: var(--nf-shadow);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .nf-tm__card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(860px 280px at 50% 0%,
+        rgba(52,152,219,.15) 0%,
+        rgba(52,152,219,0) 62%),
+      linear-gradient(180deg,
+        rgba(255,255,255,.08) 0%,
+        rgba(255,255,255,0) 52%);
+    opacity:.92;
+  }
+
+  .nf-tm__card::after{
+    content:"";
+    position:absolute;
+    left:24px;
+    right:24px;
+    top:14px;
+    height:2px;
+    border-radius:999px;
+    pointer-events:none;
+    background: linear-gradient(90deg,
+      rgba(52,152,219,0),
+      rgba(52,152,219,.70),
+      rgba(52,152,219,0));
+    opacity:.42;
+  }
+
+  .nf-tm__card > *{ position:relative; z-index:1; }
+
+  /* =========================
+     Top Row
+     ========================= */
+  .nf-tm__top{
+    display:flex;
+    justify-content:space-between;
+    gap:18px;
+    align-items:flex-start;
+    margin-bottom: 14px;
+  }
+  .nf-tm__who{ min-width:0; }
+
+  .nf-tm__name{
+    margin:0;
+    font-weight:900;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height:1.12;
+    color:var(--nf-ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .nf-tm__plan{
+    margin:10px 0 0;
+    display:inline-flex;
+    align-items:center;
+    max-width:100%;
+    padding:6px 10px;
+    border-radius:999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(233,243,247,.82);
+    font-size: 13px;
+    line-height:1.2;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .nf-tm__rating{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-end;
+    gap:10px;
+    min-width: 170px;
+  }
+
+  .nf-tm__rating-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 10px;
+    border-radius:999px;
+    border: 1px solid rgba(52,152,219,.34);
+    background: linear-gradient(180deg, rgba(52,152,219,.16), rgba(255,255,255,.06));
+    color:rgba(233,243,247,.94);
+    font-weight:900;
+    font-size:12.5px;
+    white-space:nowrap;
+    box-shadow: 0 10px 20px rgba(0,0,0,.22);
+  }
+
+  .nf-tm__rating-stars{ min-height:16px; }
+
+  .nf-stars{
+    position:relative;
+    display:inline-block;
+    line-height:1;
+    font-size: 12.5px;
+    letter-spacing: 2px;
+    transform: translateY(1px);
+  }
+  .nf-stars::before{ content:"★★★★★"; color: rgba(233,243,247,.22); }
+  .nf-stars__fill{
+    position:absolute; top:0; left:0;
+    overflow:hidden; white-space:nowrap; width:0%;
+  }
+  .nf-stars__fill::before{ content:"★★★★★"; color: rgba(233,243,247,.92); }
+
+  .nf-tm__quote{
+    margin: 14px 0 16px;
+    color: rgba(233,243,247,.92);
+    font-size: 15.5px;
+    line-height: 1.65;
+    position:relative;
+    padding-left: 18px;
+  }
+  .nf-tm__quote::before{
+    content:"“";
+    position:absolute;
+    left:0;
+    top:-10px;
+    font-size: 34px;
+    line-height: 1;
+    color: rgba(52,152,219,.60);
+    opacity:.42;
+  }
+
+  .nf-tm__metrics{
+    margin:0;
+    padding-top:14px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    color: rgba(233,243,247,.72);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .nf-metric-chip{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 10px;
+    border-radius:999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(233,243,247,.84);
+    font-size: 12.5px;
+    line-height: 1.2;
+  }
+
+  /* =========================================================
+     ACTION BUTTONS (FINAL)
+     - default = ghost button (so it can NEVER appear as plain text)
+     - role-based styling via [data-nf-role] set by body JS
+     - CHANGE: center the buttons under the review
+     ========================================================= */
+  .nf-tm__actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+
+    /* ✅ Centered under the review */
+    justify-content:center;
+
+    margin-top: 18px;
+    align-items:center;
+  }
+
+  /* Base: applies to ANY anchor/button Webflow generates in the actions row */
+  .nf-tm__actions a,
+  .nf-tm__actions button{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+
+    height: var(--nf-btn-h) !important;
+    padding: 0 14px !important;
+
+    border-radius: var(--nf-btn-r) !important;
+    text-decoration:none !important;
+
+    font-weight: 850 !important;
+    font-size: var(--nf-btn-fs) !important;
+    letter-spacing: .01em !important;
+    line-height: 1 !important;
+
+    cursor:pointer !important;
+    user-select:none !important;
+    white-space:nowrap !important;
+
+    /* DEFAULT = GHOST */
+    color: rgba(233,243,247,.94) !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05)) !important;
+    box-shadow: 0 12px 24px rgba(0,0,0,.22) !important;
+
+    transition:
+      transform var(--nf-dur) var(--nf-ease),
+      box-shadow var(--nf-dur) var(--nf-ease),
+      border-color var(--nf-dur) var(--nf-ease),
+      background var(--nf-dur) var(--nf-ease),
+      filter var(--nf-dur) var(--nf-ease) !important;
+
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .nf-tm__actions a:hover,
+  .nf-tm__actions button:hover{
+    transform: translateY(-1px);
+    border-color: rgba(52,152,219,.34) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06)) !important;
+    box-shadow: 0 16px 32px rgba(0,0,0,.28) !important;
+  }
+
+  .nf-tm__actions a:active,
+  .nf-tm__actions button:active{
+    transform: translateY(1px);
+  }
+
+  .nf-tm__actions a:focus-visible,
+  .nf-tm__actions button:focus-visible{
+    outline:2px solid var(--nf-focus) !important;
+    outline-offset:3px !important;
+  }
+
+  /* Primary role (View the plan) */
+  .nf-tm__actions [data-nf-role="plan"]{
+    color:#050607 !important;
+    border-color: rgba(52,152,219,.34) !important;
+    background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(33,125,187,.98)) !important;
+    box-shadow:
+      0 14px 30px rgba(52,152,219,.20),
+      0 10px 26px rgba(0,0,0,.28) !important;
+  }
+  .nf-tm__actions [data-nf-role="plan"]:hover{
+    filter: brightness(1.04) !important;
+    box-shadow:
+      0 18px 40px rgba(52,152,219,.26),
+      0 14px 34px rgba(0,0,0,.32) !important;
+  }
+
+  /* Icons */
+  .nf-tm__actions [data-nf-role]::before{
+    display:inline-flex;
+    width:16px;
+    height:16px;
+    align-items:center;
+    justify-content:center;
+    opacity:.95;
+    transform: translateY(-.5px);
+    margin-right: 2px;
+  }
+  .nf-tm__actions [data-nf-role="back"]::before{ content:"←"; }
+  .nf-tm__actions [data-nf-role="plan"]::before{ content:"↗"; }
+  .nf-tm__actions [data-nf-role="copy"]::before{ content:"⧉"; }
+
+  /* Copied */
+  .nf-tm__actions .is-copied{
+    border-color: rgba(52,152,219,.46) !important;
+    background: rgba(52,152,219,.16) !important;
+    color: rgba(233,243,247,.96) !important;
+  }
+
+  /* Disabled */
+  .nf-tm__actions .is-disabled{
+    opacity:.55 !important;
+    filter:saturate(.6) !important;
+    pointer-events:none !important;
+    border-color: rgba(255,255,255,.10) !important;
+    background: rgba(255,255,255,.05) !important;
+  }
+
+  /* Hidden plan href source (never leaks) */
+  .nf-plan-href-source{
+    display:none !important;
+    visibility:hidden !important;
+    position:absolute !important;
+    left:-9999px !important;
+    width:1px !important;
+    height:1px !important;
+    overflow:hidden !important;
+  }
+
+  /* Mobile: stack buttons */
+  @media (max-width: 767px){
+    .nf-tm{ padding: 22px 14px 110px; }
+    .nf-tm__card{ padding: 20px 16px; border-radius: 18px; max-width: 92vw; }
+
+    .nf-tm__top{ flex-direction:column; align-items:flex-start; }
+    .nf-tm__rating{ min-width: 0; justify-content:flex-start; }
+    .nf-tm__name{ white-space:normal; }
+    .nf-tm__plan{ white-space:normal; }
+
+    .nf-tm__actions a,
+    .nf-tm__actions button{
+      width:100% !important;
+      justify-content:center !important;
+      height: 44px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nf-tm__actions a,
+    .nf-tm__actions button{
+      transition:none !important;
+    }
+    .nf-tm__actions a:hover,
+    .nf-tm__actions button:hover{
+      transform:none !important;
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+    .nf-tm__card{ backdrop-filter:none; -webkit-backdrop-filter:none; }
+  }
+</style>
+
+Body:
+<script>
+(function(){
+  "use strict";
+
+  // ✅ Idempotence guard (prevents double-binding if pasted twice)
+  if (window.__NF_TESTIMONIALS_TM_V6__) return;
+  window.__NF_TESTIMONIALS_TM_V6__ = true;
+
+  function onReady(fn){
+    if(document.readyState === "loading"){
+      document.addEventListener("DOMContentLoaded", fn, { once:true });
+    } else {
+      fn();
+    }
+  }
+
+  function clamp(n, min, max){
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function toNumber(v){
+    if(v == null) return null;
+    var s = String(v).trim().replace(",", ".");
+    var m = s.match(/(\d+(?:\.\d+)?)/);
+    if(!m) return null;
+    var n = parseFloat(m[1]);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  /* -----------------------------
+     Tag action buttons deterministically
+     ----------------------------- */
+  function tagActions(){
+    var wrap = document.querySelector(".nf-tm__actions");
+    if(!wrap) return;
+
+    var links = Array.from(wrap.querySelectorAll("a,button"));
+    if(!links.length) return;
+
+    links.forEach(function(el){
+      var txt = (el.textContent || "").toLowerCase().trim();
+      var href = "";
+      try{ href = (el.getAttribute("href") || "").trim(); }catch(_){}
+
+      // back (tolerate hash/query)
+      var baseHref = href.split("#")[0].split("?")[0];
+
+      if (baseHref === "/results" || txt.indexOf("back to") === 0 || txt === "back"){
+        el.setAttribute("data-nf-role","back");
+        return;
+      }
+
+      // copy
+      if (el.hasAttribute("data-copy-link") || (txt.indexOf("copy") > -1)){
+        el.setAttribute("data-nf-role","copy");
+        // Ensure the copy handler can see it
+        try{ el.setAttribute("data-copy-link","1"); }catch(_){}
+        return;
+      }
+
+      // otherwise: plan button
+      el.setAttribute("data-nf-role","plan");
+    });
+  }
+
+  /* -----------------------------
+     Stars (supports decimals)
+     ----------------------------- */
+  function initStars(){
+    var numEl = document.querySelector(".nf-tm__rating-num");
+    var starEl = document.querySelector(".nf-tm__rating-stars");
+    if(!numEl || !starEl) return;
+
+    var n = toNumber(numEl.textContent);
+    if(n == null){
+      starEl.textContent = "";
+      return;
+    }
+
+    n = clamp(n, 0, 5);
+    var display = Math.round(n * 10) / 10;
+    numEl.textContent = Number.isInteger(display) ? String(display) : String(display);
+
+    starEl.innerHTML = '<span class="nf-stars" aria-hidden="true"><span class="nf-stars__fill"></span></span>';
+
+    var fill = starEl.querySelector(".nf-stars__fill");
+    if(fill) fill.style.width = (n / 5 * 100) + "%";
+
+    // ✅ a11y (stronger + consistent)
+    if(!starEl.getAttribute("role")) starEl.setAttribute("role","img");
+    starEl.setAttribute("aria-label", display + " out of 5 stars");
+  }
+
+  /* -----------------------------
+     Metrics chips
+     ----------------------------- */
+  function initMetricsChips(){
+    var el = document.querySelector(".nf-tm__metrics");
+    if(!el) return;
+
+    var raw = (el.textContent || "").trim();
+    if(!raw){
+      el.style.display = "none";
+      return;
+    }
+
+    if(el.querySelector(".nf-metric-chip")) return;
+
+    var parts = raw
+      .split(/\s(?:-|\u2022|\|)\s|\n+/)
+      .map(function(s){ return (s || "").trim(); })
+      .filter(Boolean);
+
+    if(parts.length <= 1) return;
+
+    el.textContent = "";
+    parts.forEach(function(p){
+      var chip = document.createElement("span");
+      chip.className = "nf-metric-chip";
+      chip.textContent = p;
+      el.appendChild(chip);
+    });
+  }
+
+  /* -----------------------------
+     View plan fallback
+     ----------------------------- */
+  function initPlanLinkFallback(){
+    var btn = document.querySelector(".nf-view-plan") || document.querySelector('.nf-tm__actions [data-nf-role="plan"]');
+    if(!btn) return;
+
+    var href = (btn.getAttribute("href") || "").trim();
+    var hrefLower = href.toLowerCase();
+    var bad =
+      !href ||
+      href === "#" ||
+      href === "/#" ||
+      hrefLower === "javascript:void(0)" ||
+      hrefLower === "javascript:void(0);" ||
+      hrefLower === "javascript:;" ||
+      hrefLower.indexOf("javascript:") === 0;
+
+    if(!bad) return;
+
+    var src = document.querySelector(".nf-plan-href-source");
+    if(src){
+      var u = (src.getAttribute("href") || "").trim();
+      var uLower = u.toLowerCase();
+      var uBad =
+        !u ||
+        u === "#" ||
+        u === "/#" ||
+        uLower.indexOf("javascript:") === 0;
+
+      if(!uBad){
+        btn.setAttribute("href", u);
+        return;
+      }
+    }
+
+    btn.classList.add("is-disabled");
+    btn.setAttribute("aria-disabled","true");
+    btn.setAttribute("tabindex","-1");
+    btn.setAttribute("title","Plan link not available");
+  }
+
+  /* -----------------------------
+     Copy link
+     ----------------------------- */
+  function copyText(text){
+    if (!text) return Promise.reject();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch(e){}
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  }
+
+  function flash(btn, msg){
+    var prev = btn.textContent;
+    var w = btn.offsetWidth;
+    btn.style.minWidth = w + "px";
+    btn.classList.add("is-copied");
+    btn.textContent = msg || "Copied ✓";
+    setTimeout(function(){
+      btn.textContent = prev;
+      btn.style.minWidth = "";
+      btn.classList.remove("is-copied");
+    }, 1200);
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest && e.target.closest("[data-copy-link]");
+    if(!btn) return;
+    e.preventDefault();
+
+    var url = btn.getAttribute("data-url") || window.location.href;
+
+    copyText(url).then(function(){
+      flash(btn, "Copied ✓");
+    }).catch(function(){
+      window.prompt("Copy this link:", url);
+    });
+  });
+
+  /* -----------------------------
+     Init
+     ----------------------------- */
+  onReady(function(){
+    tagActions();
+    initStars();
+    initMetricsChips();
+    initPlanLinkFallback();
+  });
+})();
+</script>
+
+Embed:

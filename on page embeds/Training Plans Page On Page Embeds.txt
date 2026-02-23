@@ -1,0 +1,1562 @@
+Training Plans Page Embeds
+Bump Ad:
+<!-- NF Info Banner (no CTA, single-line everywhere) -->
+<div id="nf-bump-banner" class="nf-bump-banner" role="region" aria-label="Warm-Up & Stretch Pack info" hidden>
+  <div class="nf-bump-inner">
+    <span id="nf-bump-text" class="nf-bump-text">
+      Add-On Special — <strong>Warm-Up + Stretch Pack</strong> (2 routines) only <strong>$5</strong> <span class="nf-badge">50% Off</span>
+    </span>
+    <button id="nf-bump-close" class="nf-bump-close" aria-label="Close notice" title="Close">×</button>
+  </div>
+</div>
+
+<style>
+  .nf-bump-banner{
+    width:100%;
+    background:#f7f7f7;
+    color:#222;
+    border-bottom:1px solid #ddd;
+    padding:10px 0;
+    position:relative;
+    z-index:999;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .nf-bump-inner{
+    max-width:1100px; margin:0 auto; padding:0 16px;
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    flex-wrap:nowrap;                 /* single row */
+    position:relative;
+  }
+
+  /* Text: fluid base size; JS will smoothly scale down if space is tight */
+  .nf-bump-text{
+    display:inline-block;             /* needed for transform scaling */
+    white-space:nowrap;               /* force single line */
+    line-height:1.3;
+    font-size: calc(0.9rem + 0.5vw);  /* fluid base, no cutoffs */
+    transform-origin:center left;
+    will-change:transform;
+    text-align:center;
+  }
+
+  /* Close button pinned and vertically centered with flex */
+  .nf-bump-close{
+    display:flex; align-items:center; justify-content:center;
+    width:30px; height:30px; line-height:1;
+    background:transparent; color:#666;
+    border:1px solid #bbb; border-radius:8px;
+    cursor:pointer; font-size:18px; flex:0 0 auto;
+  }
+  .nf-bump-close:hover{ color:#111; border-color:#999; }
+
+  /* Dark scheme polish (no breakpoints) */
+  @media (prefers-color-scheme: dark){
+    .nf-bump-banner{ background:#111; color:#fff; border-bottom:1px solid rgba(255,255,255,.15); }
+    .nf-bump-close{ color:#ddd; border-color:#444; }
+    .nf-bump-close:hover{ color:#fff; border-color:#666; }
+  }
+</style>
+
+<script>
+(function bannerBoot(){
+  if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", bannerBoot); return; }
+
+  // Prevent double-binding if pasted twice
+  if (window.__NF_BUMP_BANNER_BOOTED__) return;
+  window.__NF_BUMP_BANNER_BOOTED__ = true;
+
+  var banner   = document.getElementById("nf-bump-banner");
+  if(!banner) return;
+
+  // ✅ FIX: scope inner to this banner
+  var inner    = banner.querySelector(".nf-bump-inner");
+  var textEl   = document.getElementById("nf-bump-text");
+  var closeBtn = document.getElementById("nf-bump-close");
+  if(!inner || !textEl || !closeBtn) return;
+
+  /* ===== Visibility / TTL / paths ===== */
+  var STORAGE_KEY   = "nfBumpClosedAt";
+  var HIDE_FOR_DAYS = 7;
+  // Leave [] to show wherever you pasted it; otherwise list exact paths (lowercase, trailing slash optional).
+  var ALLOWED_PATHS = [];
+  var FORCE = (new URLSearchParams(location.search).get("nfdebug") === "1");
+
+  function daysMs(d){ return d*24*60*60*1000; }
+  function safeGet(k){ try{return localStorage.getItem(k);}catch(e){return null;} }
+  function safeSet(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+  function pathAllowed(){
+    if (!ALLOWED_PATHS.length) return true;
+    try{
+      var p=(location.pathname||"/").toLowerCase().replace(/\/+$/,"");
+      return ALLOWED_PATHS.indexOf(p)>-1 || ALLOWED_PATHS.indexOf(p+"/")>-1;
+    }catch(e){ return true; }
+  }
+  function isHidden(){
+    return banner.hasAttribute("hidden") || banner.style.display === "none";
+  }
+  function show(){ banner.removeAttribute("hidden"); banner.style.display="block"; }
+  function hide(){ banner.setAttribute("hidden",""); banner.style.display="none"; }
+
+  var closedAt = parseInt(safeGet(STORAGE_KEY)||"0",10);
+  var ttlExpired = !closedAt || (Date.now()-closedAt) > daysMs(HIDE_FOR_DAYS);
+  if (FORCE || (pathAllowed() && ttlExpired)) { show(); } else { hide(); return; }
+
+  /* ===== Continuous single-line fit (no breakpoints/clamps) ===== */
+  function fitOnce(){
+    if (isHidden()) return;
+
+    // Reset scaling before measuring
+    textEl.style.transform = "scale(1)";
+    textEl.style.maxWidth = "";
+
+    var innerW = inner.clientWidth;
+    var gap = 12;
+    var closeW = closeBtn.getBoundingClientRect().width;
+
+    // tiny breathing room to avoid subpixel wrap
+    var avail = innerW - closeW - gap - 2;
+    if (avail <= 0) return;
+
+    textEl.style.maxWidth = avail + "px";
+
+    var needsScale = textEl.scrollWidth > avail;
+    if (needsScale){
+      var scale = avail / textEl.scrollWidth;
+      if (scale < 1){
+        textEl.style.transformOrigin = "center left";
+        textEl.style.transform = "scale(" + scale + ")";
+      }
+    }
+  }
+
+  // Debounced resize for smoothness
+  var t;
+  function onResize(){ clearTimeout(t); t=setTimeout(fitOnce, 40); }
+
+  function unbind(){
+    try{ window.removeEventListener("resize", onResize); }catch(e){}
+  }
+
+  closeBtn.addEventListener("click", function(){
+    hide();
+    safeSet(STORAGE_KEY, String(Date.now()));
+    unbind();
+    if (typeof window.gtag==="function") {
+      try{ gtag("event","nf_info_banner_close",{page_path:location.pathname}); }catch(_){}
+    }
+  });
+
+  // Initial fit and on resize/orientation
+  requestAnimationFrame(fitOnce);
+  window.addEventListener("resize", onResize);
+
+  // If something else hides the banner, stop work
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState !== "visible") return;
+    if (isHidden()) unbind();
+    else fitOnce();
+  });
+})();
+</script>
+
+
+Embed 1:
+<style>
+/* ==========================================
+   NeuForm Premium Card v6.0.0 — Catalog/Product + Ribbon (2025-12-03)
+   • Reduced-motion support for page/card transitions
+   • Bullet clamping fix (remove conflicting display rules)
+   • Stateful Clear button styling (disabled/aria-disabled)
+   • Focus-visible styling aligned to --nf-focus
+   • Minor resilience tweaks (pager accessibility/disabled states)
+   ========================================== */
+
+/* ===== Design tokens ===== */
+:root{
+  --nf-bg:#0b0f12;
+  --nf-surface:#0f1418;
+  --nf-surface-2:#0c1216;
+  --nf-ink:#e9f3f7; --nf-muted:#9fb4c2;
+  --nf-blue:#3498db;
+
+  --blue-08:rgba(52,152,219,.08);
+  --blue-10:rgba(52,152,219,.10);
+  --blue-12:rgba(52,152,219,.12);
+  --blue-20:rgba(52,152,219,.20);
+  --blue-24:rgba(52,152,219,.24);
+  --blue-30:rgba(52,152,219,.30);
+  --blue-35:rgba(52,152,219,.35);
+  --blue-45:rgba(52,152,219,.45);
+  --blue-55:rgba(52,152,219,.55);
+
+  --nf-line:#1a2a33;
+  --nf-shadow:0 8px 20px rgba(0,0,0,.36);
+  --nf-shadow-hover:0 12px 28px rgba(0,0,0,.46);
+  --nf-radius:20px;
+
+  --title-fs: clamp(19px, 1.6vw, 22px);
+  --body-fs:  clamp(14px, 1.05vw, 15px);
+  --title-lh:1.22; --body-lh:1.5;
+
+  --stack-8:8px; --stack-10:10px; --stack-12:12px;
+  --gap-md:24px; --gap-lg:24px; --gap-xl:24px;
+
+  /* slightly tighter, still premium */
+  --card-pad:20px;
+  --card-minh:390px;
+
+  --chip-size:36px; --chip-radius:12px;
+
+  /* TAGS: tuned for 3 pills on one line */
+  --tag-h:28px;
+  --tag-fs:11px;      /* slightly smaller for long labels */
+  --tag-pad-x:4px;    /* tighter padding to reduce truncation */
+
+  /* allow an extra line per bullet to reduce truncation */
+  --bullet-lines:3;
+
+  /* bullet dot indent (for absolute-position bullet glyph) */
+  --bullet-indent:14px;
+}
+
+/* ==========================================
+   Shell / lane
+   ========================================== */
+
+/* Wrapper around nf-tiles (apply this class to Collection List Wrapper) */
+.nf-plans-grid{
+  margin:0 auto;
+  padding:0 16px 40px; /* reduced bottom padding to tighten transition to next section */
+  width:min(1240px,100%); /* lane width for cards/chips */
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* ==========================================
+   Catalog layout: tiles, pages, pager
+   ========================================== */
+
+/* nf-tiles becomes a vertical stack that holds pager + track */
+.nf-tiles{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  width:100%;
+}
+
+/* Page track holds the animated pages */
+.nf-page-track{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+}
+
+/* Each nf-page is the actual card grid */
+.nf-page{
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:var(--gap-md);
+  align-items:stretch;
+  grid-auto-rows:1fr;
+
+  opacity:0;
+  transform:translateX(12px);
+  transition:opacity .22s ease, transform .22s ease;
+}
+
+.nf-page.enter-to-center{
+  opacity:1;
+  transform:translateX(0);
+}
+.nf-page.leave-to-left{
+  opacity:0;
+  transform:translateX(-12px);
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.nf-page.leave-to-right{
+  opacity:0;
+  transform:translateX(12px);
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.nf-page.enter-from-right{
+  opacity:0;
+  transform:translateX(12px);
+}
+
+@media (min-width:768px){
+  .nf-page{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:var(--gap-lg);
+  }
+}
+/* 3 columns only on wider desktops to relieve pill crowding on laptops */
+@media (min-width:1360px){
+  .nf-page{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:var(--gap-xl);
+  }
+}
+
+/* Center a single tile nicely on wider screens */
+@media (min-width:768px){
+  .nf-tiles:has(.nf-page .nf-card:nth-child(1):last-child) .nf-page{
+    grid-template-columns:minmax(0, min(460px,100%));
+    justify-content:center;
+  }
+}
+
+/* Empty state */
+.nf-empty{
+  display:none;
+  margin:8px auto 0;
+  padding:10px 14px;
+  border-radius:999px;
+  font:600 13px/1.4 Inter, system-ui;
+  color:var(--nf-muted);
+  background:rgba(0,0,0,.75);
+  border:1px solid rgba(255,255,255,.06);
+}
+.nf-empty.show{ display:block; }
+
+/* Pager (bottom-only; compact chip style) */
+.nf-pager{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:8px auto 6px; /* tighter vertical spacing */
+  padding:8px 16px;
+  background:rgba(0,0,0,.9);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.32);
+  width:fit-content;
+  transition:background .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+.nf-pager:hover{
+  background:rgba(0,0,0,.94);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 7px 20px rgba(0,0,0,.34);
+}
+
+.nf-pager .nf-prev,
+.nf-pager .nf-next{
+  appearance:none;
+  border:none;
+  cursor:pointer;
+  border-radius:10px;
+  padding:6px 10px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--nf-ink);
+  background:rgba(52,152,219,.16);
+  border:1px solid rgba(52,152,219,.28);
+  transition:background .2s ease,border-color .2s ease,transform .2s ease,opacity .2s ease;
+}
+.nf-pager .nf-prev[disabled],
+.nf-pager .nf-next[disabled],
+.nf-pager .nf-prev[aria-disabled="true"],
+.nf-pager .nf-next[aria-disabled="true"]{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none !important;
+}
+@media (hover:hover){
+  .nf-pager .nf-prev:not([disabled]):not([aria-disabled="true"]):hover,
+  .nf-pager .nf-next:not([disabled]):not([aria-disabled="true"]):hover{
+    background:rgba(52,152,219,.28);
+    border-color:rgba(52,152,219,.5);
+    transform:translateY(-1px);
+  }
+}
+.nf-pager .nf-prev:focus-visible,
+.nf-pager .nf-next:focus-visible{
+  outline:2px solid var(--nf-focus);
+  outline-offset:2px;
+}
+
+.nf-page-label{
+  font-size:13px;
+  color:#d3e2ee; /* brighter for better legibility */
+  min-width:110px;
+  text-align:center;
+}
+
+/* ==========================================
+   Ribbon controls (filters + util row)
+   Blog-hub style, adapted for plans
+   ========================================== */
+
+#nf-controls{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px 14px;
+  margin:0 auto 12px;
+  padding:10px 16px;
+  width:100%;
+  max-width:min(1240px,100%); /* aligned with card lane for a single visual column */
+  box-sizing:border-box;
+  background:rgba(0,0,0,.78);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.42);
+  backdrop-filter:saturate(1.1) blur(8px);
+  -webkit-backdrop-filter:saturate(1.1) blur(8px);
+  overflow:visible;
+}
+@supports not ((-webkit-backdrop-filter: blur(0)) or (backdrop-filter: blur(0))){
+  #nf-controls{ background:rgba(0,0,0,.84); }
+}
+#nf-controls::before{
+  content:"";
+  position:absolute;
+  left:50%; top:0;
+  transform:translateX(-50%);
+  width:80%;
+  height:1px;
+  background:rgba(255,255,255,.04);
+  border-radius:1px;
+}
+
+/* inner wrapper */
+#nf-controls .nf-ribbon{
+  display:flex;
+  flex-direction:column;
+  gap:8px 14px;
+  width:100%;
+}
+
+/* rows */
+#nf-controls .nf-ctrl-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  width:100%;
+}
+
+/* filter row: grid layout similar to blog hub */
+#nf-controls .nf-ctrl-wrap.filters{
+  display:grid;
+  align-items:center;
+  grid-auto-flow:column;
+  grid-template-columns:
+    minmax(180px,1.3fr)   /* search */
+    minmax(150px,1fr)     /* focus */
+    minmax(150px,1fr)     /* days */
+    minmax(150px,1fr)     /* equipment */
+    minmax(150px,1fr);    /* sort */
+  gap:10px;
+}
+
+/* util row (Clear + result) */
+#nf-controls .nf-ctrl-wrap.util{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding-top:2px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+/* cells */
+#nf-controls .nf-cell{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px; /* UPDATED: touch-friendly baseline */
+  max-width:100%;
+}
+#nf-controls .nf-cell--search{
+  justify-content:flex-start;
+}
+
+/* search width */
+#nf-q{
+  min-width:180px;
+  max-width:260px;
+  width:100%;
+}
+
+/* shared chrome for inputs & selects */
+#nf-controls input[type="search"],
+#nf-controls select{
+  -webkit-appearance:none;
+  appearance:none;
+  background:rgba(17,25,29,.92);
+  color:var(--nf-ink);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  height:40px;           /* UPDATED */
+  line-height:40px;      /* UPDATED */
+  padding:0 36px 0 12px; /* UPDATED (slightly more room for caret) */
+  font-size:16px;        /* UPDATED: prevents iOS zoom-on-focus */
+  font-weight:500;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color .2s ease, background .2s ease;
+  max-width:100%;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+}
+#nf-controls input[type="search"]::placeholder{
+  color:var(--nf-muted);
+}
+#nf-controls select{
+  background-image:url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='%23e9f3f7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+  background-size:14px;
+  cursor:pointer;
+}
+
+/* focus + hover */
+#nf-controls input[type="search"]:hover,
+#nf-controls select:hover{
+  border-color:rgba(255,255,255,.18);
+  background:rgba(17,25,29,.98);
+}
+#nf-controls input[type="search"]:focus-visible,
+#nf-controls select:focus-visible{
+  outline:2px solid var(--nf-focus);
+  outline-offset:2px;
+  border-color:rgba(52,152,219,.55);
+}
+
+/* Hide singleton selects when JS adds [hidden] */
+#nf-controls select[hidden]{ display:none !important; }
+
+/* Clear button (util row) */
+#nf-clear{
+  appearance:none;
+  border:1px solid rgba(52,152,219,.28);
+  border-radius:10px;
+  padding:0 14px;
+  cursor:pointer;
+  font-size:15px;   /* UPDATED (matches 16px control feel without being huge) */
+  font-weight:700;
+  text-transform:none;
+  letter-spacing:.02em;
+  color:var(--nf-ink);
+  background:rgba(52,152,219,.12);
+  height:40px;      /* UPDATED */
+  line-height:40px; /* UPDATED */
+  transition:transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+}
+@media (hover:hover){
+  #nf-clear:hover{
+    background:rgba(52,152,219,.25);
+    border-color:rgba(52,152,219,.45);
+    transform:translateY(-1px);
+  }
+}
+#nf-clear:focus-visible{
+  outline:2px solid var(--nf-focus);
+  outline-offset:2px;
+}
+#nf-clear:disabled,
+#nf-clear[aria-disabled="true"]{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none !important;
+}
+@media (hover:hover){
+  #nf-clear:disabled:hover,
+  #nf-clear[aria-disabled="true"]:hover{
+    background:rgba(52,152,219,.12);
+    border-color:rgba(52,152,219,.28);
+    transform:none;
+  }
+}
+
+/* Result text */
+#nf-result{
+  font-size:13.5px;
+  font-weight:500;
+  color:var(--nf-muted);
+  white-space:nowrap;
+}
+
+/* Responsive ribbon stacking (borrowed from blog hub) */
+@media (max-width:1080px){
+  #nf-controls .nf-ctrl-wrap.filters{
+    grid-template-columns:
+      minmax(160px,1.3fr)
+      minmax(150px,1fr)
+      minmax(150px,1fr)
+      minmax(150px,1fr)
+      minmax(150px,1fr);
+  }
+}
+
+/* UPDATED: treat <=860 as “mobile-ish” and avoid cramped 2-up pills */
+@media (max-width:860px){
+  #nf-controls{
+    padding:10px;
+    gap:10px;
+  }
+  #nf-controls .nf-ctrl-wrap.filters{
+    grid-auto-flow:row;       /* UPDATED */
+    grid-template-columns:1fr;/* UPDATED */
+  }
+  #nf-q{
+    min-width:0;
+    max-width:100%;           /* UPDATED */
+  }
+  #nf-controls input[type="search"],
+  #nf-controls select{
+    width:100%;
+    max-width:100%;
+  }
+  /* UPDATED: remove aggressive truncation behavior on narrow layouts */
+  #nf-controls select{
+    text-overflow:clip;
+  }
+  #nf-controls .nf-ctrl-wrap.util{
+    justify-content:space-between; /* UPDATED (prevents crowding) */
+  }
+}
+
+@media (max-width:600px){
+  #nf-controls .nf-ctrl-wrap.filters{
+    grid-template-columns:1fr;
+  }
+  #nf-controls input[type="search"],
+  #nf-controls select,
+  #nf-q{
+    width:100%;
+    max-width:100%;
+  }
+  #nf-controls .nf-ctrl-wrap.util{
+    justify-content:space-between;
+  }
+}
+
+/* ==========================================
+   Card
+   ========================================== */
+.nf-card{
+  position:relative; isolation:isolate;
+  display:flex; flex-direction:column;
+  min-height:var(--card-minh);
+  padding:var(--card-pad);
+  border-radius:var(--nf-radius);
+  color:var(--nf-ink);
+  background:rgba(0,0,0,.85);
+  border:1px solid var(--nf-line);
+  box-shadow:var(--nf-shadow);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease, filter .25s ease;
+  overflow:hidden;
+}
+@media (hover:hover){
+  .nf-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--blue-45);
+    box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+    filter:saturate(1.03);
+  }
+}
+.nf-card:focus-within{
+  transform:translateY(-2px);
+  border-color:var(--blue-45);
+  box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
+}
+
+/* ===== Ambient glow ===== */
+.nf-ring{
+  position:absolute; inset:-52% -52% auto auto; z-index:-1; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,255,255,.04), transparent 65%);
+  filter:blur(28px);
+  width:100%; height:100%;
+  transform:translate(-30%,-30%);
+}
+
+/* ===== Header ===== */
+.nf-top{
+  display:flex;
+  align-items:flex-start; /* align chip with title cap height */
+  justify-content:space-between;
+  gap:var(--stack-12);
+}
+.nf-title{
+  margin:0;
+  font:800 var(--title-fs)/var(--title-lh) "Plus Jakarta Sans", Inter, system-ui;
+  letter-spacing:.2px;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+  min-height:calc(3 * 1em * var(--title-lh));
+}
+.nf-sub{
+  margin:6px 0 10px;
+  font:600 var(--body-fs)/var(--body-lh) Inter, system-ui;
+  color:rgba(159,180,194,.9);
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+}
+
+/* ===== Corner chip ===== */
+.nf-chip{
+  display:grid; place-items:center;
+  width:var(--chip-size); height:var(--chip-size);
+  border-radius:var(--chip-radius);
+  background:linear-gradient(180deg, var(--blue-12), rgba(0,0,0,.12));
+  border:1px solid var(--blue-45);
+  margin-top:2px; /* fine-tune vertical alignment */
+}
+.nf-chip svg{ width:18px; height:18px; fill:var(--nf-blue); }
+
+/* ===== Tags ===== */
+.nf-tags--3x{
+  /* Mobile / narrow: simple grid, can wrap */
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:4px;
+  align-items:center;
+  grid-auto-flow:dense;
+  overflow:visible;
+  width:100%;
+  -webkit-mask-image:none;
+          mask-image:none;
+}
+
+/* Tablet/desktop: pills hug content, can wrap to a second line if needed */
+@media (min-width:768px){
+  .nf-tags--3x{
+    display:flex !important;
+    flex-wrap:wrap;
+    justify-content:flex-start;
+    align-items:center;
+    gap:4px;
+    max-height:none;
+    width:100%;
+    -webkit-mask-image:none;
+            mask-image:none;
+  }
+
+  .nf-tags--3x .nf-tag{
+    flex:0 0 auto;      /* size to content, no equal stretching */
+    min-width:0;
+    padding:3px 6px;
+  }
+}
+
+.nf-tag{
+  font:700 clamp(var(--tag-fs), 1vw, calc(var(--tag-fs) + 1px))/1.12 Inter, system-ui;
+  padding:4px var(--tag-pad-x);
+  border-radius:999px;
+  min-height:var(--tag-h);
+  height:auto;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#f0f6ff;
+  background:var(--blue-35);
+  border:1px solid var(--blue-55);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+  min-width:0;
+  letter-spacing:-0.015em;
+}
+
+/* ===== Split pill toggle (no JS) ===== */
+.nf-days-pill, .nf-split-alt{ display:none; }
+
+/* Has Split = true → show Days pill; hide Alt */
+[data-has-split="true" i] .nf-days-pill{ display:inline-flex; }
+[data-has-split="true" i] .nf-split-alt{ display:none; }
+
+/* Guard: if days missing or zero, suppress Days pill even if has-split is true */
+[data-has-split] .nf-days-pill[data-days=""],
+[data-has-split] .nf-days-pill[data-days="0"]{ display:none; }
+
+/* Has Split = false/blank → hide Days; show Alt */
+[data-has-split="false" i] .nf-days-pill{ display:none; }
+[data-has-split="false" i] .nf-split-alt{ display:inline-flex; }
+[data-has-split="0"] .nf-days-pill{ display:none; }
+[data-has-split="0"] .nf-split-alt{ display:inline-flex; }
+[data-has-split=""] .nf-days-pill{ display:none; }
+[data-has-split=""] .nf-split-alt{ display:inline-flex; }
+
+/* ===== Description section ===== */
+.nf-description-section{ margin-top:14px; }
+.nf-description-section .nf-richtext{ display:none; }
+.nf-description-section .nf-list{ display:grid; }
+
+.nf-richtext{
+  font:600 var(--body-fs)/1.58 Inter, system-ui;
+  color:#cfe2ee;
+  max-height:180px;
+  overflow:auto;
+  padding-right:6px;
+  -webkit-mask-image:linear-gradient(180deg,#000 88%,transparent);
+          mask-image:linear-gradient(180deg,#000 88%,transparent);
+}
+.nf-richtext p{ margin:.35em 0; }
+.nf-richtext ul{ margin:.35em 0 .35em 1.1em; }
+.nf-richtext li{ margin:.2em 0; }
+.nf-richtext strong,b{ color:#f3fbff; }
+
+/* ===== Bullets (FIXED: no conflicting display rules) ===== */
+.nf-list{
+  margin:14px 0 0; padding:0; list-style:none;
+  display:grid; gap:9px;
+  --li-lh:1.5;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom, #000 99%, transparent);
+          mask-image:linear-gradient(to bottom, #000 99%, transparent);
+}
+
+/* Clamp lines reliably while keeping a bullet glyph */
+.nf-list li{
+  position:relative;
+  margin:0;
+  padding-left:var(--bullet-indent);
+  line-height:var(--li-lh);
+  color:#e2f0f8; /* slightly brighter for better legibility */
+  font-weight:500;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:var(--bullet-lines);
+  overflow:hidden;
+
+  /* modern spec hint (ignored where unsupported) */
+  line-clamp:var(--bullet-lines);
+}
+.nf-list li::before{
+  content:"•";
+  position:absolute;
+  left:0;
+  top:.12em;
+  color:var(--nf-blue);
+}
+
+/* Make label emphasis consistent inside bullets */
+.nf-list li strong{
+  color:#f3fbff;
+  font-weight:800;
+}
+
+/* ===== Footer / CTA ===== */
+.nf-foot{ margin-top:auto; position:relative; }
+.nf-foot::before{
+  content:""; display:block; height:1px; background:var(--blue-12);
+  margin:12px 0 10px;
+}
+.nf-cta-wrapper{ display:block; }
+.nf-cta{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap; min-height:50px;
+}
+.nf-helper-line{
+  display:block;
+  margin-top:6px;
+  font:500 12.5px/1.35 Inter, system-ui;
+  color:var(--nf-muted);
+  text-align:center;
+  opacity:.92;
+}
+.nf-helper-line:empty{ display:none; }
+
+/* ===== Price & CTA button ===== */
+.nf-price{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  color:#e9f3f7;
+  background:var(--blue-08);
+  border:1px solid var(--blue-24);
+  font:800 13px/1 Inter, system-ui;
+  font-variant-numeric:tabular-nums;
+}
+.nf-price .nf-price-msrp{
+  text-decoration: line-through;
+  text-decoration-color: #e11d48;   /* NEW: red strikethrough line */
+  text-decoration-thickness: 2px;   /* NEW: thicker line for clarity */
+  margin-left:6px;
+  opacity:.75;
+}
+.nf-price--waitlist{
+  display:none;
+  background:var(--nf-surface-2);
+  color:var(--nf-blue);
+  border:1px solid var(--blue-45);
+}
+.nf-btn{
+  appearance:none; border:none; cursor:pointer;
+  padding:12px 20px;
+  border-radius:12px;
+  font:800 15px/1 Inter, system-ui;
+  color:#fff;
+  background:linear-gradient(180deg, var(--nf-blue), #2d86c2);
+  box-shadow:0 6px 16px var(--blue-30);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  position:relative; z-index:3;
+  white-space:nowrap;
+}
+@media (hover:hover){
+  .nf-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 10px 22px var(--blue-30);
+    filter:saturate(1.05);
+  }
+}
+
+/* ===== Misc ===== */
+.hide-when-empty:empty { display:none !important; }
+
+.nf-stretched-link{ position:relative; z-index:2; text-decoration:none; color:inherit; }
+.nf-stretched-link::after{
+  content:""; position:absolute; inset:calc(-1 * var(--card-pad));
+  z-index:1; pointer-events:auto;
+}
+[data-is-product-page="true"] .nf-stretched-link::after{ display:none; }
+[data-is-product-page="true"] .nf-stretched-link{ cursor:default; }
+
+/* ===== Waitlist logic ===== */
+[data-waitlist="true"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="True"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="1"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="yes"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="Yes"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="y"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="Y"] .nf-cta--default .nf-price{ display:none; }
+[data-waitlist="true"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="True"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="1"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="yes"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="Yes"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="y"] .nf-cta--default .nf-price.nf-price--waitlist,
+[data-waitlist="Y"] .nf-cta--default .nf-price.nf-price--waitlist{ display:inline-flex; }
+
+/* Note: true “empty MSRP” handling will be finalized in Embed 2 by wrapping the value. */
+.nf-price .nf-price-msrp:empty{ display:none !important; }
+
+/* ===== Add-On switcher (enabled on product pages only) ===== */
+.nf-cta--add-on-switcher{ display:none; gap:12px; flex-wrap:wrap; }
+/* Product page enables switcher; catalog keeps it hidden regardless of data-has-add-on */
+[data-is-product-page="true"][data-has-add-on="true"] .nf-cta--add-on-switcher{ display:flex; align-items:center; }
+[data-is-product-page="true"][data-has-add-on="true"] .nf-cta--default{ display:none; }
+
+.nf-add-on-switcher{
+  display:flex; align-items:center; gap:10px;
+  background:var(--blue-08);
+  border:1px solid var(--blue-24);
+  border-radius:12px;
+  padding:10px 12px;
+  position:relative; z-index:3;
+}
+.nf-add-on-label{ display:flex; flex-direction:column; gap:2px; }
+.nf-add-on-header{ font:800 13px/1 Inter, system-ui; color:#e9f3f7; }
+.nf-add-on-text{ font:600 12.5px/1.2 Inter, system-ui; color:var(--nf-muted); }
+
+.nf-add-on-checkbox{
+  appearance:none; -webkit-appearance:none; outline:none; cursor:pointer;
+  width:38px; height:22px; border-radius:999px;
+  background:rgba(255,255,255,.12);
+  border:1px solid var(--blue-24);
+  position:relative; transition:background .2s ease, border-color .2s ease;
+}
+.nf-add-on-checkbox::after{
+  content:""; position:absolute; top:2px; left:2px;
+  width:18px; height:18px; border-radius:50%;
+  background:#e9f3f7; transition:transform .2s ease;
+}
+.nf-add-on-checkbox:checked{
+  background:var(--nf-blue); border-color:#2d86c2;
+}
+.nf-add-on-checkbox:checked::after{ transform:translateX(16px); }
+
+/* ===== Terms gate (enabled on product pages only) ===== */
+.nf-terms-gate{
+  display:none; gap:8px; align-items:center;
+  margin-top:10px;
+  font:600 12.5px/1.45 Inter, system-ui;
+  color:var(--nf-muted);
+  position:relative; z-index:3;
+}
+.nf-terms-gate input[type="checkbox"]{
+  width:16px; height:16px; accent-color:var(--nf-blue);
+}
+/* Only show when on product page AND terms are required */
+[data-is-product-page="true"][data-terms-required="true"] .nf-terms-gate{ display:flex; }
+
+/* Gate style applies only on product pages; catalog tiles are never gated */
+[data-is-product-page="true"] .nf-btn--gated{
+  opacity:.5; pointer-events:none; cursor:not-allowed; filter:grayscale(.25);
+}
+
+/* Catalog safeguards: never show add-on/terms, never gate buttons */
+[data-is-product-page="false"] .nf-cta--add-on-switcher{ display:none !important; }
+[data-is-product-page="false"] .nf-terms-gate{ display:none !important; }
+[data-is-product-page="false"] .nf-btn--gated{
+  opacity:1 !important; pointer-events:auto !important; cursor:pointer !important; filter:none !important;
+}
+
+/* ===== Mode switching ===== */
+[data-is-product-page="true"] .nf-description-section .nf-richtext{ display:block; }
+[data-is-product-page="true"] .nf-description-section .nf-list{ display:none; }
+
+/* ===== Mobile tweaks ===== */
+@media (max-width:767px){
+  .nf-card{ --card-minh:auto; padding:16px; height:auto; }
+  .nf-cta{ flex-direction:column; align-items:stretch; }
+  .nf-btn{ width:100%; text-align:center; }
+  /* tags already allowed to wrap on mobile */
+  .nf-add-on-switcher{ align-items:flex-start; }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce){
+  .nf-page,
+  .nf-card,
+  .nf-pager,
+  #nf-controls,
+  #nf-controls input[type="search"],
+  #nf-controls select,
+  #nf-clear,
+  .nf-btn{
+    transition:none !important;
+  }
+  .nf-page{
+    transform:none !important;
+  }
+  @media (hover:hover){
+    .nf-card:hover{ transform:none !important; }
+    .nf-btn:hover{ transform:none !important; }
+    #nf-clear:hover{ transform:none !important; }
+    .nf-pager .nf-prev:hover,
+    .nf-pager .nf-next:hover{ transform:none !important; }
+  }
+}
+</style>
+
+
+Embed 2:
+<!-- NeuForm — Featured CTA (Training Plans → Automatic Plan) v1.2 (cleaner layout + full-card click + matched semi-transparent black) -->
+<div class="nf-auto-cta" role="region" aria-label="Automatic Training Plan">
+  <a
+    id="nf-auto-plan-cta"
+    class="nf-auto-cta__card"
+    href="/automatic-plan"
+    data-nf-auto-cta="card"
+    aria-label="Open the Automatic Training Plan page"
+  >
+    <div class="nf-auto-cta__left">
+      <div class="nf-auto-cta__pill">AUTOMATIC PLAN</div>
+
+      <h2 class="nf-auto-cta__title">Automatic Training Plan <span class="nf-auto-cta__title-lite">(4 Weeks)</span></h2>
+
+      <p class="nf-auto-cta__sub">
+        Answer a few questions and get a clean, repeatable plan matched to your schedule, goals, and equipment —
+        <span class="nf-auto-cta__sub-strong">sets, reps, and progression included</span>.
+      </p>
+
+      <div class="nf-auto-cta__bullets" aria-label="Highlights">
+        <span class="nf-auto-cta__bullet">5–7 min intake</span>
+        <span class="nf-auto-cta__bullet">Home or gym</span>
+        <span class="nf-auto-cta__bullet">Delivered ~12 hours</span>
+      </div>
+    </div>
+
+    <div class="nf-auto-cta__right" aria-label="Call to action">
+      <div class="nf-auto-cta__actions">
+        <div class="nf-auto-cta__price" aria-label="Price">
+          <span class="nf-auto-cta__price-main">$39</span>
+          <span class="nf-auto-cta__price-sub">per plan</span>
+        </div>
+
+        <span class="nf-auto-cta__btn" aria-hidden="true">
+          Build My Plan <span class="nf-auto-cta__arrow" aria-hidden="true">→</span>
+        </span>
+      </div>
+
+      <div class="nf-auto-cta__micro">
+        One-time purchase • Not a subscription
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+  /* Fully scoped */
+  .nf-auto-cta{
+    --nf-blue:#3498db;
+
+    /* Match your site’s “semi-transparent black” card vibe */
+    --nf-card-top: rgba(0,0,0,.74);
+    --nf-card-bot: rgba(0,0,0,.86);
+
+    --nf-ink: rgba(255,255,255,.92);
+    --nf-muted: rgba(255,255,255,.72);
+    --nf-line: rgba(255,255,255,.10);
+
+    width: min(1240px, 100%);
+    margin: 12px auto 14px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .nf-auto-cta__card{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+
+    padding:18px 18px;
+    border-radius:18px;
+
+    /* ✅ Semi-transparent black (with subtle depth, still “black”) */
+    background: linear-gradient(180deg, var(--nf-card-top), var(--nf-card-bot));
+    border: 1px solid var(--nf-line);
+    box-shadow:
+      0 14px 40px rgba(0,0,0,.50),
+      inset 0 1px 0 rgba(255,255,255,.06);
+
+    backdrop-filter: saturate(1.05) blur(8px);
+    -webkit-backdrop-filter: saturate(1.05) blur(8px);
+
+    overflow:hidden;
+
+    /* Full-card link styling */
+    text-decoration:none;
+    color: inherit;
+    cursor: pointer;
+
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+
+  /* Subtle left accent (helps it read as “featured” without changing the bg) */
+  .nf-auto-cta__card::after{
+    content:"";
+    position:absolute;
+    left:0;
+    top:10px;
+    bottom:10px;
+    width:3px;
+    border-radius:999px;
+    background: linear-gradient(180deg, rgba(52,152,219,.85), rgba(52,152,219,.18));
+    opacity:.95;
+    pointer-events:none;
+  }
+
+  /* Neutral ambient glow (no blue wash) */
+  .nf-auto-cta__card::before{
+    content:"";
+    position:absolute;
+    inset:auto -40% -70% -40%;
+    height: 240px;
+    background: radial-gradient(closest-side, rgba(255,255,255,.06), transparent 70%);
+    filter: blur(26px);
+    pointer-events:none;
+    opacity:.85;
+  }
+
+  @media (hover:hover){
+    .nf-auto-cta__card:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.14);
+      box-shadow:
+        0 18px 46px rgba(0,0,0,.56),
+        inset 0 1px 0 rgba(255,255,255,.07);
+    }
+  }
+
+  .nf-auto-cta__card:focus-visible{
+    outline: 2px solid rgba(52,152,219,.65);
+    outline-offset: 3px;
+  }
+
+  .nf-auto-cta__left{
+    position:relative;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .nf-auto-cta__pill{
+    align-self:flex-start;
+    font: 850 11px/1 Inter, system-ui;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color: rgba(255,255,255,.88);
+    background: rgba(52,152,219,.14);
+    border: 1px solid rgba(52,152,219,.28);
+    padding: 8px 10px;
+    border-radius: 999px;
+    width: fit-content;
+  }
+
+  .nf-auto-cta__title{
+    margin:0;
+    font: 950 clamp(16px, 1.7vw, 22px)/1.12 "Plus Jakarta Sans", Inter, system-ui;
+    color: var(--nf-ink);
+    letter-spacing:.2px;
+  }
+
+  .nf-auto-cta__title-lite{
+    font-weight: 850;
+    color: rgba(255,255,255,.80);
+  }
+
+  .nf-auto-cta__sub{
+    margin:0;
+    font: 600 13.5px/1.45 Inter, system-ui;
+    color: var(--nf-muted);
+    max-width: 78ch;
+  }
+
+  .nf-auto-cta__sub-strong{
+    color: rgba(255,255,255,.84);
+    font-weight: 750;
+  }
+
+  .nf-auto-cta__bullets{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:2px;
+  }
+
+  .nf-auto-cta__bullet{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font: 750 12.5px/1 Inter, system-ui;
+    color: rgba(255,255,255,.86);
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(52,152,219,.10);
+    border: 1px solid rgba(52,152,219,.22);
+    white-space: nowrap;
+  }
+
+  .nf-auto-cta__bullet::before{
+    content:"";
+    width:7px; height:7px;
+    border-radius:999px;
+    background: var(--nf-blue);
+    box-shadow: 0 0 0 3px rgba(52,152,219,.18);
+  }
+
+  .nf-auto-cta__right{
+    position:relative;
+    flex: 0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+
+  /* Cleaner desktop layout: price + button in one row */
+  .nf-auto-cta__actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .nf-auto-cta__price{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:2px;
+
+    background: rgba(52,152,219,.12);
+    border: 1px solid rgba(52,152,219,.28);
+    padding: 10px 12px;
+    border-radius: 999px;
+
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .nf-auto-cta__price-main{
+    font: 950 18px/1 Inter, system-ui;
+    color: rgba(255,255,255,.95);
+  }
+
+  .nf-auto-cta__price-sub{
+    font: 750 11px/1 Inter, system-ui;
+    color: rgba(255,255,255,.70);
+    letter-spacing:.02em;
+  }
+
+  .nf-auto-cta__btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    padding: 12px 16px;
+    border-radius: 14px;
+
+    font: 950 14px/1 Inter, system-ui;
+    color:#fff;
+
+    background: linear-gradient(180deg, var(--nf-blue), #2d86c2);
+    box-shadow: 0 12px 26px rgba(52,152,219,.24);
+
+    white-space: nowrap;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  }
+
+  .nf-auto-cta__arrow{
+    display:inline-block;
+    transform: translateX(0);
+    transition: transform .18s ease;
+  }
+
+  @media (hover:hover){
+    .nf-auto-cta__card:hover .nf-auto-cta__btn{
+      filter: saturate(1.05);
+      box-shadow: 0 16px 34px rgba(52,152,219,.26);
+    }
+    .nf-auto-cta__card:hover .nf-auto-cta__arrow{
+      transform: translateX(2px);
+    }
+  }
+
+  .nf-auto-cta__micro{
+    font: 650 12px/1.35 Inter, system-ui;
+    color: rgba(255,255,255,.62);
+    text-align:right;
+    max-width: 240px;
+  }
+
+  /* Mobile: stack, make it feel like a native card CTA */
+  @media (max-width: 760px){
+    .nf-auto-cta__card{
+      flex-direction: column;
+      align-items: stretch;
+      padding: 16px;
+      gap: 14px;
+    }
+
+    .nf-auto-cta__right{
+      align-items: stretch;
+    }
+
+    .nf-auto-cta__actions{
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .nf-auto-cta__price{
+      align-items: flex-start;
+      width: fit-content;
+    }
+
+    .nf-auto-cta__btn{
+      width: 100%;
+    }
+
+    .nf-auto-cta__micro{
+      text-align: left;
+      max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nf-auto-cta__card,
+    .nf-auto-cta__btn,
+    .nf-auto-cta__arrow{
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+(function(){
+  function init(){
+    var el = document.getElementById('nf-auto-plan-cta');
+    if (!el) return;
+
+    el.addEventListener('click', function(){
+      var dest = el.getAttribute('href') || '/automatic-plan';
+
+      // GTM/GA4-friendly
+      try{
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'nf_auto_plan_cta_click',
+          nf_location: 'training_plans_featured',
+          nf_dest: dest
+        });
+      }catch(_){}
+
+      // optional gtag
+      if (typeof window.gtag === 'function'){
+        try{
+          window.gtag('event','nf_auto_plan_cta_click', {
+            nf_location: 'training_plans_featured',
+            nf_dest: dest
+          });
+        }catch(_){}
+      }
+    }, { passive:true });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+Embed 3:
+<!-- UPDATED TILE (v6.0.0 — robust empty-field hiding; ISO release date; safer MSRP markup; cleaner semantics) -->
+<article
+  class="nf-card"
+  data-plan-card
+  data-is-product-page="false"
+  data-has-add-on="false"
+  data-terms-required="false"
+
+  data-plan="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-category-focus="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-price="{{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-sku="{{wf {&quot;path&quot;:&quot;sku-product-id&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-position="{{wf {&quot;path&quot;:&quot;sort-weight&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-sort-weight="{{wf {&quot;path&quot;:&quot;sort-weight&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+
+  data-waitlist="{{wf {&quot;path&quot;:&quot;is-waitlist-only&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-has-split="{{wf {&quot;path&quot;:&quot;has-split&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-split-alt="{{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-days="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+
+  data-audience-level="{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-audience="{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-training-style="{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-style="{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-equipment-needed="{{wf {&quot;path&quot;:&quot;equipment-needed&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-equipment="{{wf {&quot;path&quot;:&quot;equipment-needed&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-goal-tagline="{{wf {&quot;path&quot;:&quot;goal-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-goal="{{wf {&quot;path&quot;:&quot;goal-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-tags="{{wf {&quot;path&quot;:&quot;keywords-tags&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-release="{{wf {&quot;path&quot;:&quot;release-date&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;MMM DD, YYYY&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}"
+
+  data-url="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  aria-labelledby="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+>
+  <div class="nf-ring" aria-hidden="true"></div>
+
+  <div class="nf-top">
+    <header>
+      <a
+        class="nf-stretched-link"
+        data-nf-plan-link
+        href="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        data-action="preview"
+        aria-label="See details — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        title="See details"
+      >
+        <h3
+          class="nf-title"
+          id="nf-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-name="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        >{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</h3>
+
+        <p class="nf-sub">{{wf {&quot;path&quot;:&quot;goal-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</p>
+      </a>
+    </header>
+
+    <div
+      class="nf-chip"
+      title="{{wf {&quot;path&quot;:&quot;category-focus&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="9" width="3" height="6" rx="1"></rect>
+        <rect x="18" y="9" width="3" height="6" rx="1"></rect>
+        <rect x="7" y="10.5" width="10" height="3" rx="1.5"></rect>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tags row -->
+  <div class="nf-tags nf-tags--3x" aria-label="Key specs">
+    <span
+      class="nf-tag nf-days nf-days-pill"
+      data-days="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      title="{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split"
+    >{{wf {&quot;path&quot;:&quot;days-per-week&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-Day Split</span>
+
+    <span
+      class="nf-tag nf-split-alt hide-when-empty"
+      title="{{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+    >{{wf {&quot;path&quot;:&quot;split-alt-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</span>
+
+    <span class="nf-tag"
+      title="{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+    >{{wf {&quot;path&quot;:&quot;training-style&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</span>
+
+    <span class="nf-tag hide-when-empty"
+      title="{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+    >{{wf {&quot;path&quot;:&quot;audience-level&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</span>
+  </div>
+
+  <!-- Description -->
+  <div class="nf-description-section">
+    <div class="nf-richtext hide-when-empty"></div>
+
+    <ul class="nf-list" aria-label="Highlights">
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-1&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;bullet-3&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+      <li class="hide-when-empty">{{wf {&quot;path&quot;:&quot;equipment-needed&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="nf-foot">
+    <div class="nf-cta-wrapper">
+      <div class="nf-cta nf-cta--default">
+
+        <div class="nf-price nf-price--waitlist">WAITLIST</div>
+
+        <div class="nf-price" aria-label="Price">
+          ${{wf {&quot;path&quot;:&quot;price&quot;,&quot;type&quot;:&quot;Number&quot;\} }}
+          <span class="nf-price-msrp hide-when-empty">{{wf {&quot;path&quot;:&quot;original-price-msrp&quot;,&quot;type&quot;:&quot;Number&quot;\} }}</span>
+        </div>
+
+        <a
+          class="nf-btn"
+          href="{{wf {&quot;path&quot;:&quot;product-page-link-2&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          data-action="preview"
+          aria-label="See details — {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          title="See details"
+        >{{wf {&quot;path&quot;:&quot;cta-label&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</a>
+      </div>
+    </div>
+
+    <small class="nf-helper-line hide-when-empty">{{wf {&quot;path&quot;:&quot;tile-helper&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}</small>
+  </div>
+</article>

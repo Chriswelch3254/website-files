@@ -1,0 +1,119 @@
+DLTER Purchase Complete Page Settings Code
+
+Head:
+<!-- Basic meta (router page is utility only) -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+
+
+Body:
+<noscript>
+  <!-- JS-disabled fallback so users aren’t stuck on the router page -->
+  <div style="max-width:720px;margin:40px auto 0;padding:16px 18px;border:1px solid rgba(148,163,184,.25);border-radius:14px;background:rgba(2,6,23,.55);color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.55;text-align:left;">
+    <div style="font-weight:700;margin-bottom:6px;">JavaScript is disabled</div>
+    <div style="opacity:.9;margin-bottom:10px;">
+      We can’t automatically redirect you to your DLTER Reality Type without JavaScript.
+    </div>
+    <a href="/dlter-quiz" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;border:1px solid rgba(252,211,77,.35);background:rgba(2,6,23,.35);color:rgba(252,211,77,.95);text-decoration:none;font-weight:700;">
+      Go back to the DLTER Quiz →
+    </a>
+  </div>
+</noscript>
+
+<!-- DLTER Purchase Router (v1.2 — JSON-safe + sessionStorage + safe redirect) -->
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "nf.dlter.returnTo";
+  var FALLBACK = "/dlter-quiz";
+  var MAX_AGE_MS = 1000 * 60 * 60 * 6; // 6 hours
+
+  function updateStatus(msg) {
+    try {
+      var el = document.getElementById("dlter-redirect-status");
+      if (el) el.textContent = msg;
+    } catch (e) {}
+  }
+
+  function readRawReturnTo() {
+    var raw = null;
+
+    // Try localStorage first
+    try { raw = window.localStorage.getItem(KEY); } catch (e) {}
+
+    // Fallback to sessionStorage (type page uses this fallback too)
+    if (!raw) {
+      try { raw = window.sessionStorage.getItem(KEY); } catch (e2) {}
+    }
+
+    // Clear both so it doesn't get "stuck"
+    try { window.localStorage.removeItem(KEY); } catch (e3) {}
+    try { window.sessionStorage.removeItem(KEY); } catch (e4) {}
+
+    return raw;
+  }
+
+  function normalizeReturnTo(raw) {
+    if (!raw) return null;
+    raw = String(raw).trim();
+    if (!raw) return null;
+
+    // Back-compat: handle JSON payloads like {"path": "...", "ts": 123}
+    if (raw.charAt(0) === "{") {
+      try {
+        var obj = JSON.parse(raw);
+        if (obj && typeof obj.ts === "number" && (Date.now() - obj.ts) > MAX_AGE_MS) {
+          return null; // expired
+        }
+        if (obj && typeof obj.path === "string") raw = obj.path;
+      } catch (e) {
+        // If JSON parse fails, fall through and treat as string
+      }
+    }
+
+    raw = String(raw).trim();
+    if (!raw) return null;
+
+    // Prevent open redirects: only allow same-origin URLs/paths
+    try {
+      var u = new URL(raw, window.location.origin);
+      if (u.origin !== window.location.origin) return null;
+      return u.pathname + u.search + u.hash;
+    } catch (e2) {
+      // If URL parsing fails, treat as path
+    }
+
+    if (raw.charAt(0) !== "/") raw = "/" + raw;
+    return raw;
+  }
+
+  function go(target) {
+    try {
+      window.location.replace(target);
+    } catch (e) {
+      window.location.href = target;
+    }
+  }
+
+  // Small delay so Memberstack/GTM can finish any final work
+  setTimeout(function () {
+    try {
+      var raw = readRawReturnTo();
+      var target = normalizeReturnTo(raw) || FALLBACK;
+      updateStatus("Redirecting…");
+      go(target);
+    } catch (err) {
+      console.warn("[DLTER router] redirect failed, using fallback:", err);
+      updateStatus("Redirecting…");
+      go(FALLBACK);
+    }
+  }, 250);
+})();
+</script>
+
+<!-- Minimal visible copy (only shows briefly on slow connections) -->
+<div style="color:#e5e7eb; text-align:center; margin-top:40px; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+  <span id="dlter-redirect-status">Redirecting you back to your DLTER Reality Type…</span>
+</div>

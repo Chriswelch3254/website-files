@@ -1,0 +1,208 @@
+About Page Settings Code:
+
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0b0f12">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/about">
+<meta property="og:title" content="About NeuForm Fitness — Evidence-Based Coaching by Chris Welch">
+<meta property="og:description" content="Our method, values, and results. Practical, joint-smart training plans built by coach Chris Welch.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — About">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About NeuForm Fitness — Evidence-Based Coaching by Chris Welch">
+<meta name="twitter:description" content="Our method, values, and results. Practical, joint-smart training plans built by coach Chris Welch.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — About">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+
+
+Body:
+<!-- NeuForm — About Page Helpers -->
+<script>
+(function(){
+  "use strict";
+
+  // Idempotence guard
+  if (window.__NF_ABOUT_HELPERS__) return;
+  window.__NF_ABOUT_HELPERS__ = true;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+  dl.push({ event: 'nf_about_view' });
+
+  var $  = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
+
+  function outboundMetaFromHref(href){
+    try{
+      href = String(href || '').trim();
+      if (!href) return null;
+
+      var lower = href.toLowerCase();
+      if (lower.indexOf('mailto:') === 0 || lower.indexOf('tel:') === 0) return null;
+      if (lower.charAt(0) === '#') return null;
+
+      var u = new URL(href, window.location.origin);
+      if (!u.hostname || u.origin === window.location.origin) return null;
+
+      return {
+        host: u.hostname,
+        path: (u.pathname || '/'),
+        // hostname + pathname only (no query/hash)
+        url: u.hostname + (u.pathname || '/')
+      };
+    }catch(e){
+      return null;
+    }
+  }
+
+  /** 1) Section impressions (IDs optional — add if present in markup) **/
+  function observe(id, evt){
+    var el = document.getElementById(id);
+    if (!el || !('IntersectionObserver' in window)) return;
+    var seen = false;
+    new IntersectionObserver(function(entries, io){
+      entries.forEach(function(entry){
+        if (!seen && entry.isIntersecting){
+          seen = true; io.disconnect();
+          dl.push({ event: evt });
+        }
+      });
+    }, { threshold: 0.3 }).observe(el);
+  }
+  // Hook to these if you add them:
+  observe('nf-story', 'nf_about_story_impression');
+  observe('nf-method', 'nf_about_method_impression');          // your “3-bullet Method” strip
+  observe('nf-proof', 'nf_testimonials_impression');           // testimonials block
+  observe('nf-cta', 'nf_about_cta_impression');
+
+  /** 2) Testimonial interactions (stars/expand/next-prev) **/
+  // Give your testimonial items data-testimonial-id and use a container id="nf-proof"
+  var proof = $('#nf-proof');
+  if (proof){
+    proof.addEventListener('click', function(e){
+      var next = e.target.closest && e.target.closest('[data-proof-next]');
+      var prev = e.target.closest && e.target.closest('[data-proof-prev]');
+      var expand = e.target.closest && e.target.closest('[data-proof-expand]');
+      var star = e.target.closest && e.target.closest('[data-star-rating]'); // optional
+
+      if (next){ dl.push({ event:'nf_testimonial_nav', nf_dir:'next' }); }
+      if (prev){ dl.push({ event:'nf_testimonial_nav', nf_dir:'prev' }); }
+      if (expand){
+        var tid = expand.getAttribute('data-proof-expand') || null;
+        dl.push({ event:'nf_testimonial_expand', nf_id: tid });
+      }
+      if (star){
+        var val = Number(star.getAttribute('data-star-rating')||0) || 0;
+        dl.push({ event:'nf_star_rating_view', nf_value: val, nf_context:'about' });
+      }
+    }, { passive:true });
+  }
+
+  /** 3) Video tracking (hero/about clips) **/
+  // For native <video id="about-video">…
+  function wireHTMLVideo(id){
+    var v = document.getElementById(id);
+    if (!v || !v.play) return;
+    var started=false, quartiles={25:false,50:false,75:false};
+    v.addEventListener('play', function(){
+      if(!started){
+        started=true;
+        dl.push({ event:'nf_video_start', nf_video:id, nf_page:'about' });
+      }
+    });
+    v.addEventListener('timeupdate', function(){
+      var p = (v.currentTime / Math.max(1, v.duration)) * 100;
+      if(!quartiles[25] && p>=25){
+        quartiles[25]=true;
+        dl.push({ event:'nf_video_q25', nf_video:id, nf_page:'about' });
+      }
+      if(!quartiles[50] && p>=50){
+        quartiles[50]=true;
+        dl.push({ event:'nf_video_q50', nf_video:id, nf_page:'about' });
+      }
+      if(!quartiles[75] && p>=75){
+        quartiles[75]=true;
+        dl.push({ event:'nf_video_q75', nf_video:id, nf_page:'about' });
+      }
+    });
+    v.addEventListener('ended', function(){
+      dl.push({ event:'nf_video_complete', nf_video:id, nf_page:'about' });
+    });
+  }
+  wireHTMLVideo('about-video'); // call this if you use a native video element
+
+  /** 4) Outbound & social clicks (footer/social strip on About)
+      ✅ Updated: log hostname+pathname only (no query/hash) **/
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+
+    var href = a.getAttribute('href') || '';
+    var social = a.getAttribute('data-social');
+
+    var meta = outboundMetaFromHref(href);
+
+    if (social){
+      dl.push({
+        event:'nf_social_follow',
+        nf_network: social,
+        nf_dest: meta ? meta.url : (href ? href : null),
+        nf_context:'about'
+      });
+      return;
+    }
+
+    if (meta){
+      dl.push({
+        event:'nf_outbound_click',
+        nf_url: meta.url,     // hostname + pathname only
+        nf_host: meta.host,
+        nf_path: meta.path,
+        nf_context:'about'
+      });
+    }
+  }, { passive:true });
+
+  /** 5) “Why trust us” micro-CTA tracking **/
+  // Give the block id="nf-method" and buttons/links data-about-cta="plans|results|reviews|contact"
+  document.addEventListener('click', function(e){
+    var node = e.target.closest && e.target.closest('[data-about-cta]');
+    if (!node) return;
+    var dest = node.getAttribute('data-about-cta');
+    var href = node.tagName === 'A' ? node.getAttribute('href') : (node.getAttribute('data-href') || null);
+    dl.push({ event:'nf_about_cta_click', nf_dest: dest, nf_href: href });
+  }, { passive:true });
+
+  /** 6) Optional: reveal “Reply within 24h” note after a short dwell **/
+  (function(){
+    var el = document.getElementById('reply-window');
+    if (!el) return;
+    setTimeout(function(){ el.hidden = false; }, 2500);
+  })();
+
+  /** 7) Small accessibility nicety: focus skip if you include a “Skip to content” link **/
+  var skip = document.querySelector('a[href="#main"]');
+  var main = document.getElementById('main');
+  if (skip && main){
+    skip.addEventListener('click', function(){
+      main.setAttribute('tabindex','-1');
+      main.focus();
+    });
+  }
+
+})();
+</script>

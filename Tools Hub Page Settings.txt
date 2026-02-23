@@ -1,0 +1,1025 @@
+Tools Hub Page Settings
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#020617">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/tools">
+<meta property="og:title" content="Free Training Tools & Calculators | NeuForm Fitness">
+<meta property="og:description" content="Plan smarter: Nutrition Lab, 1RM estimator, plate math, and progression planners.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — Tools & Calculators">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Training Tools & Calculators | NeuForm Fitness">
+<meta name="twitter:description" content="Nutrition Lab, 1RM estimator, plate math, and progression planners.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — Tools & Calculators">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+
+<!-- Analytics helpers (attach to your UI buttons/links) -->
+<script>
+  (function(){
+    "use strict";
+
+    var dl = window.dataLayer = window.dataLayer || [];
+
+    // Idempotent + resilient: no self-references like NFTools.track
+    var api = window.NFTools = window.NFTools || {};
+    api.__v = api.__v || "revG";
+
+    api.track = api.track || function(action, detail){
+      // Prevent detail from overwriting event name
+      var payload = Object.assign({}, detail || {}, { event: action });
+      try { dl.push(payload); } catch(_){}
+    };
+
+    // Convenience wrappers you can call from onclick handlers
+    api.calc = api.calc || function(tool, meta){
+      api.track('nf_tool_calc', Object.assign({ nf_tool: tool }, meta || {}));
+    };
+    api.copy = api.copy || function(tool, meta){
+      api.track('nf_tool_copy', Object.assign({ nf_tool: tool }, meta || {}));
+    };
+    api.handoff = api.handoff || function(tool, url){
+      api.track('nf_tool_handoff', { nf_tool: tool, nf_url: url || null });
+    };
+
+    // Mark page view (deduped)
+    if (!window.__NF_TOOLS_VIEW_FIRED__) {
+      window.__NF_TOOLS_VIEW_FIRED__ = true;
+      dl.push({ event: 'nf_tools_view' });
+    }
+  })();
+</script>
+
+<style>
+/* =========================================
+   NeuForm Tools Hub — Layout & Theme (Rev G)
+   NOTE: Tokens are scoped to .tools.section to avoid collisions with other tool CSS.
+   ========================================= */
+
+/* Global background for this page (no dependency on scoped tokens) */
+body {
+  background-color: #020617;
+}
+
+/* =========================
+   Root tools section wrapper
+   ========================= */
+
+.tools.section {
+  /* Scoped tokens (Tools Hub only) */
+  --nf-glass-bg: rgba(30, 41, 59, 0.7);
+  --nf-glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --nf-glass-blur: blur(12px);
+  --nf-glass-shadow: 0 18px 45px rgba(0,0,0,0.6);
+  --nf-glass-shadow-sm: 0 8px 24px rgba(0,0,0,0.45);
+
+  --dm-bg-primary: #020617;
+  --dm-surface-primary: #020617;
+  --dm-surface-secondary: #0b1120;
+  --dm-border-subtle: rgba(148,163,184,0.35);
+  --dm-text-primary: rgba(249,250,251,0.96);
+  --dm-text-secondary: rgba(229,231,235,0.88);
+  --dm-text-muted: rgba(148,163,184,0.9);
+
+  --nf-blue: #3498db;
+  --nf-blue-soft: rgba(52,152,219,0.18);
+  --nf-gold: #facc15;
+
+  --nf-radius-lg: 18px;
+  --nf-radius: 14px;
+  --nf-radius-sm: 10px;
+  --nf-gutter: clamp(1rem, 3vw, 1.75rem);
+  --nf-container-max: 1120px;
+
+  position: relative;
+  padding: clamp(44px, 7vh, 76px) 0 clamp(56px, 9vh, 92px);
+  color: var(--dm-text-secondary);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+
+/* Dim overlay over the cracked background image */
+.tools.section::before,
+.tools.section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tools.section::before {
+  background:
+    radial-gradient(circle at 0 0, rgba(15,23,42,0.9), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(15,23,42,0.88), transparent 55%);
+  mix-blend-mode: multiply;
+}
+
+.tools.section::after {
+  background:
+    radial-gradient(circle at 50% 0, rgba(0,0,0,0.6), transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(0,0,0,0.75), transparent 60%);
+}
+
+/* Inner width wrapper (.nf-wrap) */
+.tools.section .nf-wrap {
+  max-width: var(--nf-container-max);
+  margin: 0 auto;
+  padding: 0 var(--nf-gutter);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================
+   Hero card (Code Embed)
+   ========================= */
+
+.tools-hero-card {
+  --hero-underline-origin-x: 50%; /* updated dynamically via JS */
+
+  border-radius: var(--nf-radius-lg);
+  border: var(--nf-glass-border);
+  background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
+  backdrop-filter: var(--nf-glass-blur);
+  -webkit-backdrop-filter: var(--nf-glass-blur);
+  box-shadow: var(--nf-glass-shadow);
+
+  padding: clamp(18px, 2.6vh, 26px) clamp(18px, 3vw, 30px);
+  margin: 0 auto;
+  max-width: 920px;
+
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  animation: nf-hero-fade-up 0.85s cubic-bezier(0.2, 0.9, 0.25, 1) 0.05s forwards;
+}
+
+/* Hero highlight overlay */
+.tools-hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 0 0, rgba(148,163,184,0.24), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(15,23,42,0.95), transparent 40%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.tools-hero-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Label pill */
+.tools-hero-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.6);
+  background: rgba(15,23,42,0.95);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(229,231,235,0.9);
+}
+
+/* Hero heading with soft glow */
+.tools-hero-heading {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--dm-text-primary);
+  position: relative;
+  display: inline-block;
+
+  text-shadow:
+    0 0 16px rgba(15,23,42,0.95),
+    0 0 26px rgba(52,152,219,0.55),
+    0 0 40px rgba(15,23,42,0.9);
+}
+
+/* Accent underline + hover ripple (mouse-position sensitive) */
+.tools-hero-heading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  width: 220px;
+  height: 2px;
+  border-radius: 999px;
+  transform: translateX(-50%) scaleX(0.45);
+  transform-origin: var(--hero-underline-origin-x) 50%;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(52,152,219,0), rgba(52,152,219,0.8)),
+    linear-gradient(90deg, rgba(52,152,219,0.2), rgba(250,204,21,0.9), rgba(52,152,219,0.5));
+  box-shadow:
+    0 0 10px rgba(52,152,219,0.6),
+    0 0 18px rgba(15,23,42,0.85);
+  opacity: 0.9;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease-out,
+    opacity 0.3s ease-out;
+}
+
+.tools-hero-card:hover .tools-hero-heading::after {
+  transform: translateX(-50%) scaleX(1.08);
+  box-shadow:
+    0 0 18px rgba(52,152,219,0.9),
+    0 0 28px rgba(250,204,21,0.75);
+  opacity: 1;
+}
+
+/* Hero subtitle text */
+.tools-hero-subtitle {
+  margin: 14px auto 0;
+  max-width: 640px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--dm-text-secondary);
+}
+
+/* Subtle hover emphasis for hero card (no extra motion) */
+.tools-hero-card:hover {
+  box-shadow:
+    0 22px 52px rgba(0,0,0,0.85),
+    0 0 0 1px rgba(52,152,219,0.4);
+}
+
+/* =========================
+   Lab cards section wrapper
+   ========================= */
+
+.lab.cards.section {
+  margin-top: 14px;
+}
+
+/* Our embed root inside that wrapper */
+.lab.cards.section .lab-cards-section {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+}
+
+/* =========================
+   Individual lab cards
+   ========================= */
+
+.tool-card-link {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Base card */
+.tool-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,0.9);
+  background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+  padding: 18px 22px;
+  box-shadow: 0 14px 32px rgba(0,0,0,0.75);
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    border-color 0.2s ease-out,
+    background 0.2s ease-out;
+  backdrop-filter: var(--nf-glass-blur);
+  -webkit-backdrop-filter: var(--nf-glass-blur);
+
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+
+  cursor: pointer;
+}
+
+/* Nutrition Lab variant – blue frame */
+.tool-card--nutrition {
+  border-color: rgba(52,152,219,0.75);
+}
+
+/* Identity Lab variant – gold frame */
+.tool-card--identity {
+  border-color: rgba(250,204,21,0.8);
+}
+
+/* Subtle inner gradient glow for both */
+.tool-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 0 0, rgba(148,163,184,0.18), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(15,23,42,0.9), transparent 50%);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Ensure content is above highlight layer */
+.tool-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover lift + color glow */
+.tool-card:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(15,23,42,1), rgba(15,23,42,0.98));
+}
+
+.tool-card--nutrition:hover {
+  box-shadow:
+    0 20px 45px rgba(15,23,42,0.9),
+    0 0 0 1px rgba(52,152,219,0.65);
+}
+
+.tool-card--identity:hover {
+  box-shadow:
+    0 20px 45px rgba(15,23,42,0.9),
+    0 0 0 1px rgba(250,204,21,0.75);
+}
+
+/* Left-hand text stack */
+.tool-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  max-width: calc(100% - 52px);
+}
+
+/* Title line with lab tag + main name */
+.tool-card-title {
+  font-size: 15.5px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: var(--dm-text-primary);
+  letter-spacing: 0.03em;
+  min-width: 0;
+}
+
+/* Lab label within title */
+.tool-card-title span {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dm-text-muted);
+  margin-right: 8px;
+}
+
+/* Subtitle */
+.tool-card-subtitle {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(229, 231, 235, 0.92);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.65em * 2);
+}
+
+/* Right arrow pill */
+.tool-card-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.8);
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  color: var(--dm-text-primary);
+  background:
+    radial-gradient(circle at 0 0, rgba(148,163,184,0.6), transparent 70%),
+    rgba(15,23,42,0.95);
+  flex-shrink: 0;
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    border-color 0.18s ease-out,
+    background 0.18s ease-out;
+}
+
+.tool-card:hover .tool-card-arrow {
+  transform: translateX(2px);
+  border-color: rgba(52,152,219,0.95);
+  box-shadow: 0 0 20px rgba(52,152,219,0.7);
+}
+
+.tool-card--identity:hover .tool-card-arrow {
+  border-color: rgba(250,204,21,0.95);
+  box-shadow: 0 0 22px rgba(250,204,21,0.7);
+}
+
+.tool-card-link:focus-visible .tool-card,
+.tool-card-link:focus-visible {
+  outline: 2px solid var(--nf-blue);
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 1px rgba(52,152,219,0.9),
+    0 0 18px rgba(52,152,219,0.65);
+}
+
+/* =========================
+   Motion / reveal
+   ========================= */
+
+@keyframes nf-hero-fade-up {
+  0% { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(4px); }
+  55% { opacity: 1; transform: translateY(0) scale(1.01); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes nf-card-fade-up {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.lab-cards-section .tool-card {
+  animation: nf-card-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.22s forwards;
+}
+
+.lab-cards-section > .tool-card-link:nth-child(2) .tool-card {
+  animation-delay: 0.3s;
+}
+
+.lab-cards-section > .tool-card-link:nth-child(3) .tool-card {
+  animation-delay: 0.38s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools-hero-card { animation: none; }
+  .lab-cards-section .tool-card { animation: none; }
+}
+
+@media (min-width: 1440px) {
+  .tools-hero-card { max-width: 980px; }
+  .tool-card { max-width: 980px; }
+}
+
+@media (max-width: 640px) {
+  .tools.section { padding: 38px 0 64px; }
+  .lab.cards.section .lab-cards-section { gap: 16px; }
+  .tool-card-link { justify-content: stretch; }
+  .tools-hero-card { text-align: center; max-width: 100%; }
+  .tools-hero-heading::after { width: 170px; }
+
+  .tool-card {
+    max-width: none;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px 16px;
+    border-radius: 18px;
+  }
+
+  .tool-card-text { max-width: calc(100% - 56px); }
+
+  .tool-card-subtitle {
+    -webkit-line-clamp: 3;
+    max-height: calc(1.65em * 3);
+  }
+
+  .tool-card-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+}
+
+@media (max-width: 390px) {
+  .tools-hero-heading { font-size: 26px; }
+  .tools-hero-subtitle { font-size: 13.5px; line-height: 1.75; }
+  .tool-card-title { font-size: 14.5px; }
+  .tool-card-subtitle { font-size: 13px; }
+}
+
+/* =========================================================
+   Rev G UPGRADES (grid + hero polish + icon/chips + accents)
+   ========================================================= */
+
+/* Hero: more depth + better hierarchy */
+.tools-hero-card{
+  border-radius: 22px;
+  background:
+    radial-gradient(1200px 280px at 20% 0%, rgba(52,152,219,0.18), transparent 55%),
+    radial-gradient(900px 240px at 85% 10%, rgba(250,204,21,0.14), transparent 60%),
+    radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.90));
+}
+
+/* Subtle top sheen line */
+.tools-hero-card::after{
+  content:"";
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:0;
+  height:1px;
+  pointer-events:none;
+  opacity:0.45;
+  background: linear-gradient(
+    90deg,
+    rgba(52,152,219,0.0),
+    rgba(52,152,219,0.45),
+    rgba(250,204,21,0.35),
+    rgba(52,152,219,0.25),
+    rgba(52,152,219,0.0)
+  );
+}
+
+.tools-hero-heading{ letter-spacing: 0.035em; }
+.tools-hero-subtitle{ line-height: 1.75; max-width: 720px; }
+
+/* Desktop: 2-column tool grid + tile feel */
+@media (min-width: 820px){
+  .lab.cards.section .lab-cards-section{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .tool-card-link{ justify-content: stretch; }
+
+  .tool-card{
+    max-width: none;
+    height: 100%;
+    border-radius: 18px;
+    padding: 20px 20px;
+  }
+
+  .tool-card-arrow{
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}
+
+/* Widescreen lane harmony */
+@media (min-width: 1440px){
+  .lab.cards.section .lab-cards-section{ max-width: 980px; }
+}
+
+/* Icon + chips (safe if unused) */
+.tool-card-left{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  min-width:0;
+  flex:1 1 auto;
+}
+
+.tool-card-icon{
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  color: rgba(249,250,251,0.95);
+  background: rgba(15,23,42,0.72);
+  border: 1px solid rgba(148,163,184,0.28);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+.tool-card-icon--nutrition{
+  box-shadow: 0 10px 26px rgba(52,152,219,0.18), 0 10px 24px rgba(0,0,0,0.35);
+}
+.tool-card-icon--identity{
+  box-shadow: 0 10px 26px rgba(250,204,21,0.14), 0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* Only override max-width logic when using the new inner layout */
+.tool-card-left .tool-card-text{
+  max-width: none;
+  flex: 1 1 auto;
+}
+
+.tool-card-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.tool-chip{
+  font-size:11px;
+  line-height:1;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,0.25);
+  background: rgba(2,6,23,0.35);
+  color: rgba(229,231,235,0.88);
+}
+
+/* Left accent strip */
+.tool-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:12px;
+  bottom:12px;
+  width:3px;
+  border-radius:999px;
+  opacity:0.75;
+  pointer-events:none;
+  background: rgba(148,163,184,0.35);
+}
+
+.tool-card--nutrition::after{
+  background: linear-gradient(180deg, rgba(52,152,219,1), rgba(52,152,219,0));
+}
+.tool-card--identity::after{
+  background: linear-gradient(180deg, rgba(250,204,21,1), rgba(250,204,21,0));
+}
+</style>
+
+Body:
+<!-- NeuForm — Tools Hub Helpers (Rev G) -->
+<script>
+(function () {
+  "use strict";
+
+  // Prevent double-binding if this script is pasted twice
+  if (window.__NF_TOOLS_HUB_HELPERS__) return;
+  window.__NF_TOOLS_HUB_HELPERS__ = "revG";
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  var $  = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  function track(action, detail){
+    try{
+      if (window.NFTools && typeof window.NFTools.track === "function") {
+        window.NFTools.track(action, detail || {});
+        return;
+      }
+    } catch(_){}
+    try{
+      var payload = Object.assign({}, detail || {});
+      payload.event = action;
+      dl.push(payload);
+    } catch(_){}
+  }
+
+  function parseUrl(href){
+    try{
+      if (!href) return null;
+      var raw = String(href).trim();
+      var lower = raw.toLowerCase();
+
+      // Ignore anchors + unsafe schemes
+      if (lower.charAt(0) === "#") return null;
+      if (lower.indexOf("javascript:") === 0 || lower.indexOf("data:") === 0) return null;
+
+      // Leave special protocols alone (still may be useful to log as raw)
+      if (lower.indexOf("mailto:") === 0 || lower.indexOf("tel:") === 0) {
+        return { __special:true, href: raw };
+      }
+
+      return new URL(raw, window.location.origin);
+    } catch(e){
+      return null;
+    }
+  }
+
+  function cleanUrl(u){
+    try{
+      if (!u || u.__special) return u && u.href ? u.href : null;
+      // Strip query + hash for privacy
+      return u.origin + u.pathname;
+    } catch(e){
+      return null;
+    }
+  }
+
+  function ensureRel(a, token){
+    try{
+      var rel = (a.getAttribute("rel") || "").trim();
+      var parts = rel ? rel.split(/\s+/) : [];
+      if (parts.indexOf(token) === -1) parts.push(token);
+      a.setAttribute("rel", parts.join(" ").trim());
+    } catch(_){}
+  }
+
+  // ===== A) Auto-tag Tools Hub cards for analytics (fills missing only) =====
+  (function(){
+    var links = $$('.tool-card-link');
+    if (!links.length) return;
+
+    links.forEach(function(link){
+      var card = link.querySelector('.tool-card');
+      if (!card) return;
+
+      if (!card.classList.contains('nf-tool-card')) card.classList.add('nf-tool-card');
+
+      var existingId   = card.getAttribute('data-tool-id');
+      var existingName = card.getAttribute('data-tool-name');
+      var existingCat  = card.getAttribute('data-tool-cat');
+
+      if (!link.getAttribute('data-tool-open')) link.setAttribute('data-tool-open','true');
+
+      // If already fully tagged, do nothing
+      if (existingId && existingName && existingCat) return;
+
+      var href = (link.getAttribute('href') || '').toLowerCase();
+      var id, name, cat;
+
+      if (href.indexOf('nutrition') !== -1) {
+        id   = 'nutrition_lab';
+        name = 'NeuForm Nutrition Lab';
+        cat  = 'nutrition';
+      } else if (href.indexOf('dlter') !== -1 || href.indexOf('identity') !== -1) {
+        id   = 'identity_lab_dlter';
+        name = 'DLTER Reality Types';
+        cat  = 'identity';
+      } else {
+        var titleEl = card.querySelector('.tool-card-title');
+        name = titleEl ? titleEl.textContent.replace(/\s+/g,' ').trim() : 'Unknown tool';
+        id   = name.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+        cat  = 'tools';
+      }
+
+      if (!existingId)   card.setAttribute('data-tool-id',   id);
+      if (!existingName) card.setAttribute('data-tool-name', name);
+      if (!existingCat)  card.setAttribute('data-tool-cat',  cat);
+    });
+  })();
+
+  // ===== 1) Tool card impressions (fire once per card) =====
+  (function(){
+    var cards = $$('.nf-tool-card');
+    if (!cards.length || !('IntersectionObserver' in window)) return;
+
+    var seen = new Set();
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+
+        var el = entry.target;
+        var id = el.getAttribute('data-tool-id') || el.id || '';
+        if (!id || seen.has(id)) return;
+
+        seen.add(id);
+
+        track('nf_tool_card_impression', {
+          nf_tool_id:   id,
+          nf_tool_name: el.getAttribute('data-tool-name') || null,
+          nf_tool_cat:  el.getAttribute('data-tool-cat') || null
+        });
+
+        io.unobserve(el);
+      });
+    }, { threshold: 0.35 });
+
+    cards.forEach(function(c){ io.observe(c); });
+  })();
+
+  // ===== 2–7) Click tracking (open/run/copy/handoff/filter/outbound) =====
+  document.addEventListener('click', function(e){
+    var t = e.target;
+
+    // 2) Card clicks / opens
+    var open = t.closest && t.closest('[data-tool-open], .nf-tool-card[data-tool-id]');
+    if (open) {
+      var host = (open.closest && open.closest('.nf-tool-card')) || (open.classList && open.classList.contains('nf-tool-card') ? open : null);
+      host = host || open;
+
+      var id   = (host.getAttribute && host.getAttribute('data-tool-id')) || host.id || null;
+      var name = (host.getAttribute && host.getAttribute('data-tool-name')) || (open.getAttribute && open.getAttribute('data-tool-name')) || null;
+      var cat  = (host.getAttribute && host.getAttribute('data-tool-cat')) || null;
+
+      var a = (open.tagName === 'A') ? open : (open.closest && open.closest('a[href]'));
+      var href = a ? (a.getAttribute('href') || null) : null;
+
+      var url = parseUrl(href);
+      var absClean = cleanUrl(url);
+      var isExternal = !!(url && !url.__special && url.hostname && url.hostname !== window.location.hostname);
+
+      track('nf_tool_open', {
+        nf_tool_id:   id,
+        nf_tool_name: name,
+        nf_tool_cat:  cat,
+        nf_href:      href,
+        nf_href_abs:  absClean,
+        nf_external:  isExternal ? true : false
+      });
+    }
+
+    // 3) Calculator/run actions
+    var run = t.closest && t.closest('[data-tool-run]');
+    if (run) {
+      var runHost = (run.closest && run.closest('[data-tool-id]')) || (run.closest && run.closest('.nf-tool-card')) || run;
+      track('nf_tool_calc', {
+        nf_tool_id:   (runHost.getAttribute && runHost.getAttribute('data-tool-id')) || null,
+        nf_tool_name: (runHost.getAttribute && runHost.getAttribute('data-tool-name')) || null,
+        nf_variant:   (run.getAttribute && run.getAttribute('data-variant')) || null
+      });
+    }
+
+    // 4) Copy buttons
+    var btn = t.closest && t.closest('[data-tool-copy]');
+    if (btn) {
+      var copyHost = (btn.closest && btn.closest('[data-tool-id]')) || (btn.closest && btn.closest('.nf-tool-card')) || null;
+      var type = (btn.getAttribute && btn.getAttribute('data-copy-type')) || '(generic)';
+      track('nf_tool_copy', {
+        nf_tool_id:   copyHost && copyHost.getAttribute ? (copyHost.getAttribute('data-tool-id') || null) : null,
+        nf_tool_name: copyHost && copyHost.getAttribute ? (copyHost.getAttribute('data-tool-name') || null) : null,
+        nf_copy_type: type
+      });
+    }
+
+    // 5) Handoff / export actions
+    var x = t.closest && t.closest('[data-tool-handoff]');
+    if (x) {
+      var hx = (x.getAttribute && (x.getAttribute('data-dest') || x.getAttribute('href'))) || null;
+      var ux = parseUrl(hx);
+      var clean = cleanUrl(ux);
+
+      var handHost = (x.closest && x.closest('[data-tool-id]')) || (x.closest && x.closest('.nf-tool-card')) || null;
+
+      track('nf_tool_handoff', {
+        nf_tool_id:   handHost && handHost.getAttribute ? (handHost.getAttribute('data-tool-id') || null) : null,
+        nf_tool_name: handHost && handHost.getAttribute ? (handHost.getAttribute('data-tool-name') || null) : null,
+        nf_dest:      clean,
+        nf_format:    (x.getAttribute && x.getAttribute('data-format')) || null
+      });
+    }
+
+    // 6) Tag filters
+    var f = t.closest && t.closest('[data-tool-filter]');
+    if (f) {
+      track('nf_tool_filter', {
+        nf_filter: (f.getAttribute && f.getAttribute('data-tool-filter')) || '(unknown)'
+      });
+    }
+
+    // 7) Outbound safety + outbound click event (NO query params logged)
+    var a2 = t.closest && t.closest('a[href]');
+    if (a2) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      var href2 = (a2.getAttribute('href') || '').trim();
+      if (!href2) return;
+
+      var u2 = parseUrl(href2);
+      if (!u2 || u2.__special) return;
+
+      var ext = u2.hostname && u2.hostname !== window.location.hostname;
+      if (ext) {
+        // Open external links safely
+        if (!a2.getAttribute('target')) a2.setAttribute('target','_blank');
+        ensureRel(a2, 'noopener');
+        ensureRel(a2, 'noreferrer');
+
+        track('nf_outbound_click', {
+          nf_url:      cleanUrl(u2),
+          nf_url_host: u2.hostname || null,
+          nf_url_path: u2.pathname || null,
+          nf_context:  'tools_hub'
+        });
+      }
+    }
+  }, { passive:true });
+
+  // ===== 6B) Tool search (debounced) =====
+  (function(){
+    var input = $('#nf-tool-search') || $('[data-tool-search]');
+    var last  = '';
+    var timer = null;
+
+    if (!input) return;
+
+    input.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        var q = (input.value || '').trim();
+        if (q === last) return;
+        last = q;
+
+        track('nf_tool_search', {
+          nf_query: q,
+          nf_len:   q.length
+        });
+      }, 350);
+    });
+  })();
+
+  // ===== View marker (optional extra; avoids scanning dataLayer) =====
+  (function(){
+    if (window.__NF_TOOLS_HUB_VIEW_FIRED__) return;
+    window.__NF_TOOLS_HUB_VIEW_FIRED__ = true;
+
+    track('nf_tools_hub_view', {
+      page: "tools",
+      section: "tools_hub",
+      nf_tools_view_already_fired: window.__NF_TOOLS_VIEW_FIRED__ ? true : false
+    });
+  })();
+
+  // ===== 8) Small UX niceties =====
+
+  // a) Focus main content if you include a “Skip to content” link
+  (function(){
+    var skip = document.querySelector('a[href="#main"]');
+    var main = document.getElementById('main');
+    if (!skip || !main) return;
+
+    skip.addEventListener('click', function(){
+      if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex','-1');
+      main.focus();
+    });
+  })();
+
+  // b) Lazy-init iframes (iframe[data-lazy-src])
+  (function(){
+    var lazy = $$('iframe[data-lazy-src]');
+    if (!lazy.length || !('IntersectionObserver' in window)) return;
+
+    var io = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+
+        var ifr = entry.target;
+        var src = ifr.getAttribute('data-lazy-src');
+        if (src){
+          ifr.src = src;
+          ifr.removeAttribute('data-lazy-src');
+        }
+        obs.unobserve(ifr);
+      });
+    }, { threshold: 0.1 });
+
+    lazy.forEach(function(ifr){ io.observe(ifr); });
+  })();
+
+  // c) Hero underline reacts to pointer position
+  (function(){
+    var hero = document.querySelector('.tools-hero-card');
+    if (!hero) return;
+
+    hero.addEventListener('pointermove', function(e){
+      var rect = hero.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width;
+      x = Math.max(0, Math.min(1, x));
+      hero.style.setProperty('--hero-underline-origin-x', (x * 100).toFixed(1) + '%');
+    });
+
+    hero.addEventListener('pointerleave', function(){
+      hero.style.setProperty('--hero-underline-origin-x', '50%');
+    });
+  })();
+
+})();
+</script>

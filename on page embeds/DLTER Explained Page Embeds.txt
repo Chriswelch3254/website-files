@@ -1,0 +1,905 @@
+Embed 1:
+<!-- ==============================
+     DLTER Explained — Embed A (CSS) (Rev 4.3)
+     Paste into: Code Embed ABOVE the HTML embed (inside nf-lab-container)
+     Notes:
+       - Fully scoped to #dlterx-top so it won't bleed site-wide
+       - Avoids collision with the Webflow wrapper section class (also dlterx-section)
+       - Anchor offset uses CSS var: --dlterx-anchor-offset (fallback 88px)
+     ============================== -->
+
+<style id="dlterx-explained-embedA-css-v43">
+  /* =========================================================
+     Scope + layout insurance (scoped to this embed only)
+     ========================================================= */
+  #dlterx-top { position: relative; }
+  #dlterx-top, #dlterx-top * { box-sizing: border-box; }
+
+  /* Optional safety: ensure this card is content-driven (matches your Head intent) */
+  #dlterx-top .card.dlterx-card{
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Screen-reader only helper */
+  #dlterx-top .dlterx-sr{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Anchor offset (avoid collision with wrapper section class) */
+  #dlterx-top .dlterx-section{
+    scroll-margin-top: var(--dlterx-anchor-offset, 88px);
+  }
+
+  /* =========================================================
+     Header + typography helpers
+     ========================================================= */
+  #dlterx-top .dlterx-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  #dlterx-top .dlterx-title{ margin: 6px 0 10px; }
+
+  #dlterx-top .dlterx-lede{
+    margin: 0 0 10px;
+    font-size: 1.02rem;
+    color: rgba(229,231,235,0.88);
+    line-height: 1.65;
+  }
+
+  #dlterx-top .dlterx-sublede{ margin: 0 0 12px; }
+
+  #dlterx-top .dlterx-h2{ margin: 0 0 10px; }
+
+  #dlterx-top .dlterx-h3{
+    margin:0;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.75);
+  }
+
+  #dlterx-top .dlterx-p{ margin: 0 0 10px; }
+
+  #dlterx-top .dlterx-kicker{
+    margin-top: 12px;
+    font-size: 0.88rem;
+    color: rgba(148,163,184,0.78);
+  }
+
+  /* Focus visibility (accessibility) */
+  #dlterx-top .dlterx-toclink:focus-visible,
+  #dlterx-top .dlterx-footlink:focus-visible,
+  #dlterx-top .dlter-link:focus-visible,
+  #dlterx-top .dlterx-summary:focus-visible{
+    outline: 2px solid rgba(52,152,219,0.9);
+    outline-offset: 3px;
+    border-radius: 10px;
+  }
+
+  /* =========================================================
+     TOC pills (top navigation)
+     ========================================================= */
+  #dlterx-top .dlterx-toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin: 12px 0 8px;
+  }
+
+  #dlterx-top .dlterx-toclink{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.32);
+    background: rgba(15,23,42,0.75);
+    color: rgba(229,231,235,0.86);
+    text-decoration:none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: border-color 0.18s ease-out, transform 0.18s ease-out, box-shadow 0.18s ease-out;
+  }
+
+  #dlterx-top .dlterx-toclink:hover{
+    border-color: var(--dm-border-interactive, #3498db);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+    transform: translateY(-1px);
+  }
+
+  /* If your JS adds is-active, this gives it a clear state */
+  #dlterx-top .dlterx-toclink.is-active{
+    border-color: var(--dm-border-interactive, #3498db);
+    background: rgba(15,23,42,0.88);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+  }
+
+  /* =========================================================
+     Callout
+     ========================================================= */
+  #dlterx-top .dlterx-callout{
+    margin: 14px 0 18px;
+    border-radius: var(--nf-radius, 14px);
+    border: 1px solid rgba(148,163,184,0.32);
+    background: linear-gradient(135deg, rgba(15,23,42,0.82), rgba(2,6,23,0.72));
+    padding: 12px 12px 10px;
+    box-shadow: var(--nf-glass-shadow-sm, 0 8px 24px rgba(0,0,0,0.45));
+  }
+
+  #dlterx-top .dlterx-callout-title{
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.9);
+    margin-bottom: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  /* Lists */
+  #dlterx-top .dlterx-list{
+    margin: 0;
+    padding-left: 18px;
+    color: rgba(229,231,235,0.88);
+  }
+  #dlterx-top .dlterx-list li{ margin: 0 0 10px; }
+  #dlterx-top .dlterx-list li:last-child{ margin-bottom: 0; }
+
+  /* =========================================================
+     Axis grid + cards
+     ========================================================= */
+  #dlterx-top .dlterx-axis-grid{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  #dlterx-top .dlterx-panel{
+    border: 1px solid rgba(148,163,184,0.28);
+    background: rgba(2,6,23,0.55);
+    border-radius: var(--nf-radius-sm, 10px);
+    padding: 12px 12px 10px;
+    box-shadow: var(--nf-glass-shadow-sm, 0 8px 24px rgba(0,0,0,0.45));
+  }
+
+  #dlterx-top .dlterx-panel-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom: 8px;
+  }
+
+  #dlterx-top .dlterx-mini{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin-top: 4px;
+  }
+
+  #dlterx-top .dlterx-mini-code{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.28);
+    background: rgba(15,23,42,0.85);
+    color: rgba(249,250,251,0.9);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  #dlterx-top .dlterx-mini-text{
+    font-size: 0.82rem;
+    color: rgba(148,163,184,0.78);
+  }
+
+  #dlterx-top .dlterx-axis-dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-top: 2px;
+    box-shadow: 0 0 14px rgba(255,255,255,0.06);
+  }
+
+  #dlterx-top .dlterx-axis-dot--p{ background: var(--dlter-axis-perception, #38bdf8); }
+  #dlterx-top .dlterx-axis-dot--e{ background: var(--dlter-axis-emergence, #22c55e); }
+  #dlterx-top .dlterx-axis-dot--i{ background: var(--dlter-axis-identity, #eab308); }
+
+  /* Inline code pill */
+  #dlterx-top .dlterx-code{
+    display:inline-flex;
+    align-items:center;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.28);
+    background: rgba(15,23,42,0.88);
+    color: rgba(249,250,251,0.92);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    white-space: nowrap;
+  }
+
+  /* =========================================================
+     Geometry / grids
+     ========================================================= */
+  #dlterx-top .dlterx-geo-grid{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  #dlterx-top .dlterx-geo-item{
+    border: 1px solid rgba(148,163,184,0.22);
+    background: rgba(2,6,23,0.45);
+    border-radius: var(--nf-radius-sm, 10px);
+    padding: 12px 12px 10px;
+  }
+
+  #dlterx-top .dlterx-geo-title{
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.78);
+    margin-bottom: 8px;
+    font-weight: 800;
+  }
+
+  /* =========================================================
+     Details / summary
+     ========================================================= */
+  #dlterx-top .dlterx-details{
+    margin-top: 12px;
+    border-radius: var(--nf-radius, 14px);
+    border: 1px solid rgba(148,163,184,0.28);
+    background: rgba(2,6,23,0.46);
+    overflow: hidden;
+  }
+
+  #dlterx-top .dlterx-summary{
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 12px;
+    font-weight: 800;
+    color: rgba(249,250,251,0.9);
+    background: rgba(15,23,42,0.65);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  #dlterx-top .dlterx-summary::-webkit-details-marker{ display:none; }
+
+  #dlterx-top .dlterx-summary::after{
+    content: "＋";
+    color: rgba(148,163,184,0.9);
+    flex: 0 0 auto;
+  }
+
+  #dlterx-top details[open] > .dlterx-summary::after{ content: "－"; }
+
+  #dlterx-top .dlterx-details-body{ padding: 12px 12px 10px; }
+
+  /* Steps */
+  #dlterx-top .dlterx-steps{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 10px 0 12px;
+  }
+
+  #dlterx-top .dlterx-step{
+    border: 1px solid rgba(148,163,184,0.22);
+    background: rgba(2,6,23,0.42);
+    border-radius: var(--nf-radius-sm, 10px);
+    padding: 12px 12px 10px;
+  }
+
+  #dlterx-top .dlterx-step-title{
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.78);
+    margin-bottom: 8px;
+    font-weight: 800;
+  }
+
+  /* Table */
+  #dlterx-top .dlterx-tablewrap{
+    overflow: auto;
+    border-radius: var(--nf-radius-sm, 10px);
+    border: 1px solid rgba(148,163,184,0.22);
+    background: rgba(2,6,23,0.55);
+  }
+
+  #dlterx-top .dlterx-tablewrap:focus-visible{
+    outline: 2px solid rgba(52,152,219,0.9);
+    outline-offset: 3px;
+  }
+
+  #dlterx-top .dlterx-table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+  }
+
+  #dlterx-top .dlterx-table th,
+  #dlterx-top .dlterx-table td{
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(148,163,184,0.18);
+    color: rgba(229,231,235,0.88);
+    font-size: 0.95rem;
+  }
+
+  #dlterx-top .dlterx-table th{
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.85);
+    color: rgba(249,250,251,0.92);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #dlterx-top .dlterx-table tbody tr:nth-child(even){
+    background: rgba(15,23,42,0.25);
+  }
+
+  /* NeuForm split blocks */
+  #dlterx-top .dlterx-split{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 12px 0 12px;
+  }
+
+  #dlterx-top .dlterx-split-item{
+    border: 1px solid rgba(148,163,184,0.22);
+    background: rgba(2,6,23,0.45);
+    border-radius: var(--nf-radius-sm, 10px);
+    padding: 12px 12px 10px;
+  }
+
+  #dlterx-top .dlterx-split-title{
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.78);
+    margin-bottom: 8px;
+    font-weight: 800;
+  }
+
+  /* CTA row */
+  #dlterx-top .dlterx-cta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  #dlterx-top .dlterx-footerlinks{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  #dlterx-top .dlterx-footlink{
+    color: rgba(229,231,235,0.86);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  #dlterx-top .dlterx-footlink:hover{ text-decoration: underline; }
+
+  #dlterx-top .dlterx-footsep{ color: rgba(148,163,184,0.6); }
+
+  /* =========================================================
+     Responsive
+     ========================================================= */
+  @media (max-width: 980px){
+    #dlterx-top .dlterx-axis-grid{ grid-template-columns: 1fr; }
+    #dlterx-top .dlterx-geo-grid{ grid-template-columns: 1fr; }
+    #dlterx-top .dlterx-split{ grid-template-columns: 1fr; }
+    #dlterx-top .dlterx-steps{ grid-template-columns: 1fr; }
+
+    #dlterx-top .dlterx-toclink:hover{ transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #dlterx-top .dlterx-toclink{ transition: none !important; }
+    #dlterx-top .dlterx-toclink:hover{ transform: none !important; }
+  }
+</style>
+
+Embed 2:
+<!-- ==============================
+     DLTER Explained — Embed B (HTML) (Rev 4.3)
+     Paste into: Code Embed BELOW the CSS embed (inside nf-lab-container)
+     Updates:
+       - Adds stable data markers for JS targeting
+       - Removes inline <style> (now in Embed A)
+     ============================== -->
+
+<div id="dlterx-top" data-dlterx-scope="explained" data-dlterx-root="dlter-explained" data-dlterx-version="4.3">
+  <div class="card dlterx-card" role="region" aria-labelledby="dlterx-title">
+    <div class="dlter-explained-shell">
+
+      <!-- Header -->
+      <header class="dlterx-header">
+        <div class="dlter-badge" aria-label="DLTER system badge">
+          <span class="dlter-badge-dot" aria-hidden="true"></span>
+          <span>DLTER System · Identity Geometry</span>
+        </div>
+
+        <a
+          class="dlter-link"
+          href="https://www.neuform-fitness.com/dlter-quiz"
+          aria-label="Go to the DLTER Quiz"
+        >
+          Back to the quiz →
+        </a>
+      </header>
+
+      <h1 id="dlterx-title" class="dlterx-title">DLTER Explained</h1>
+
+      <p class="dlterx-lede">
+        <strong>DLTER</strong> (Dimension-Labeled Theory of Emergent Reality) is built around one idea:
+        <strong>reality becomes usable when information is organized, stabilized, and updated around an observer</strong>.
+        In its full technical form, DLTER is a quantum-information framework that explores how spacetime, matter, and forces could
+        <strong>emerge</strong> from deeper informational structure (a “theory-of-everything” style attempt).
+        In NeuForm, we use a human-scale translation—<strong>DLTER Reality Types</strong>—to map how you tend to
+        <strong>process information</strong>, <strong>adapt to change</strong>, and <strong>maintain identity over time</strong>.
+        It’s not a label for who you are. It’s a model of your default settings when life requires an update.
+      </p>
+
+      <p class="dlter-muted dlterx-sublede">
+        Optional reading · skimmable by design · go as deep as you want. You can take the quiz without reading this page.
+        This exists for context, clarity, and the “show me the logic” crowd.
+      </p>
+
+      <!-- Quick navigation -->
+      <nav class="dlterx-toc" aria-label="On this page" data-dlterx-toc="pills">
+        <a class="dlterx-toclink" href="#dlterx-axes">The three axes</a>
+        <a class="dlterx-toclink" href="#dlterx-geometry">The geometry model</a>
+        <a class="dlterx-toclink" href="#dlterx-quizworks">Why the quiz works</a>
+        <a class="dlterx-toclink" href="#dlterx-underhood">Under the hood</a>
+        <a class="dlterx-toclink" href="#dlterx-not">What DLTER is not</a>
+        <a class="dlterx-toclink" href="#dlterx-neuform">Why NeuForm uses it</a>
+        <a class="dlterx-toclink" href="#dlterx-cta">Take the quiz</a>
+      </nav>
+
+      <!-- Important framing -->
+      <aside class="dlterx-callout" role="note" aria-label="Important framing">
+        <div class="dlterx-callout-title">Important framing</div>
+        <ul class="dlterx-list">
+          <li>
+            <strong>DLTER describes response dynamics under change</strong>—how your system routes input, stabilizes, and updates—not “traits” you’re stuck with.
+          </li>
+          <li>
+            <strong>Types are stable baselines</strong>, not boxes. Stress, learning, environment, and skills can shift how you show up day-to-day.
+          </li>
+          <li>
+            <strong>Usefulness beats perfection.</strong> If a DLTER idea helps you train, decide, or stay consistent—use it. If it doesn’t, ignore it.
+          </li>
+        </ul>
+      </aside>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- AXES -->
+      <section id="dlterx-axes" class="dlterx-section" aria-labelledby="dlterx-axes-h">
+        <h2 id="dlterx-axes-h" class="dlterx-h2">The three axes</h2>
+
+        <p class="dlterx-p">
+          DLTER Reality Types come from three <strong>independent (orthogonal) axes</strong>.
+          Think of them as three dials your system tends to return to—especially when things feel uncertain,
+          fast-moving, stressful, or high-stakes.
+        </p>
+
+        <p class="dlterx-p">
+          In plain language, the three axes describe:
+          <strong>how you route information</strong> (Perception),
+          <strong>how you create stability</strong> (Emergence),
+          and <strong>how you update identity</strong> (Identity Dynamics).
+        </p>
+
+        <div class="dlterx-axis-grid" role="list" aria-label="DLTER axes">
+          <!-- Perception -->
+          <article class="dlterx-panel" role="listitem" aria-label="Perception Axis">
+            <div class="dlterx-panel-head">
+              <div>
+                <h3 class="dlterx-h3">Perception Axis</h3>
+                <div class="dlterx-mini">
+                  <span class="dlterx-mini-code">IN ↔ EX</span>
+                  <span class="dlterx-mini-text">Where clarity tends to come from first</span>
+                </div>
+              </div>
+              <span class="dlterx-axis-dot dlterx-axis-dot--p" aria-hidden="true"></span>
+            </div>
+
+            <p class="dlterx-p">
+              <strong>Perception</strong> describes your default input route under change:
+              do you form coherence by fitting information into an <strong>internal model</strong> first,
+              or by using <strong>external feedback</strong> first?
+              Everyone does both—DLTER is about which route you instinctively trust when you’re moving fast.
+            </p>
+
+            <ul class="dlterx-list">
+              <li>
+                <strong>IN — Internal Reality Framer</strong><br />
+                You tend to pause, interpret, and “make it make sense” internally before committing.
+                You often want the <em>why</em> and the framework. Strength: depth and coherence. Watch-out: overthinking can delay action.
+              </li>
+              <li>
+                <strong>EX — External Reality Absorber</strong><br />
+                You tend to gain clarity through interaction—doing, testing, talking, iterating, getting feedback.
+                Strength: momentum and learning-by-contact. Watch-out: without feedback loops, you can feel scattered.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Emergence -->
+          <article class="dlterx-panel" role="listitem" aria-label="Emergence Axis">
+            <div class="dlterx-panel-head">
+              <div>
+                <h3 class="dlterx-h3">Emergence Axis</h3>
+                <div class="dlterx-mini">
+                  <span class="dlterx-mini-code">ST ↔ FL</span>
+                  <span class="dlterx-mini-text">How you create stability when life shifts</span>
+                </div>
+              </div>
+              <span class="dlterx-axis-dot dlterx-axis-dot--e" aria-hidden="true"></span>
+            </div>
+
+            <p class="dlterx-p">
+              <strong>Emergence</strong> describes your stability strategy:
+              do you stabilize through <strong>structure</strong> (repeatable patterns),
+              or through <strong>adaptive flow</strong> (flexible reconfiguration)?
+              Neither is “better.” They solve different problems.
+            </p>
+
+            <ul class="dlterx-list">
+              <li>
+                <strong>ST — Structured Stabilizer</strong><br />
+                You prefer consistent systems: routines, repeatable schedules, clear rules, and predictable progressions.
+                Strength: reliability and compounding. Watch-out: too much disruption can feel draining—or trigger rigidity.
+              </li>
+              <li>
+                <strong>FL — Fluid Transmuter</strong><br />
+                You prefer flexible systems: options, improvisation, rapid adaptation, and learning as you go.
+                Strength: resilience and responsiveness. Watch-out: without anchors, “flexible” can slide into inconsistent.
+              </li>
+            </ul>
+          </article>
+
+          <!-- Identity -->
+          <article class="dlterx-panel" role="listitem" aria-label="Identity Dynamics Axis">
+            <div class="dlterx-panel-head">
+              <div>
+                <h3 class="dlterx-h3">Identity Dynamics Axis</h3>
+                <div class="dlterx-mini">
+                  <span class="dlterx-mini-code">FX ↔ TR</span>
+                  <span class="dlterx-mini-text">How your self-model tends to update</span>
+                </div>
+              </div>
+              <span class="dlterx-axis-dot dlterx-axis-dot--i" aria-hidden="true"></span>
+            </div>
+
+            <p class="dlterx-p">
+              <strong>Identity Dynamics</strong> describes how your sense of self stays coherent over time:
+              do you update through <strong>refinement</strong>, or through <strong>phases</strong> and deeper reorganizations?
+              This axis matters a lot for long-term change—because behavior tends to follow identity.
+            </p>
+
+            <ul class="dlterx-list">
+              <li>
+                <strong>FX — Fixed Pattern Holder</strong><br />
+                You tend to keep a stable identity core and improve by upgrading the system around it.
+                Strength: consistency and commitment. Watch-out: if the current identity story can’t fit the next chapter, you may resist needed change.
+              </li>
+              <li>
+                <strong>TR — Transformational Observer</strong><br />
+                You tend to update identity through meaningful shifts, seasons, and reinvention phases.
+                Strength: ability to evolve and re-author the self. Watch-out: “reset energy” can become a loop if you don’t keep anchors.
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="dlterx-kicker">
+          Middle scores are not a flaw. They often signal <strong>blend capacity</strong>—you can operate near the center without collapsing into one extreme.
+          DLTER includes dedicated “liminal” types specifically to represent common, stable midpoint patterns.
+        </p>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- GEOMETRY MODEL -->
+      <section id="dlterx-geometry" class="dlterx-section" aria-labelledby="dlterx-geometry-h">
+        <h2 id="dlterx-geometry-h" class="dlterx-h2">The geometry model</h2>
+
+        <p class="dlterx-p">
+          DLTER is easiest to understand as a <strong>coordinate system</strong>.
+          You’re not being “typed” from one trait—you’re being mapped by a <strong>pattern</strong> across three independent dimensions.
+          Your result is an “identity geometry” profile: a readable snapshot of how your system tends to stay coherent under change.
+        </p>
+
+        <div class="dlterx-geo-grid" role="list" aria-label="How the DLTER geometry model works">
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">1) Axis scores are continuous</div>
+            <p class="dlterx-p" style="margin:0;">
+              You’re not a binary label. You can be strongly ST, lightly ST, or right down the middle.
+              Near-center scores often mean you can switch strategies depending on context.
+            </p>
+          </div>
+
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">2) Types are prototypes</div>
+            <p class="dlterx-p" style="margin:0;">
+              A Reality Type is a stable “best-fit” configuration—useful as a reference point for decisions and self-coaching.
+              It’s less “this is who you are” and more “this is your default settings menu.”
+            </p>
+          </div>
+
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">3) Liminal types exist on purpose</div>
+            <p class="dlterx-p" style="margin:0;">
+              Some people are genuinely stable near key midpoints (for example, ST/FL blend).
+              DLTER includes prototypes for those patterns instead of forcing everyone into extremes.
+            </p>
+          </div>
+        </div>
+
+        <p class="dlterx-kicker">
+          Your quiz result also shows a <strong>match strength</strong>. If it’s “Exploratory,” treat your top type as a starting point
+          and pay attention to your “neighbor” (secondary resonance) type—both can explain you.
+        </p>
+
+        <details class="dlterx-details" aria-label="Liminal types explanation">
+          <summary class="dlterx-summary">Why 12 types (not 8) and what “liminal” actually means</summary>
+          <div class="dlterx-details-body">
+            <p class="dlterx-p">
+              If you only used extremes, you’d get 8 “corner” configurations (one for each IN/EX × ST/FL × FX/TR combination).
+              DLTER adds <strong>4 additional prototypes</strong> to represent common boundary patterns that many people live in consistently.
+            </p>
+            <ul class="dlterx-list">
+              <li><strong>Axis Synthesizer</strong> and <strong>Resonant Fieldholder</strong> represent a stable <strong>ST/FL blend</strong> on the Emergence axis.</li>
+              <li><strong>Dimensional Anchor</strong> and <strong>Horizon Breaker</strong> represent a stable <strong>IN/EX blend</strong> on the Perception axis.</li>
+            </ul>
+            <p class="dlterx-p" style="margin-bottom:0;">
+              Translation: “liminal” doesn’t mean unclear. It means you can stabilize near the midpoint on a key dimension—real mode, real strengths.
+            </p>
+          </div>
+        </details>
+
+        <details class="dlterx-details" aria-label="Prototype vectors table">
+          <summary class="dlterx-summary">The 12 type prototypes (coordinate shorthand used under the hood)</summary>
+          <div class="dlterx-details-body">
+            <p class="dlterx-p">
+              If you like clean structure, here’s the compact way the prototypes are represented internally.
+              Midpoint (“liminal”) prototypes sit at 0 on the blended axis.
+            </p>
+
+            <div class="dlterx-tablewrap" role="region" aria-label="DLTER type vectors table" tabindex="0">
+              <table class="dlterx-table">
+                <caption class="dlterx-sr">DLTER type codes and prototype vectors in [Perception, Emergence, Identity Dynamics] format.</caption>
+                <thead>
+                  <tr>
+                    <th>Type</th><th>Code</th><th>Prototype vector [P,E,I]</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1 · Inner Frameworker</td><td>IN–ST–FX</td><td>[-1, -1, -1]</td></tr>
+                  <tr><td>2 · Internal Alchemist</td><td>IN–FL–TR</td><td>[-1, +1, +1]</td></tr>
+                  <tr><td>3 · Dimensional Flowweaver</td><td>EX–FL–TR</td><td>[+1, +1, +1]</td></tr>
+                  <tr><td>4 · External Catalyst</td><td>EX–FL–FX</td><td>[+1, +1, -1]</td></tr>
+                  <tr><td>5 · Reality Architect</td><td>EX–ST–FX</td><td>[+1, -1, -1]</td></tr>
+                  <tr><td>6 · Structured Empathic Lens</td><td>IN–ST–TR</td><td>[-1, -1, +1]</td></tr>
+                  <tr><td>7 · Analytical Evolver</td><td>EX–ST–TR</td><td>[+1, -1, +1]</td></tr>
+                  <tr><td>8 · Fluxbound Weaver</td><td>IN–FL–FX</td><td>[-1, +1, -1]</td></tr>
+                  <tr><td>9 · Axis Synthesizer</td><td>IN–(ST/FL)–TR</td><td>[-1, 0, +1]</td></tr>
+                  <tr><td>10 · Resonant Fieldholder</td><td>EX–(ST/FL)–TR</td><td>[+1, 0, +1]</td></tr>
+                  <tr><td>11 · Dimensional Anchor</td><td>(IN/EX)–ST–FX</td><td>[0, -1, -1]</td></tr>
+                  <tr><td>12 · Horizon Breaker</td><td>(IN/EX)–FL–TR</td><td>[0, +1, +1]</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="dlterx-kicker" style="margin-top:10px;">
+              Practical tip: if you’re near the midpoint on an axis, adjacent types can behave like “neighbors.”
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- WHY THE QUIZ WORKS -->
+      <section id="dlterx-quizworks" class="dlterx-section" aria-labelledby="dlterx-quizworks-h">
+        <h2 id="dlterx-quizworks-h" class="dlterx-h2">Why the quiz works</h2>
+
+        <p class="dlterx-p">
+          The quiz works because it measures the same thing DLTER is modeling at the human scale:
+          your <strong>default response tendencies under change</strong> across three independent axes.
+          No single question “decides” your type. Your result comes from the <strong>pattern across repeated signals</strong>.
+        </p>
+
+        <div class="dlterx-geo-grid" role="list" aria-label="Why the quiz works conceptually">
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">1) Axis separation</div>
+            <p class="dlterx-p" style="margin:0;">Items are written to reflect one axis at a time, so your result isn’t one blended “personality soup.”</p>
+          </div>
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">2) Redundancy beats noise</div>
+            <p class="dlterx-p" style="margin:0;">Multiple items per axis reduce randomness. The tendency that repeats is usually the meaningful one.</p>
+          </div>
+          <div class="dlterx-geo-item" role="listitem">
+            <div class="dlterx-geo-title">3) Stable prototypes</div>
+            <p class="dlterx-p" style="margin:0;">Types are stable prototypes of common configurations. Your result is simply the best-fit match.</p>
+          </div>
+        </div>
+
+        <p class="dlterx-kicker">
+          Answer for accuracy: respond as “<strong>what you default to when life is changing</strong>,” not your best day.
+        </p>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- UNDER THE HOOD -->
+      <section id="dlterx-underhood" class="dlterx-section" aria-labelledby="dlterx-underhood-h">
+        <h2 id="dlterx-underhood-h" class="dlterx-h2">Under the hood</h2>
+
+        <p class="dlterx-p">
+          DLTER started as a quantum-information lens exploring how <strong>spacetime geometry</strong>, <strong>matter</strong>, and <strong>forces</strong>
+          could emerge from deeper informational structure. Whether or not that technical layer ultimately succeeds, the logic translates cleanly:
+          systems become coherent through labeled information, stabilization strategies, and update rules.
+        </p>
+
+        <p class="dlterx-p" style="margin-bottom:0;">
+          NeuForm uses DLTER as a practical framework—not metaphysics or identity dogma.
+        </p>
+
+        <details class="dlterx-details">
+          <summary class="dlterx-summary">DLTER’s core model (plain language)</summary>
+          <div class="dlterx-details-body">
+            <ul class="dlterx-list">
+              <li><strong>Input + labeling:</strong> what gets noticed and what it means.</li>
+              <li><strong>Stabilization:</strong> structure (ST) vs adaptive flow (FL).</li>
+              <li><strong>Update rule:</strong> refinement (FX) vs phases (TR).</li>
+              <li><strong>Coherence under constraint:</strong> limited attention/energy compresses complexity into a workable model.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="dlterx-details">
+          <summary class="dlterx-summary">What DLTER is careful not to claim</summary>
+          <div class="dlterx-details-body">
+            <ul class="dlterx-list">
+              <li><strong>Not destiny:</strong> it describes defaults, not limits.</li>
+              <li><strong>Not diagnosis:</strong> it doesn’t assess disorders or mental health.</li>
+              <li><strong>Not astrology:</strong> no mysticism or fate narratives.</li>
+              <li><strong>Not an excuse:</strong> “that’s my type” isn’t a reason to stay stuck.</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- NOT -->
+      <section id="dlterx-not" class="dlterx-section" aria-labelledby="dlterx-not-h">
+        <h2 id="dlterx-not-h" class="dlterx-h2">What DLTER is not</h2>
+        <ul class="dlterx-list">
+          <li><strong>Not a diagnostic tool.</strong> It does not assess mental health, disorders, or pathology.</li>
+          <li><strong>Not a moral ranking.</strong> There are no “better” types—only different defaults with different tradeoffs.</li>
+          <li><strong>Not astrology.</strong> It’s not based on birth data, mysticism, or fate narratives.</li>
+          <li><strong>Not a typical personality test.</strong> It focuses on how you respond to change.</li>
+          <li><strong>Not a box.</strong> You can grow across all axes while still having a recognizable baseline.</li>
+        </ul>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- NEUFORM -->
+      <section id="dlterx-neuform" class="dlterx-section" aria-labelledby="dlterx-neuform-h">
+        <h2 id="dlterx-neuform-h" class="dlterx-h2">Why this shows up inside NeuForm Fitness</h2>
+
+        <p class="dlterx-p">
+          NeuForm is built around one principle: <strong>the best plan is the one you can execute</strong>.
+          Most people don’t fail because they “don’t want it.” They fail because the plan fights their default stability strategy,
+          their information style, or their identity update pattern.
+        </p>
+
+        <p class="dlterx-p">
+          DLTER helps us coach and design programs that match how you naturally stabilize and adapt—so the fundamentals
+          (training, nutrition, recovery, habits) become <strong>less friction</strong>, more consistency, and better outcomes.
+        </p>
+
+        <div class="dlterx-split" role="list" aria-label="DLTER in NeuForm mapping">
+          <div class="dlterx-split-item" role="listitem">
+            <div class="dlterx-split-title">Training structure</div>
+            <ul class="dlterx-list">
+              <li><strong>ST</strong> thrives with repeating templates, predictable progressions, and clear tracking.</li>
+              <li><strong>FL</strong> thrives with modular plans, smart variation, and options when life gets messy.</li>
+            </ul>
+          </div>
+
+          <div class="dlterx-split-item" role="listitem">
+            <div class="dlterx-split-title">Adherence loops</div>
+            <ul class="dlterx-list">
+              <li><strong>IN</strong> adheres when the “why” clicks: rationale and internal buy-in.</li>
+              <li><strong>EX</strong> adheres with feedback: accountability, environment, visible metrics.</li>
+            </ul>
+          </div>
+
+          <div class="dlterx-split-item" role="listitem">
+            <div class="dlterx-split-title">Long-term change</div>
+            <ul class="dlterx-list">
+              <li><strong>FX</strong> changes via refinement: stable identity, upgraded systems.</li>
+              <li><strong>TR</strong> changes via phases: “chapters,” resets, meaningful shifts.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="dlterx-p" style="margin-bottom:0;">
+          DLTER doesn’t replace fundamentals—it helps you <strong>apply</strong> fundamentals in a way that matches how you actually function.
+        </p>
+      </section>
+
+      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+
+      <!-- CTA -->
+      <section id="dlterx-cta" class="dlterx-section" aria-label="Call to action">
+        <div class="dlterx-cta">
+          <div>
+            <h2 class="dlterx-h2" style="margin:0 0 6px;">Ready to see your Reality Type?</h2>
+            <p class="dlter-muted" style="margin:0;">24 questions · ~4–6 minutes · instant result (with match strength + axis breakdown)</p>
+          </div>
+
+          <a class="btn primary tiny" href="https://www.neuform-fitness.com/dlter-quiz" aria-label="Take the DLTER Quiz">
+            Take the quiz →
+          </a>
+        </div>
+
+        <div class="dlterx-footerlinks" aria-label="Footer links">
+          <a class="dlterx-footlink" href="#dlterx-top">Back to top ↑</a>
+          <span class="dlterx-footsep" aria-hidden="true">·</span>
+          <a class="dlterx-footlink" href="https://www.neuform-fitness.com/dlter-quiz">Back to quiz →</a>
+        </div>
+
+        <p class="dlterx-kicker" style="margin-top:10px;">
+          You don’t need to memorize anything here. Use your type as a starting point: reduce friction, build consistency,
+          and make the identity you want easier to live.
+        </p>
+      </section>
+
+    </div><!-- /.dlter-explained-shell -->
+  </div><!-- /.card.dlterx-card -->
+</div><!-- /#dlterx-top -->

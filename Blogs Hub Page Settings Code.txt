@@ -1,0 +1,597 @@
+Blogs Hub Page Settings Code
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/blog">
+<meta property="og:title" content="The NeuForm Fitness Blog — Evidence-Based Training, Tools & Results">
+<meta property="og:description" content="Evidence-based articles on hypertrophy, strength, functional fitness, and practical training tools. Clear cues, smart programming, real results.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — Blog">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The NeuForm Fitness Blog — Evidence-Based Training, Tools & Results">
+<meta name="twitter:description" content="Evidence-based articles on hypertrophy, strength, and functional fitness. Tools, guides, and practical templates for real-world progress.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness — Blog">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+Body:
+<!-- NeuForm — Blog Hub (Unified Logic v4.6.0, 2025-12-02)
+     • Centered ribbon + CMS-driven filters (Search, Category, Series, Sort, Read Range)
+     • Dual-thumb read-time (both thumbs usable; active thumb floats to top)
+     • URL sync (Back/Forward aware) + pager + result/empty messaging
+-->
+<script>
+(function(){
+  /* ---------- helpers ---------- */
+  var dl = window.dataLayer = window.dataLayer || [];
+  try{ dl.push({ event:'nf_blog_index_view' }); }catch(_){}
+
+  var $  = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
+  var toNum  = function(v){ var n = parseFloat(String(v||'').replace(/,/g,'.')); return Number.isFinite(n) ? n : NaN; };
+  var norm   = function(s){ return String(s||'').toLowerCase().replace(/\s+/g,' ').trim(); };
+  var splitCSV = function(s){ return String(s||'').split(',').map(function(x){return norm(x);}).filter(Boolean); };
+  var uniq = function(arr){ return Array.from(new Set(arr)); };
+  var clamp = function(v,min,max){ return Math.max(min, Math.min(max, v)); };
+  function friendlyRead(v){ return (parseInt(v,10) === 11 ? '10+' : String(v)); }
+
+  var PAGE_SIZE = 10;
+  var grid = $('.blog_list'); if(!grid) return;
+
+  /* ---------- analytics ---------- */
+  (function(){
+    var cards = $$('.nf-blog-card, .nf-blog-tile, [data-blog-card]', grid);
+    if (!cards.length || !('IntersectionObserver' in window)) return;
+    var seen = new Set();
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        var href = (el.querySelector('a[href]')||{}).href || '';
+        var id = el.dataset.id || el.id || href;
+        if (!id || seen.has(id)) return;
+        seen.add(id);
+
+        // capture current filter state (if available) for analytics
+        var filters;
+        try{
+          filters = (typeof readUI === 'function') ? readUI() : null;
+        }catch(_){
+          filters = null;
+        }
+
+        try{
+          dl.push({
+            event:'nf_blog_card_impression',
+            blog_id:id,
+            blog_title:el.dataset.title || (el.querySelector('h3')?.textContent || ''),
+            blog_cat:el.dataset.cat || null,
+            blog_date:el.dataset.date || null,
+            filter_q: filters && filters.q || '',
+            filter_cat: filters && filters.cat || '',
+            filter_series: filters && filters.series || '',
+            filter_sort: filters && filters.sort || 'new',
+            filter_readMin: filters && filters.readMin || 1,
+            filter_readMax: filters && filters.readMax || 11,
+            filter_page: (typeof state === 'object' && state && typeof state.page === 'number') ? state.page : 1
+          });
+        }catch(_){}
+        io.unobserve(el);
+      });
+    }, { threshold:0.3, rootMargin:'0px 0px -10% 0px' });
+    cards.forEach(function(c){ io.observe(c); });
+  })();
+
+  // ✅ Updated: removed passive:true so you can safely preventDefault later if needed
+  document.addEventListener('click',function(e){
+    var card = e.target.closest && e.target.closest('.nf-blog-card, .nf-blog-tile, [data-blog-card]');
+    if(!card) return;
+    var href = (card.querySelector('a[href]')||{}).href || '';
+    if(!href) return;
+
+    // capture current filter state (if available) for analytics
+    var filters;
+    try{
+      filters = (typeof readUI === 'function') ? readUI() : null;
+    }catch(_){
+      filters = null;
+    }
+
+    try{
+      dl.push({
+        event:'nf_blog_card_click',
+        blog_id:card.dataset.id || href,
+        blog_title:card.dataset.title || (card.querySelector('h3')?.textContent || ''),
+        blog_cat:card.dataset.cat || null,
+        blog_date:card.dataset.date || null,
+        dest:href,
+        filter_q: filters && filters.q || '',
+        filter_cat: filters && filters.cat || '',
+        filter_series: filters && filters.series || '',
+        filter_sort: filters && filters.sort || 'new',
+        filter_readMin: filters && filters.readMin || 1,
+        filter_readMax: filters && filters.readMax || 11,
+        filter_page: (typeof state === 'object' && state && typeof state.page === 'number') ? state.page : 1
+      });
+    }catch(_){}
+  });
+
+  /* ---------- skeleton ---------- */
+  var empty = $('.nf-empty',grid);
+  if(!empty){
+    empty=document.createElement('div');
+    empty.className='nf-empty';
+    empty.textContent='No posts match your filters.';
+    grid.appendChild(empty);
+  }
+  var track=$('.nf-page-track',grid);
+  if(!track){
+    track=document.createElement('div');
+    track.className='nf-page-track';
+    grid.insertBefore(track,empty);
+  }
+  $$('.nf-blog-tile',grid).forEach(function(el){ if(el.parentElement!==track) track.appendChild(el); });
+
+  function parseDate(el){
+    var iso=el.dataset.date;
+    if(iso){ var d=new Date(iso); if(!isNaN(d)) return d; }
+    return new Date(0);
+  }
+
+  /* ---------- read tiles from CMS-mapped data-* ---------- */
+  var tiles=$$('.nf-blog-tile',track).map(function(el){
+    var d=function(k){ return String(el.dataset[k]||'').trim(); };
+    // CMS mapping → data attributes expected on each tile:
+    // data-title, data-sub, data-cat (Primary), data-cat2 (Secondary),
+    // data-cats (CSV extra categories, optional), data-tags (CSV keywords),
+    // data-series (Series/Collection), data-read (Estimated Read Time minutes),
+    // data-date (ISO Publish Date)
+    var primary=norm(d('cat')), secondary=norm(d('cat2')), extras=splitCSV(d('cats'));
+    var catsSet=new Set([primary, secondary].concat(extras).filter(Boolean));
+    var tagList=splitCSV(d('tags'));
+    var series = norm(d('series'));
+    return {
+      el:el,
+      title:norm(d('title')),
+      sub:norm(d('sub')),
+      cat:primary, cat2:secondary, catsSet:catsSet,
+      tagList:tagList,
+      series:series,
+      read:(function(){ var r=toNum(d('read')); return Number.isFinite(r)? r : 0; })(),
+      date:parseDate(el)
+    };
+  });
+
+  /* ---------- controls (inject) ---------- */
+  var controls=$('#nf-controls');
+  if(!controls){
+    controls=document.createElement('div');
+    controls.id='nf-controls';
+    controls.setAttribute('data-nf-js','4.6.0');
+    controls.innerHTML =
+      '<div class="nf-ribbon">'
+        + '<div class="nf-ctrl-wrap filters">'
+          + '<span class="nf-cell nf-cell--search"><input id="nf-q" type="search" placeholder="Search posts…" aria-label="Search posts"></span>'
+          + '<span class="nf-cell"><select id="nf-cat" aria-label="Category"><option value="">All categories</option></select></span>'
+          + '<span class="nf-cell"><select id="nf-series" aria-label="Series"><option value="">All series</option></select></span>'
+          + '<span class="nf-cell"><select id="nf-sort" aria-label="Sort">'
+              + '<option value="new">Newest</option>'
+              + '<option value="old">Oldest</option>'
+              + '<option value="az">Title A–Z</option>'
+              + '<option value="za">Title Z–A</option>'
+              + '<option value="read">Read Time (Short→Long)</option>'
+              + '<option value="readDesc">Read Time (Long→Short)</option>'
+            + '</select></span>'
+        + '</div>'
+        + '<div class="nf-ctrl-wrap util" aria-hidden="false"></div>'
+      + '</div>';
+    grid.insertBefore(controls,track);
+  }
+
+  var els={
+    rMin:    $('#nf-read-min'),
+    rMax:    $('#nf-read-max'),
+    rLabel:  $('#nf-read-label'),
+    rReset:  $('#nf-read-reset'),
+    readText:$('#nf-read-text'),
+    rFill:   $('#nf-slider-fill'),
+    clear:   $('#nf-clear'),
+    result:  $('#nf-result'),
+    utilWrap:    $('#nf-controls .util')
+  };
+
+  /* ---------- row 2: read-range + clear + result ---------- */
+  if(!$('#nf-readrange')){
+    var rg = document.createElement('div');
+    rg.className = 'nf-readrange';
+    rg.id = 'nf-readrange';
+    rg.setAttribute('role','group');
+    rg.setAttribute('aria-label','Read time range');
+    rg.setAttribute('aria-controls','nf-result');
+    rg.innerHTML =
+      '<span class="nf-read-text" id="nf-read-text">Read time</span>'
+      + '<div class="nf-slider-wrap">'
+        + '<div class="nf-slider-track"></div>'
+        + '<div class="nf-slider-fill" id="nf-slider-fill"></div>'
+        + '<label for="nf-read-min" class="sr-only">Minimum read time (minutes)</label>'
+        + '<input id="nf-read-min" type="range" min="1" max="11" step="1" value="1" aria-label="Minimum read time (minutes)" aria-valuetext="1 minute">'
+        + '<label for="nf-read-max" class="sr-only">Maximum read time (minutes)</label>'
+        + '<input id="nf-read-max" type="range" min="1" max="11" step="1" value="11" aria-label="Maximum read time (minutes)" aria-valuetext="10+ minutes">'
+      + '</div>'
+      + '<span id="nf-read-label" class="nf-read-label" aria-live="polite">1–10+ min</span>'
+      + '<button type="button" id="nf-read-reset" class="nf-read-reset" aria-label="Reset read time range" title="Reset read time">↺</button>';
+    els.utilWrap.appendChild(rg);
+  }
+  if(!els.clear){
+    var clr = document.createElement('button');
+    clr.id='nf-clear'; clr.type='button'; clr.textContent='Clear';
+    clr.setAttribute('aria-label','Clear all filters');
+    els.utilWrap.appendChild(clr);
+  }
+  if(!els.result){
+    var rs = document.createElement('span');
+    rs.id='nf-result'; rs.className='nf-result'; rs.setAttribute('aria-live','polite');
+    els.utilWrap.appendChild(rs);
+  }
+
+  /* ---------- CSS (inline: slider + basic ribbon shell) ---------- */
+  (function injectCSS(){
+    if(document.querySelector('style[data-nf-ribbon]')) return;
+    var st = document.createElement('style');
+    st.setAttribute('data-nf-ribbon','');
+    st.textContent = [
+      /* Centering frame (no bleed) */
+      '#nf-controls{display:flex;justify-content:center;width:100%;padding:0 12px;box-sizing:border-box;}',
+      '#nf-controls .nf-ribbon{--nf-ribbon-max: 1040px;display:flex;flex-direction:column;row-gap:12px;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.55);box-shadow:0 14px 40px rgba(0,0,0,.45);width:100%;max-width:var(--nf-ribbon-max);margin:0 auto;box-sizing:border-box;overflow:visible;isolation:isolate;}',
+
+      /* Rows */
+      '#nf-controls .nf-ctrl-wrap{width:100%;box-sizing:border-box;}',
+
+      /* Top row grid (structural only; visual styling in page CSS) */
+      '#nf-controls .filters{display:grid;grid-template-columns:1fr 180px 180px 180px;column-gap:18px;align-items:center;justify-items:stretch;padding-inline:6px;white-space:nowrap;}',
+
+      /* Bottom row */
+      '#nf-controls .util{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 14px;padding-inline:6px;}',
+
+      /* Slider visuals */
+      '#nf-controls .nf-slider-wrap{position:relative;width:min(420px,100%);height:28px;}',
+      '#nf-controls .nf-slider-track{position:absolute;left:0;right:0;top:50%;height:4px;transform:translateY(-50%);background:rgba(255,255,255,.22);border-radius:999px;pointer-events:none;z-index:1;}',
+      '#nf-controls .nf-slider-fill{position:absolute;top:50%;height:4px;transform:translateY(-50%);background:rgba(52,152,219,.9);border-radius:999px;pointer-events:none;z-index:1;}',
+      '#nf-controls #nf-read-min,#nf-controls #nf-read-max{position:absolute;left:0;right:0;width:100%;margin:0;background:transparent;appearance:none;-webkit-appearance:none;height:28px;outline:none;}',
+
+      /* thumbs */
+      '#nf-controls #nf-read-min::-webkit-slider-thumb,#nf-controls #nf-read-max::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#e9f3f7;border:2px solid rgba(255,255,255,.25);box-shadow:0 0 0 2px rgba(0,0,0,.3);position:relative;z-index:3;}',
+      '#nf-controls #nf-read-min::-moz-range-thumb,#nf-controls #nf-read-max::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#e9f3f7;border:2px solid rgba(255,255,255,.25);position:relative;z-index:3;}',
+
+      /* default stacking (min on top so floor is always draggable first) */
+      '#nf-controls #nf-read-min{z-index:5;}',
+      '#nf-controls #nf-read-max{z-index:4;}',
+
+      /* Responsive */
+      '@media (max-width:980px){#nf-controls .nf-ribbon{--nf-ribbon-max: 780px;}#nf-controls .filters{grid-template-columns:1fr 160px 160px 160px;column-gap:14px;}}',
+      '@media (max-width:760px){#nf-controls .filters{grid-template-columns:1fr 1fr;row-gap:10px;white-space:normal;}}'
+    ].join('');
+    document.head.appendChild(st);
+  })();
+
+  /* ---------- populate selects from tiles ---------- */
+  function addOptions(sel, values){
+    uniq(values).filter(Boolean).sort().forEach(function(v){
+      var o=document.createElement('option');
+      o.value=v;
+      // Capitalize words for display
+      o.textContent=v.replace(/\b\w/g,function(m){return m.toUpperCase();});
+      sel.appendChild(o);
+    });
+  }
+  function hideIfSingleton(sel){
+    if(!sel) return;
+    var real = Array.from(sel.options).filter(function(o){ return o.value !== ''; });
+    if(real.length <= 1){ sel.setAttribute('hidden',''); sel.setAttribute('aria-hidden','true'); sel.disabled=true; }
+    else{ sel.removeAttribute('hidden'); sel.removeAttribute('aria-hidden'); sel.disabled=false; }
+  }
+  // Build pools
+  var catPool=[]; tiles.forEach(function(t){ t.catsSet.forEach(function(c){ catPool.push(c); }); });
+  var haveSeries = tiles.some(function(t){ return !!t.series; });
+  var seriesPool=[];
+  tiles.forEach(function(t){
+    if(haveSeries){ if(t.series) seriesPool.push(t.series); }
+    else{ t.tagList.forEach(function(tag){ seriesPool.push(tag); }); }
+  });
+  // Populate
+  if($('#nf-cat') && !$('#nf-cat').dataset.bound){
+    addOptions($('#nf-cat'), catPool);
+    $('#nf-cat').dataset.bound = '1';
+  }
+  if($('#nf-series') && !$('#nf-series').dataset.bound){
+    addOptions($('#nf-series'), seriesPool);
+    $('#nf-series').dataset.bound = '1';
+  }
+  hideIfSingleton($('#nf-cat'));
+  hideIfSingleton($('#nf-series'));
+
+  /* ---------- URL/state ---------- */
+  function getParams(){
+    var p=new URLSearchParams(location.search);
+    var n=parseInt(p.get('p'),10);
+    var readMin = parseInt(p.get('readMin'), 10);
+    var readMax = parseInt(p.get('readMax'), 10);
+    if(Number.isFinite(readMin) && Number.isFinite(readMax) && readMin>readMax) readMax=readMin;
+    return {
+      q: p.get('q')||'',
+      cat: norm(p.get('cat')||''),
+      series: norm(p.get('series')||''),
+      sort: p.get('sort')||'new',
+      readMin: Number.isFinite(readMin)?clamp(readMin,1,11):1,
+      readMax: Number.isFinite(readMax)?clamp(readMax,1,11):11,
+      page: Number.isFinite(n)&&n>0?n:1
+    };
+  }
+  function setParams(s, replace){
+    var p=new URLSearchParams();
+    if(s.q)      p.set('q',s.q);
+    if(s.cat)    p.set('cat',s.cat);
+    if(s.series) p.set('series',s.series);
+    if(s.sort && s.sort!=='new') p.set('sort',s.sort);
+    if(s.readMin && s.readMin!==1) p.set('readMin', String(s.readMin));
+    if(s.readMax && s.readMax!==11) p.set('readMax', String(s.readMax));
+    if(s.page && s.page>1) p.set('p', String(s.page));
+    var url=location.pathname+(p.toString()?('?'+p.toString()):'');
+    try{ (replace?history.replaceState:history.pushState).call(history,null,'',url); }catch(_){}
+  }
+
+  function writeUI(s){
+    $('#nf-q') && ($('#nf-q').value = s.q||'');
+    $('#nf-cat') && ($('#nf-cat').value = s.cat||'');
+    $('#nf-series') && ($('#nf-series').value = s.series||'');
+    $('#nf-sort') && ($('#nf-sort').value = s.sort||'new');
+    $('#nf-read-min') && ($('#nf-read-min').value = String(s.readMin||1));
+    $('#nf-read-max') && ($('#nf-read-max').value = String(s.readMax||11));
+    updateReadLabel();
+  }
+  function readUI(){
+    return {
+      q:      ($('#nf-q')?.value||'').trim(),
+      cat:    norm($('#nf-cat')?.value||''),
+      series: norm($('#nf-series')?.value||''),
+      sort:   ($('#nf-sort')?.value||'new'),
+      readMin: clamp(parseInt($('#nf-read-min')?.value||'1',10)||1,1,11),
+      readMax: clamp(parseInt($('#nf-read-max')?.value||'11',10)||11,1,11)
+    };
+  }
+
+  /* ---------- read-range helpers ---------- */
+  function readMeetsRange(val, minV, maxV){
+    if(!val || Number(val) === 0){ return (minV === 1 && maxV === 11); }
+    var lower = (minV===11 ? 10 : minV);
+    var upper = (maxV===11 ? Infinity : maxV);
+    var v = Number(val)||0;
+    return v >= lower && (upper === Infinity ? true : v <= upper);
+  }
+  function formatReadLabel(minV, maxV){
+    var lo = friendlyRead(minV), hi = friendlyRead(maxV);
+    if(lo===hi) return (hi==='10+'? '10+ min' : (hi+' min'));
+    return lo + '–' + hi + ' min';
+  }
+  function updateReadLabel(){
+    var rMin = $('#nf-read-min'), rMax = $('#nf-read-max'), rLbl = $('#nf-read-label'), fill = $('#nf-slider-fill');
+    if(!rMin || !rMax || !rLbl) return;
+    var minV = clamp(parseInt(rMin.value||'1',10)||1,1,11);
+    var maxV = clamp(parseInt(rMax.value||'11',10)||11,1,11);
+    if(minV>maxV){ maxV = minV; rMax.value = String(maxV); }
+    rLbl.textContent = formatReadLabel(minV, maxV);
+    rMin.setAttribute('aria-valuetext', friendlyRead(minV) + (minV===11 ? ' minutes (10+)' : ' minute' + (minV===1?'':'s')));
+    rMax.setAttribute('aria-valuetext', friendlyRead(maxV) + (maxV===11 ? ' minutes (10+)' : ' minutes'));
+    if(fill){
+      var minPct = ((minV - 1) / 10) * 100;
+      var maxPct = ((maxV - 1) / 10) * 100;
+      var left = Math.min(minPct, maxPct);
+      var width = Math.max(0, Math.abs(maxPct - minPct));
+      fill.style.left = left + '%';
+      fill.style.width = width + '%';
+    }
+  }
+  function bringToFront(which){
+    var minEl = $('#nf-read-min'), maxEl = $('#nf-read-max');
+    if(!minEl || !maxEl) return;
+    if(which === 'min'){ minEl.style.zIndex = '6'; maxEl.style.zIndex = '5'; }
+    else{ maxEl.style.zIndex = '6'; minEl.style.zIndex = '5'; }
+  }
+
+  /* ---------- matching ---------- */
+  function matches(t, s){
+    var q = norm(s.q);
+    var qHit   = !q || t.title.includes(q) || t.sub.includes(q) || (t.series && t.series.includes(q));
+    var catHit = !s.cat || t.cat===s.cat || t.cat2===s.cat || (t.catsSet && t.catsSet.has(s.cat));
+    var serHit = !s.series || (t.series && t.series===s.series) || t.tagList.includes(s.series);
+    var rdHit  = readMeetsRange(t.read, s.readMin, s.readMax);
+    return qHit && catHit && serHit && rdHit;
+  }
+
+  /* ---------- pagers ---------- */
+  function makePager(){
+    var p=document.createElement('div');
+    p.className='nf-pager';
+    p.innerHTML='<button type="button" class="nf-prev" aria-label="Previous page">←</button>'
+               +'<span class="nf-page-label" aria-live="polite">Page 1</span>'
+               +'<button type="button" class="nf-next" aria-label="Next page">→</button>';
+    return p;
+  }
+  var pagerTop=makePager(), pagerBot=makePager();
+  grid.insertBefore(pagerTop,track);
+  grid.insertBefore(pagerBot,empty);
+
+  var prevBtns=[].slice.call(pagerTop.querySelectorAll('.nf-prev'))
+                 .concat([].slice.call(pagerBot.querySelectorAll('.nf-prev')));
+  var nextBtns=[].slice.call(pagerTop.querySelectorAll('.nf-next'))
+                 .concat([].slice.call(pagerBot.querySelectorAll('.nf-next')));
+  var labels=[].slice.call(pagerTop.querySelectorAll('.nf-page-label'))
+                .concat([].slice.call(pagerBot.querySelectorAll('.nf-page-label')));
+
+  var state = { page:1, totalPages:1 }, current=null, applying=false;
+
+  function buildPage(items){
+    var page=document.createElement('div');
+    page.className='nf-page enter-from-right';
+    items.forEach(function(t){ page.appendChild(t.el); });
+    return page;
+  }
+  function swapPage(newPage,dir){
+    if(current){
+      current.classList.remove('enter-from-right','enter-to-center');
+      current.classList.add(dir==='prev'?'enter-from-right':'leave-to-left');
+      var old=current;
+      old.addEventListener('transitionend',function(e){
+        if(e.propertyName==='transform'||e.propertyName==='opacity'){
+          if(old.parentElement===track) track.removeChild(old);
+        }
+      },{once:true});
+    }
+    track.appendChild(newPage);
+    void newPage.offsetWidth;
+    newPage.classList.remove('enter-from-right');
+    newPage.classList.add('enter-to-center');
+    current=newPage;
+  }
+  function updatePager(){
+    labels.forEach(function(l){ l.textContent='Page '+state.page+' of '+state.totalPages; });
+    prevBtns.forEach(function(b){ b.disabled=state.page<=1; });
+    nextBtns.forEach(function(b){ b.disabled=state.totalPages<=1 || state.page>=state.totalPages; });
+  }
+
+  function apply(replaceURL,dir){
+    if(applying) return; applying = true;
+
+    var s=readUI();
+    if(s.readMin > s.readMax){ s.readMax = s.readMin; $('#nf-read-max').value = String(s.readMax); updateReadLabel(); }
+
+    var shown=[];
+    tiles.forEach(function(t){
+      var ok=matches(t,s);
+      t.el.style.display=ok?'':'none';
+      if(ok) shown.push(t);
+    });
+
+    var cmp = {
+      new:function(a,b){ return b.date-a.date; },
+      old:function(a,b){ return a.date-b.date; },
+      read:function(a,b){
+        if((a.read||0)===0 && (b.read||0)!==0) return 1;
+        if((b.read||0)===0 && (a.read||0)!==0) return -1;
+        return (a.read-b.read)||(b.date-a.date);
+      },
+      readDesc:function(a,b){
+        if((a.read||0)===0 && (b.read||0)!==0) return 1;
+        if((b.read||0)===0 && (a.read||0)!==0) return -1;
+        return (b.read-a.read)||(b.date-a.date);
+      },
+      az:function(a,b){ var c=a.title.localeCompare(b.title); return c||(b.date-a.date); },
+      za:function(a,b){ var c=b.title.localeCompare(a.title); return c||(b.date-a.date); }
+    }[s.sort] || function(a,b){ return b.date-a.date; };
+    shown.sort(cmp);
+
+    state.totalPages=Math.max(1,Math.ceil(shown.length/PAGE_SIZE));
+    if(state.page>state.totalPages) state.page=state.totalPages;
+    if(state.page<1) state.page=1;
+
+    var start=(state.page-1)*PAGE_SIZE;
+    var end=start+PAGE_SIZE;
+    var newPage=buildPage(shown.slice(start,end));
+    swapPage(newPage,dir||'next');
+
+    // empty/result text
+    var emptyNow = shown.length===0;
+    empty.classList.toggle('show', emptyNow);
+    if($('#nf-result')){
+      $('#nf-result').textContent = emptyNow
+        ? 'No posts match your filters.'
+        : 'Showing '+shown.length+' post'+(shown.length===1?'':'s')+'.';
+    }
+
+    setParams({ q:s.q, cat:s.cat, series:s.series, sort:s.sort, readMin:s.readMin, readMax:s.readMax, page:state.page }, !!replaceURL);
+
+    updatePager();
+    applying = false;
+  }
+
+  /* ---- pager controls ---- */
+  function prev(){ if(state.page>1){ state.page--; apply(false,'prev'); } }
+  function next(){ if(state.page<state.totalPages){ state.page++; apply(false,'next'); } }
+  prevBtns.forEach(function(b){ b.addEventListener('click', prev); });
+  nextBtns.forEach(function(b){ b.addEventListener('click', next); });
+
+  /* ---------- other events ---------- */
+  var debounce=function(fn,ms){ var t; return function(){ var a=arguments; clearTimeout(t); t=setTimeout(function(){ fn.apply(null,a); }, ms||160); }; };
+  var applyDebounced=debounce(function(){ state.page=1; apply(true); },140);
+
+  $('#nf-q')      && $('#nf-q').addEventListener('input', applyDebounced);
+  $('#nf-cat')    && $('#nf-cat').addEventListener('change', function(){ state.page=1; apply(true); });
+  $('#nf-series') && $('#nf-series').addEventListener('change', function(){ state.page=1; apply(true); });
+  $('#nf-sort')   && $('#nf-sort').addEventListener('change', function(){ state.page=1; apply(true); });
+
+  function rangeChanged(){
+    var rMin=$('#nf-read-min'), rMax=$('#nf-read-max');
+    var minV = clamp(parseInt(rMin.value||'1',10)||1,1,11);
+    var maxV = clamp(parseInt(rMax.value||'11',10)||11,1,11);
+    if(this === rMin && minV > maxV){ maxV = minV; rMax.value = String(maxV); }
+    if(this === rMax && maxV < minV){ minV = maxV; rMin.value = String(minV); }
+    updateReadLabel();
+    state.page=1; apply(true);
+  }
+  $('#nf-read-min') && $('#nf-read-min').addEventListener('input', rangeChanged);
+  $('#nf-read-max') && $('#nf-read-max').addEventListener('input', rangeChanged);
+
+  var bumpMin = function(){ bringToFront('min'); };
+  var bumpMax = function(){ bringToFront('max'); };
+  ['pointerdown','mousedown','touchstart','focus'].forEach(function(evt){
+    $('#nf-read-min') && $('#nf-read-min').addEventListener(evt, bumpMin, {passive:true});
+    $('#nf-read-max') && $('#nf-read-max').addEventListener(evt, bumpMax, {passive:true});
+  });
+
+  $('#nf-read-reset') && $('#nf-read-reset').addEventListener('click', function(){
+    $('#nf-read-min').value='1'; $('#nf-read-max').value='11';
+    updateReadLabel(); state.page=1; apply(true);
+  });
+
+  /* ---------- init ---------- */
+  var init = (function(){
+    var p=getParams();
+    writeUI(p);
+    return p;
+  })();
+  state.page = init.page || 1;
+  updateReadLabel();
+  apply(true);
+
+  /* ---------- Back/Forward support ---------- */
+  window.addEventListener('popstate', function(){
+    var p = getParams();
+    writeUI(p);
+    state.page = p.page || 1;
+    apply(true);
+  });
+
+  /* ---------- a11y: sr-only (if missing) ---------- */
+  if(!document.querySelector('style[data-nf-sr-only]')){
+    var st=document.createElement('style');
+    st.setAttribute('data-nf-sr-only','');
+    st.textContent='.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}';
+    document.head.appendChild(st);
+  }
+})();
+</script>

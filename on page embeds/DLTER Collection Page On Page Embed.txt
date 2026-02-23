@@ -1,0 +1,417 @@
+DLTER CMS Collection Page On Page Embeds
+Embed 1:
+<style>
+.dlter-auth-bar{
+  display:none;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  margin:0 0 20px;
+  border-radius:12px;
+  background:var(--nf-glass-bg,rgba(15,23,42,.9));
+  border:var(--nf-glass-border,1px solid rgba(255,255,255,.08));
+  box-shadow:var(--nf-glass-shadow,0 18px 45px rgba(0,0,0,.6));
+  backdrop-filter:var(--nf-glass-blur,blur(12px));
+  -webkit-backdrop-filter:var(--nf-glass-blur,blur(12px));
+  font-size:.9rem;
+}
+.dlter-auth-info{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  color:var(--dlter-text,#f9fafb);
+  font-weight:600;
+  flex-wrap:wrap;
+}
+.dlter-auth-email{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dlter-auth-plan{font-size:.8rem;color:var(--dlter-muted,#9ca3af);opacity:.9;white-space:nowrap}
+.dlter-auth-badge{font-size:.7rem;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.dlter-auth-badge--guest{background:rgba(31,41,55,.9);color:rgba(156,163,175,.95);border:1px solid rgba(55,65,81,.9)}
+.dlter-auth-badge--member{background:rgba(129,140,248,.10);color:rgba(199,210,254,.95);border:1px solid rgba(129,140,248,.55);box-shadow:0 0 0 1px rgba(129,140,248,.12)}
+.dlter-auth-badge--premium{background:rgba(252,211,77,.12);color:#fcd34d;border:1px solid rgba(252,211,77,.5);box-shadow:0 0 0 1px rgba(252,211,77,.18),0 0 10px rgba(252,211,77,.35)}
+.dlter-auth-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.dlter-auth-actions [hidden]{display:none!important}
+
+/* Keep buttons for Memberstack modals */
+.dlter-auth-actions button.btn{
+  appearance:none;-webkit-appearance:none;box-sizing:border-box;border-radius:999px;padding:6px 12px;min-height:30px;
+  font-size:.8rem;line-height:1.2;font-weight:600;
+  border:1px solid rgba(148,163,184,.5)!important;background:rgba(15,23,42,.95)!important;color:var(--dlter-text,#f9fafb)!important;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-decoration:none;
+  transition:background .16s ease-out,border-color .16s ease-out,box-shadow .16s ease-out,transform .16s ease-out,opacity .16s ease-out
+}
+.dlter-auth-actions button.btn:hover{background:rgba(30,64,175,.65)!important;border-color:rgba(129,140,248,.7)!important;box-shadow:0 8px 18px rgba(0,0,0,.4);transform:translateY(-.5px)}
+.dlter-auth-actions button.btn:focus-visible{outline:2px solid rgba(129,140,248,.95);outline-offset:2px}
+.dlter-auth-actions button.btn.ghost{background:transparent!important;border-color:rgba(148,163,184,.6)!important;color:var(--dlter-text,#f9fafb)!important}
+.dlter-auth-actions button.btn.ghost:hover{background:rgba(15,23,42,.9)!important}
+.dlter-auth-actions button.btn.primary{background:#3498db!important;border-color:#3498db!important;color:#020617!important;box-shadow:0 10px 24px rgba(52,152,219,.55)}
+.dlter-auth-actions button.btn.primary:hover{background:#2980b9!important;border-color:#2980b9!important}
+.dlter-auth-actions button.btn.tiny{padding:5px 11px;min-height:30px;font-size:.8rem}
+
+/* ✅ FORCE MOBILE STACK (wins even if another rule conflicts) */
+@media (max-width:1100px){
+  .dlter-auth-bar{
+    flex-direction:column !important;
+    align-items:stretch !important;
+    justify-content:flex-start !important;
+    gap:10px;
+  }
+  .dlter-auth-info{
+    justify-content:center !important;
+    text-align:center;
+  }
+  .dlter-auth-actions{
+    width:100%;
+    justify-content:center !important;
+  }
+  .dlter-auth-email{max-width:100%}
+  .dlter-auth-plan{display:block !important;white-space:normal !important}
+}
+
+@media (max-width:480px){
+  .dlter-auth-bar{padding:10px 12px}
+  .dlter-auth-actions button.btn{flex:1 1 140px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .dlter-auth-bar,.dlter-auth-actions button.btn{transition:none!important;transform:none!important}
+}
+</style>
+
+<div id="dlter-member-bar" class="dlter-auth-bar" role="region" aria-label="Account status">
+  <div class="dlter-auth-info">
+    <span id="dlter-user-email" class="dlter-auth-email">Guest mode</span>
+    <span id="dlter-user-plan-copy" class="dlter-auth-plan" aria-live="polite">· Blueprint locked for this Reality Type</span>
+    <span id="dlter-user-badge" class="dlter-auth-badge dlter-auth-badge--guest" aria-live="polite">Guest</span>
+  </div>
+
+  <div class="dlter-auth-actions">
+    <div id="dlter-guest-actions">
+      <button id="dlter-login-btn" type="button" class="btn ghost tiny" data-ms-modal="login" data-ms-redirect="current-url">Log in</button>
+      <button id="dlter-signup-btn" type="button" class="btn primary tiny" data-ms-modal="signup" data-ms-redirect="current-url">Create account</button>
+    </div>
+
+    <div id="dlter-member-actions" hidden>
+      <button id="dlter-profile-btn" type="button" class="btn ghost tiny" data-ms-modal="profile">Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){"use strict";
+if(window.__DLTER_MEMBER_BAR_V3)return;window.__DLTER_MEMBER_BAR_V3=true;
+
+var bar=document.getElementById("dlter-member-bar");if(!bar)return;
+var emailSpan=document.getElementById("dlter-user-email");
+var planSpan=document.getElementById("dlter-user-plan-copy");
+var badge=document.getElementById("dlter-user-badge");
+var guestBox=document.getElementById("dlter-guest-actions");
+var memberBox=document.getElementById("dlter-member-actions");
+
+var state={member:null,unlocked:false};
+
+function showBar(){bar.style.display="flex";}
+function getMemberEmail(member){return (member&&(member.email||(member.auth&&member.auth.email)))||"";}
+
+function debugEnabled(){
+  try{
+    var q=String(window.location.search||"");
+    return q.indexOf("dlterDebug=1")!==-1 || q.indexOf("nfdebug=1")!==-1 || !!window.__DLTER_DEBUG__;
+  }catch(e){ return false; }
+}
+function debugLogMemberShape(member){
+  if(!debugEnabled()) return;
+  if(window.__DLTER_MEMBER_BAR_SHAPE_LOGGED__) return;
+  window.__DLTER_MEMBER_BAR_SHAPE_LOGGED__=true;
+  try{
+    var pc=member&&member.planConnections;
+    var pl=member&&member.plans;
+    var pids=member&&member.planIds;
+    console.log("[DLTER] Member data shape:",{
+      hasPlanConnections:Array.isArray(pc),
+      planConnectionsLen:Array.isArray(pc)?pc.length:0,
+      hasPlans:Array.isArray(pl),
+      plansLen:Array.isArray(pl)?pl.length:0,
+      hasPlanId:!!(member&&member.planId),
+      planIdsLen:Array.isArray(pids)?pids.length:0,
+      keys:member?Object.keys(member).sort().slice(0,30):[]
+    });
+  }catch(e){}
+}
+
+function setBadge(kind){
+  if(!badge) return;
+  if(kind==="unlocked"){badge.textContent="Unlocked";badge.className="dlter-auth-badge dlter-auth-badge--premium";return;}
+  if(kind==="member"){badge.textContent="Member";badge.className="dlter-auth-badge dlter-auth-badge--member";return;}
+  badge.textContent="Guest";badge.className="dlter-auth-badge dlter-auth-badge--guest";
+}
+
+function render(){
+  showBar();
+  var hasMember=!!state.member;
+  var unlocked=!!state.unlocked;
+
+  if(!hasMember){
+    if(emailSpan) emailSpan.textContent="Guest mode";
+    if(guestBox) guestBox.hidden=false;
+    if(memberBox) memberBox.hidden=true;
+    setBadge("guest");
+    if(planSpan) planSpan.textContent="· Blueprint locked for this Reality Type";
+    return;
+  }
+
+  var email=getMemberEmail(state.member);
+  if(emailSpan) emailSpan.textContent=email||"NeuForm member";
+  if(guestBox) guestBox.hidden=true;
+  if(memberBox) memberBox.hidden=false;
+  setBadge(unlocked ? "unlocked" : "member");
+  if(planSpan) planSpan.textContent=unlocked
+    ? "· Blueprint unlocked for this Reality Type"
+    : "· Logged in · Blueprint locked for this Reality Type";
+}
+
+function seedAccessFromBody(){
+  try{ state.unlocked=document.body.classList.contains("dlter-blueprint-unlocked"); }
+  catch(e){ state.unlocked=false; }
+}
+
+seedAccessFromBody();
+render();
+
+document.addEventListener("dlter:accessState",function(e){
+  try{
+    if(e&&e.detail&&typeof e.detail.unlocked!=="undefined"){
+      state.unlocked=!!e.detail.unlocked;
+      render();
+    }
+  }catch(err){}
+});
+
+/* MutationObserver fallback */
+(function(){
+  try{
+    var obs=new MutationObserver(function(){
+      var unlocked=document.body.classList.contains("dlter-blueprint-unlocked");
+      if(unlocked!==state.unlocked){
+        state.unlocked=unlocked;
+        render();
+      }
+    });
+    obs.observe(document.body,{attributes:true,attributeFilter:["class"]});
+  }catch(e){}
+})();
+
+function syncMemberOnce(){
+  var ms=window.$memberstackDom || window.MemberStack || null;
+  if(!ms||typeof ms.getCurrentMember!=="function") return false;
+  ms.getCurrentMember().then(function(result){
+    var member=result&&result.data;
+    state.member=member||null;
+
+    // Debug (guarded): prints shape info (no values/PII)
+    if(member) debugLogMemberShape(member);
+
+    render();
+  }).catch(function(err){
+    console.warn("[DLTER] member bar getCurrentMember failed:",err);
+    state.member=null;
+    render();
+  });
+  return true;
+}
+
+(function waitForMemberstack(){
+  if(syncMemberOnce()) return;
+  var attempts=0, maxAttempts=40; /* ✅ more tolerant of slow loads */
+  var t=setInterval(function(){
+    attempts++;
+    if(syncMemberOnce()||attempts>=maxAttempts) clearInterval(t);
+  },300);
+})();
+
+window.addEventListener("focus",function(){syncMemberOnce();});
+document.addEventListener("visibilitychange",function(){if(!document.hidden)syncMemberOnce();});
+})();
+</script>
+
+Embed 2:
+<div class="dlter-hero-shell" role="region" aria-labelledby="dlter-type-title" style="--dlter-gold: {{wf {&quot;path&quot;:&quot;accent-color-3&quot;,&quot;type&quot;:&quot;Color&quot;\} }};">
+  <div class="dlter-hero-top">
+    <span class="dlter-pill">DLTER Reality Type</span>
+  </div>
+
+  <div class="dlter-hero-main">
+    <div class="dlter-hero-left">
+      <div class="dlter-title-row">
+        <div class="dlter-title-glyph" aria-hidden="true">
+          <img
+            src="{{wf {&quot;path&quot;:&quot;type-glyph-icon&quot;,&quot;type&quot;:&quot;ImageRef&quot;\} }}"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+        <h1 class="dlter-type-name" id="dlter-type-title">
+          {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </h1>
+      </div>
+
+      <div class="dlter-type-code">
+        {{wf {&quot;path&quot;:&quot;type-code&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+      </div>
+
+      <p class="dlter-tagline">
+        {{wf {&quot;path&quot;:&quot;one-line-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+      </p>
+
+      <div class="dlter-axis-chips" aria-label="Axis blend">
+        <button
+          type="button"
+          class="dlter-axis-chip"
+          data-axis="perception"
+          data-dlter-tip="Perception — How you take in information"
+          aria-label="Perception — How you take in information"
+        >
+          P · {{wf {&quot;path&quot;:&quot;perception-axis&quot;,&quot;type&quot;:&quot;Option&quot;\} }}
+        </button>
+
+        <button
+          type="button"
+          class="dlter-axis-chip"
+          data-axis="emergence"
+          data-dlter-tip="Emergence — How you adapt to change"
+          aria-label="Emergence — How you adapt to change"
+        >
+          E · {{wf {&quot;path&quot;:&quot;emergence-axis&quot;,&quot;type&quot;:&quot;Option&quot;\} }}
+        </button>
+
+        <button
+          type="button"
+          class="dlter-axis-chip"
+          data-axis="identity"
+          data-dlter-tip="Identity — How your sense of self updates"
+          aria-label="Identity — How your sense of self updates"
+        >
+          I · {{wf {&quot;path&quot;:&quot;identity-dynamics-axis&quot;,&quot;type&quot;:&quot;Option&quot;\} }}
+        </button>
+      </div>
+
+      <a class="dlter-explained-link" href="/dlter-explained" aria-label="Learn how the DLTER framework works">
+        How DLTER Works <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <aside class="dlter-hero-right" aria-label="Reality Blueprint purchase">
+      <div class="dlter-price-card" aria-label="Reality Blueprint purchase box">
+        <div class="dlter-price-label">Reality Blueprint</div>
+        <div class="dlter-price-amount">
+          {{wf {&quot;path&quot;:&quot;price-display-text&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+        </div>
+
+        <!-- Memberstack CTA: guest opens signup, logged-in purchase continues to checkout (script toggles modal attr) -->
+        <a
+          class="dlter-cta-button"
+          href="#"
+          data-ms-modal="signup"
+          data-ms-redirect="current-url"
+          data-ms-price:add="{{wf {&quot;path&quot;:&quot;memberstack-priceid&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+          aria-label="Unlock the {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} Reality Blueprint"
+          aria-haspopup="dialog"
+        >
+          <span class="dlter-cta-button-text">
+            {{wf {&quot;path&quot;:&quot;button-cta-text&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+          </span>
+        </a>
+
+        <div class="dlter-blueprint-includes" aria-label="Blueprint includes">
+          <div class="dlter-blueprint-includes-title">Includes:</div>
+          <ul class="dlter-blueprint-includes-list">
+            <li>30-Day Roadmap</li>
+            <li>Shadow Pattern &amp; Integration Strategy</li>
+            <li>Decision Architecture</li>
+            <li>Training Translation</li>
+            <li>Integration Practices</li>
+          </ul>
+        </div>
+
+        <div class="dlter-cta-guarantee">
+          Instant digital access. One-time purchase, no subscription required.
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="dlter-hero-bottom">
+    <div
+      class="dlter-axis-graph"
+      data-perception="{{wf {&quot;path&quot;:&quot;perception-score&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      data-emergence="{{wf {&quot;path&quot;:&quot;emergence-score&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      data-identity="{{wf {&quot;path&quot;:&quot;identity-score&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+      aria-describedby="dlter-axis-graph-note"
+      role="img"
+      aria-label="DLTER axis profile showing Perception, Emergence, and Identity scores."
+    >
+      <div class="dlter-axis-graph-title">Axis Profile</div>
+      <div class="dlter-axis-graph-subtitle" id="dlter-axis-graph-note">
+        Higher bars mean a stronger weighting of that reality dimension in your identity geometry.
+      </div>
+
+      <div class="dlter-axis-bars">
+        <div class="dlter-axis-bar-wrapper">
+          <div class="dlter-axis-bar">
+            <div class="dlter-axis-bar-fill" data-bar="perception"></div>
+          </div>
+          <button
+            type="button"
+            class="dlter-axis-label"
+            data-axis="perception"
+            data-dlter-tip="Perception — How you take in information"
+            aria-label="Perception — How you take in information"
+          >
+            Perception
+          </button>
+          <div class="dlter-axis-score" data-score="perception">0/100</div>
+        </div>
+
+        <div class="dlter-axis-bar-wrapper">
+          <div class="dlter-axis-bar">
+            <div class="dlter-axis-bar-fill" data-bar="emergence"></div>
+          </div>
+          <button
+            type="button"
+            class="dlter-axis-label"
+            data-axis="emergence"
+            data-dlter-tip="Emergence — How you adapt to change"
+            aria-label="Emergence — How you adapt to change"
+          >
+            Emergence
+          </button>
+          <div class="dlter-axis-score" data-score="emergence">0/100</div>
+        </div>
+
+        <div class="dlter-axis-bar-wrapper">
+          <div class="dlter-axis-bar">
+            <div class="dlter-axis-bar-fill" data-bar="identity"></div>
+          </div>
+          <button
+            type="button"
+            class="dlter-axis-label"
+            data-axis="identity"
+            data-dlter-tip="Identity — How your sense of self updates"
+            aria-label="Identity — How your sense of self updates"
+          >
+            Identity
+          </button>
+          <div class="dlter-axis-score" data-score="identity">0/100</div>
+        </div>
+      </div>
+
+      <div class="dlter-axis-average-note" aria-hidden="true" style="display:none;">
+        Average marker shown at 50/100.
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,432 @@
+Terms & Privacy Page Settings Code
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index,follow">
+<meta name="author" content="NeuForm Fitness LLC">
+<meta name="theme-color" content="#0ec5bd">
+
+<!-- Optional brand clarification (helps disambiguate across the web) -->
+<meta name="application-name" content="NeuForm Fitness LLC (owned by Chris Welch)">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/terms-privacy">
+<meta property="og:title" content="Terms &amp; Privacy | NeuForm Fitness">
+<meta property="og:description" content="NeuForm Fitness Terms of Service, Privacy Policy, and DMCA information.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness — Terms &amp; Privacy">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Terms &amp; Privacy | NeuForm Fitness">
+<meta name="twitter:description" content="NeuForm Fitness Terms of Service, Privacy Policy, and DMCA information.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+
+<style>
+/* ================================
+   NEUFORM LEGAL PAGE — WRAPPER + TILE
+   ================================ */
+
+/* Outer layout wrapper */
+.legal-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 5rem;
+  color: #e9f3f7;
+  font-family: 'Inter', 'Arial', sans-serif;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+/* Each card/tile block (Terms + Privacy) */
+.legal-page {
+  background: rgba(0, 0, 0, 0.86);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding: 2.5rem 2.25rem 2.25rem;
+  margin-bottom: 3rem;
+  overflow: hidden;
+}
+
+/* Remove card divider styling – tiles handle separation now */
+.legal-page:last-child {
+  margin-bottom: 0;
+}
+
+/* HEADINGS */
+.legal-wrapper h1 {
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+}
+
+.legal-wrapper h2 {
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.legal-wrapper h3 {
+  font-size: 1.15rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* PARAGRAPHS */
+.legal-wrapper p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #d2dce2;
+}
+
+/* LINKS */
+.legal-wrapper a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.legal-wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* ORDERED LISTS */
+.legal-wrapper ol.legal-list {
+  padding-left: 1.2rem;
+  counter-reset: legal-counter;
+}
+
+.legal-wrapper ol.legal-list > li {
+  list-style: none;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.legal-wrapper ol.legal-list > li:before {
+  counter-increment: legal-counter;
+  content: counter(legal-counter) ".";
+  position: absolute;
+  left: -1.2rem;
+  top: 0.2rem;
+  font-weight: 700;
+  color: #3498db;
+}
+
+/* UNORDERED LISTS */
+.legal-wrapper ul {
+  padding-left: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.legal-wrapper ul li {
+  margin-bottom: 0.5rem;
+  color: #c5d3db;
+}
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 768px) {
+
+  .legal-wrapper {
+    padding: 3rem 1rem 4rem;
+  }
+
+  .legal-page {
+    padding: 2rem 1.5rem 1.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .legal-wrapper h1 {
+    font-size: 1.9rem;
+  }
+
+  .legal-wrapper h2 {
+    font-size: 1.2rem;
+  }
+
+  .legal-wrapper h3 {
+    font-size: 1.05rem;
+  }
+
+  .legal-wrapper ol.legal-list > li:before {
+    left: -1rem;
+  }
+}
+</style>
+
+Body:
+<!-- NeuForm — Terms & Privacy Helpers -->
+<script>
+(function(){
+  var dl = window.dataLayer = window.dataLayer || [];
+  dl.push({ event: 'nf_terms_privacy_view' });
+
+  var $  = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.from((r || document).querySelectorAll(s)); };
+
+  // Ensure neuform namespace exists (sitewide footer should define these APIs)
+  window.neuform = window.neuform || {};
+
+  // ===== Helper: domain-only extraction (NO raw email logged) =====
+  function emailDomain(v){
+    try{
+      var s = String(v || '').trim();
+      s = s.replace(/^mailto:/i,'');
+      s = s.split('?')[0].trim();          // strip query params
+      if (!s || s.indexOf('@') === -1) return null;
+      var dom = String(s.split('@').pop() || '').toLowerCase().trim();
+      return dom || null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  // ===== Helper: outbound URL safe label (hostname + pathname only) =====
+  function safeOutbound(u){
+    try{
+      var url = new URL(String(u || ''), window.location.origin);
+      if (!url.hostname) return null;
+      return url.hostname + url.pathname; // strip query/hash
+    }catch(e){
+      return null;
+    }
+  }
+
+  /** 1) Scrollspy for in-page TOC (anchors) **/
+  (function(){
+    var tocLinks = $$('#toc a[href^="#"]');
+    if (!tocLinks.length || !('IntersectionObserver' in window)) return;
+
+    var map = {};
+    tocLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      if (id) map[id] = a;
+    });
+
+    var seen = {};
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var id = entry.target.id;
+        if (!id || !map[id]) return;
+
+        if (entry.isIntersecting){
+          tocLinks.forEach(function(l){ l.classList.remove('active'); });
+          map[id].classList.add('active');
+
+          if (!seen[id]) {
+            dl.push({ event: 'nf_toc_section_view', nf_section: id });
+            seen[id] = 1;
+          }
+        }
+      });
+    }, {
+      rootMargin: '-30% 0px -60% 0px',
+      threshold: 0.01
+    });
+
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  })();
+
+  /** 2) Outbound / legal link click tracking (DMCA, Privacy, email, tel) **/
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+
+    var href = a.getAttribute('href') || '';
+    var hrefLower = String(href).toLowerCase();
+    var isExternal = a.hostname && a.hostname !== location.hostname;
+    var isMail = hrefLower.indexOf('mailto:') === 0;
+    var isTel  = hrefLower.indexOf('tel:') === 0;
+    var isDMCA = a.matches('[data-legal="dmca"], a[href*="dmca"]');
+
+    if (isExternal){
+      dl.push({
+        event: 'nf_outbound_click',
+        nf_url: safeOutbound(href) || null,
+        nf_context: 'terms_privacy'
+      });
+    }
+
+    if (isMail){
+      dl.push({
+        event: 'nf_support_click',
+        nf_channel: 'email',
+        nf_email_domain: emailDomain(href)
+      });
+    }
+
+    if (isTel){
+      dl.push({
+        event: 'nf_support_click',
+        nf_channel: 'phone'
+      });
+    }
+
+    if (isDMCA){
+      dl.push({ event: 'nf_dmca_click', nf_dest: safeOutbound(href) || href });
+    }
+  }, { passive: true });
+
+  /** 3) Privacy Preference Center (Manage Cookies) — UPDATED to use sitewide consent API **/
+  // Add buttons/links in your markup with:
+  //   data-consent="accept-all" | data-consent="deny-all" | data-consent="open-center"
+  // And an optional modal wrapper #privacy-center (hidden by default)
+  (function(){
+    function applyViaSitewide(granted){
+      // Prefer the centralized sitewide functions (footer)
+      try{
+        if (window.neuform) {
+          if (granted && typeof window.neuform.grantConsent === 'function') {
+            window.neuform.grantConsent('privacy_center'); // sitewide handles dl event
+            return true;
+          }
+          if (!granted && typeof window.neuform.denyConsent === 'function') {
+            window.neuform.denyConsent('privacy_center');  // sitewide handles dl event
+            return true;
+          }
+          if (window.neuform.consent && typeof window.neuform.consent.set === 'function') {
+            window.neuform.consent.set(granted ? 'granted' : 'denied', { source: 'privacy_center' });
+            return true;
+          }
+        }
+      }catch(e){}
+      return false;
+    }
+
+    function fallbackApply(granted){
+      // Fallback if footer API isn't present for some reason
+      try {
+        if (typeof gtag === 'function') {
+          gtag('consent', 'update', {
+            'ad_storage': granted ? 'granted' : 'denied',
+            'ad_user_data': granted ? 'granted' : 'denied',
+            'ad_personalization': granted ? 'granted' : 'denied',
+            'analytics_storage': granted ? 'granted' : 'denied',
+            'functionality_storage': 'granted',
+            'security_storage': 'granted'
+          });
+        }
+      } catch(e){}
+
+      try {
+        // Keep BOTH keys for compatibility with older code
+        localStorage.setItem('nf.consent', granted ? 'granted' : 'denied');
+        localStorage.setItem('nf.cookie.ok', granted ? '1' : '0');
+      } catch(e){}
+
+      dl.push({ event: 'nf_cookie_pref_update', nf_granted: !!granted, nf_source: 'privacy_center_fallback' });
+    }
+
+    function updateConsent(granted){
+      if (!applyViaSitewide(granted)) fallbackApply(granted);
+    }
+
+    // Wire actions
+    document.addEventListener('click', function(e){
+      var node = e.target.closest && e.target.closest('[data-consent]');
+      if (!node) return;
+
+      var act    = node.getAttribute('data-consent');
+      var center = $('#privacy-center');
+
+      if (act === 'open-center'){
+        if (center) center.hidden = false;
+        dl.push({ event: 'nf_privacy_center_open' });
+        return;
+      }
+      if (act === 'accept-all'){
+        updateConsent(true);
+        if (center) center.hidden = true;
+        return;
+      }
+      if (act === 'deny-all'){
+        updateConsent(false);
+        if (center) center.hidden = true;
+        return;
+      }
+    }, { passive: true });
+
+    // If you have a link like <a href="#" id="manage-cookies">Manage cookies</a>
+    var manage = $('#manage-cookies');
+    if (manage && !manage.__nfBound){
+      manage.__nfBound = true;
+      manage.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var center = $('#privacy-center');
+        if (center) {
+          center.hidden = false;
+          dl.push({ event: 'nf_privacy_center_open' });
+        }
+      });
+    }
+  })();
+
+  /** 4) Print helper (if you include a "Print" button with id="print-legal") **/
+  (function(){
+    var printBtn = $('#print-legal');
+    if (!printBtn) return;
+
+    printBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      dl.push({ event: 'nf_print_click', nf_page: 'terms_privacy' });
+      try { window.print(); } catch(e){}
+    });
+  })();
+
+  /** 5) Mailto obfuscation fallback (if you render a split email) **/
+  // Example markup:
+  // <span data-email-user="hello" data-email-domain="neuform-fitness.com" id="support-email"></span>
+  (function(){
+    var t = $('#support-email');
+    if (!t) return;
+
+    var u = t.getAttribute('data-email-user');
+    var d = t.getAttribute('data-email-domain');
+    if (!u || !d) return;
+
+    var addr = u + '@' + d;
+    t.textContent = addr;
+    t.setAttribute('role','link');
+    t.setAttribute('tabindex','0');
+
+    function goMail(){
+      dl.push({
+        event:'nf_support_click',
+        nf_channel:'email',
+        nf_email_domain: String(d || '').toLowerCase().trim() || null
+      });
+      location.href = 'mailto:' + addr;
+    }
+
+    t.addEventListener('click', function(){ goMail(); });
+
+    t.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') goMail();
+    });
+  })();
+
+})();
+</script>

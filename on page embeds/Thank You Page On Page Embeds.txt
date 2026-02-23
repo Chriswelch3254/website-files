@@ -1,0 +1,180 @@
+Thank You Page On Page Embeds
+Embed 1:
+<style>
+  /* NeuForm — Purchase Thank You Card (v1.1) */
+  .nf-thankyou-section {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px 72px;
+    box-sizing: border-box;
+  }
+
+  .nf-thankyou-card {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 28px 28px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.86);
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(15, 23, 42, 0.82);
+    color: #f9fafb;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient highlight */
+  .nf-thankyou-card::before {
+    content: "";
+    position: absolute;
+    inset: -30%;
+    background:
+      radial-gradient(circle at 0 0, rgba(148, 163, 184, 0.25), transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.95), transparent 55%);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .nf-thankyou-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nf-thankyou-title {
+    margin: 0 0 18px;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 3.4vw, 36px);
+    line-height: 1.15;
+  }
+
+  .nf-thankyou-lede,
+  .nf-thankyou-body {
+    margin: 0 0 12px;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(229, 231, 235, 0.9);
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .nf-thankyou-email {
+    color: #3498db; /* NeuForm blue */
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    word-break: break-all;
+  }
+
+  .nf-thankyou-steps {
+    margin: 20px auto 0;
+    padding-left: 1.1rem;
+    max-width: 480px;
+    text-align: left;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: rgba(229, 231, 235, 0.92);
+  }
+
+  .nf-thankyou-steps li {
+    margin: 6px 0;
+  }
+
+  .nf-thankyou-steps strong {
+    font-weight: 700;
+  }
+
+  .nf-thankyou-steps a {
+    color: #3498db; /* NeuForm blue */
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .nf-thankyou-steps a:hover {
+    text-decoration-thickness: 0.12em;
+  }
+
+  @media (max-width: 640px) {
+    .nf-thankyou-card {
+      padding: 26px 18px 24px;
+      border-radius: 18px;
+    }
+
+    .nf-thankyou-steps {
+      padding-left: 1rem;
+    }
+  }
+
+  /* Subtle entrance animation, reduced-motion-safe */
+  @media (prefers-reduced-motion: no-preference) {
+    .nf-thankyou-card {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: nf-thankyou-fade 520ms ease-out 80ms forwards;
+    }
+
+    @keyframes nf-thankyou-fade {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>
+
+<section class="nf-thankyou-section" role="main" aria-labelledby="nf-thankyou-heading">
+  <div class="nf-thankyou-card">
+    <h1 class="nf-thankyou-title" id="nf-thankyou-heading">
+      Thank You for your purchase!
+    </h1>
+
+    <p class="nf-thankyou-lede">
+      Your plan is on its way — check your email for the download link and instructions.
+      Didn’t see it? Check your spam folder or contact
+      <a
+        class="nf-thankyou-email"
+        href="mailto:chriswelch.neuform@gmail.com"
+        aria-label="Email NeuForm support"
+        data-thanks-action="support"
+        data-channel="email"
+        data-email-domain="gmail.com"
+      >
+        chriswelch.neuform@gmail.com
+      </a>.
+    </p>
+
+    <p class="nf-thankyou-body">
+      Build momentum the smart way — not through hype, but through structure.
+      Every NeuForm plan is built to make consistency simple and results repeatable.
+    </p>
+
+    <ul class="nf-thankyou-steps">
+      <li>
+        <strong>Download your plan:</strong>
+        The link is in your email.
+      </li>
+      <li>
+        <strong>Set your routine:</strong>
+        Add your first workout day to your calendar.
+      </li>
+      <li>
+        <strong>Fuel your progress:</strong>
+        Explore the
+        <a
+          href="/nutrition-lab"
+          data-thanks-action="open"
+          data-dest="/nutrition-lab"
+        >
+          Nutrition Lab
+        </a>.
+      </li>
+    </ul>
+  </div>
+</section>

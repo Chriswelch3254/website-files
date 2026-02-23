@@ -1,0 +1,1516 @@
+Head:
+<!-- Memberstack v2 (single source of truth) -->
+<script
+  data-memberstack-app="app_cmibxdyx5002y0sta96kta3gr"
+  src="https://static.memberstack.com/scripts/v2/memberstack.js"
+  type="text/javascript"
+  defer
+></script>
+
+<!-- =====================================================
+     NeuForm Consent Bootstrap (HEAD)
+     - Sets Consent Mode defaults BEFORE GTM loads
+     - Re-applies stored consent on every page load
+     - Centralizes state: nf.consent = granted|denied (keeps legacy nf.cookie.ok in sync)
+===================================================== -->
+<script>
+(function(){
+  'use strict';
+
+  // dataLayer + gtag shim (required for Consent Mode before GTM)
+  var dl = window.dataLayer = window.dataLayer || [];
+  if (typeof window.gtag !== 'function') {
+    window.gtag = function(){ dl.push(arguments); };
+  }
+
+  window.neuform = window.neuform || {};
+
+  var KEY = 'nf.consent';     // new: "granted" | "denied"
+  var LEGACY = 'nf.cookie.ok';// legacy: "1" | "0"
+
+  function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function lsSet(k,v){ try { localStorage.setItem(k, v); } catch(e){} }
+  function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
+
+  function normState(v){
+    v = String(v || '').trim().toLowerCase();
+    return (v === 'granted' || v === 'denied') ? v : '';
+  }
+
+  // Determine state from nf.consent, then legacy fallback
+  var state = normState(lsGet(KEY));
+  var legacy = lsGet(LEGACY);
+
+  if (!state) {
+    if (legacy === '1') state = 'granted';
+    else if (legacy === '0') state = 'denied';
+  }
+
+  // Keep both keys synced when one is present
+  if (state === 'granted') {
+    if (lsGet(KEY) !== 'granted') lsSet(KEY, 'granted');
+    if (lsGet(LEGACY) !== '1') lsSet(LEGACY, '1');
+  } else if (state === 'denied') {
+    if (lsGet(KEY) !== 'denied') lsSet(KEY, 'denied');
+    if (lsGet(LEGACY) !== '0') lsSet(LEGACY, '0');
+  }
+
+  // Track applied state for downstream scripts (compat)
+  window.neuform._consentApplied = state || 'unset';
+  window.neuform._consentGranted = (state === 'granted');
+
+  var GRANTED = {
+    ad_storage:'granted',
+    ad_user_data:'granted',
+    ad_personalization:'granted',
+    analytics_storage:'granted',
+    functionality_storage:'granted',
+    security_storage:'granted'
+  };
+
+  var DENIED = {
+    ad_storage:'denied',
+    ad_user_data:'denied',
+    ad_personalization:'denied',
+    analytics_storage:'denied',
+    functionality_storage:'granted',
+    security_storage:'granted'
+  };
+
+  // ✅ Critical: set DEFAULT consent BEFORE GTM loads
+  // Default behavior: denied unless explicitly granted
+  try { window.gtag('consent','default', (state === 'granted') ? GRANTED : DENIED); } catch(_){}
+
+  // Single source-of-truth API (used by banner + Terms page + any embed)
+  window.neuform.consent = window.neuform.consent || {};
+
+  window.neuform.consent.get = window.neuform.consent.get || function(){
+    var s = normState(lsGet(KEY));
+    if (s) return s;
+    var l = lsGet(LEGACY);
+    if (l === '1') return 'granted';
+    if (l === '0') return 'denied';
+    return 'unset';
+  };
+
+  window.neuform.consent.isGranted = window.neuform.consent.isGranted || function(){
+    return window.neuform.consent.get() === 'granted';
+  };
+
+  window.neuform.consent.set = window.neuform.consent.set || function(next, opts){
+    next = normState(next);
+    if (!next) return false;
+
+    opts = (opts && typeof opts === 'object') ? opts : {};
+    var source = opts.source || 'api';
+
+    // Persist (strictly necessary storage)
+    try {
+      lsSet(KEY, next);
+      lsSet(LEGACY, next === 'granted' ? '1' : '0');
+    } catch(_){}
+
+    // Update Consent Mode
+    try { window.gtag('consent','update', next === 'granted' ? GRANTED : DENIED); } catch(_2){}
+
+    // Track applied state for downstream scripts (compat)
+    window.neuform._consentApplied = next;
+    window.neuform._consentGranted = (next === 'granted');
+
+    // GTM-friendly signal
+    try { dl.push({ event:'nf_cookie_pref_update', nf_granted:(next==='granted'), nf_source:source }); } catch(_3){}
+
+    return true;
+  };
+
+  // Back-compat helpers
+  if (typeof window.neuform.grantConsent !== 'function') {
+    window.neuform.grantConsent = function(src){
+      return window.neuform.consent.set('granted', { source: src || 'grantConsent' });
+    };
+  }
+  if (typeof window.neuform.denyConsent !== 'function') {
+    window.neuform.denyConsent = function(src){
+      return window.neuform.consent.set('denied', { source: src || 'denyConsent' });
+    };
+  }
+  if (typeof window.neuform.resetConsent !== 'function') {
+    window.neuform.resetConsent = function(){
+      lsDel(KEY); lsDel(LEGACY);
+      window.neuform._consentApplied = 'unset';
+      window.neuform._consentGranted = false;
+      try { window.gtag('consent','update', DENIED); } catch(_){}
+      try { dl.push({ event:'nf_cookie_pref_reset' }); } catch(_2){}
+      return true;
+    };
+  }
+
+  // ✅ Sitewide banner injection (fixes “homepage-only banner” issue)
+  function injectCookieBar(){
+    try {
+      if (!window.neuform || !window.neuform.consent || typeof window.neuform.consent.get !== 'function') return;
+      if (window.neuform.consent.get() !== 'unset') return;
+      if (document.getElementById('cookiebar')) return;
+      if (!document.body) return;
+
+      var bar = document.createElement('div');
+      bar.id = 'cookiebar';
+      bar.setAttribute('role','region');
+      bar.setAttribute('aria-label','Cookie preferences');
+      bar.style.cssText =
+        'position:fixed;inset:auto 0 0 0;background:#111;color:#fff;padding:12px 14px;z-index:9999;font-size:14px;' +
+        'display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;text-align:center';
+
+      var msg = document.createElement('span');
+      msg.textContent = 'We use cookies for analytics and to improve your experience.';
+      bar.appendChild(msg);
+
+      var learn = document.createElement('a');
+      learn.href = '/terms-privacy';
+      learn.textContent = 'Learn more';
+      learn.style.cssText = 'color:#0ec5bd;text-decoration:none;font-weight:700';
+      bar.appendChild(learn);
+
+      var actions = document.createElement('span');
+      actions.style.cssText = 'display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center';
+
+      var manage = document.createElement('a');
+      manage.id = 'cookie-manage';
+      manage.href = '/terms-privacy?manage=1#privacy-center';
+      manage.textContent = 'Manage cookies';
+      manage.style.cssText =
+        'padding:6px 12px;border-radius:4px;border:1px solid rgba(255,255,255,.28);' +
+        'color:#fff;text-decoration:none;font-weight:700;background:transparent;display:inline-flex;align-items:center;justify-content:center';
+      manage.addEventListener('click', function(){
+        try { sessionStorage.setItem('nf_open_privacy_center','1'); } catch(_){}
+      }, { passive:true });
+
+      var reject = document.createElement('button');
+      reject.type = 'button';
+      reject.id = 'cookie-reject';
+      reject.textContent = 'Decline';
+      reject.style.cssText =
+        'padding:6px 12px;border-radius:4px;border:1px solid rgba(255,255,255,.28);' +
+        'color:#fff;background:transparent;font-weight:700;cursor:pointer';
+
+      var ok = document.createElement('button');
+      ok.type = 'button';
+      ok.id = 'cookie-ok';
+      ok.textContent = 'Accept';
+      ok.style.cssText =
+        'padding:6px 12px;border:none;border-radius:4px;background:#0ec5bd;color:#000;font-weight:800;cursor:pointer';
+
+      actions.appendChild(manage);
+      actions.appendChild(reject);
+      actions.appendChild(ok);
+      bar.appendChild(actions);
+
+      document.body.appendChild(bar);
+
+      ok.addEventListener('click', function(){
+        try { window.neuform.grantConsent('cookiebar'); } catch(_){}
+        try { bar.remove(); } catch(_2){}
+      });
+
+      reject.addEventListener('click', function(){
+        try { window.neuform.denyConsent('cookiebar'); } catch(_){}
+        try { bar.remove(); } catch(_2){}
+      });
+
+    } catch(_e){}
+  }
+
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectCookieBar, { once:true });
+  } else {
+    injectCookieBar();
+  }
+
+})();
+</script>
+
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){
+  w[l]=w[l]||[];
+  w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),
+      dl=l!='dataLayer'?'&l='+l:'';
+  j.async=true;
+  j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+  f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K36XD5G4');
+</script>
+<!-- End Google Tag Manager -->
+
+<script>
+(function(){
+  'use strict';
+
+  /**
+   * NF UTM Persistence v1.1 (CONSENT-GATED)
+   * - Stores UTMs/click IDs from first touch
+   * - Restores them into the URL via history.replaceState on later steps
+   * - Prevents "file://C:/Users/..." and staging traffic from polluting production
+   *
+   * NOTE: Runs ONLY on /dlter* paths.
+   */
+  (function () {
+    "use strict";
+
+    var STORAGE_KEY = "nf.utm.persist.v1";
+    var MAX_AGE_DAYS = 30;
+    var MAX_AGE_MS = MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+    var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+    var CLICK_KEYS = ["gclid", "gbraid", "wbraid", "msclkid", "fbclid", "ttclid"];
+
+    function hasConsent(){
+      try {
+        if (window.neuform && window.neuform.consent && typeof window.neuform.consent.isGranted === 'function') {
+          return !!window.neuform.consent.isGranted();
+        }
+      } catch(e) {}
+      try {
+        var s = String(localStorage.getItem('nf.consent') || '').toLowerCase();
+        if (s === 'granted') return true;
+        if (s === 'denied') return false;
+        var l = localStorage.getItem('nf.cookie.ok');
+        return l === '1';
+      } catch(e2) {
+        return false;
+      }
+    }
+
+    function isTrackableEnv() {
+      try {
+        if (location.protocol !== "https:" && location.protocol !== "http:") return false;
+        var h = (location.hostname || "").toLowerCase();
+        if (!h) return false;
+        if (h === "localhost" || h === "127.0.0.1" || h === "[::1]") return false;
+        if (h.endsWith("webflow.io")) return false; // staging
+        return true;
+      } catch (e) { return false; }
+    }
+
+    function isDlterPath() {
+      try {
+        return (location.pathname || "").toLowerCase().indexOf("/dlter") === 0;
+      } catch (e) { return false; }
+    }
+
+    function parseQuery(qs) {
+      var out = {};
+      if (!qs) return out;
+      qs.replace(/^\?/, "").split("&").forEach(function (part) {
+        if (!part) return;
+        var idx = part.indexOf("=");
+        var k = idx > -1 ? part.slice(0, idx) : part;
+        var v = idx > -1 ? part.slice(idx + 1) : "";
+        try { k = decodeURIComponent(k || "").trim(); } catch (e) { k = (k || "").trim(); }
+        try { v = decodeURIComponent(v || "").trim(); } catch (e2) { v = (v || "").trim(); }
+        if (k) out[k] = v;
+      });
+      return out;
+    }
+
+    function pick(obj, keys) {
+      var out = {};
+      keys.forEach(function (k) {
+        if (obj[k]) out[k] = obj[k];
+      });
+      return out;
+    }
+
+    function safeRead() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data || typeof data !== "object") return null;
+        if (typeof data.ts !== "number") return null;
+        if ((Date.now() - data.ts) > MAX_AGE_MS) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+
+    function safeWrite(payload) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {}
+    }
+
+    function merge(a, b) {
+      var out = {};
+      Object.keys(a || {}).forEach(function (k) { out[k] = a[k]; });
+      Object.keys(b || {}).forEach(function (k) { out[k] = b[k]; });
+      return out;
+    }
+
+    function mergeMissing(base, add) {
+      var out = {};
+      Object.keys(base || {}).forEach(function (k) { out[k] = base[k]; });
+      Object.keys(add || {}).forEach(function (k) {
+        if (out[k] == null || out[k] === '') out[k] = add[k];
+      });
+      return out;
+    }
+
+    function buildQuery(obj) {
+      var parts = [];
+      Object.keys(obj || {}).forEach(function (k) {
+        var v = obj[k];
+        if (v == null || v === "") return;
+        parts.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      });
+      return parts.join("&");
+    }
+
+    // Only run on real web env + only on DLTER URLs
+    if (!isTrackableEnv()) return;
+    if (!isDlterPath()) return;
+
+    // ✅ Consent gate: no attribution persistence without consent
+    if (!hasConsent()) {
+      window.NF_NL = window.NF_NL || {};
+      window.NF_NL.utm = {};
+      return;
+    }
+
+    var q = parseQuery(location.search);
+    var utm = pick(q, UTM_KEYS);
+    var click = pick(q, CLICK_KEYS);
+    var hasIncoming = Object.keys(utm).length > 0 || Object.keys(click).length > 0;
+
+    var stored = safeRead();
+    var storedParams = (stored && stored.params) ? stored.params : {};
+
+    // Save/update if we have incoming attribution
+    if (hasIncoming) {
+      var combined = merge(storedParams, merge(utm, click));
+      safeWrite({ ts: Date.now(), params: combined });
+      storedParams = combined;
+    }
+
+    // Expose for other scripts (optional)
+    window.NF_NL = window.NF_NL || {};
+    window.NF_NL.utm = storedParams;
+
+    // Restore UTMs into URL if missing on this step (helps Memberstack capture attribution)
+    // - Never overwrites existing query params (e.g., session_id, ms_*)
+    if (!hasIncoming && storedParams && Object.keys(storedParams).length > 0 && !q.utm_source) {
+      var needsRestore = false;
+      Object.keys(storedParams).forEach(function(k){
+        if (!q[k]) needsRestore = true;
+      });
+
+      if (needsRestore) {
+        var newParams = mergeMissing(q, storedParams);
+        var newQs = buildQuery(newParams);
+        if (newQs) {
+          var curUrl = location.pathname + (location.search || "") + (location.hash || "");
+          var newUrl = location.pathname + "?" + newQs + (location.hash || "");
+          if (newUrl !== curUrl) history.replaceState(null, "", newUrl);
+        }
+      }
+    }
+  })();
+
+  // NOTE:
+  // - NF_NL.pantryIntel was moved OUT of Sitewide Code (global) to a Lab-only Pantry module/embed.
+  // - This reduces page weight sitewide and prevents pantry API drift/duplication.
+
+})();
+</script>
+
+
+
+
+Footer:
+<!-- =========================================
+  NeuForm — Sitewide <footer> (GLOBAL)  v4.5
+  - Consent Mode v2 updater (banner OK + persist + API)
+  - Reviews loader + star/results renderers
+  - JSON-LD: merge into product JSON if present; else inject Product node
+  - Disabled / gated buy button styles + hard block
+  - Automatic Plan: 1-hour Intake Access expiry enforcement (Memberstack plan removal)
+
+  v4.5 updates:
+  - ✅ Automatic Plan expiry: supports BOTH keys (nf_ap_access_until + countdownDateTime) + keeps them in sync
+  - ✅ Automatic Plan expiry: stops interval when no expiry exists or after removal
+  - ✅ Adds sitewide config + helper utilities (IDs/keys/selectors + runtime warnings)
+  - ✅ Adds Memberstack login focus management (a11y) + live region fallback
+========================================= -->
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+  <iframe
+    src="https://www.googletagmanager.com/ns.html?id=GTM-K36XD5G4"
+    height="0"
+    width="0"
+    style="display:none;visibility:hidden"
+  ></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Disabled / gated buy CTA accessibility & perf -->
+<style>
+  /* Generic “disabled” contract for any buy button surface */
+  .buy-btn[aria-disabled="true"],
+  #buy-btn[aria-disabled="true"],
+  .nf-btn--gated {
+    opacity: 0.45;
+    pointer-events: none;
+    filter: grayscale(0.6);
+    cursor: not-allowed;
+    transition: opacity .25s ease, filter .25s ease;
+  }
+  .buy-btn[aria-disabled="true"] *,
+  #buy-btn[aria-disabled="true"] *,
+  .nf-btn--gated * {
+    pointer-events: none;
+  }
+
+  /* =====================================================
+     Sitewide Rating Badge (Footer + any rating-* widget)
+     Ensures the star overlay actually works (clipped fg width)
+  ====================================================== */
+  .nf-rating-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+  }
+
+  .nf-stars{
+    position:relative;
+    display:inline-block;
+    line-height:1;
+    letter-spacing:2px;
+    font-size:12.5px;
+    height: 1em;
+  }
+
+  .nf-stars--bg{
+    display:block;
+    color: rgba(233,243,247,.22);
+  }
+
+  .nf-stars--fg{
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    overflow:hidden;
+    white-space:nowrap;
+
+    width: 0%;              /* important: default to 0 until JS sets width */
+    color: rgba(233,243,247,.92);
+  }
+
+  .nf-score{
+    color: rgba(233,243,247,.92);
+    font-weight: 800;
+    font-size: 12.5px;
+  }
+
+  .nf-count{
+    color: rgba(233,243,247,.70);
+    font-weight: 800;
+    font-size: 12.5px;
+  }
+
+  /* Screen-reader only helper */
+  .nf-sr-only{
+    position:absolute !important;
+    width:1px !important;
+    height:1px !important;
+    padding:0 !important;
+    margin:-1px !important;
+    overflow:hidden !important;
+    clip:rect(0,0,0,0) !important;
+    white-space:nowrap !important;
+    border:0 !important;
+  }
+</style>
+
+<script>
+/* =====================================================
+   NeuForm Sitewide Core (footer) — config + utilities
+   - Centralizes IDs/keys/selectors used across embeds
+   - Provides safe storage + dataLayer helpers
+   - Adds Memberstack login focus management (a11y)
+===================================================== */
+(function(){
+  "use strict";
+
+  window.neuform = window.neuform || {};
+  var nf = window.neuform;
+
+  if (nf.__NF_FOOTER_CORE_BOOTED__) return;
+  nf.__NF_FOOTER_CORE_BOOTED__ = true;
+
+  /* ---------- Safe storage + dataLayer ---------- */
+  nf.storage = nf.storage || {};
+  nf.storage.get = nf.storage.get || function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } };
+  nf.storage.set = nf.storage.set || function(k,v){ try { localStorage.setItem(k, v); } catch(e){} };
+  nf.storage.del = nf.storage.del || function(k){ try { localStorage.removeItem(k); } catch(e){} };
+
+  nf.dl = nf.dl || {};
+  nf.dl.push = nf.dl.push || function(obj){
+    try {
+      (window.dataLayer = window.dataLayer || []).push(obj);
+      return true;
+    } catch(e){
+      return false;
+    }
+  };
+
+  nf.util = nf.util || {};
+  nf.util.warn = nf.util.warn || function(msg, meta){
+    try {
+      if (meta) console.warn(msg, meta);
+      else console.warn(msg);
+    } catch(e){}
+  };
+
+  /* ---------- Central config (IDs/keys/selectors) ---------- */
+  nf.config = nf.config || {};
+
+  nf.config.memberstack = nf.config.memberstack || {};
+  nf.config.memberstack.plans = nf.config.memberstack.plans || {};
+  if (!nf.config.memberstack.plans.ap_intake_access_1h) {
+    nf.config.memberstack.plans.ap_intake_access_1h = "pln_automatic-plan-intake-access-1-hour--ic1a607rg";
+  }
+
+  nf.config.storageKeys = nf.config.storageKeys || {};
+  if (!nf.config.storageKeys.apExpiryPrimary) nf.config.storageKeys.apExpiryPrimary = "nf_ap_access_until";
+  if (!nf.config.storageKeys.apExpiryLegacy)  nf.config.storageKeys.apExpiryLegacy  = "countdownDateTime";
+
+  nf.config.selectors = nf.config.selectors || {};
+  nf.config.selectors.planCardRequiredDataAttrs =
+    nf.config.selectors.planCardRequiredDataAttrs || ["plan", "sku"]; // used by Training Plans scripts
+
+  /* ---------- Memberstack helpers (safe) ---------- */
+  nf.memberstack = nf.memberstack || {};
+  nf.memberstack.get = nf.memberstack.get || function(){ return window.$memberstackDom || null; };
+  nf.memberstack.ready = nf.memberstack.ready || function(){
+    var ms = nf.memberstack.get();
+    return !!(ms && typeof ms.removePlan === "function");
+  };
+  nf.memberstack.getCurrentMemberSafe = nf.memberstack.getCurrentMemberSafe || async function(){
+    var ms = nf.memberstack.get();
+    if (!ms || typeof ms.getCurrentMember !== "function") return null;
+    try { return await ms.getCurrentMember(); } catch(e){ return null; }
+  };
+
+  /* ---------- Analytics helpers (for future de-dupe) ---------- */
+  nf.analytics = nf.analytics || {};
+
+  if (typeof nf.analytics.view !== "function") {
+    nf.analytics.view = function(toolCode, payload){
+      var p = payload && typeof payload === "object" ? payload : {};
+      p.event = p.event || "nf_tool_view";
+      p.tool = p.tool || toolCode;
+      nf.dl.push(p);
+    };
+  }
+
+  if (typeof nf.analytics.action !== "function") {
+    nf.analytics.action = function(toolCode, action, payload){
+      var p = payload && typeof payload === "object" ? payload : {};
+      p.event = p.event || "nf_tool_action";
+      p.tool = p.tool || toolCode;
+      p.action = p.action || action || "run";
+      nf.dl.push(p);
+    };
+  }
+
+  /* Optional bridge: if pages check for NF_NL.analytics.action/view, provide defaults */
+  window.NF_NL = window.NF_NL || {};
+  window.NF_NL.analytics = window.NF_NL.analytics || {};
+  if (typeof window.NF_NL.analytics.view !== "function") {
+    window.NF_NL.analytics.view = function(toolCode, payload){ try{ nf.analytics.view(toolCode, payload); } catch(e){} };
+  }
+  if (typeof window.NF_NL.analytics.action !== "function") {
+    window.NF_NL.analytics.action = function(toolCode, action, payload){ try{ nf.analytics.action(toolCode, action, payload); } catch(e){} };
+  }
+
+  /* ---------- A11y: live region + focus helpers ---------- */
+  nf.a11y = nf.a11y || {};
+
+  function ensureLiveRegion(){
+    try{
+      var el = document.getElementById("nf-live");
+      if (el) return el;
+
+      el = document.createElement("div");
+      el.id = "nf-live";
+      el.className = "nf-sr-only";
+      el.setAttribute("aria-live", "polite");
+      el.setAttribute("role", "status");
+      (document.body || document.documentElement).appendChild(el);
+      return el;
+    }catch(e){
+      return null;
+    }
+  }
+
+  nf.a11y.announce = nf.a11y.announce || function(msg){
+    try{
+      var el = ensureLiveRegion();
+      if (!el) return false;
+      el.textContent = "";
+      setTimeout(function(){ el.textContent = String(msg || ""); }, 50);
+      return true;
+    }catch(e){
+      return false;
+    }
+  };
+
+  nf.a11y.focus = nf.a11y.focus || function(el){
+    try{
+      if (!el) return false;
+      var had = el.hasAttribute("tabindex");
+      if (!had) el.setAttribute("tabindex", "-1");
+      try { el.focus({ preventScroll:false }); } catch(_) { try{ el.focus(); }catch(__){} }
+      if (!had) setTimeout(function(){ try{ el.removeAttribute("tabindex"); }catch(_){} }, 300);
+      return true;
+    }catch(e){
+      return false;
+    }
+  };
+
+  function findLoginFocusTarget(){
+    try{
+      return (
+        document.querySelector("[data-nf-focus-on-login]") ||
+        document.getElementById("nf-focus-on-login") ||
+        document.querySelector("main h1, main h2, [role='main'] h1, [role='main'] h2, h1")
+      );
+    }catch(e){
+      return null;
+    }
+  }
+
+  function onLoggedIn(){
+    // Give Memberstack/UI a beat to unlock gated regions
+    setTimeout(function(){
+      var target = findLoginFocusTarget();
+      if (target) {
+        nf.a11y.focus(target);
+      } else {
+        nf.a11y.announce("Logged in. Content unlocked.");
+      }
+    }, 80);
+  }
+
+  if (!nf.__NF_LOGIN_FOCUS_BOUND__) {
+    nf.__NF_LOGIN_FOCUS_BOUND__ = true;
+    try { document.addEventListener("memberstack:loggedIn", onLoggedIn); } catch(_) {}
+    try { window.addEventListener("memberstack:loggedIn", onLoggedIn); } catch(_) {}
+  }
+
+  /* ---------- Runtime warnings (catch silent breaks) ---------- */
+  (function(){
+    var pid = nf.config.memberstack.plans.ap_intake_access_1h;
+    if (!pid || typeof pid !== "string" || pid.indexOf("pln_") !== 0) {
+      nf.util.warn("[NF] Missing/invalid Memberstack plan id for AP intake access (nf.config.memberstack.plans.ap_intake_access_1h).", pid);
+    }
+    var k1 = nf.config.storageKeys.apExpiryPrimary;
+    var k2 = nf.config.storageKeys.apExpiryLegacy;
+    if (!k1 || !k2) {
+      nf.util.warn("[NF] Missing AP expiry storage keys in nf.config.storageKeys.", { primary:k1, legacy:k2 });
+    }
+  })();
+
+})();
+</script>
+
+
+<!-- Consent handled in HEAD (NeuForm Consent Bootstrap). Footer shim removed to prevent drift. -->
+
+<script>
+/* =====================================================
+   NeuForm Reviews — sitewide loader + renderers
+   + JSON-LD augmentation for Product (aggregateRating + up to 2 Review items)
+
+   IMPORTANT:
+   - Default mode is FULLY AUTOMATIC: permission + planSlug required
+   - If you want manual approval gating, set:
+       window.neuform.REVIEWS_REQUIRE_APPROVED = true;
+===================================================== */
+window.neuform = window.neuform || {};
+
+/* ✅ Updated: PUBLIC tab CSV (no email column) */
+window.neuform.REVIEWS_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-YGQ6bhsoYuyeIWskeL9rMctbhMeI42-QMcVo2s-X7-ieNSwJSu1FDhEs7UmnY1pOPR9tgD4YEgVs/pub?gid=1377651058&single=true&output=csv";
+
+// Default: automatic mode (no approval needed)
+if (typeof window.neuform.REVIEWS_REQUIRE_APPROVED !== "boolean") {
+  window.neuform.REVIEWS_REQUIRE_APPROVED = false;
+}
+
+/* --- Reviews: only load if page needs it --- */
+function nfPageNeedsReviews(){
+  try{
+    // Rating badges, results lists, or reviews cards
+    return !!(
+      document.querySelector('[id^="rating-"]') ||
+      document.querySelector('[data-results-list]') ||
+      document.getElementById('results-list') ||
+      document.querySelector('.nf-review-card') ||
+      document.querySelector('[data-needs-reviews="1"]')
+    );
+  }catch(e){
+    return false;
+  }
+}
+
+/* --- Lightweight cache (sanitized) --- */
+function nfReviewsCacheKey(){
+  // Cache respects both source URL + gating mode
+  var mode = (window.neuform && window.neuform.REVIEWS_REQUIRE_APPROVED) ? 'approved' : 'auto';
+  return 'nf.reviews.cache.v1::' + mode;
+}
+function nfReviewsCacheRead(ttlMs){
+  try{
+    var key = nfReviewsCacheKey();
+    var raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+
+    var obj = JSON.parse(raw);
+    if (!obj || typeof obj !== 'object') return null;
+
+    // Invalidate if source changed
+    if (obj.src !== window.neuform.REVIEWS_CSV) return null;
+
+    // TTL
+    var ts = Number(obj.ts || 0);
+    if (!ts || (Date.now() - ts) > (ttlMs || 0)) return null;
+
+    if (!Array.isArray(obj.items)) return null;
+
+    return obj.items;
+  }catch(e){
+    return null;
+  }
+}
+function nfReviewsCacheWrite(items){
+  try{
+    var key = nfReviewsCacheKey();
+    sessionStorage.setItem(key, JSON.stringify({
+      ts: Date.now(),
+      src: window.neuform.REVIEWS_CSV,
+      items: items
+    }));
+  }catch(e){}
+}
+
+/* --- Fetch + parse CSV (supports quoted commas) --- */
+async function nfFetchReviews(opts){
+  opts = opts || {};
+
+  // If this page doesn't render reviews widgets, do nothing
+  if (!opts.force && !nfPageNeedsReviews()) return null;
+
+  // Dedupe concurrent calls
+  if (window.neuform._reviewsPromise) return window.neuform._reviewsPromise;
+
+  var TTL_MS = 6 * 60 * 60 * 1000; // 6 hours (session cache)
+
+  // Serve from cache (fast path)
+  if (!opts.forceRefresh){
+    var cached = nfReviewsCacheRead(TTL_MS);
+    if (cached){
+      window.neuform.reviews = cached;
+      document.dispatchEvent(new Event('nf:reviews-ready'));
+      return cached;
+    }
+  }
+
+  window.neuform._reviewsPromise = (async function(){
+    try{
+      // Optional: fetch timeout
+      var controller = null, to = null;
+      try{
+        if ('AbortController' in window) {
+          controller = new AbortController();
+          to = setTimeout(function(){ try{ controller.abort(); }catch(_){ } }, 9000);
+        }
+      }catch(_){}
+
+      // ✅ Removed cache:'no-store' (browser may cache; we also session-cache parsed output)
+      var res = await fetch(window.neuform.REVIEWS_CSV, controller ? { signal: controller.signal } : undefined);
+      if (to) { try{ clearTimeout(to); }catch(_){ } }
+
+      var txt = await res.text();
+
+      const rows = txt.trim()
+        .split(/\r?\n/)
+        .map(line => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+          .map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"')));
+
+      if(!rows.length) throw new Error('Empty CSV');
+
+      const headers = rows.shift().map(h => h.trim().toLowerCase());
+
+      /* ✅ Privacy FAIL-CLOSED: never load a CSV that contains any email column */
+      if (
+        headers.includes('email') ||
+        headers.includes('e-mail') ||
+        headers.includes('e-mail address') ||
+        headers.includes('email address')
+      ){
+        throw new Error('Privacy block: Reviews CSV contains an email column. Publish a public tab without it.');
+      }
+
+      const idx = Object.fromEntries(headers.map((h,i)=>[h,i]));
+      const pick = (row, names, def='') => {
+        for(const n of names){
+          if(n in idx && row[idx[n]] !== undefined && String(row[idx[n]]).trim() !== '') {
+            return row[idx[n]];
+          }
+        }
+        return def;
+      };
+
+      const items = rows.map(r => {
+        const quote = pick(r, ['quote','review','testimonial','comment'], '');
+
+        // Metrics (combined + metric1..6 / result1..6)
+        let metrics = [];
+        const combined = pick(r, ['metrics','results'], '');
+        if(combined){
+          const split = combined
+            .split(/\s*[·|]\s*|,(?![^(]*\))/)
+            .map(s=>s.trim())
+            .filter(Boolean);
+          metrics = metrics.concat(split);
+        }
+        for(let i=1;i<=6;i++){
+          const m = pick(r, [`metric${i}`, `result${i}`], '').trim();
+          if(m) metrics.push(m);
+        }
+        metrics = metrics
+          .map(m => m.replace(/\s+/g,' ').trim())
+          .filter(m => m && !/^[\u2014\u2013\-–—\s.]+$/.test(m));
+
+        const approvedRaw = String(pick(r, ['approved','publish','published'], '')).trim().toLowerCase();
+        const permissionRaw = String(pick(r, ['permission','consent'], '')).trim().toLowerCase();
+
+        const approved =
+          (approvedRaw === '') ? false : (approvedRaw === 'true');  // explicit field if you use it
+        const permission =
+          (permissionRaw === 'true'); // must be true
+
+        return {
+          name:       pick(r, ['name','client','first name','full name'], ''),
+          /* ✅ Removed: email field is never parsed/stored on-site */
+          quote,
+          rating:     parseFloat(pick(r, ['rating','stars','score'], '')),
+          planName:   pick(r, ['planname','plan name','program','program name'], ''),
+          planSlug:   String(pick(r, ['planslug','plan slug','slug'], '')).trim(),
+          metrics:    metrics.join(' · '),
+          date:       pick(r, ['date','review date','submitted'], ''),
+          approved,
+          permission
+        };
+      })
+      .filter(x => {
+        if(!x.permission) return false;
+        if(!x.planSlug) return false;
+        if(window.neuform.REVIEWS_REQUIRE_APPROVED) return !!x.approved;
+        return true; // automatic mode
+      });
+
+      // Store sanitized items globally (no email possible)
+      window.neuform.reviews = items;
+
+      // Cache sanitized JSON for this tab/session
+      nfReviewsCacheWrite(items);
+
+      document.dispatchEvent(new Event('nf:reviews-ready'));
+      return items;
+    } catch (e){
+      console.warn('Reviews fetch failed', e);
+      window.neuform.reviews = [];
+      try {
+        (window.dataLayer = window.dataLayer || []).push({ event:'nf_reviews_error' });
+      } catch(_){}
+      document.dispatchEvent(new Event('nf:reviews-ready'));
+      return [];
+    } finally {
+      window.neuform._reviewsPromise = null;
+    }
+  })();
+
+  return window.neuform._reviewsPromise;
+}
+
+/* --- Helpers --- */
+function nfPlanRating(slug){
+  const all  = (window.neuform.reviews || []).filter(x => x.planSlug === slug);
+  const rated = all.filter(x => Number.isFinite(x.rating) && x.rating > 0);
+  if (!rated.length) return null;
+  const avg = Math.round((rated.reduce((s,x)=>s+x.rating,0)/rated.length)*10)/10;
+  return { avg, count: rated.length, items: rated };
+}
+function nfAllRating(){
+  const rated = (window.neuform.reviews || []).filter(x => Number.isFinite(x.rating) && x.rating > 0);
+  if (!rated.length) return null;
+  const avg = Math.round((rated.reduce((s,x)=>s+x.rating,0)/rated.length)*10)/10;
+  return { avg, count: rated.length, items: rated };
+}
+
+/* --- Product meta sniffing for JSON-LD fallback --- */
+function nfReadProductMeta(){
+  const node = document.getElementById('nf-product') || document.querySelector('[data-sku]') || document.body;
+  const d = (node && node.dataset) ? node.dataset : {};
+  const mOg = (prop)=> document.querySelector(`meta[property="${prop}"]`)?.content || '';
+
+  const url   = d.url  || mOg('og:url')    || location.href;
+  const name  = d.name || document.title.replace(/\s*\|\s*.*$/,'').trim();
+  const image = d.image|| mOg('og:image')  || '';
+  const sku   = d.sku  || '';
+
+  return {
+    '@id': url.replace(/#.*$/,'') + '#product',
+    url, name, image, sku,
+    brand: { '@type':'Brand', 'name':'NeuForm Fitness' }
+  };
+}
+
+/* --- Merge/inject AggregateRating JSON-LD --- */
+function nfUpsertProductAggregateRating(res, planSlug){
+  try{
+    const existing = document.getElementById('nf-product-jsonld');
+    if (existing) {
+      let json;
+      try {
+        json = JSON.parse(existing.textContent || '{}');
+      } catch(parseErr){
+        console.warn('nfUpsertProductAggregateRating: invalid existing JSON-LD, injecting fresh Product node', parseErr);
+        json = null;
+      }
+
+      if (json) {
+        let product = null;
+        if (Array.isArray(json['@graph'])) {
+          product = json['@graph'].find(n => n['@type'] === 'Product') || null;
+        } else if (json['@type'] === 'Product') {
+          product = json;
+        }
+
+        if (product) {
+          product.aggregateRating = {
+            '@type': 'AggregateRating',
+            ratingValue: String(res.avg),
+            reviewCount: String(res.count)
+          };
+
+          const reviews = (window.neuform.reviews || [])
+            .filter(x => x.planSlug === planSlug && x.quote && Number.isFinite(x.rating) && x.rating > 0)
+            .slice(0,2)
+            .map(x => ({
+              '@type': 'Review',
+              'author': x.name ? {'@type':'Person','name': String(x.name)} : undefined,
+              'reviewBody': String(x.quote).slice(0,500),
+              'datePublished': x.date || undefined,
+              'reviewRating': {
+                '@type':'Rating',
+                'ratingValue': String(x.rating),
+                'bestRating': '5',
+                'worstRating': '1'
+              }
+            }));
+
+          if (reviews.length){
+            if (Array.isArray(product.review)) {
+              product.review = product.review.concat(reviews);
+            } else if (product.review) {
+              product.review = [product.review].concat(reviews);
+            } else {
+              product.review = reviews;
+            }
+          }
+
+          existing.textContent = JSON.stringify(json);
+          return true;
+        }
+      }
+    }
+
+    const meta = nfReadProductMeta();
+    const productNode = {
+      '@context':'https://schema.org',
+      '@type':'Product',
+      '@id': meta['@id'],
+      name: meta.name,
+      url: meta.url,
+      image: meta.image || undefined,
+      sku: meta.sku || undefined,
+      brand: meta.brand,
+      aggregateRating: {
+        '@type':'AggregateRating',
+        ratingValue: String(res.avg),
+        reviewCount: String(res.count)
+      }
+    };
+
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(productNode);
+    document.body.appendChild(s);
+    return true;
+  } catch(e){
+    console.warn('nfUpsertProductAggregateRating failed', e);
+    return false;
+  }
+}
+
+/* --- Renderers (stars + results list + JSON-LD upsert) --- */
+function nfRenderOnPage(){
+  document.querySelectorAll('[id^="rating-"]').forEach(badge => {
+    const id   = badge.id;
+    const slug = id.replace(/^rating-/, '');
+    const res  = (slug === 'all' || slug === 'sitewide') ? nfAllRating() : nfPlanRating(slug);
+    if(!res){ badge.style.display = 'none'; return; }
+
+    const bg    = badge.querySelector('.nf-stars--bg');
+    const fg    = badge.querySelector('.nf-stars--fg');
+    const score = badge.querySelector('.nf-score');
+    const count = badge.querySelector('.nf-count');
+
+    if(bg && !bg.textContent.trim()) bg.textContent = '★★★★★';
+    if(fg && !fg.textContent.trim()) fg.textContent = '★★★★★';
+
+    const pct = Math.max(0, Math.min(100, (res.avg/5)*100));
+    if(fg) fg.style.width = pct + '%';
+
+    if(score) score.textContent = `${res.avg.toFixed(1)}/5`;
+    if(count) count.textContent = `(${res.count} review${res.count>1?'s':''})`;
+
+    badge.setAttribute(
+      'aria-label',
+      `${res.avg.toFixed(1)} out of 5 based on ${res.count} review${res.count>1?'s':''}`
+    );
+
+    if(slug !== 'all' && slug !== 'sitewide'){
+      if(!window.neuform._ldInjected){
+        nfUpsertProductAggregateRating(res, slug);
+        window.neuform._ldInjected = true;
+      }
+    }
+  });
+
+  /* Results lists (unchanged) */
+  const ALL = (window.neuform.reviews || []).slice();
+  const esc = s => String(s||'').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+  const fmtDate = (d) => {
+    if(!d) return '';
+    const ms = Date.parse(d);
+    if(Number.isNaN(ms)) return esc(d);
+    return new Date(ms).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  };
+  const starHTML = (r) => {
+    if(!Number.isFinite(r) || r<=0) return '';
+    const pct = Math.max(0, Math.min(100, (r/5)*100));
+    return `
+      <span class="nf-stars" aria-label="${r.toFixed(1)} out of 5">
+        <span class="nf-stars--bg">★★★★★</span>
+        <span class="nf-stars--fg" style="width:${pct}%">★★★★★</span>
+      </span>`;
+  };
+
+  const renderBatch = (wrapper, list, from, size) => {
+    const chunk = list.slice(from, from+size);
+    const html = chunk.map(x => {
+      const name = esc(x.name || 'Verified Client');
+      const role = esc(x.planName || x.planSlug || '');
+      const quoteRaw = (x.quote || '').replace(/\r?\n/g,' ').trim();
+      const quote = esc(quoteRaw);
+      const dateStr = fmtDate(x.date);
+      const metrics = (x.metrics || '').split(/\s*·\s*/).filter(Boolean).map(m=>esc(m));
+
+      return `
+        <div class="tst_wrap">
+          <div class="tst_card">
+            <div class="tst_head">
+              <div class="tst_name">${name}</div>
+              <div class="tst_role">${role}</div>
+            </div>
+
+            <div class="tst_meta">
+              ${starHTML(Number(x.rating))}
+              ${dateStr ? `<span class="tst_date">${dateStr}</span>` : ''}
+            </div>
+
+            ${quote ? `<p class="tst_para">${quote}</p>` : ''}
+
+            ${metrics.length ? `
+              <div class="tst_metrics">
+                ${metrics.map(m => `<div class="tst_metric">${m}</div>`).join('')}
+              </div>
+            ` : ''}
+
+            <div class="tst_disclaimer">
+              Results vary based on training history, nutrition, and adherence.
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    wrapper.insertAdjacentHTML('beforeend', html);
+    return chunk.length;
+  };
+
+  document.querySelectorAll('[data-results-list], #results-list').forEach(wrapper => {
+    const filter = (wrapper.getAttribute('data-filter') || '').trim();
+
+    const list = ALL
+      .filter(x => !filter || x.planSlug === filter)
+      .sort((a,b) => {
+        const ad = Date.parse(a.date||''); const bd = Date.parse(b.date||'');
+        if(!Number.isNaN(ad) && !Number.isNaN(bd)) return bd - ad;
+        if(!Number.isNaN(ad) && Number.isNaN(bd))  return -1;
+        if(Number.isNaN(ad) && !Number.isNaN(bd))  return 1;
+        return (b.rating||0) - (a.rating||0);
+      });
+
+    wrapper.innerHTML = '';
+    if(!list.length){
+      wrapper.innerHTML = '<p class="nf-muted">No published results yet.</p>';
+      return;
+    }
+
+    const PAGE = 6;
+    wrapper._nfList = list;
+    wrapper._nfRendered = 0;
+
+    const first = renderBatch(wrapper, list, 0, PAGE);
+    wrapper._nfRendered += first;
+
+    const moreBtn = document.getElementById('results-more');
+    if(moreBtn){
+      const sync = ()=> moreBtn.style.display = (wrapper._nfRendered >= list.length) ? 'none' : 'block';
+      sync();
+
+      if (!moreBtn._nfHandlers) moreBtn._nfHandlers = new Map();
+      if (!moreBtn._nfHandlers.has(wrapper)) {
+        const handler = () => {
+          const added = renderBatch(wrapper, wrapper._nfList, wrapper._nfRendered, PAGE);
+          wrapper._nfRendered += added;
+          sync();
+        };
+        moreBtn.addEventListener('click', handler);
+        moreBtn._nfHandlers.set(wrapper, handler);
+      }
+    }
+  });
+}
+
+/* --- Boot --- */
+document.addEventListener('nf:reviews-ready', nfRenderOnPage);
+document.addEventListener('DOMContentLoaded', function(){
+  // Only load if page actually renders a reviews widget
+  if (nfPageNeedsReviews()) nfFetchReviews();
+});
+</script>
+
+<script>
+/* =====================================================
+   Automatic Plan — 1-hour Intake Access Expiry (SITEWIDE)
+   v4.6:
+   - Supports BOTH nf_ap_access_until (primary) + countdownDateTime (legacy)
+   - Keeps keys in sync
+   - Only removes plan if member currently has it
+   - Adds backoff on removal failures (no 10s hammer loop)
+   - Stops interval when no expiry exists or after successful removal
+===================================================== */
+(function(){
+  "use strict";
+
+  window.neuform = window.neuform || {};
+  var nf = window.neuform;
+
+  if (nf.__NF_AP_EXPIRY_BOOTED__) return;
+  nf.__NF_AP_EXPIRY_BOOTED__ = true;
+
+  var FREE_PLAN_ID =
+    (nf.config && nf.config.memberstack && nf.config.memberstack.plans && nf.config.memberstack.plans.ap_intake_access_1h)
+      ? nf.config.memberstack.plans.ap_intake_access_1h
+      : "pln_automatic-plan-intake-access-1-hour--ic1a607rg";
+
+  var KEY_PRIMARY =
+    (nf.config && nf.config.storageKeys && nf.config.storageKeys.apExpiryPrimary)
+      ? nf.config.storageKeys.apExpiryPrimary
+      : "nf_ap_access_until";
+
+  var KEY_LEGACY =
+    (nf.config && nf.config.storageKeys && nf.config.storageKeys.apExpiryLegacy)
+      ? nf.config.storageKeys.apExpiryLegacy
+      : "countdownDateTime";
+
+  var CHECK_MS = 10000;
+  var timer = null;
+
+  // Backoff (session-scoped) so we don't hammer removePlan on repeated failures
+  var FAIL_KEY = "nf.ap.expiry.backoff.v1";
+  var failCount = 0;
+  var backoffUntil = 0;
+
+  function ssGet(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
+  function ssSet(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
+  function ssDel(k){ try { sessionStorage.removeItem(k); } catch(e){} }
+
+  (function loadBackoff(){
+    try{
+      var raw = ssGet(FAIL_KEY);
+      if (!raw) return;
+      var o = JSON.parse(raw);
+      if (!o || typeof o !== "object") return;
+      failCount = Number(o.n || 0) || 0;
+      backoffUntil = Number(o.until || 0) || 0;
+    }catch(e){}
+  })();
+
+  function persistBackoff(){
+    try{
+      if (failCount <= 0 && !backoffUntil) { ssDel(FAIL_KEY); return; }
+      ssSet(FAIL_KEY, JSON.stringify({ n: failCount, until: backoffUntil }));
+    }catch(e){}
+  }
+
+  function clearBackoff(){
+    failCount = 0;
+    backoffUntil = 0;
+    persistBackoff();
+  }
+
+  function bumpBackoff(){
+    failCount = Math.min(10, (failCount || 0) + 1);
+    var ms = Math.min(30 * 60 * 1000, 30000 * Math.pow(2, failCount - 1));
+    backoffUntil = Date.now() + ms;
+    persistBackoff();
+    return ms;
+  }
+
+  function lsGet(k){ return (nf.storage && nf.storage.get) ? nf.storage.get(k) : (function(){ try{ return localStorage.getItem(k); }catch(e){ return null; } })(); }
+  function lsSet(k,v){ if (nf.storage && nf.storage.set) nf.storage.set(k,v); else { try{ localStorage.setItem(k,v); }catch(e){} } }
+  function lsDel(k){ if (nf.storage && nf.storage.del) nf.storage.del(k); else { try{ localStorage.removeItem(k); }catch(e){} } }
+
+  function dlPush(obj){
+    if (nf.dl && typeof nf.dl.push === "function") { nf.dl.push(obj); return; }
+    try { (window.dataLayer = window.dataLayer || []).push(obj); } catch(e){}
+  }
+
+  function parseISODate(s){
+    if(!s) return null;
+    var d = new Date(String(s));
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function getExpiryISO(){
+    var iso = lsGet(KEY_PRIMARY) || lsGet(KEY_LEGACY);
+    if (iso) {
+      if (lsGet(KEY_PRIMARY) !== iso) lsSet(KEY_PRIMARY, iso);
+      if (lsGet(KEY_LEGACY)  !== iso) lsSet(KEY_LEGACY,  iso);
+    }
+    return iso || null;
+  }
+
+  function memberstackReady(){
+    if (nf.memberstack && typeof nf.memberstack.ready === "function") return nf.memberstack.ready();
+    var ms = window.$memberstackDom;
+    return ms && typeof ms.removePlan === "function";
+  }
+
+  function stopInterval(){
+    if (timer) {
+      try { clearInterval(timer); } catch(_){ }
+      timer = null;
+    }
+  }
+
+  function ensureInterval(){
+    if (timer) return;
+    timer = setInterval(tick, CHECK_MS);
+  }
+
+  function memberHasPlan(member, planId){
+    try{
+      var d = member && member.data ? member.data : member;
+      if (!d) return false;
+
+      var pcs = d.planConnections;
+      if (Array.isArray(pcs)) {
+        for (var i=0;i<pcs.length;i++) {
+          var pc = pcs[i];
+          if (!pc) continue;
+          if (pc.planId === planId) return true;
+          if (pc.plan && pc.plan.id === planId) return true;
+          if (pc.plan && pc.plan.planId === planId) return true;
+        }
+      }
+
+      var plans = d.plans;
+      if (Array.isArray(plans)) {
+        for (var j=0;j<plans.length;j++) {
+          var p = plans[j];
+          if (!p) continue;
+          if (p.id === planId || p.planId === planId) return true;
+          if (p.plan && (p.plan.id === planId || p.plan.planId === planId)) return true;
+        }
+      }
+
+      var planIds = d.planIds;
+      if (Array.isArray(planIds)) {
+        for (var k=0;k<planIds.length;k++) {
+          if (String(planIds[k]) === planId) return true;
+        }
+      }
+    }catch(e){}
+    return false;
+  }
+
+  async function attemptRemoval(){
+    if (backoffUntil && Date.now() < backoffUntil) return;
+
+    var iso = getExpiryISO();
+
+    // No expiry set: stop recurring checks
+    if (!iso){
+      clearBackoff();
+      stopInterval();
+      return;
+    }
+
+    var exp = parseISODate(iso);
+    if (!exp){
+      // Corrupt timestamp: clear keys and stop
+      lsDel(KEY_PRIMARY);
+      lsDel(KEY_LEGACY);
+      clearBackoff();
+      stopInterval();
+      dlPush({ event: "nf_ap_access_expiry_invalid_cleared" });
+      return;
+    }
+
+    // Not expired yet
+    if (Date.now() <= exp.getTime()){
+      clearBackoff();
+      return;
+    }
+
+    // Memberstack not ready yet
+    if (!memberstackReady()) return;
+
+    // Validate plan id
+    if (!FREE_PLAN_ID || typeof FREE_PLAN_ID !== "string" || FREE_PLAN_ID.indexOf("pln_") !== 0) {
+      try { nf.util && nf.util.warn && nf.util.warn("[NF] Invalid AP plan id; cannot remove plan.", FREE_PLAN_ID); } catch(_){ }
+      stopInterval();
+      return;
+    }
+
+    var ms = (nf.memberstack && typeof nf.memberstack.get === "function") ? nf.memberstack.get() : window.$memberstackDom;
+    if (!ms || typeof ms.removePlan !== "function") return;
+
+    // Need a logged-in member to remove plan
+    var mem = null;
+    if (nf.memberstack && typeof nf.memberstack.getCurrentMemberSafe === "function") {
+      mem = await nf.memberstack.getCurrentMemberSafe();
+    } else if (typeof ms.getCurrentMember === "function") {
+      try { mem = await ms.getCurrentMember(); } catch(e){ mem = null; }
+    }
+
+    if (!mem || !mem.data){
+      // Not logged in (or no member payload yet) — keep checking
+      return;
+    }
+
+    // If member no longer has the plan, expiry keys are stale; clear + stop
+    if (!memberHasPlan(mem, FREE_PLAN_ID)) {
+      lsDel(KEY_PRIMARY);
+      lsDel(KEY_LEGACY);
+      clearBackoff();
+      stopInterval();
+      dlPush({ event: "nf_ap_access_expired_plan_not_present" });
+      return;
+    }
+
+    try {
+      await ms.removePlan({ planId: FREE_PLAN_ID });
+
+      lsDel(KEY_PRIMARY);
+      lsDel(KEY_LEGACY);
+      clearBackoff();
+
+      dlPush({ event: "nf_ap_access_expired_removed" });
+
+      stopInterval();
+
+      try { location.reload(); } catch(_){ }
+    } catch(e){
+      var waitMs = bumpBackoff();
+      console.warn("[NF] Intake access expiry removal failed (backing off " + Math.round(waitMs/1000) + "s):", e);
+      dlPush({ event: "nf_ap_access_expired_remove_failed", nf_fail_count: failCount });
+    }
+  }
+
+  function tick(){
+    Promise.resolve(attemptRemoval()).catch(function(){});
+  }
+
+  // Run once immediately
+  tick();
+
+  // Start interval ONLY if an expiry exists right now
+  if (getExpiryISO()) ensureInterval();
+
+  // If tab becomes visible, re-check
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible") {
+      tick();
+      if (getExpiryISO()) ensureInterval();
+    }
+  });
+
+  // If member logs in, re-check quickly
+  try { document.addEventListener("memberstack:loggedIn", tick, { passive:true }); } catch(_){ }
+  try { window.addEventListener("memberstack:loggedIn", tick, { passive:true }); } catch(_){ }
+
+})();
+</script>
+
+<script>
+/* =====================================================
+   Global “gated button” hard-block
+===================================================== */
+(function(){
+  document.addEventListener('click', function(e){
+    var gatedEl = e.target.closest && e.target.closest('[data-nf-gated]');
+    if (!gatedEl) return;
+
+    // Only block elements you explicitly mark with data-nf-gated
+    e.preventDefault();
+    e.stopPropagation();
+
+    var reason = '';
+    try { reason = String(gatedEl.getAttribute('data-nf-gated') || '').trim(); } catch(_){ reason = ''; }
+    var evt = (reason && reason.toLowerCase() === 'terms') ? 'nf_terms_block_global' : 'nf_gated_block';
+
+    try {
+      if (window.neuform && window.neuform.dl && typeof window.neuform.dl.push === "function") {
+        window.neuform.dl.push({ event: evt, nf_reason: reason || null });
+      } else {
+        (window.dataLayer = window.dataLayer || []).push({ event: evt, nf_reason: reason || null });
+      }
+    } catch(_){}
+  }, { capture:true, passive:false });
+})();
+</script>
+

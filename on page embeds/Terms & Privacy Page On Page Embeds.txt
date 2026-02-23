@@ -1,0 +1,559 @@
+<div class="legal-wrapper">
+
+  <!-- Page-level H1 (single source of truth) -->
+  <h1 id="terms-privacy-title">Terms &amp; Privacy</h1>
+
+  <!-- TERMS OF SERVICE -->
+  <section id="terms-of-service" class="legal-page" aria-labelledby="tos-title">
+    <div class="legal-container">
+      <h2 id="tos-title" style="margin-top:0;">Terms of Service</h2>
+      <p><strong>Effective date:</strong> January 9, 2026</p>
+      <p><strong>Owner:</strong> NeuForm Fitness LLC (“NeuForm,” “we,” “us”) (owned and operated by Chris Welch)</p>
+      <p><strong>Contact:</strong> <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a> &bull; <a href="/contact">Contact Page</a></p>
+
+      <div class="legal-summary" aria-label="Quick summary">
+        <p><strong>Quick summary (not a substitute for the full Terms):</strong></p>
+        <ul>
+          <li>These Terms apply to <strong>all current and future</strong> NeuForm offerings (including books, tools, software, subscriptions, and services), whether delivered digitally, physically, or otherwise.</li>
+          <li>NeuForm provides educational fitness, nutrition, and self-development content and tools — <strong>not</strong> medical, nutritional, psychological, or therapeutic services.</li>
+          <li><strong>Results are not guaranteed</strong>. Testimonials are examples only.</li>
+          <li>Digital products are licensed for <strong>personal, single-user</strong> use — no sharing, reposting, or resale.</li>
+          <li>Custom Plans are time-sensitive. The service begins at purchase and requires completing the intake within the stated window.</li>
+          <li>Except for technical/duplicate-charge issues (and any product-specific terms disclosed at checkout), <strong>sales are final</strong> once access is provided or services begin.</li>
+        </ul>
+      </div>
+
+      <ol class="legal-list">
+        <li>
+          <h3>Agreement to Terms</h3>
+          <p>
+            By accessing <strong>neuform-fitness.com</strong> (the “Site”), creating an account, using any NeuForm tools or content, or purchasing any NeuForm product or service (collectively, “Products”), you agree to these Terms and our Privacy Policy (together, the “Agreement”).
+            If you do not agree, do not use the Site or purchase Products.
+          </p>
+          <p>
+            These Terms apply to all current and future NeuForm offerings, whether delivered digitally, physically, or otherwise, unless different terms are expressly provided at checkout or within a specific product offering.
+          </p>
+        </li>
+
+        <li>
+          <h3>Eligibility (Adults Primary; Minors With Guardian)</h3>
+          <p>
+            NeuForm Products are intended for adults (18+). If you are under 18 (or the age of majority where you live), you may only use the Site and Products with the involvement and consent of a parent or legal guardian.
+          </p>
+          <p>
+            If you are a parent or legal guardian and you allow a minor to use the Site or Products, <strong>you are the purchaser and responsible party</strong>, you agree to this Agreement on the minor’s behalf, and you accept full responsibility for supervision, use, and outcomes.
+          </p>
+          <p>
+            The Site is not directed to children under 13, and children under 13 may not use the Site or Products.
+          </p>
+        </li>
+
+        <li>
+          <h3>Scope, Definitions, and Educational-Only Disclaimers</h3>
+          <p>
+            <strong>Definitions.</strong> “Products” may include, without limitation: downloadable training plans and guides; subscriptions and memberships; online tools, software, dashboards, and calculators (including nutrition/hydration tools); custom plan services; educational content; and any future offerings (including books and other digital or physical resources).
+          </p>
+          <p>
+            <strong>Educational use only.</strong> All NeuForm content, tools, and Products are provided for educational and informational purposes only. NeuForm is not a medical provider, registered dietitian practice, psychotherapy provider, or mental health service, and does not provide medical advice, diagnosis, treatment, or therapy.
+          </p>
+          <p>
+            <strong>Tools &amp; calculators.</strong> Any calculator, recommendation, template, automated output, generated plan, or other result is an estimate based on your inputs and assumptions. You are responsible for your decisions and for verifying outputs with qualified professionals as needed.
+          </p>
+          <p>
+            <strong>DLTER / self-development content.</strong> DLTER and related content are conceptual educational frameworks intended for self-reflection and personal development. They are not mental health services, clinical evaluation, diagnosis, or treatment.
+          </p>
+          <p>
+            <strong>No guarantees.</strong> NeuForm does not guarantee any specific fitness, strength, aesthetic, body composition, nutrition, or performance results. Individual outcomes vary based on training history, genetics, recovery, nutrition, adherence, and many other factors.
+          </p>
+          <p>
+            <strong>Testimonials.</strong> Testimonials and examples reflect individual experiences and are not promises of typical or guaranteed outcomes.
+          </p>
+        </li>
+
+        <li>
+          <h3>Health &amp; Safety; Assumption of Risk</h3>
+          <p>
+            Training and physical activity involve inherent risks, including the risk of serious injury or death. You are solely responsible for your health and safety while using the Site or Products.
+            Consult a qualified healthcare professional before beginning any exercise or nutrition program, especially if you have a medical condition, injury, are pregnant, or are taking medications that affect exercise tolerance, appetite, blood pressure, or metabolism.
+          </p>
+          <p>
+            You voluntarily assume all risks arising from your participation, including risks associated with exercises, equipment, environment, and any reliance on content or tool outputs.
+          </p>
+        </li>
+
+        <li>
+          <h3>Accounts, Access, and Security</h3>
+          <p>
+            Certain Products or features may require an account or gated access (e.g., Memberstack). You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account.
+          </p>
+          <p>
+            You may not share accounts, login credentials, or gated access with others. Unauthorized sharing may result in access termination without refund.
+          </p>
+        </li>
+
+        <li>
+          <h3>Digital Products License (What You Can &amp; Can’t Do)</h3>
+          <p>
+            NeuForm digital Products are <strong>digital-only</strong> unless explicitly stated otherwise. When you purchase a digital Product (e.g., training plan PDFs, guides, templates, tools), you receive a personal, non-transferable, non-exclusive, revocable license to download and use it for your personal, single-user use.
+          </p>
+          <p>You may <strong>not</strong>:</p>
+          <ul>
+            <li>Share, post, resell, sublicense, or distribute our files, templates, tools, or access links.</li>
+            <li>Upload Products to shared drives, public folders, forums, groups, or marketplaces.</li>
+            <li>Remove branding, copyright notices, or attribution.</li>
+            <li>Use the Products commercially (including training clients) without a separate written license from NeuForm.</li>
+            <li>Use the Products to create competing products, libraries, or derivative distributions.</li>
+          </ul>
+          <p>
+            For commercial or professional licensing, email <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a>.
+          </p>
+        </li>
+
+        <li>
+          <h3>Custom Plans: Intake Window, Processing, and Delivery</h3>
+          <p>
+            Some Products are custom services (“Custom Plans”) and require you to complete an intake questionnaire. <strong>The Custom Plan service begins at purchase</strong> because access and processing are initiated immediately.
+          </p>
+          <p>
+            <strong>Time-limited intake.</strong> Unless otherwise stated on the Product page or checkout, you have a limited time window to submit your intake after purchase. If you do not submit your intake within the stated window, the order may be considered used/fulfilled and may require a new purchase to restart.
+          </p>
+          <p>
+            <strong>Automated + manual review workflow.</strong> NeuForm may use automated scripts to generate an initial plan draft based on your intake. Plans are then manually reviewed before final export and delivery where applicable.
+          </p>
+          <p>
+            <strong>Delivery timeline.</strong> Estimated delivery timelines (e.g., “within ~12 hours”) are targets, not guarantees, and may vary due to workload, technical issues, or circumstances outside our control. If delays occur, we will make reasonable efforts to deliver as soon as practical.
+          </p>
+          <p>
+            <strong>Accuracy of information.</strong> You are responsible for providing complete and accurate intake information. NeuForm is not responsible for outcomes arising from inaccurate, incomplete, or misleading information.
+          </p>
+        </li>
+
+        <li>
+          <h3>Subscriptions (Recurring Billing)</h3>
+          <p>
+            Some Products may be offered as subscriptions (“Subscriptions”). Subscription terms (pricing, billing interval, included features) will be displayed at purchase.
+          </p>
+          <ul>
+            <li><strong>Renewals:</strong> Subscriptions renew automatically until canceled.</li>
+            <li><strong>Cancellation:</strong> You may cancel at any time, and cancellation takes effect at the end of the current billing period unless stated otherwise at checkout.</li>
+            <li><strong>Access:</strong> Access to subscription features may end when the billing period ends (or immediately if required for fraud prevention or policy enforcement).</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Pricing, Payments, and Delivery</h3>
+          <p>
+            Prices may change without notice. Payments are processed by third-party providers (e.g., Stripe, Memberstack). NeuForm Fitness LLC does not store full payment card numbers.
+          </p>
+          <p>
+            Digital Products may be delivered by on-screen download, gated access, and/or email link after purchase. You are responsible for providing a valid email address and ensuring you can receive messages from us.
+          </p>
+          <p>
+            If we offer physical goods (for example, a printed book or merchandise), shipping fees, delivery estimates, and any product-specific terms will be shown at checkout or on the product page.
+          </p>
+          <p>
+            If you have access issues, contact us within 7 days of purchase and we will make reasonable efforts to provide a working copy or restore access. Any resends, extensions, or accommodations beyond this window are provided at NeuForm’s sole discretion and are not guaranteed.
+          </p>
+          <p>
+            Certain Site features may rely on third-party platforms such as Memberstack, Webflow, Stripe, Google Workspace, and Google Forms/Sheets. Your use of those features may also be subject to those providers’ terms and policies.
+          </p>
+        </li>
+
+        <li>
+          <h3>Refunds, Chargebacks, and Billing Issues</h3>
+          <p><strong>General rule:</strong> Because many Products are digital and/or involve immediate access or services that begin at purchase, <strong>sales are final</strong> except as required by law or as expressly stated here (or as otherwise stated at checkout for a specific physical product).</p>
+
+          <h4>Digital downloads and one-time digital Products</h4>
+          <p>
+            Once a digital Product is delivered or access is granted, refunds are not provided for reasons such as change of mind, lack of use, user error, or subjective dissatisfaction.
+          </p>
+
+          <h4>Custom Plans</h4>
+          <p>
+            Custom Plans are non-refundable once purchased because the service begins at purchase and includes time-sensitive access and processing. Failure to submit the intake within the stated window may require repurchase to restart. Any exceptions are at NeuForm’s sole discretion.
+          </p>
+
+          <h4>Subscriptions</h4>
+          <p>
+            Subscription charges are generally non-refundable for the current billing period. You can cancel to prevent future renewals. If you cancel, you retain access until the end of the current period unless stated otherwise at checkout.
+          </p>
+
+          <h4>Physical goods (if offered)</h4>
+          <p>
+            If we offer physical goods, any return, replacement, or shipping-issue terms will be disclosed at checkout or on the product page and will control for that item.
+          </p>
+
+          <h4>Technical issues and duplicate/failed charges</h4>
+          <p>
+            If there is a technical problem (e.g., corrupted file, failed access, duplicate charge), contact us within 7 days and we will correct the issue (for example, by restoring access, resending a file, or refunding a duplicate charge where appropriate).
+          </p>
+
+          <h4>Chargebacks</h4>
+          <p>
+            Initiating a chargeback without first contacting us to resolve the issue may result in loss of access and may be treated as a breach of this Agreement. We reserve the right to provide payment processors with relevant order and access records to contest chargebacks.
+          </p>
+        </li>
+
+        <li>
+          <h3>Intellectual Property</h3>
+          <p>
+            All content on the Site—including plans, text, graphics, logos, videos, tools, templates, and code—is owned by NeuForm Fitness LLC or its licensors and is protected by copyright and other laws.
+            Except for the personal license granted above, no rights are transferred or granted.
+          </p>
+        </li>
+
+        <li>
+          <h3>Acceptable Use</h3>
+          <p>You agree that you will not:</p>
+          <ul>
+            <li>Hack, scrape, reverse engineer, or attempt to bypass security, access controls, or paywalls.</li>
+            <li>Interfere with the Site’s operation or access it using automated tools (such as bots or crawlers) without our consent.</li>
+            <li>Use the Site or Products for unlawful purposes or to infringe the rights of others.</li>
+            <li>Share login credentials or otherwise enable unauthorized access.</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Testimonials &amp; Reviews</h3>
+          <p>
+            If you submit a testimonial or review, you grant NeuForm Fitness LLC a non-exclusive, worldwide right to display, reproduce, and use it for marketing and promotional purposes. We may edit for clarity and length without changing the meaning.
+          </p>
+          <p>
+            We will display only your first name and initial unless you request anonymity. Testimonials reflect individual experiences and are not guarantees of typical outcomes.
+          </p>
+        </li>
+
+        <li>
+          <h3>Third-Party Services and Links</h3>
+          <p>
+            The Site may reference or link to third-party services. NeuForm is not responsible for third-party content, policies, availability, or practices. Your use of third-party services is governed by their terms and policies.
+          </p>
+        </li>
+
+        <li>
+          <h3>“AS IS” Warranty Disclaimer</h3>
+          <p>
+            The Site and Products are provided “as is” and “as available.” To the fullest extent permitted by law, NeuForm Fitness LLC disclaims all warranties, express or implied, including warranties of merchantability, fitness for a particular purpose, and non-infringement.
+          </p>
+        </li>
+
+        <li>
+          <h3>Limitation of Liability</h3>
+          <p>
+            To the maximum extent permitted by law, NeuForm Fitness LLC (and its owners, affiliates, and service providers) will not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or for lost profits, data, or goodwill.
+          </p>
+          <p>
+            Our total liability for any claim arising out of or relating to the Site or Products is limited to the amount you paid for the Product or <strong>$50</strong>, whichever is greater.
+          </p>
+        </li>
+
+        <li>
+          <h3>Indemnification</h3>
+          <p>
+            You agree to defend, indemnify, and hold NeuForm Fitness LLC harmless from any claims, damages, liabilities, losses, and expenses (including reasonable attorneys’ fees) arising from your use of the Site or Products, your breach of this Agreement, or your violation of law or third-party rights.
+          </p>
+        </li>
+
+        <li>
+          <h3>Copyright Complaints (DMCA)</h3>
+          <p>
+            If you believe content on the Site infringes your copyright, email <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a> with:
+          </p>
+          <ul>
+            <li>Your contact information.</li>
+            <li>Identification of the copyrighted work you claim is infringed.</li>
+            <li>The URL(s) of the allegedly infringing content.</li>
+            <li>
+              A statement under penalty of perjury that you are the copyright owner or authorized to act on the owner’s behalf, and that the information in your notice is accurate.
+            </li>
+            <li>Your physical or electronic signature.</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Changes to Products or Features</h3>
+          <p>
+            We may modify or discontinue Products, features, or pricing at any time without notice. We are not liable for any modification, price change, or discontinuation.
+          </p>
+        </li>
+
+        <li>
+          <h3>Force Majeure</h3>
+          <p>
+            NeuForm Fitness LLC is not responsible for delays or failures caused by events outside reasonable control, including outages, platform/provider interruptions, internet failures, natural disasters, labor issues, or governmental actions. If such events occur, we will make reasonable efforts to resume delivery and access.
+          </p>
+        </li>
+
+        <li>
+          <h3>Governing Law &amp; Venue</h3>
+          <p>
+            These Terms are governed by the laws of the State of Illinois, without regard to conflict-of-law rules. You agree to exclusive jurisdiction and venue in the state courts of Will County, Illinois, and the federal courts of the Northern District of Illinois.
+          </p>
+        </li>
+
+        <li>
+          <h3>Updates to These Terms</h3>
+          <p>
+            We may update these Terms periodically. The “Effective date” at the top of this page will be revised accordingly. For material changes, we may post a notice on the Site. Your continued use of the Site after any changes constitutes acceptance of the updated Terms.
+          </p>
+        </li>
+
+        <li>
+          <h3>Contact</h3>
+          <p>
+            Questions about these Terms? Email <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a> or use our <a href="/contact">Contact Page</a>.
+          </p>
+          <p>
+            NeuForm Fitness LLC maintains a business mailing address for legal notices. To request the mailing address, please contact us by email.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- PRIVACY POLICY -->
+  <section id="privacy-policy" class="legal-page" aria-labelledby="privacy-title">
+    <div class="legal-container">
+      <h2 id="privacy-title" style="margin-top:0;">Privacy Policy</h2>
+      <p><strong>Effective date:</strong> January 9, 2026</p>
+      <p><strong>Owner/Data Controller:</strong> NeuForm Fitness LLC (Chris Welch)</p>
+      <p><strong>Privacy Contact:</strong> <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a> &bull; <a href="/contact">Contact Page</a></p>
+
+      <!-- Visible manage cookies entry point (hooks into your Page Settings JS) -->
+      <p>
+        <strong>Cookie preferences:</strong>
+        <a href="#" id="manage-cookies">Manage cookies</a>
+      </p>
+
+      <!-- Preference center (hidden by default; opened by #manage-cookies) -->
+      <div id="privacy-center" class="legal-summary" aria-label="Cookie preferences center" hidden>
+        <p><strong>Cookie Preferences</strong></p>
+        <p style="margin-bottom:12px;">
+          Choose whether you want to allow analytics and advertising cookies. Necessary cookies are always enabled for core site functionality.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+          <button
+            type="button"
+            data-consent="accept-all"
+            style="appearance:none;border:1px solid rgba(52,152,219,.55);background:rgba(52,152,219,.20);color:#e9f3f7;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;"
+          >
+            Accept all
+          </button>
+
+          <button
+            type="button"
+            data-consent="deny-all"
+            style="appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#e9f3f7;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;"
+          >
+            Deny all
+          </button>
+        </div>
+
+        <p style="margin-top:12px;margin-bottom:0;color:#c5d3db;font-size:.95rem;">
+          You can return to this page at any time to update your choice.
+        </p>
+      </div>
+
+      <div class="legal-summary" aria-label="Privacy at a glance">
+        <p><strong>Privacy at a glance:</strong></p>
+        <ul>
+          <li>We collect information needed to deliver Products, operate accounts, and improve the Site.</li>
+          <li>We <strong>do not sell</strong> personal information.</li>
+          <li>We use service providers (like hosting, payments, email, and analytics) to run NeuForm.</li>
+          <li>Depending on your settings and region, some analytics/advertising tools may be considered “sharing” under certain privacy laws; you can opt out where available.</li>
+          <li>You can request access, correction, or deletion of your data by emailing us.</li>
+        </ul>
+      </div>
+
+      <ol class="legal-list">
+        <li>
+          <h3>Scope</h3>
+          <p>
+            This Policy explains how we collect, use, share, and protect personal information (“PI”) when you visit <strong>neuform-fitness.com</strong>, create an account, purchase Products, or interact with us.
+          </p>
+        </li>
+
+        <li>
+          <h3>Information We Collect</h3>
+
+          <p><strong>Information you provide:</strong></p>
+          <ul>
+            <li>Name, email address, and account-related information (e.g., membership status if applicable).</li>
+            <li>Order information and purchase history.</li>
+            <li>Shipping address and contact details (such as phone number) if you purchase physical goods or if required for delivery.</li>
+            <li>Form submissions (e.g., consult interest, custom plan intake, questionnaires, and other submissions).</li>
+            <li>Training, nutrition, lifestyle, and preference inputs you choose to provide (which may include fitness- or health-adjacent information, such as injuries, limitations, goals, or dietary preferences).</li>
+            <li>Messages to support and communications with us.</li>
+            <li>Testimonials and reviews you submit.</li>
+          </ul>
+
+          <p><strong>Information collected automatically:</strong></p>
+          <ul>
+            <li>Device and log data (IP address, browser type/version, pages viewed, timestamps, referrers).</li>
+            <li>Cookies, pixels, and analytics events (as configured on the Site).</li>
+            <li>Approximate location (derived from IP address).</li>
+          </ul>
+
+          <p><strong>Information from third parties:</strong></p>
+          <ul>
+            <li>Payment processors (e.g., transaction status, last 4 digits and card brand where provided, billing country; we do not receive or store full card numbers).</li>
+            <li>Scheduling providers (e.g., booking data, if you book a consult).</li>
+            <li>Account/membership providers (e.g., access status and identifiers where applicable).</li>
+            <li>Email providers (e.g., deliverability and engagement data such as opens/clicks where enabled).</li>
+          </ul>
+
+          <p>
+            <strong>Note on sensitive information:</strong> NeuForm is not a HIPAA-covered entity. Please do not submit highly sensitive medical information or emergency details through the Site. If you choose to provide health- or fitness-adjacent information, you do so voluntarily to help us deliver Products (such as Custom Plans).
+          </p>
+        </li>
+
+        <li>
+          <h3>How We Use Information (Purposes &amp; Legal Bases)</h3>
+          <p>We use personal information to:</p>
+          <ul>
+            <li>Provide the Site and Products and deliver access (contract).</li>
+            <li>Process payments, manage orders, and deliver purchases (contract).</li>
+            <li>Generate or prepare Product outputs based on your inputs (contract/legitimate interests).</li>
+            <li>Communicate with you about orders, support, and account activity (contract/legitimate interests).</li>
+            <li>Improve Site performance and Products (legitimate interests).</li>
+            <li>Send optional marketing communications where permitted (consent/legitimate interests, depending on region; you can opt out anytime).</li>
+            <li>Comply with legal obligations, prevent fraud, and protect rights (legal obligation/legitimate interests).</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Cookies, Analytics &amp; Advertising</h3>
+          <p>
+            We use necessary cookies for core Site functions and may use analytics and/or advertising technologies (such as cookies or pixels) to understand usage, measure performance, and improve marketing.
+            Where required by law, we obtain consent for non-essential cookies through a banner or similar mechanism. You can manage cookies via your browser settings and any on-site cookie controls.
+          </p>
+          <p>
+            Depending on your location and how tools are configured, certain analytics/advertising activities may be considered “sharing” under some privacy laws (e.g., California’s CPRA). Where applicable, you may opt out through provided controls or by contacting us.
+          </p>
+          <p>
+            If supported and required by law, we will honor recognized opt-out preference signals (such as Global Privacy Control) for applicable activities.
+          </p>
+        </li>
+
+        <li>
+          <h3>Sharing with Service Providers (Processors)</h3>
+          <p>
+            We share personal information with vendors who help operate NeuForm, under contracts requiring confidentiality and security. They may process PI only as needed to perform their services.
+          </p>
+          <p>Typical providers include:</p>
+          <ul>
+            <li>Webflow (hosting and site infrastructure).</li>
+            <li>Stripe (payments).</li>
+            <li>Memberstack (account/membership access where applicable).</li>
+            <li>Google Analytics (analytics, where enabled).</li>
+            <li>Google Workspace (e.g., Gmail, Google Drive/Sheets) for email and file storage.</li>
+            <li>Google Forms/Apps Script/Sheets (for intake collection and plan generation workflows).</li>
+            <li>Zapier (automations and integrations).</li>
+            <li>Acuity Scheduling (consult bookings).</li>
+            <li>Shipping carriers and fulfillment providers (if physical goods are offered).</li>
+          </ul>
+          <p>
+            <strong>We do not sell</strong> personal information. We may use analytics and advertising tools; depending on configuration and region, that may be considered “sharing” as described above.
+          </p>
+        </li>
+
+        <li>
+          <h3>Data Retention</h3>
+          <p>We keep personal information only as long as necessary for the purposes described above, then delete or anonymize it where feasible. Typical retention periods include:</p>
+          <ul>
+            <li>Orders and invoices: 7 years (for tax and audit purposes).</li>
+            <li>Support emails and contact messages: up to 24 months.</li>
+            <li>Custom plan intake submissions and related outputs: retained as reasonably necessary to deliver support, maintain records, and improve Products (commonly up to 24 months unless a longer period is required by law or legitimate business needs).</li>
+            <li>Analytics: according to configured retention settings (e.g., 14–26 months).</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Security</h3>
+          <p>
+            We use reasonable technical and organizational measures to protect personal information. However, no method of transmission or storage is 100% secure. Please protect your account email and devices.
+          </p>
+        </li>
+
+        <li>
+          <h3>International Transfers</h3>
+          <p>
+            Our providers may process data in the United States and other countries. Where required, transfers rely on recognized safeguards (e.g., Standard Contractual Clauses) offered by those providers.
+          </p>
+        </li>
+
+        <li>
+          <h3>Automated Processing (e.g., Plan Generation)</h3>
+          <p>
+            Some workflows may use automated scripts to process your submitted inputs and generate draft outputs (such as preliminary training plan structures) before any manual review where applicable. These outputs are educational estimates based on inputs and are not medical or therapeutic decisions.
+          </p>
+          <p>
+            If you believe your submitted information was incorrect or you have questions about an output, you may contact us to correct errors or request guidance on next steps.
+          </p>
+        </li>
+
+        <li>
+          <h3>Your Rights</h3>
+          <p>
+            Depending on your location, you may have rights to access, correct, delete, restrict processing, object, port your data, and withdraw consent. To exercise your rights, email <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a>. We will respond as required by law.
+          </p>
+
+          <h4>California Residents (CCPA/CPRA)</h4>
+          <p>
+            You may request to know, delete, or correct personal information, and opt out of “sale” or “sharing” where applicable. NeuForm does not sell personal information. If our use of certain analytics/advertising tools constitutes “sharing” under CPRA, you may opt out through available controls or by contacting us with “CPRA Request” in the subject line.
+          </p>
+          <p>
+            To submit a request or authorize an agent, email us with “CCPA/CPRA Request” in the subject line. We will verify your request and respond within the statutory period (typically 45 days).
+          </p>
+
+          <h4>EEA/UK/Switzerland (GDPR)</h4>
+          <p>
+            If you are in the EEA, UK, or Switzerland, you have the rights listed above and may lodge a complaint with your local supervisory authority. Our lawful bases are listed in Section 3.
+          </p>
+        </li>
+
+        <li>
+          <h3>Children</h3>
+          <p>
+            Our Site is not directed to children under 13, and we do not knowingly collect personal information from them. If you believe a child under 13 has provided personal information, contact us and we will delete it.
+          </p>
+          <p>
+            If a parent or legal guardian provides information on behalf of a minor (13+), they consent to collection and use of that information as described in this Policy.
+          </p>
+        </li>
+
+        <li>
+          <h3>Communications</h3>
+          <p><strong>Transactional communications:</strong> Receipts and essential service emails related to orders, accounts, or Product delivery.</p>
+          <p><strong>Marketing:</strong> Sent where permitted. You can unsubscribe at any time through the link in emails or by contacting us.</p>
+        </li>
+
+        <li>
+          <h3>Third-Party Links</h3>
+          <p>
+            We may link to other websites. Their privacy practices are their own; we encourage you to review their policies before providing any personal information.
+          </p>
+        </li>
+
+        <li>
+          <h3>Changes to This Policy</h3>
+          <p>
+            We may update this Policy from time to time. When we do, we will update the “Effective date” at the top, and for material changes, we may post a notice on the Site. Your continued use of the Site after changes are made constitutes acceptance of the updated Policy.
+          </p>
+        </li>
+
+        <li>
+          <h3>Contact</h3>
+          <p>
+            Questions or requests about privacy? Email <a href="mailto:chriswelch.neuform@gmail.com">chriswelch.neuform@gmail.com</a> or use our <a href="/contact">Contact Page</a>.
+          </p>
+          <p>
+            We do not list a public mailing address. If you require a postal address for legal or regulatory requests, email us and we will provide the appropriate address for service.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+</div>

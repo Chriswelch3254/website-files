@@ -1,0 +1,251 @@
+Thank You Page Settings Code
+Head:
+<!-- Basic meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NeuForm Fitness">
+<meta property="og:url" content="https://www.neuform-fitness.com/thank-you">
+<meta property="og:title" content="Thank You | NeuForm Fitness">
+<meta property="og:description" content="Thanks for your purchase—check your email for the download link. Need help with access? Reply to the receipt or use our contact page.">
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NeuForm Fitness thank-you message over dark stone background">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Thank You | NeuForm Fitness">
+<meta name="twitter:description" content="Thanks for your purchase—check your email for the download link. Need help with access? Reply to the receipt or use our contact page.">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="NeuForm Fitness thank-you message over dark stone background">
+
+<!-- Performance niceties -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- NeuForm — Thank You Page Helpers (Lead conversion + CTA tracking; no PII) -->
+
+Body:
+<script>
+(function(){
+  "use strict";
+
+  if (window.__NF_THANKYOU_HELPERS__) return;
+  window.__NF_THANKYOU_HELPERS__ = true;
+
+  var dl = window.dataLayer = window.dataLayer || [];
+
+  /* =====================================================
+     A) Lead Conversion (FALLBACK ONLY; strict + deduped)
+     - This page is purchase-themed. Lead conversion may only fire here
+       if a recent contact submit attempt was recorded in sessionStorage.
+     - Fires GA4 generate_lead + Meta Lead + dataLayer nf_lead_submit
+     - Dedupe + cleanup aligns with /contact-thank-you
+     - Never sends PII (only uses meta saved by contact page: lengths/domains)
+  ====================================================== */
+  (function(){
+    var FIRED_TS_KEY = 'nf.leadFiredTs';
+    var FIRED_ID_KEY = 'nf.leadFiredId';
+    var PENDING_KEY  = 'nf.leadPending';
+    var META_KEY     = 'nf.leadMeta';
+    var LEAD_ID_KEY  = 'nf.leadId';
+    var LEGACY_ID_KEY= 'nf.lead_id';
+
+    var MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
+
+    function ssGet(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
+    function ssSet(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
+    function ssDel(k){ try { sessionStorage.removeItem(k); } catch(e){} }
+
+    function genId(){
+      try{
+        if (window.crypto && crypto.getRandomValues) {
+          var a = new Uint8Array(16);
+          crypto.getRandomValues(a);
+          return Array.from(a).map(function(b){ return ('0'+b.toString(16)).slice(-2); }).join('');
+        }
+      }catch(e){}
+      return (Date.now().toString(36) + Math.random().toString(36).slice(2));
+    }
+
+    function once(key) {
+      try {
+        if (sessionStorage.getItem(key)) return false;
+        sessionStorage.setItem(key, "1");
+        return true;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    function pendingTs(){
+      try { return Number(ssGet(PENDING_KEY) || 0); } catch(e){ return 0; }
+    }
+
+    function firedTs(){
+      try { return Number(ssGet(FIRED_TS_KEY) || 0); } catch(e){ return 0; }
+    }
+
+    function readMeta(){
+      try{
+        var raw = ssGet(META_KEY);
+        if (!raw) return {};
+        var m = JSON.parse(raw);
+        return (m && typeof m === 'object') ? m : {};
+      }catch(e){ return {}; }
+    }
+
+    function shouldFire(meta){
+      var p = pendingTs();
+      if (!p) return false;
+
+      // Stale pending → clear to prevent future accidental fires
+      if ((Date.now() - p) > MAX_AGE_MS){
+        ssDel(PENDING_KEY);
+        ssDel(META_KEY);
+        return false;
+      }
+
+      // Already fired after this pending timestamp
+      var f = firedTs();
+      if (f && f >= p) return false;
+
+      // Only accept contact-form pending meta
+      if (meta && meta.nf_method && meta.nf_method !== 'contact_form') return false;
+
+      return true;
+    }
+
+    var meta = readMeta();
+    if (!shouldFire(meta)) return;
+
+    // Use Contact-page generated lead ID if available; else create one
+    var leadId = ssGet(LEAD_ID_KEY) || ssGet(LEGACY_ID_KEY) || genId();
+    ssSet(LEAD_ID_KEY, leadId);
+    ssSet(LEGACY_ID_KEY, leadId);
+
+    // Unified dedupe: if this leadId is already the firedId, bail
+    var already = ssGet(FIRED_ID_KEY);
+    if (already && already === leadId) {
+      ssDel(PENDING_KEY);
+      ssDel(META_KEY);
+      return;
+    }
+
+    // Extra reload-safe guard per lead id
+    var dedupeKey = 'nf.lead.sent.' + leadId;
+    if (!once(dedupeKey)) return;
+
+    // Fire canonical conversion event (no PII)
+    dl.push(Object.assign({
+      event: 'nf_lead_submit',
+      nf_lead_id: leadId,
+      nf_method: 'contact_form',
+      nf_source: 'thankyou_fallback'
+    }, meta || {}));
+
+    // GA4 conversion
+    if (typeof gtag === 'function') {
+      try {
+        gtag('event', 'generate_lead', {
+          lead_id: leadId,
+          method: 'contact_form',
+
+          // safe meta (non-PII)
+          nf_plan_interest: meta && meta.nf_plan_interest ? meta.nf_plan_interest : null,
+          nf_email_domain: meta && meta.nf_email_domain ? meta.nf_email_domain : null,
+          nf_message_len: (meta && typeof meta.nf_message_len === 'number') ? meta.nf_message_len : null,
+          nf_newsletter_optin: (meta && typeof meta.nf_newsletter_optin === 'boolean') ? meta.nf_newsletter_optin : null
+        });
+      } catch(e) {}
+    }
+
+    // Meta Pixel conversion (dedupe via eventID)
+    if (typeof fbq === 'function') {
+      try {
+        fbq('track', 'Lead', { lead_id: leadId }, { eventID: leadId });
+      } catch(e) {}
+    }
+
+    // Mark fired + clear pending/meta to prevent any other page from firing again
+    try{
+      var now = String(Date.now());
+      ssSet(FIRED_TS_KEY, now);
+      ssSet(FIRED_ID_KEY, leadId);
+      ssSet('nf.leadFired', '1'); // legacy
+
+      ssDel(PENDING_KEY);
+      ssDel(META_KEY);
+    }catch(e){}
+  })();
+
+  /* =====================================================
+     B) Purchase thank-you page viewed
+  ====================================================== */
+  dl.push({ event: 'nf_purchase_thankyou_view' });
+
+  /* =====================================================
+     C) Delegated click tracking for Thank You CTAs
+     (works only if you add data-thanks-action attrs)
+  ====================================================== */
+  function closestAction(el){
+    return el && el.closest ? el.closest('[data-thanks-action]') : null;
+  }
+
+  document.addEventListener('click', function(e){
+    var node = closestAction(e.target);
+    if (!node) return;
+
+    var act   = node.getAttribute('data-thanks-action');
+    var plan  = node.getAttribute('data-plan') || null;
+    var file  = node.getAttribute('data-file') || null;
+    var dest  = node.getAttribute('data-dest') || (node.tagName === 'A' ? node.getAttribute('href') : null);
+    var pack  = node.getAttribute('data-pack') || null;
+    var field = node.getAttribute('data-field') || null;
+
+    switch(act){
+      case 'download':
+        dl.push({ event: 'nf_download_click', nf_plan: plan, nf_file: file });
+        break;
+
+      case 'open':
+        dl.push({ event: 'nf_thankyou_open', nf_dest: dest });
+        break;
+
+      case 'add_pack':
+        dl.push({ event: 'nf_post_purchase_nudge', nf_attach_pack: true, nf_pack: pack || 'warmup_stretch' });
+        try { sessionStorage.setItem('nf.attach_pack', '1'); } catch(e){}
+        break;
+
+      case 'support':
+        dl.push({ event: 'nf_support_click', nf_channel: node.getAttribute('data-channel') || 'email' });
+        break;
+
+      case 'copy':
+        (function(){
+          var val = '';
+          if (field === 'order_id') {
+            try {
+              var qp = new URLSearchParams(window.location.search || '');
+              val = qp.get('session_id') || '';
+            } catch(e){}
+          }
+          if (!val && node.hasAttribute('data-value')) val = node.getAttribute('data-value');
+          if (!val || !navigator.clipboard || !navigator.clipboard.writeText) return;
+          try {
+            navigator.clipboard.writeText(val);
+            // ✅ Only length is tracked (no copied value)
+            dl.push({ event: 'nf_copy', nf_field: field || 'unknown', nf_len: String(val).length });
+          } catch(e){}
+        })();
+        break;
+    }
+  }, { passive: true });
+
+})();
+</script>

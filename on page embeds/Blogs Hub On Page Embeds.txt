@@ -1,0 +1,666 @@
+Blogs Hub On Page Embeds
+
+Embed 1:
+<style>
+/* ==========================================================
+   NeuForm — Blog Hub Styles (v4.6.0, 2025-12-02)
+   Matched to JS v4.6.0 (refined ribbon + fixed dual-thumb slider)
+   --------------------------------------------------------------
+   • Ribbon width anchored via inner .nf-ribbon card (no clipped corners)
+   • Auto-stack overflow: Read range + Clear + Result move to centered 2nd row
+   • Read-time group: visible label, dual thumbs share one line, reset
+   • Uniform 40px controls; responsive, a11y-friendly polish
+   ========================================================== */
+
+/* ---------- Layout ---------- */
+.blog_list,
+.nf-blog-grid{
+  display:flex;
+  flex-direction:column;
+  margin:0 auto;
+  padding:26px 16px 64px;
+  width:min(1100px,100%);
+  box-sizing:border-box;
+}
+
+/* ---------- Controls (ribbon shell) ---------- */
+#nf-controls{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  width:100%;
+  max-width:1100px;
+  margin:0 auto 20px;
+  padding:0 12px;
+  box-sizing:border-box;
+}
+
+/* Inner glass card */
+#nf-controls .nf-ribbon{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px 14px;
+  margin:0 auto;
+  padding:16px 18px;
+  width:100%;
+  max-width:min(1100px,100%);
+  background:rgba(0,0,0,.78);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  box-shadow:0 12px 36px rgba(0,0,0,.45);
+  backdrop-filter:saturate(1.1) blur(8px);
+  -webkit-backdrop-filter:saturate(1.1) blur(8px);
+  overflow:visible;
+}
+@supports not ((-webkit-backdrop-filter: blur(0)) or (backdrop-filter: blur(0))){
+  #nf-controls .nf-ribbon{ background:rgba(0,0,0,.84); }
+}
+#nf-controls .nf-ribbon::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  width:92%;
+  height:1px;
+  background:rgba(255,255,255,.06);
+  border-radius:1px;
+}
+
+/* Rows */
+#nf-controls .nf-ctrl-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  width:100%;
+}
+#nf-controls .filters{
+  display:grid;
+  align-items:center;
+  grid-auto-flow:column;
+  /* search | category | series | sort | (readrange lives in util row) */
+  grid-template-columns:
+    minmax(180px,1.2fr)
+    minmax(150px,.9fr)
+    minmax(150px,.9fr)
+    minmax(160px,1fr);
+  gap:10px;
+}
+
+/* When JS stacks (overflow/narrow), util row takes readrange + clear/result */
+#nf-controls.nf-stacked .filters{
+  grid-template-columns:
+    minmax(180px,1.2fr)
+    minmax(150px,.9fr)
+    minmax(150px,.9fr)
+    minmax(160px,1fr);
+}
+#nf-controls .util{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+/* Inputs & selects */
+#nf-controls input[type="search"],
+#nf-controls select{
+  -webkit-appearance:none;
+  appearance:none;
+  background:rgba(17,25,29,.92);
+  color:var(--nf-ink,#e9f3f7);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  height:40px;
+  line-height:40px;
+  padding:0 36px 0 12px;
+  font-size:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color .2s ease, background .2s ease;
+  max-width:100%;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  overflow:hidden;
+}
+#nf-controls select{
+  background-image:url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='%23e9f3f7' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+  background-size:14px;
+  cursor:pointer;
+}
+#nf-controls input[type="search"]::placeholder{
+  color:var(--nf-muted,#9fb4c2);
+}
+
+#nf-controls input[type="search"]:hover,
+#nf-controls select:hover{
+  border-color:rgba(255,255,255,.18);
+  background:rgba(17,25,29,.98);
+}
+#nf-controls input[type="search"]:focus-visible,
+#nf-controls select:focus-visible{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+  border-color:rgba(52,152,219,.55);
+}
+
+/* Hide singleton selects when JS flags them with [hidden] */
+#nf-controls select[hidden]{ display:none !important; }
+
+/* ---------- Dual Read-Time Range (group) ---------- */
+/* Layout: [text | sliders | value | reset] */
+#nf-readrange{
+  position:relative;
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  align-items:center;
+  gap:10px;
+  min-width:300px;
+  padding:6px 10px;
+  background:rgba(17,25,29,.6);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:10px;
+  overflow:hidden; /* contain slider thumbs inside the group only */
+}
+/* visible label */
+#nf-controls .nf-read-text{
+  grid-column:1 / 2;
+  font-size:13px;
+  color:var(--nf-muted,#9fb4c2);
+  white-space:nowrap;
+}
+
+/* Sliders live inside .nf-slider-wrap; JS handles absolute positioning.
+   Updated: pointer-events enabled on the range inputs for cross-browser reliability. */
+#nf-readrange input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:28px;
+  background:transparent;
+  margin:0;
+  padding:0;
+  cursor:pointer;
+
+  /* ✅ FIX: allow reliable dragging/clicking across browsers (Safari iOS/Firefox) */
+  pointer-events:auto;
+  touch-action:none;
+}
+
+/* Base track (WebKit) */
+#nf-readrange input[type="range"]::-webkit-slider-runnable-track{
+  height:6px;
+  background:linear-gradient(to right, rgba(255,255,255,.14), rgba(255,255,255,.14));
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+}
+/* Base track (Firefox) */
+#nf-readrange input[type="range"]::-moz-range-track{
+  height:6px;
+  background:rgba(255,255,255,.14);
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+}
+
+/* Thumbs */
+#nf-readrange input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:var(--nf-ink,#e9f3f7);
+  border:1px solid rgba(0,0,0,.35);
+  box-shadow:0 1px 2px rgba(0,0,0,.45);
+  cursor:pointer;
+  margin-top:-7px;              /* centers circle on 6px track */
+}
+#nf-readrange input[type="range"]::-moz-range-thumb{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:var(--nf-ink,#e9f3f7);
+  border:1px solid rgba(0,0,0,.35);
+  box-shadow:0 1px 2px rgba(0,0,0,.45);
+  cursor:pointer;
+}
+
+/* Focus ring for thumbs */
+#nf-readrange input[type="range"]:focus-visible::-webkit-slider-thumb{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+}
+#nf-readrange input[type="range"]:focus-visible::-moz-range-thumb{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+}
+
+/* Value label & reset on the right */
+.nf-read-label{
+  color:var(--nf-muted,#9fb4c2);
+  font-size:13.5px;
+  white-space:nowrap;
+  grid-column:3 / 4;
+}
+#nf-controls .nf-read-reset{
+  grid-column:4 / 5;
+  background:transparent;
+  color:var(--nf-muted,#9fb4c2);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;
+  height:28px;
+  padding:0 8px;
+  font-size:14px;
+  line-height:28px;
+  cursor:pointer;
+  transition:background .18s ease, border-color .18s ease, transform .18s ease;
+}
+#nf-controls .nf-read-reset:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.28);
+  transform:translateY(-1px);
+}
+#nf-controls .nf-read-reset:focus-visible{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+}
+
+/* Hide the second (max) track so both thumbs appear on a single visible rail */
+#nf-read-max::-webkit-slider-runnable-track{
+  background:transparent;
+  border-color:transparent;
+}
+#nf-read-max::-moz-range-track{
+  background:transparent;
+  border-color:transparent;
+}
+
+/* ---------- Clear (inline) + Result ---------- */
+#nf-controls .nf-clear-inline,
+#nf-clear{
+  background:rgba(52,152,219,.12);
+  color:var(--nf-ink,#e9f3f7);
+  border:1px solid rgba(52,152,219,.28);
+  border-radius:10px;
+  height:40px;
+  padding:0 14px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .18s ease, background .18s ease, border-color .18s ease;
+  justify-self:end;
+}
+#nf-controls .nf-clear-inline:hover,
+#nf-clear:hover{
+  transform:translateY(-1px);
+  background:rgba(52,152,219,.25);
+  border-color:rgba(52,152,219,.45);
+}
+#nf-controls .nf-clear-inline:focus-visible,
+#nf-clear:focus-visible{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+}
+#nf-controls .nf-result,
+#nf-result{
+  font-size:13.5px;
+  color:var(--nf-muted,#9fb4c2);
+  white-space:nowrap;
+  justify-self:end;
+}
+
+/* ---------- Tiles ---------- */
+.nf-blog-tile{
+  background:rgba(0,0,0,.85);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:20px 18px 16px;
+  color:var(--nf-ink,#e9f3f7);
+  box-shadow:0 10px 24px rgba(0,0,0,.34);
+  display:flex;
+  flex-direction:column;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.nf-blog-tile:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 32px rgba(0,0,0,.42);
+  border-color:rgba(255,255,255,.14);
+}
+
+/* Meta & text */
+.nf-blog-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  font-size:12.5px;
+  color:var(--nf-muted,#9fb4c2);
+  margin:0 0 4px;
+}
+.nf-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(52,152,219,.10);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9999px;
+  font-size:12px;
+  padding:3px 9px;
+  color:var(--nf-muted,#9fb4c2);
+}
+
+/* Featured chip: hidden by default, only shown when CMS flag is true */
+.nf-chip--featured{ display:none; }
+.nf-blog-tile[data-featured="true"] .nf-chip--featured{ display:inline-flex; }
+
+.nf-blog-title{
+  font-size:21.5px;
+  font-weight:700;
+  line-height:1.22;
+  margin:0 0 4px;
+}
+.nf-blog-title a{
+  color:var(--nf-ink,#e9f3f7);
+  text-decoration:none;
+}
+.nf-blog-title a:hover{text-decoration:underline;}
+.nf-blog-sub{
+  font-size:14.5px;
+  color:var(--nf-muted,#9fb4c2);
+  margin:0 0 8px;
+  line-height:1.45;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.nf-blog-excerpt{
+  font-size:14.5px;
+  line-height:1.5;
+  color:var(--nf-ink,#e9f3f7);
+  opacity:.85;
+  margin:0 0 12px;
+  flex:1;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Hide dot + read-time when no read-time is set (or 0) */
+.nf-blog-tile[data-read=""] .nf-meta-dot,
+.nf-blog-tile[data-read="0"] .nf-meta-dot,
+.nf-blog-tile[data-read=""] [data-field="read-time"],
+.nf-blog-tile[data-read="0"] [data-field="read-time"]{
+  display:none;
+}
+
+.nf-blog-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:auto;
+  flex-wrap:wrap;
+}
+.nf-blog-btn{
+  color:var(--nf-blue,#3498db);
+  font-weight:600;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.nf-blog-btn:hover{text-decoration:underline;}
+.nf-blog-btn:focus-visible{
+  outline:2px solid var(--nf-blue,#3498db);
+  outline-offset:2px;
+}
+.nf-blog-date{
+  font-size:12.5px;
+  color:var(--nf-muted,#9fb4c2);
+}
+
+/* ---------- Empty state ---------- */
+.nf-empty{
+  display:none;
+  text-align:center;
+  color:var(--nf-muted,#9fb4c2);
+  width:100%;
+  padding:28px 8px;
+  font-size:14px;
+}
+.nf-empty.show{display:block;}
+
+/* ---------- Pager ---------- */
+.nf-pager{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:24px auto 14px;
+  padding:12px 20px;
+  background:rgba(0,0,0,.85);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  width:fit-content;
+  transition:background .25s ease,border-color .25s ease;
+}
+.nf-pager:hover{
+  background:rgba(0,0,0,.9);
+  border-color:rgba(255,255,255,.12);
+}
+.nf-pager::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  width:60%;
+  height:1px;
+  background:rgba(255,255,255,.05);
+}
+.nf-pager button{
+  background:rgba(52,152,219,.12);
+  color:var(--nf-ink,#e9f3f7);
+  border:1px solid rgba(52,152,219,.25);
+  border-radius:10px;
+  padding:7px 12px;
+  font-size:13.5px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.nf-pager button:hover:not([disabled]){
+  background:rgba(52,152,219,.25);
+  border-color:rgba(52,152,219,.45);
+  transform:translateY(-1px);
+}
+.nf-pager button[disabled]{opacity:.45;cursor:not-allowed;}
+.nf-pager .nf-page-label{
+  font-size:13.5px;
+  color:var(--nf-muted,#9fb4c2);
+  min-width:120px;
+  text-align:center;
+}
+
+/* ---------- Animation & responsive ---------- */
+.nf-page-track{position:relative;overflow:hidden;}
+.nf-page{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  transition:transform .28s ease,opacity .28s ease;
+}
+.nf-page.enter-from-right{transform:translateX(36px);opacity:0;}
+.nf-page.enter-to-center{transform:translateX(0);opacity:1;}
+.nf-page.leave-to-left{transform:translateX(-36px);opacity:0;}
+@media (prefers-reduced-motion: reduce){
+  .nf-page{transition:none;}
+  .nf-page.enter-from-right,
+  .nf-page.leave-to-left{transform:none;opacity:1;}
+}
+
+@media (max-width:1200px){
+  #nf-readrange{min-width:260px;}
+}
+@media (max-width:1080px){
+  #nf-controls .filters{
+    grid-template-columns:
+      minmax(160px,1.2fr)
+      minmax(150px,.9fr)
+      minmax(150px,.9fr)
+      minmax(150px,1fr);
+  }
+  #nf-controls.nf-stacked .filters{
+    grid-template-columns:
+      minmax(160px,1.2fr)
+      minmax(150px,.9fr)
+      minmax(150px,.9fr)
+      minmax(150px,1fr);
+  }
+}
+@media (max-width:860px){
+  #nf-controls .nf-ribbon{padding:12px 12px;}
+  #nf-controls .filters{grid-template-columns:1fr 1fr;}
+  #nf-readrange{min-width:0;}
+}
+@media (max-width:600px){
+  #nf-controls .filters{grid-template-columns:1fr;}
+  #nf-controls input[type="search"],
+  #nf-controls select,
+  #nf-readrange,
+  #nf-controls .nf-clear-inline,
+  #nf-controls .nf-result{width:100%;}
+  #nf-controls .util{justify-content:space-between;}
+}
+@media (max-width:560px){
+  .nf-blog-tile{padding:16px 14px;border-radius:16px;}
+  .nf-blog-title{font-size:19px;}
+  .nf-blog-sub,
+  .nf-blog-excerpt{font-size:14px;}
+  .nf-blog-foot{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+  }
+  .nf-pager{
+    flex-direction:column;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:14px;
+  }
+  .nf-pager .nf-page-label{min-width:auto;}
+}
+
+/* ---------- Print ---------- */
+@media print{
+  #nf-controls,
+  .nf-pager{display:none!important;}
+}
+</style>
+
+Embed 2:
+<!-- NeuForm — Blog Hub Tile HTML (v2.2, 2025-12-02)
+     Improvements vs v2.1:
+       • Corrected Webflow dynamic date mapping for Publish Date
+       • Cleaned up markup + safer dot separator
+       • Fully compatible with Blog Hub JS v4.6.0
+-->
+
+<article
+  class="nf-blog-tile"
+  aria-labelledby="post-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-id="{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-title="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-sub="{{wf {&quot;path&quot;:&quot;subtitle-deck&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+
+  data-cat="{{wf {&quot;path&quot;:&quot;primary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }}"
+  data-cat2="{{wf {&quot;path&quot;:&quot;secondary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }}"
+  data-cats="{{wf {&quot;path&quot;:&quot;primary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }},{{wf {&quot;path&quot;:&quot;secondary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }}"
+
+  data-series="{{wf {&quot;path&quot;:&quot;series-collection-name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-tags="{{wf {&quot;path&quot;:&quot;series-collection-name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+  data-read="{{wf {&quot;path&quot;:&quot;estimated-read-time&quot;,&quot;type&quot;:&quot;Number&quot;\} }}"
+  data-featured="{{wf {&quot;path&quot;:&quot;is-featured-blog&quot;,&quot;type&quot;:&quot;Bool&quot;\} }}"
+  data-date="{{wf {&quot;path&quot;:&quot;publish-date&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;MMM DD, YYYY&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}"
+>
+
+  <header class="nf-blog-head">
+
+    <p class="nf-blog-meta">
+
+      <!-- Featured chip (hidden via CSS unless data-featured="true") -->
+      <span class="nf-chip nf-chip--featured">Featured</span>
+
+      <!-- Primary Category -->
+      <span class="nf-chip nf-chip--category">
+        {{wf {&quot;path&quot;:&quot;primary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }}
+      </span>
+
+      <!-- Optional Series chip -->
+      <span class="nf-chip nf-chip--series">
+        {{wf {&quot;path&quot;:&quot;series-collection-name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+      </span>
+
+      <!-- Dot separator (hidden via CSS when no read-time exists) -->
+      <span class="nf-meta-dot" aria-hidden="true">•</span>
+
+      <!-- Read Time -->
+      <span data-field="read-time">
+        {{wf {&quot;path&quot;:&quot;estimated-read-time&quot;,&quot;type&quot;:&quot;Number&quot;\} }}-min read
+      </span>
+
+    </p>
+
+    <!-- Title -->
+    <h3 class="nf-blog-title" id="post-title-{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+      <a
+        href="/blog-posts/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+        rel="bookmark"
+        title="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+      >
+        {{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+      </a>
+    </h3>
+
+    <!-- Subtitle -->
+    <p class="nf-blog-sub">
+      {{wf {&quot;path&quot;:&quot;subtitle-deck&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+    </p>
+
+  </header>
+
+  <!-- Excerpt -->
+  <p class="nf-blog-excerpt">
+    {{wf {&quot;path&quot;:&quot;excerpt-summary&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}
+  </p>
+
+  <footer class="nf-blog-foot">
+
+    <a
+      href="/blog-posts/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}"
+      class="nf-blog-btn"
+      rel="bookmark"
+    >
+      Read more →
+    </a>
+
+    <time
+      class="nf-blog-date"
+      datetime="{{wf {&quot;path&quot;:&quot;publish-date&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;MMM DD, YYYY&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}"
+    >
+      {{wf {&quot;path&quot;:&quot;publish-date&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;MMM DD, YYYY&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}
+    </time>
+
+  </footer>
+</article>
