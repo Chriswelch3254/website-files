@@ -73,14 +73,16 @@ Body:
     var el = document.getElementById(id);
     if (!el || !('IntersectionObserver' in window)) return;
     var seen = false;
-    new IntersectionObserver(function(entries, io){
+    var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (!seen && entry.isIntersecting){
           seen = true; io.disconnect();
           window.neuform.track(evt);
         }
       });
-    }, { threshold: 0.3 }).observe(el);
+    }, { threshold: 0.3 });
+    io.observe(el);
+    window.addEventListener('pagehide', function(){ try{ io.disconnect(); }catch(_){} }, { once:true });
   }
   // Hook to these if you add them:
   observe('nf-story', 'nf_about_story_impression');

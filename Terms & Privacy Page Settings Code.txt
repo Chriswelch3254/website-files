@@ -247,6 +247,7 @@ Body:
       var el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+    window.addEventListener('pagehide', function(){ try{ observer.disconnect(); }catch(_){} }, { once:true });
   })();
 
   /** 2) Outbound / legal link click tracking (DMCA, Privacy, email, tel) **/

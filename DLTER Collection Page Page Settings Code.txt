@@ -1031,6 +1031,7 @@ Body:
         });
       },{threshold:.3});
       for(var i=0;i<graphs.length;i++) graphObserver.observe(graphs[i]);
+      window.addEventListener('pagehide', function(){ try{ graphObserver.disconnect(); }catch(_){} }, { once:true });
     }else{
       for(var j=0;j<graphs.length;j++) initAxisGraph(graphs[j]);
     }

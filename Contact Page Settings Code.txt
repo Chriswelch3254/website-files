@@ -131,6 +131,19 @@ Body:
     if (!wrap || wrap.__nfContactObserved) return;
     wrap.__nfContactObserved = true;
 
+    var mo = null;
+    var iv = null;
+    var cleaned = false;
+
+    function cleanup(){
+      if (cleaned) return;
+      cleaned = true;
+      try{ if (iv) clearInterval(iv); }catch(_){}
+      try{ if (mo) mo.disconnect(); }catch(_){}
+      iv = null;
+      mo = null;
+    }
+
     function check(){
       var done = wrap.querySelector('.w-form-done');
       var fail = wrap.querySelector('.w-form-fail');
@@ -139,21 +152,21 @@ Body:
       return false;
     }
 
-    var mo = null;
     try{
       mo = new MutationObserver(function(){ check(); });
       mo.observe(wrap, { subtree:true, childList:true, attributes:true });
     }catch(_){}
 
     var tries = 0;
-    var iv = setInterval(function(){
+    iv = setInterval(function(){
       tries++;
       var ended = check();
       if (ended || !isSubmitting() || tries >= 60){ // 30s max
-        try{ clearInterval(iv); }catch(_){}
-        try{ if (mo) mo.disconnect(); }catch(_){}
+        cleanup();
       }
     }, 500);
+
+    window.addEventListener('pagehide', cleanup, { once:true });
   }
 
   // ===== 4) Lead meta + ID (non-PII) for TY dedupe =====
