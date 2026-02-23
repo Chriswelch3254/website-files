@@ -76,6 +76,10 @@ Body:
 (function () {
   "use strict";
 
+  // Idempotence guard (prevents double-binding if pasted twice)
+  if (window.__NF_START_PLAN_HASH_GUARD__) return;
+  window.__NF_START_PLAN_HASH_GUARD__ = true;
+
   // Add stable page scope class
   try { document.body.classList.add('nf-start-plan-page'); } catch(e) {}
 
