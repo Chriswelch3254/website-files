@@ -34,7 +34,7 @@ Head:
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 
 <style>
-  :root {
+  body {
     color-scheme: dark;
 
     /* Glass + shadow system (NeuForm core) */

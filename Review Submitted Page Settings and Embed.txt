@@ -24,7 +24,7 @@ Head:
      Minimal NeuForm-styled card
      =========================== */
 
-  :root{
+  .nf-review-submitted{
     --nf-blue:#3498db;
     --nf-ink:#e9f3f7;
     --nf-muted:rgba(233,243,247,.75);
@@ -86,7 +86,7 @@ Head:
     margin:10px 0 14px 0;
   }
 
-  .nf-btn{
+  .nf-review-submitted .nf-btn{
     display:inline-flex;
     align-items:center;
     justify-content:center;
@@ -101,25 +101,25 @@ Head:
     -webkit-tap-highlight-color: transparent;
   }
 
-  .nf-btn:active{ transform: translateY(1px); }
+  .nf-review-submitted .nf-btn:active{ transform: translateY(1px); }
 
-  .nf-btn--primary{
+  .nf-review-submitted .nf-btn--primary{
     background:linear-gradient(180deg, rgba(52,152,219,.95), rgba(33,125,187,.95));
     color:#0b0f12;
     box-shadow:0 12px 28px rgba(52,152,219,.22);
   }
 
-  .nf-btn--primary:hover{
+  .nf-review-submitted .nf-btn--primary:hover{
     box-shadow:0 16px 36px rgba(52,152,219,.28);
   }
 
-  .nf-btn--ghost{
+  .nf-review-submitted .nf-btn--ghost{
     background:rgba(255,255,255,.06);
     color:var(--nf-ink);
     border:1px solid rgba(255,255,255,.14);
   }
 
-  .nf-btn--ghost:hover{
+  .nf-review-submitted .nf-btn--ghost:hover{
     background:rgba(255,255,255,.09);
   }
 

@@ -4,18 +4,36 @@ const path = require('path');
 
 const repoRoot = process.cwd();
 const SITEWIDE_REL = normalizeRel(path.join('on page embeds', 'Sitewide Code.txt'));
+const SELFCHECK_REL = normalizeRel(path.join('scripts', 'nf-selfcheck.js'));
 const TRAINING_PAGE = 'Training Plans Page Settings Code.txt';
 const BLOGS_PAGE = 'Blogs Hub Page Settings Code.txt';
 const TRAINING_CMS_PAGE = 'Training Plans CMS Collection Page Page Settings Code.txt';
 const TRAINING_EMBED = normalizeRel(path.join('on page embeds', 'Training Plans Page On Page Embeds.txt'));
 const BLOGS_EMBED = normalizeRel(path.join('on page embeds', 'Blogs Hub On Page Embeds.txt'));
+const HOMEPAGE_EMBED = normalizeRel(path.join('on page embeds', 'Homepage On Page Embeds.txt'));
+const TRAINING_CMS_EMBED = normalizeRel(path.join('on page embeds', 'Training PLans CMS Collection Page On Page Embeds.txt'));
+
+const EMBEDS_WITH_LITERAL_BAN = [
+  HOMEPAGE_EMBED,
+  TRAINING_EMBED,
+  TRAINING_CMS_EMBED
+];
+
+const BANNED_LITERALS = ['#2d86c2', '#f3fbff', '#1a2a33', '#e11d48'];
 
 const PROHIBITED_PATTERNS = [
   { name: 'dataLayer.push(', regex: /dataLayer\.push\(/g },
   { name: 'dl.push(', regex: /\bdl\.push\(/g },
-  { name: "gtag('event'", regex: /gtag\('event'/g },
+  { name: "gtag(event)", regex: /gtag\(("|')event\1/g },
   { name: "fbq('track'", regex: /fbq\('track'/g }
 ];
+
+const ROOT_PATTERN = /^\s*:root\s*\{/gm;
+const BASE_PRIMITIVE_PATTERNS = [
+  { name: 'base .nf-btn', regex: /^\s*\.nf-btn\b/gm },
+  { name: 'base .nf-card', regex: /^\s*\.nf-card\b/gm }
+];
+const GTAG_EVENT_PATTERN = /gtag\(("|')event\1/g;
 
 function normalizeRel(relPath) {
   return relPath.split(path.sep).join('/');
@@ -37,7 +55,7 @@ function getTargetFiles() {
     .filter((full) => {
       const rel = normalizeRel(path.relative(repoRoot, full));
       const base = path.basename(full);
-      return base.endsWith('.txt') || rel === 'README.md';
+      return base.endsWith('.txt') || base.endsWith('.js') || rel === 'README.md';
     })
     .sort((a, b) => normalizeRel(path.relative(repoRoot, a)).localeCompare(normalizeRel(path.relative(repoRoot, b))));
 }
@@ -118,6 +136,58 @@ if (!sitewide) {
     if (!sitewide.content.includes(marker)) {
       failures.push(`${SITEWIDE_REL} missing canonical API marker: ${marker}`);
     }
+  }
+}
+
+// (2b) Sitewide is the only global :root token authority
+for (const file of fileEntries) {
+  if (file.rel === SITEWIDE_REL) continue;
+  ROOT_PATTERN.lastIndex = 0;
+  let m;
+  while ((m = ROOT_PATTERN.exec(file.content))) {
+    const line = file.content.slice(0, m.index).split('\n').length;
+    failures.push(`${file.rel}:${line} contains :root outside Sitewide`);
+  }
+}
+
+// (2c) Base primitives must not be declared outside Sitewide
+for (const file of fileEntries) {
+  if (file.rel === SITEWIDE_REL) continue;
+  for (const p of BASE_PRIMITIVE_PATTERNS) {
+    p.regex.lastIndex = 0;
+    let m;
+    while ((m = p.regex.exec(file.content))) {
+      const line = file.content.slice(0, m.index).split('\n').length;
+      failures.push(`${file.rel}:${line} contains ${p.name} outside Sitewide`);
+    }
+  }
+}
+
+// (2d) Canonical token literals must be absent in selected embeds
+for (const rel of EMBEDS_WITH_LITERAL_BAN) {
+  const entry = fileEntries.find((f) => f.rel === rel);
+  if (!entry) {
+    failures.push(`Missing required file: ${rel}`);
+    continue;
+  }
+  for (const lit of BANNED_LITERALS) {
+    let idx = entry.content.indexOf(lit);
+    while (idx !== -1) {
+      const line = entry.content.slice(0, idx).split('\n').length;
+      failures.push(`${rel}:${line} contains banned literal ${lit}`);
+      idx = entry.content.indexOf(lit, idx + lit.length);
+    }
+  }
+}
+
+// (2e) No direct gtag("event"|'event') outside self-check itself
+for (const file of fileEntries) {
+  if (file.rel === SELFCHECK_REL) continue;
+  GTAG_EVENT_PATTERN.lastIndex = 0;
+  let m;
+  while ((m = GTAG_EVENT_PATTERN.exec(file.content))) {
+    const line = file.content.slice(0, m.index).split('\n').length;
+    failures.push(`${file.rel}:${line} contains direct gtag(event) emission outside ${SELFCHECK_REL}`);
   }
 }
 

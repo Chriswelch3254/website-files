@@ -468,6 +468,12 @@ Footer:
     --nf-text:#e9f3f7;
     --nf-text-muted:#9fb4c2;
     --nf-primary:#3498db;
+    --nf-primary-700:#2d86c2;
+    --nf-text-strong:#f3fbff;
+    --nf-line:#1a2a33;
+    --nf-danger-600:#e11d48;
+    --nf-bg-surface-3:#0f1418;
+    --nf-bg-surface-4:#0c1216;
     --nf-primary-contrast:#ffffff;
     --nf-focus:#00D1C7;
     --nf-space-card-pad:20px;
