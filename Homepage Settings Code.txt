@@ -35,7 +35,7 @@ Head:
 
 <!-- Accessible link styling -->
 <style>
-  :root{
+  body{
     --nf-focus: #00D1C7;
   }
 

@@ -10,7 +10,7 @@ Embed 1:
    ========================================== */
 
 /* ===== Design tokens ===== */
-:root{
+.nf-tiles{
   --nf-bg:#0b0f12;
   --nf-surface:#0f1418;
   --nf-surface-2:#0c1216;
@@ -27,7 +27,6 @@ Embed 1:
   --blue-45:rgba(52,152,219,.45);
   --blue-55:rgba(52,152,219,.55);
 
-  --nf-line:#1a2a33;
   --nf-shadow:0 8px 20px rgba(0,0,0,.36);
   --nf-shadow-hover:0 12px 28px rgba(0,0,0,.46);
   --nf-radius:20px;
@@ -77,7 +76,7 @@ Embed 1:
 }
 
 /* ===== Card ===== */
-.nf-card{
+.nf-tiles .nf-card{
   position:relative; isolation:isolate;
   display:flex; flex-direction:column;
   min-height:var(--card-minh);
@@ -91,14 +90,14 @@ Embed 1:
   overflow:hidden;
 }
 @media (hover:hover){
-  .nf-card:hover{
+  .nf-tiles .nf-card:hover{
     transform:translateY(-2px);
     border-color:var(--blue-45);
     box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
     filter:saturate(1.03);
   }
 }
-.nf-card:focus-within{
+.nf-tiles .nf-card:focus-within{
   transform:translateY(-2px);
   border-color:var(--blue-45);
   box-shadow:var(--nf-shadow-hover), 0 0 0 1px var(--blue-10) inset;
@@ -218,7 +217,7 @@ Embed 1:
 .nf-richtext p{ margin:.35em 0; }
 .nf-richtext ul{ margin:.35em 0 .35em 1.1em; }
 .nf-richtext li{ margin:.2em 0; }
-.nf-richtext strong,b{ color:#f3fbff; }
+.nf-richtext strong,b{ color:var(--nf-text-strong); }
 
 /* ===== Bullets (FIXED) ===== */
 .nf-list{
@@ -252,7 +251,7 @@ Embed 1:
   color:var(--nf-blue);
 }
 .nf-list li strong{
-  color:#f3fbff;
+  color:var(--nf-text-strong);
   font-weight:800;
 }
 
@@ -291,7 +290,7 @@ Embed 1:
 }
 .nf-price .nf-price-msrp{
   text-decoration: line-through;
-  text-decoration-color: #e11d48;
+  text-decoration-color: var(--nf-danger-600);
   text-decoration-thickness: 2px;
   margin-left: 0;
   font-weight:700;
@@ -309,20 +308,20 @@ Embed 1:
   justify-content: center;
   letter-spacing:.02em;
 }
-.nf-btn{
+.nf-tiles .nf-btn{
   appearance:none; border:none; cursor:pointer;
   padding:12px 20px;
   border-radius:12px;
   font:800 15px/1 Inter, system-ui;
   color:#fff;
-  background:linear-gradient(180deg, var(--nf-blue), #2d86c2);
+  background:linear-gradient(180deg, var(--nf-blue), var(--nf-primary-700));
   box-shadow:0 6px 16px var(--blue-30);
   transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
   position:relative; z-index:3;
   white-space:nowrap;
 }
 @media (hover:hover){
-  .nf-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px var(--blue-30); filter:saturate(1.05); }
+  .nf-tiles .nf-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px var(--blue-30); filter:saturate(1.05); }
 }
 
 /* ===== Misc ===== */
@@ -385,7 +384,7 @@ Embed 1:
   background:#e9f3f7; transition:transform .2s ease;
 }
 .nf-add-on-checkbox:checked{
-  background:var(--nf-blue); border-color:#2d86c2;
+  background:var(--nf-blue); border-color:var(--nf-primary-700);
 }
 .nf-add-on-checkbox:checked::after{ transform:translateX(16px); }
 
@@ -402,7 +401,7 @@ Embed 1:
 }
 [data-terms-required="true"] .nf-terms-gate{ display:flex; }
 
-.nf-btn--gated{
+.nf-tiles .nf-btn--gated{
   opacity:.5; pointer-events:none; cursor:not-allowed; filter:grayscale(.25);
 }
 
@@ -412,17 +411,17 @@ Embed 1:
 
 /* ===== Mobile ===== */
 @media (max-width:767px){
-  .nf-card{ --card-minh:auto; padding:16px; height:auto; }
+  .nf-tiles .nf-card{ --card-minh:auto; padding:16px; height:auto; }
   .nf-cta{ flex-direction:column; align-items:stretch; }
-  .nf-btn{ width:100%; text-align:center; }
+  .nf-tiles .nf-btn{ width:100%; text-align:center; }
   .nf-add-on-switcher{ align-items:flex-start; }
 }
 
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce){
-  .nf-card, .nf-btn{ transition:none !important; transform:none !important; }
+  .nf-tiles .nf-card, .nf-tiles .nf-btn{ transition:none !important; transform:none !important; }
   @media (hover:hover){
-    .nf-card:hover, .nf-btn:hover{ transform:none !important; }
+    .nf-tiles .nf-card:hover, .nf-tiles .nf-btn:hover{ transform:none !important; }
   }
 }
 </style>
@@ -435,7 +434,7 @@ Embed 1:
        - Webflow CMS Testimonials list (filtered by Plan reference)
      ========================================================= */
 
-  :root{
+  .nf-tiles{
     --nf-blue:#3498db;
     --nf-ink:#e9f3f7;
     --nf-muted:rgba(233,243,247,.74);
@@ -1286,7 +1285,7 @@ Embed 4:
   }
 
   .nf-pr__btn--primary{
-    background: linear-gradient(180deg, var(--nf-pr-blue), #2d86c2);
+    background: linear-gradient(180deg, var(--nf-pr-blue), var(--nf-primary-700));
     color:#fff;
     box-shadow:0 10px 22px rgba(52,152,219,.30);
   }

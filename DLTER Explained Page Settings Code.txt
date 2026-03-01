@@ -74,7 +74,7 @@ Head:
 /* -----------------------------------------
    Design tokens (local to this page)
 ----------------------------------------- */
-:root{
+html.dlterx-explained body > section.dlterx-section{
   color-scheme: dark;
 
   --nf-glass-bg: rgba(30, 41, 59, 0.7);

@@ -10,7 +10,7 @@ Head:
        ✅ NEW: Center the action buttons under the review
      ========================================================= */
 
-  :root{
+  .nf-tm{
     --nf-blue:#3498db;
 
     --nf-ink:#e9f3f7;
