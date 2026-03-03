@@ -621,17 +621,95 @@ Footer:
     }
   };
 
+  nf.analytics = nf.analytics || {};
+  nf.analytics.dictionary = nf.analytics.dictionary || {
+    page_view: true,
+    cta_click: true,
+    plan_card_click: true,
+    buy_click: true,
+    checkout_outbound: true,
+    begin_checkout: true,
+    lead_submit_attempt: true,
+    lead_submit_success: true,
+    lead_submit_error: true,
+    purchase_thankyou_view: true,
+    support_click: true,
+    social_click: true
+  };
+  nf.analytics.aliases = nf.analytics.aliases || {
+    nf_buy_click: 'buy_click',
+    nf_plans_catalog_view: 'page_view',
+    nf_purchase_thankyou_view: 'purchase_thankyou_view',
+    nf_lead_submit: 'lead_submit_success',
+    nf_support_click: 'support_click'
+  };
+  nf.analytics.allowlist = nf.analytics.allowlist || {
+    Lead: true,
+    generate_lead: true,
+    view_item_list: true,
+    select_item: true,
+    nf_terms_block: true,
+    nf_product_impression: true,
+    nf_plan_preview_open: true,
+    nf_catalog_filter: true,
+    nf_add_on_toggled: true,
+    nf_sticky_cta_show: true,
+    nf_sticky_cta_hide: true,
+    nf_download_click: true,
+    nf_thankyou_open: true,
+    nf_post_purchase_nudge: true,
+    nf_copy: true,
+    nf_tool_view: true,
+    nf_tool_action: true,
+    nf_cookie_pref_update: true,
+    nf_cookie_pref_reset: true,
+    nf_plan_card_missing_data: true
+  };
+
+  var sinkNoteSeen = {};
+  function noteSinkHealth(reason, eventName){
+    var key = String(reason || 'unknown') + '|' + String(eventName || 'unknown');
+    if (sinkNoteSeen[key]) return;
+    sinkNoteSeen[key] = true;
+    try {
+      nf._sinkHealthNotes = nf._sinkHealthNotes || [];
+      nf._sinkHealthNotes.push({ reason: String(reason || 'unknown'), event: String(eventName || 'unknown'), ts: Date.now() });
+    } catch(_){ }
+    try {
+      console.info('[NF] analytics sink note:', { reason: reason || 'unknown', event: eventName || 'unknown' });
+    } catch(_2){ }
+  }
+
+  function canonicalEventName(eventName){
+    var raw = String(eventName || '').trim();
+    if (!raw) return '';
+    if (nf.analytics.aliases && nf.analytics.aliases[raw]) return nf.analytics.aliases[raw];
+    return raw;
+  }
+
   window.neuform.track = window.neuform.track || function(eventName, payload){
     if (!eventName || typeof eventName !== "string") return false;
-    if (!window.neuform.canTrack()) return false;
+
+    var canonical = canonicalEventName(eventName);
+    var canTrack = window.neuform.canTrack();
+    if (!canTrack) {
+      noteSinkHealth('consent_or_gate_blocked', canonical || eventName);
+      return false;
+    }
 
     var obj = Object.assign({}, payload || {});
-    obj.event = eventName;
+    obj.event = canonical;
+    if (canonical !== eventName) obj.nf_event_alias_of = String(eventName);
 
     try {
-      (window.dataLayer = window.dataLayer || []).push(obj);
+      if (!window.dataLayer || typeof window.dataLayer.push !== 'function') {
+        noteSinkHealth('missing_datalayer_sink', canonical || eventName);
+        return false;
+      }
+      window.dataLayer.push(obj);
       return true;
     } catch(e){
+      noteSinkHealth('sink_push_failed', canonical || eventName);
       return false;
     }
   };
@@ -1065,84 +1143,92 @@ function nfReadProductMeta(){
 /* --- Merge/inject AggregateRating JSON-LD --- */
 function nfUpsertProductAggregateRating(res, planSlug){
   try{
-    const existing = document.getElementById('nf-product-jsonld');
-    if (existing) {
-      let json;
-      try {
-        json = JSON.parse(existing.textContent || '{}');
-      } catch(parseErr){
-        console.warn('nfUpsertProductAggregateRating: invalid existing JSON-LD, injecting fresh Product node', parseErr);
-        json = null;
-      }
+    const meta = nfReadProductMeta();
+    const productId = String(meta['@id'] || '').trim() || (location.href.replace(/#.*$/,'') + '#product');
+    const scriptId = 'nf-product-jsonld';
 
-      if (json) {
-        let product = null;
-        if (Array.isArray(json['@graph'])) {
-          product = json['@graph'].find(n => n['@type'] === 'Product') || null;
-        } else if (json['@type'] === 'Product') {
-          product = json;
-        }
-
-        if (product) {
-          product.aggregateRating = {
-            '@type': 'AggregateRating',
-            ratingValue: String(res.avg),
-            reviewCount: String(res.count)
-          };
-
-          const reviews = (window.neuform.reviews || [])
-            .filter(x => x.planSlug === planSlug && x.quote && Number.isFinite(x.rating) && x.rating > 0)
-            .slice(0,2)
-            .map(x => ({
-              '@type': 'Review',
-              'author': x.name ? {'@type':'Person','name': String(x.name)} : undefined,
-              'reviewBody': String(x.quote).slice(0,500),
-              'datePublished': x.date || undefined,
-              'reviewRating': {
-                '@type':'Rating',
-                'ratingValue': String(x.rating),
-                'bestRating': '5',
-                'worstRating': '1'
-              }
-            }));
-
-          if (reviews.length){
-            if (Array.isArray(product.review)) {
-              product.review = product.review.concat(reviews);
-            } else if (product.review) {
-              product.review = [product.review].concat(reviews);
-            } else {
-              product.review = reviews;
-            }
-          }
-
-          existing.textContent = JSON.stringify(json);
-          return true;
-        }
-      }
+    function parseJsonLd(node){
+      try { return JSON.parse(node.textContent || '{}'); } catch(_){ return null; }
     }
 
-    const meta = nfReadProductMeta();
-    const productNode = {
-      '@context':'https://schema.org',
-      '@type':'Product',
-      '@id': meta['@id'],
-      name: meta.name,
-      url: meta.url,
-      image: meta.image || undefined,
-      sku: meta.sku || undefined,
-      brand: meta.brand,
-      aggregateRating: {
-        '@type':'AggregateRating',
-        ratingValue: String(res.avg),
-        reviewCount: String(res.count)
+    function findProductNode(json){
+      if (!json || typeof json !== 'object') return null;
+      if (Array.isArray(json['@graph'])) {
+        for (var i=0;i<json['@graph'].length;i++) {
+          var node = json['@graph'][i];
+          if (node && node['@type'] === 'Product') return node;
+        }
+        return null;
       }
-    };
+      return (json['@type'] === 'Product') ? json : null;
+    }
 
-    const s = document.createElement('script');
-    s.type = 'application/ld+json';
-    s.textContent = JSON.stringify(productNode);
-    document.body.appendChild(s);
+    const reviews = (window.neuform.reviews || [])
+      .filter(x => x.planSlug === planSlug && x.quote && Number.isFinite(x.rating) && x.rating > 0)
+      .slice(0,2)
+      .map(x => ({
+        '@type': 'Review',
+        'author': x.name ? {'@type':'Person','name': String(x.name)} : undefined,
+        'reviewBody': String(x.quote).slice(0,500),
+        'datePublished': x.date || undefined,
+        'reviewRating': {
+          '@type':'Rating',
+          'ratingValue': String(x.rating),
+          'bestRating': '5',
+          'worstRating': '1'
+        }
+      }));
+
+    var targetScript = document.getElementById(scriptId);
+    var productJson = targetScript ? parseJsonLd(targetScript) : null;
+    var productNode = findProductNode(productJson);
+
+    if (!productNode) {
+      productNode = {
+        '@context':'https://schema.org',
+        '@type':'Product',
+        '@id': productId,
+        name: meta.name,
+        url: meta.url,
+        image: meta.image || undefined,
+        sku: meta.sku || undefined,
+        brand: meta.brand
+      };
+      productJson = productNode;
+    }
+
+    productNode['@id'] = productId;
+    productNode.url = meta.url;
+    productNode.name = productNode.name || meta.name;
+    productNode.image = productNode.image || (meta.image || undefined);
+    productNode.sku = productNode.sku || (meta.sku || undefined);
+    productNode.brand = productNode.brand || meta.brand;
+    productNode.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: String(res.avg),
+      reviewCount: String(res.count)
+    };
+    if (reviews.length) productNode.review = reviews;
+    else delete productNode.review;
+
+    var scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+    scripts.forEach(function(node){
+      if (targetScript && node === targetScript) return;
+      var parsed = parseJsonLd(node);
+      var maybeProduct = findProductNode(parsed);
+      if (!maybeProduct) return;
+      var pid = String((maybeProduct['@id'] || '')).trim();
+      if (pid === productId || maybeProduct.url === meta.url) {
+        try { node.remove(); } catch(_){ }
+      }
+    });
+
+    var nextScript = document.createElement('script');
+    nextScript.type = 'application/ld+json';
+    nextScript.id = scriptId;
+    nextScript.textContent = JSON.stringify(productJson);
+    if (targetScript && targetScript.parentNode) targetScript.replaceWith(nextScript);
+    else (document.head || document.body || document.documentElement).appendChild(nextScript);
     return true;
   } catch(e){
     console.warn('nfUpsertProductAggregateRating failed', e);

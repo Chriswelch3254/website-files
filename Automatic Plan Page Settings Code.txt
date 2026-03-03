@@ -13,19 +13,5 @@ Body:
   if (window.__NF_AP_MS_HASH_GUARD__) return;
   window.__NF_AP_MS_HASH_GUARD__ = true;
 
-  // Prevent jump-to-top on Memberstack anchors (href="#") WITHOUT blocking Memberstack.
-  // IMPORTANT: Do NOT stopPropagation — Memberstack needs the click event.
-  document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest('a[href="#"]') : null;
-    if (!a) return;
-
-    if (
-      a.hasAttribute("data-ms-price:add") ||
-      a.hasAttribute("data-ms-modal") ||
-      a.hasAttribute("data-ms-action")
-    ) {
-      e.preventDefault(); // stop the jump
-    }
-  }, true); // capture is fine as long as we don't stop propagation
-})();
+  })();
 </script>

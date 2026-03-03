@@ -322,7 +322,7 @@
       <!-- Visible manage cookies entry point (hooks into your Page Settings JS) -->
       <p>
         <strong>Cookie preferences:</strong>
-        <a href="#" id="manage-cookies">Manage cookies</a>
+        <button type="button" id="manage-cookies">Manage cookies</button>
       </p>
 
       <!-- Preference center (hidden by default; opened by #manage-cookies) -->

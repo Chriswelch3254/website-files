@@ -820,14 +820,12 @@
 
           <!-- Logged-out -->
           <div data-ms-content="!members">
-            <a class="nf-btn nf-btn-primary"
-               role="button"
+            <button type="button" class="nf-btn nf-btn-primary"
                aria-label="Buy and start intake"
                data-ms-modal="signup"
-               data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-               href="#">
+               data-ms-price:add="prc_automatic-plan-jbwk0hc7">
               Buy &amp; Start Intake ($39)
-            </a>
+            </button>
 
             <div class="nf-undercta">
               Unlock intake instantly • Takes ~5–7 minutes • Delivery ~12 hours
@@ -858,13 +856,11 @@
 
             <!-- If access is NOT active, show Buy again -->
             <div data-ms-content="!ap-intake-access">
-              <a class="nf-btn nf-btn-primary"
-                 role="button"
+              <button type="button" class="nf-btn nf-btn-primary"
                  aria-label="Buy and start intake"
-                 data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-                 href="#">
+                 data-ms-price:add="prc_automatic-plan-jbwk0hc7">
                 Buy &amp; Start Intake ($39)
-              </a>
+              </button>
 
               <div class="nf-undercta">
                 Each purchase unlocks 1 hour of intake access
@@ -999,14 +995,12 @@
               <div class="nf-inline-cta-actions">
                 <!-- Logged-out -->
                 <div data-ms-content="!members">
-                  <a class="nf-btn nf-btn-primary nf-btn--inline"
-                     role="button"
+                  <button type="button" class="nf-btn nf-btn-primary nf-btn--inline"
                      aria-label="Buy and start intake (inline)"
                      data-ms-modal="signup"
-                     data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-                     href="#">
+                     data-ms-price:add="prc_automatic-plan-jbwk0hc7">
                     Buy &amp; Start ($39)
-                  </a>
+                  </button>
                 </div>
 
                 <!-- Logged-in -->
@@ -1021,13 +1015,11 @@
                   </div>
 
                   <div data-ms-content="!ap-intake-access">
-                    <a class="nf-btn nf-btn-primary nf-btn--inline"
-                       role="button"
+                    <button type="button" class="nf-btn nf-btn-primary nf-btn--inline"
                        aria-label="Buy and start intake (inline)"
-                       data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-                       href="#">
+                       data-ms-price:add="prc_automatic-plan-jbwk0hc7">
                       Buy &amp; Start ($39)
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1115,14 +1107,12 @@
 
         <!-- Logged-out -->
         <div data-ms-content="!members">
-          <a class="nf-btn nf-btn-primary"
-             role="button"
+          <button type="button" class="nf-btn nf-btn-primary"
              aria-label="Buy and start intake (sticky)"
              data-ms-modal="signup"
-             data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-             href="#">
+             data-ms-price:add="prc_automatic-plan-jbwk0hc7">
             Buy &amp; Start
-          </a>
+          </button>
         </div>
 
         <!-- Logged-in -->
@@ -1137,13 +1127,11 @@
           </div>
 
           <div data-ms-content="!ap-intake-access">
-            <a class="nf-btn nf-btn-primary"
-               role="button"
+            <button type="button" class="nf-btn nf-btn-primary"
                aria-label="Buy and start intake (sticky)"
-               data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-               href="#">
+               data-ms-price:add="prc_automatic-plan-jbwk0hc7">
               Buy &amp; Start
-            </a>
+            </button>
           </div>
         </div>
 

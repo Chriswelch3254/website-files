@@ -410,16 +410,16 @@
               This page is for purchasers. Log in with the <b>same email you used at checkout</b>, or purchase the Automatic Plan to unlock intake access.
             </p>
 
-            <a class="nf-btn nf-btn-primary" data-ms-modal="login" href="#" role="button" aria-label="Log in">
+            <button type="button" class="nf-btn nf-btn-primary" data-ms-modal="login" aria-label="Log in">
               Log in
-            </a>
+            </button>
 
-            <a class="nf-btn nf-btn-soft"
+            <button type="button" class="nf-btn nf-btn-soft"
                data-ms-modal="signup"
                data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-               href="#" role="button" aria-label="Buy the Automatic Plan">
+               aria-label="Buy the Automatic Plan">
               Buy the Automatic Plan ($39)
-            </a>
+            </button>
 
             <div class="nf-note">
               <b>Pricing:</b> $39 per generated plan (purchase required each time).<br/>
@@ -438,11 +438,11 @@
               Each plan is <b>$39</b>. Each purchase unlocks <b>1 hour</b> of intake access to generate one plan.
             </p>
 
-            <a class="nf-btn nf-btn-primary"
+            <button type="button" class="nf-btn nf-btn-primary"
                data-ms-price:add="prc_automatic-plan-jbwk0hc7"
-               href="#" role="button" aria-label="Buy another plan (39 dollars)">
+               aria-label="Buy another plan (39 dollars)">
               Buy another plan ($39)
-            </a>
+            </button>
 
             <div class="nf-links" style="justify-content:flex-start;">
               <a class="nf-actionlink" data-ms-modal="profile" href="#">Account settings</a>

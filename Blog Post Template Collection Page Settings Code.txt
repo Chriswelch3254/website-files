@@ -422,9 +422,21 @@ Update:
   (function jsonld(){
     function addOrReplaceLd(id, obj){
       var prev = document.getElementById(id);
+      var scripts = Array.prototype.slice.call(document.querySelectorAll('script[type="application/ld+json"]'));
+      scripts.forEach(function(node){
+        if (prev && node === prev) return;
+        if (node.id === id) { try { node.remove(); } catch(_){} return; }
+        try {
+          var parsed = JSON.parse(node.textContent || '{}');
+          if (parsed && parsed['@type'] === obj['@type'] && parsed.headline === obj.headline) {
+            node.remove();
+          }
+        } catch(_e){}
+      });
+
       var s = document.createElement('script'); s.type='application/ld+json'; s.id=id;
       s.textContent = JSON.stringify(obj, null, 2);
-      if(prev) prev.replaceWith(s); else document.head.appendChild(s);
+      if(prev) prev.replaceWith(s); else (document.head || document.body || document.documentElement).appendChild(s);
     }
 
     var canonUrl = getCanonicalUrl();
