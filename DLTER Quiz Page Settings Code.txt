@@ -845,6 +845,14 @@ Body:
   const BASE_TYPE_URL = "/dlter-reality-types/";
   const EXPLAINED_URL = "/dlter-explained";
   const DLTER_SAVE_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyof7-DsgWWdkZmyOPxEs7UxEWDog1Pip6KqCLykx-NK2ud0qGaFQsXnmE5p3QCYmSC/exec";
+  const DLTER_SAVE_CONFIG = {
+    DLTER_SAVE_MODE: "relay_preferred",
+    DLTER_RELAY_URL: "/api/dlter/save",
+    DLTER_LEGACY_URL: DLTER_SAVE_ENDPOINT_URL,
+    DLTER_REQUIRE_SIG: false, // Keep false for client-only; real signature enforcement belongs on the server relay.
+    DLTER_CLIENT_RATE_LIMIT_MS: 15000,
+    DLTER_REPLAY_WINDOW_SEC: 600
+  };
   const QUIZ_VERSION = "v1";
   const AUTO_REDIRECT = false;
 
@@ -1618,87 +1626,226 @@ Body:
     try { return JSON.parse(txt); } catch(e) { return null; }
   }
 
+  const DLTER_SAVE_ERROR_MESSAGES = {
+    missing_member_id: "Unable to submit right now. Please log in again and retry.",
+    invalid_member_id: "Your account ID looks invalid. Please log out and back in.",
+    invalid_type_slug: "Your result type could not be validated. Please retake the quiz.",
+    invalid_sig: "Unable to submit securely. Please try again later.",
+    replay_detected: "That submission appears duplicated. Please wait and try again.",
+    rate_limited: "You're submitting too quickly. Please wait a moment and retry.",
+    unknown: SAVE_STATUS_TRY_AGAIN
+  };
+
+  var lastSubmitAttemptAt = 0;
+  var SESSION_LAST_SUBMISSION_KEY = "dlter:last_submission";
+
+  function emitDlterSaveTelemetry(eventName, payload) {
+    try {
+      var nf = window.neuform;
+      if (!nf || typeof nf.canTrack !== "function" || !nf.canTrack() || typeof nf.track !== "function") return;
+      nf.track(eventName, payload || {});
+    } catch (e) {}
+  }
+
+  function getErrorCode(err, fallbackCode) {
+    if (err && typeof err.error_code === "string" && err.error_code) return err.error_code;
+    if (fallbackCode) return fallbackCode;
+    return "unknown";
+  }
+
+  function getErrorMessage(err, fallbackCode) {
+    var code = getErrorCode(err, fallbackCode);
+    return DLTER_SAVE_ERROR_MESSAGES[code] || DLTER_SAVE_ERROR_MESSAGES.unknown;
+  }
+
+  function shouldFallbackToLegacy(err, status) {
+    if (!DLTER_SAVE_CONFIG.DLTER_LEGACY_URL) return false;
+    if (status === 404 || status === 501) return true;
+    if (err && err.isNetworkError) return true;
+    return false;
+  }
+
+  function shouldFallbackToRelay(err, status) {
+    if (!DLTER_SAVE_CONFIG.DLTER_RELAY_URL) return false;
+    if (status === 404 || status === 501) return true;
+    if (err && err.isNetworkError) return true;
+    return false;
+  }
+
+  function classifySaveError(err, status, fallbackCode) {
+    var code = getErrorCode(err, fallbackCode);
+    var wrapped = new Error(getErrorMessage(err, code));
+    wrapped.error_code = code;
+    wrapped.http_status = typeof status === "number" ? status : 0;
+    wrapped.raw_error = err || null;
+    return wrapped;
+  }
+
+  function parseSaveResponse(res, mode, latencyMs) {
+    var status = res && typeof res.status === "number" ? res.status : 0;
+    return (res ? res.text() : Promise.resolve(""))
+      .then(function (txt) {
+        var json = parseJsonTextSafe(txt) || null;
+        if (!res || !res.ok) {
+          var code = (json && typeof json.error === "string" && json.error) ? json.error : "unknown";
+          throw classifySaveError(json || null, status, code);
+        }
+        if (json && json.ok === false) {
+          throw classifySaveError(json, status, json.error || "unknown");
+        }
+        if (json && json.ok !== true) {
+          throw classifySaveError(json, status, "unknown");
+        }
+        return {
+          queued: true,
+          confirmed: true,
+          mode: mode,
+          latency_ms: latencyMs,
+          http_status: status,
+          resp: json
+        };
+      });
+  }
+
+  function asFormUrlEncoded(payload) {
+    try { return new URLSearchParams(payload).toString(); }
+    catch (eParams) {
+      var pairs = [];
+      for (var k in payload) {
+        if (!Object.prototype.hasOwnProperty.call(payload, k)) continue;
+        pairs.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(payload[k])));
+      }
+      return pairs.join("&");
+    }
+  }
+
+  function sendSaveRequest(url, mode, payload) {
+    var start = Date.now();
+    var fetchOptions = {
+      method: "POST",
+      mode: "cors",
+      credentials: "omit",
+      headers: { "Accept": "application/json" },
+      keepalive: true,
+      redirect: "follow"
+    };
+
+    if (mode === "relay") {
+      fetchOptions.headers["Content-Type"] = "application/json;charset=UTF-8";
+      fetchOptions.body = JSON.stringify(payload);
+    } else {
+      fetchOptions.headers["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
+      fetchOptions.body = asFormUrlEncoded(payload);
+    }
+
+    return fetch(url, fetchOptions)
+      .then(function (res) {
+        return parseSaveResponse(res, mode, Date.now() - start);
+      })
+      .catch(function (err) {
+        if (err && typeof err.http_status === "number") throw err;
+        var wrapped = classifySaveError(err, 0, "unknown");
+        wrapped.isNetworkError = true;
+        throw wrapped;
+      });
+  }
+
+  function readLastSubmissionSession() {
+    try {
+      var raw = sessionStorage.getItem(SESSION_LAST_SUBMISSION_KEY);
+      var parsed = parseJsonTextSafe(raw);
+      if (!parsed || typeof parsed.ts !== "number") return null;
+      return parsed;
+    } catch (e) { return null; }
+  }
+
+  function isClientRateLimited(nowMs) {
+    if ((nowMs - lastSubmitAttemptAt) < DLTER_SAVE_CONFIG.DLTER_CLIENT_RATE_LIMIT_MS) return true;
+    var prior = readLastSubmissionSession();
+    if (!prior || !prior.ts) return false;
+    return (nowMs - Number(prior.ts)) < DLTER_SAVE_CONFIG.DLTER_CLIENT_RATE_LIMIT_MS;
+  }
+
   function saveResultToEndpoint(member, packet) {
     return new Promise(function (resolve, reject) {
-      if (!DLTER_SAVE_ENDPOINT_URL) { reject(new Error("Save endpoint not configured.")); return; }
-      if (!member || !member.id) { reject(new Error("No member ID available.")); return; }
-      if (!packet || !packet.type_slug) { reject(new Error("No result to save.")); return; }
-      if (!ALLOWED_TYPE_SLUGS[String(packet.type_slug)]) { reject(new Error("Invalid type slug.")); return; }
+      var relayUrl = DLTER_SAVE_CONFIG.DLTER_RELAY_URL;
+      var legacyUrl = DLTER_SAVE_CONFIG.DLTER_LEGACY_URL;
+      if (!relayUrl && !legacyUrl) { reject(new Error("Save endpoint not configured.")); return; }
+      if (!member || !member.id) { reject(classifySaveError(null, 0, "missing_member_id")); return; }
+      if (!packet || !packet.type_slug) { reject(classifySaveError(null, 0, "invalid_type_slug")); return; }
+      if (!ALLOWED_TYPE_SLUGS[String(packet.type_slug)]) { reject(classifySaveError(null, 0, "invalid_type_slug")); return; }
 
+      var nowSec = Math.floor(Date.now() / 1000);
       var payload = {
         member_id: String(member.id),
         type_slug: String(packet.type_slug),
         type_code: String(packet.type_code || ""),
         quiz_version: String(packet.quiz_version || QUIZ_VERSION),
-        client_ts: String(Date.now()),
-        client_nonce: genClientNonce()
+        client_ts: String(nowSec),
+        client_nonce: genClientNonce(),
+        replay_window_sec: String(DLTER_SAVE_CONFIG.DLTER_REPLAY_WINDOW_SEC || 600)
       };
 
       var sig = getOptionalSaveSig();
+      var hasSig = !!sig;
       if (sig) payload.sig = String(sig);
-
-      var body = "";
-      try { body = new URLSearchParams(payload).toString(); }
-      catch (eParams) {
-        var pairs = [];
-        for (var k in payload) {
-          if (!Object.prototype.hasOwnProperty.call(payload, k)) continue;
-          pairs.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(payload[k])));
-        }
-        body = pairs.join("&");
+      if (DLTER_SAVE_CONFIG.DLTER_REQUIRE_SIG && !hasSig) {
+        reject(classifySaveError({ error_code: "invalid_sig" }, 0, "invalid_sig"));
+        return;
       }
 
-      function tryCorsConfirm() {
-        return fetch(DLTER_SAVE_ENDPOINT_URL, {
-          method: "POST",
-          mode: "cors",
-          credentials: "omit",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-            "Accept": "application/json"
-          },
-          body: body,
-          keepalive: true,
-          redirect: "follow"
+      var mode = DLTER_SAVE_CONFIG.DLTER_SAVE_MODE === "legacy_preferred" ? "legacy_preferred" : "relay_preferred";
+      var primaryMode = (mode === "legacy_preferred" && legacyUrl) ? "legacy" : "relay";
+      var primaryUrl = primaryMode === "relay" ? relayUrl : legacyUrl;
+      var secondaryMode = primaryMode === "relay" ? "legacy" : "relay";
+      var secondaryUrl = secondaryMode === "relay" ? relayUrl : legacyUrl;
+
+      emitDlterSaveTelemetry("dlter_save_attempt", { mode: primaryMode, has_sig: hasSig });
+      sendSaveRequest(primaryUrl, primaryMode, payload)
+        .then(function (resp) {
+          emitDlterSaveTelemetry("dlter_save_success", { mode: primaryMode, latency_ms: resp.latency_ms || 0 });
+          resolve(resp);
         })
-        .then(function(res){
-          if (!res) throw new Error("No response");
-          if (!res.ok) throw new Error("Save failed");
-          return res.text().then(function(txt){
-            var json = parseJsonTextSafe(txt);
-            if (json && json.ok === false) throw new Error(json.error || "Save rejected");
-            return { queued: true, confirmed: true, via: "cors", resp: json || null };
+        .catch(function (primaryErr) {
+          emitDlterSaveTelemetry("dlter_save_fail", {
+            mode: primaryMode,
+            error_code: getErrorCode(primaryErr),
+            http_status: primaryErr && primaryErr.http_status ? primaryErr.http_status : 0
           });
-        });
-      }
 
-      function tryBeaconOrNoCors() {
-        try {
-          if (navigator && typeof navigator.sendBeacon === "function") {
-            var blob = new Blob([body], { type: "application/x-www-form-urlencoded;charset=UTF-8" });
-            var queued = navigator.sendBeacon(DLTER_SAVE_ENDPOINT_URL, blob);
-            if (queued) { resolve({ queued: true, confirmed: false, via: "beacon" }); return; }
+          var shouldFallback = primaryMode === "relay"
+            ? shouldFallbackToLegacy(primaryErr, primaryErr && primaryErr.http_status)
+            : shouldFallbackToRelay(primaryErr, primaryErr && primaryErr.http_status);
+          if (!secondaryUrl || !shouldFallback) {
+            reject(primaryErr);
+            return;
           }
-        } catch (eBeacon) {}
 
-        fetch(DLTER_SAVE_ENDPOINT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-          body: body,
-          keepalive: true,
-          redirect: "follow"
-        })
-        .then(function () { resolve({ queued: true, confirmed: false, via: "no-cors" }); })
-        .catch(function (err) { reject(err); });
-      }
+          var fallbackReason = primaryErr && primaryErr.isNetworkError ? "network_error" : "http_" + String(primaryErr && primaryErr.http_status || 0);
+          if (secondaryMode === "legacy") emitDlterSaveTelemetry("dlter_save_fallback_to_legacy", { reason: fallbackReason });
+          if (secondaryMode === "relay") emitDlterSaveTelemetry("dlter_save_fallback_to_relay", { reason: fallbackReason });
 
-      tryCorsConfirm().then(resolve).catch(function(){ tryBeaconOrNoCors(); });
+          emitDlterSaveTelemetry("dlter_save_attempt", { mode: secondaryMode, has_sig: hasSig });
+          sendSaveRequest(secondaryUrl, secondaryMode, payload)
+            .then(function (resp) {
+              emitDlterSaveTelemetry("dlter_save_success", { mode: secondaryMode, latency_ms: resp.latency_ms || 0 });
+              resolve(resp);
+            })
+            .catch(function (secondaryErr) {
+              emitDlterSaveTelemetry("dlter_save_fail", {
+                mode: secondaryMode,
+                error_code: getErrorCode(secondaryErr),
+                http_status: secondaryErr && secondaryErr.http_status ? secondaryErr.http_status : 0
+              });
+              reject(secondaryErr);
+            });
+        });
     });
   }
 
   function finalizeSave(resp, packet, isAuto) {
     var confirmed = !!(resp && resp.confirmed);
+    var mode = resp && resp.mode ? String(resp.mode) : "unknown";
     setSaveStatus(confirmed ? "Saved ✓" : "Submitted (queued)");
     setSaveButtonLabel(confirmed ? "Saved ✓" : "Submitted (queued)");
     setTimeout(function () { setSaveButtonLabel("Submit again"); }, 1200);
@@ -1707,18 +1854,20 @@ Body:
       type_slug: packet.type_slug,
       member_id_present: true,
       confirmed: confirmed,
-      via: (resp && resp.via) ? String(resp.via) : "unknown"
+      via: mode
     });
     saveInFlight = false;
     setSaveEnabled(true);
   }
 
   function failSave(err, packet, isAuto) {
-    setSaveStatus(SAVE_STATUS_TRY_AGAIN);
+    setSaveStatus(getErrorMessage(err));
     setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
     trackSaveEvent(isAuto ? "auto_error" : "error", {
       type_slug: packet && packet.type_slug ? packet.type_slug : "unknown",
-      msg: (err && err.message) ? String(err.message) : "unknown"
+      msg: (err && err.message) ? String(err.message) : "unknown",
+      error_code: getErrorCode(err),
+      http_status: err && err.http_status ? err.http_status : 0
     });
     saveInFlight = false;
     setSaveEnabled(true);
@@ -1727,6 +1876,19 @@ Body:
   function doSaveWithMember(member, packet, isAuto) {
     if (saveInFlight) return;
     if (!member || !member.id || !packet || !packet.type_slug) return;
+
+    var nowMs = Date.now();
+    if (isClientRateLimited(nowMs)) {
+      setSaveStatus("Already submitting…");
+      return;
+    }
+    lastSubmitAttemptAt = nowMs;
+    try {
+      sessionStorage.setItem(SESSION_LAST_SUBMISSION_KEY, JSON.stringify({
+        nonce: genClientNonce(),
+        ts: nowMs
+      }));
+    } catch (eSession) {}
 
     clearAuthWatch();
     setSaveButtonModal(null);
@@ -1793,7 +1955,7 @@ Body:
     var packet = getLastResultPacket();
     if (!packet) { setSaveStatus("Take the quiz to generate a result first."); return; }
 
-    if (!DLTER_SAVE_ENDPOINT_URL) {
+    if (!DLTER_SAVE_CONFIG.DLTER_RELAY_URL && !DLTER_SAVE_CONFIG.DLTER_LEGACY_URL) {
       setSaveStatus("Save is not enabled yet.");
       trackSaveEvent("disabled", { type_slug: packet.type_slug });
       return;
@@ -1816,9 +1978,9 @@ Body:
         }
         doSaveWithMember(member, packet, false);
       })
-      .catch(function () {
+      .catch(function (err) {
         var packet2 = getLastResultPacket();
-        setSaveStatus(SAVE_STATUS_TRY_AGAIN);
+        setSaveStatus(getErrorMessage(err));
         setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
         trackSaveEvent("error", { type_slug: packet2 && packet2.type_slug ? packet2.type_slug : "unknown", msg: "member_check_failed" });
         saveInFlight = false;

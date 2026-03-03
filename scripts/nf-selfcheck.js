@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-
 const repoRoot = process.cwd();
 const SITEWIDE_REL = normalizeRel(path.join('on page embeds', 'Sitewide Code.txt'));
 const SELFCHECK_REL = normalizeRel(path.join('scripts', 'nf-selfcheck.js'));
@@ -12,33 +11,27 @@ const TRAINING_EMBED = normalizeRel(path.join('on page embeds', 'Training Plans 
 const BLOGS_EMBED = normalizeRel(path.join('on page embeds', 'Blogs Hub On Page Embeds.txt'));
 const HOMEPAGE_EMBED = normalizeRel(path.join('on page embeds', 'Homepage On Page Embeds.txt'));
 const TRAINING_CMS_EMBED = normalizeRel(path.join('on page embeds', 'Training PLans CMS Collection Page On Page Embeds.txt'));
-
 const EMBEDS_WITH_LITERAL_BAN = [
   HOMEPAGE_EMBED,
   TRAINING_EMBED,
   TRAINING_CMS_EMBED
 ];
-
 const BANNED_LITERALS = ['#2d86c2', '#f3fbff', '#1a2a33', '#e11d48'];
-
 const PROHIBITED_PATTERNS = [
   { name: 'dataLayer.push(', regex: /dataLayer\.push\(/g },
   { name: 'dl.push(', regex: /\bdl\.push\(/g },
   { name: "gtag(event)", regex: /gtag\(("|')event\1/g },
   { name: "fbq('track'", regex: /fbq\('track'/g }
 ];
-
 const ROOT_PATTERN = /^\s*:root\s*\{/gm;
 const BASE_PRIMITIVE_PATTERNS = [
   { name: 'base .nf-btn', regex: /^\s*\.nf-btn\b/gm },
   { name: 'base .nf-card', regex: /^\s*\.nf-card\b/gm }
 ];
 const GTAG_EVENT_PATTERN = /gtag\(("|')event\1/g;
-
 function normalizeRel(relPath) {
   return relPath.split(path.sep).join('/');
 }
-
 function walk(dir) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -49,7 +42,6 @@ function walk(dir) {
   }
   return out;
 }
-
 function getTargetFiles() {
   return walk(repoRoot)
     .filter((full) => {
@@ -59,7 +51,6 @@ function getTargetFiles() {
     })
     .sort((a, b) => normalizeRel(path.relative(repoRoot, a)).localeCompare(normalizeRel(path.relative(repoRoot, b))));
 }
-
 function parseScriptBlocks(text) {
   const blocks = [];
   const regex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
@@ -76,7 +67,6 @@ function parseScriptBlocks(text) {
   }
   return blocks;
 }
-
 function normalizeScriptBody(body) {
   return body
     .split(/\r?\n/)
@@ -84,16 +74,13 @@ function normalizeScriptBody(body) {
     .filter(Boolean)
     .join('\n');
 }
-
 function hasMarker(text, marker) {
   if (marker instanceof RegExp) return marker.test(text);
   return text.includes(marker);
 }
-
 const failures = [];
 const warnings = [];
 const infos = [];
-
 const fileEntries = [];
 for (const full of getTargetFiles()) {
   const rel = normalizeRel(path.relative(repoRoot, full));
@@ -101,10 +88,8 @@ for (const full of getTargetFiles()) {
   const scripts = parseScriptBlocks(content);
   fileEntries.push({ rel, content, scripts });
 }
-
 infos.push(`Scanned files: ${fileEntries.length}`);
 infos.push(`Scanned script blocks: ${fileEntries.reduce((n, f) => n + f.scripts.length, 0)}`);
-
 // (1) prohibited direct emissions outside Sitewide
 for (const file of fileEntries) {
   const isSitewide = file.rel === SITEWIDE_REL;
@@ -121,7 +106,6 @@ for (const file of fileEntries) {
     }
   }
 }
-
 // (2) sitewide canonical APIs
 const sitewide = fileEntries.find((f) => f.rel === SITEWIDE_REL);
 if (!sitewide) {
@@ -138,7 +122,6 @@ if (!sitewide) {
     }
   }
 }
-
 // (2b) Sitewide is the only global :root token authority
 for (const file of fileEntries) {
   if (file.rel === SITEWIDE_REL) continue;
@@ -149,7 +132,6 @@ for (const file of fileEntries) {
     failures.push(`${file.rel}:${line} contains :root outside Sitewide`);
   }
 }
-
 // (2c) Base primitives must not be declared outside Sitewide
 for (const file of fileEntries) {
   if (file.rel === SITEWIDE_REL) continue;
@@ -162,7 +144,6 @@ for (const file of fileEntries) {
     }
   }
 }
-
 // (2d) Canonical token literals must be absent in selected embeds
 for (const rel of EMBEDS_WITH_LITERAL_BAN) {
   const entry = fileEntries.find((f) => f.rel === rel);
@@ -179,7 +160,6 @@ for (const rel of EMBEDS_WITH_LITERAL_BAN) {
     }
   }
 }
-
 // (2e) No direct gtag("event"|'event') outside self-check itself
 for (const file of fileEntries) {
   if (file.rel === SELFCHECK_REL) continue;
@@ -190,7 +170,6 @@ for (const file of fileEntries) {
     failures.push(`${file.rel}:${line} contains direct gtag(event) emission outside ${SELFCHECK_REL}`);
   }
 }
-
 // (3) Training and Blog marker checks
 const markerChecks = [
   {
@@ -221,7 +200,6 @@ const markerChecks = [
     ]
   }
 ];
-
 for (const rule of markerChecks) {
   const entry = fileEntries.find((f) => f.rel === rule.file);
   if (!entry) {
@@ -234,7 +212,6 @@ for (const rule of markerChecks) {
     }
   }
 }
-
 // (4) Hub embed reduced-motion swap-transition guardrails
 const embedChecks = [
   {
@@ -254,7 +231,6 @@ const embedChecks = [
     ]
   }
 ];
-
 for (const rule of embedChecks) {
   const entry = fileEntries.find((f) => f.rel === rule.file);
   if (!entry) {
@@ -267,7 +243,6 @@ for (const rule of embedChecks) {
     }
   }
 }
-
 // (5) Training Plans CMS template script-block integrity
 const trainingCms = fileEntries.find((f) => f.rel === TRAINING_CMS_PAGE);
 if (!trainingCms) {
@@ -287,8 +262,6 @@ if (!trainingCms) {
     }
   }
 }
-
-
 // (6) Conversion controls / hash-button anti-pattern
 for (const file of fileEntries) {
   const regex = /<a\b[^>]*href\s*=\s*(["'])#\1[^>]*role\s*=\s*(["'])button\2/gi;
@@ -298,7 +271,6 @@ for (const file of fileEntries) {
     failures.push(`${file.rel}:${line} contains a[href="#"][role="button"] anti-pattern`);
   }
 }
-
 // (7) Stripe links require checkout_outbound instrumentation (heuristic)
 const stripeEmbed = fileEntries.find((f) => f.rel === TRAINING_CMS_EMBED);
 if (stripeEmbed) {
@@ -312,7 +284,6 @@ const trainingCmsEntry = fileEntries.find((f) => f.rel === TRAINING_CMS_PAGE);
 if (trainingCmsEntry && !trainingCmsEntry.content.includes("event: 'checkout_outbound'")) {
   failures.push(`${TRAINING_CMS_PAGE} missing checkout_outbound instrumentation`);
 }
-
 // (8) Event dictionary enforcement (canonical OR explicit allowlist)
 const CANONICAL_EVENTS = new Set([
   'page_view','cta_click','plan_card_click','buy_click','checkout_outbound','begin_checkout',
@@ -324,7 +295,6 @@ const EVENT_ALLOWLIST = new Set([
   'nf_download_click','nf_thankyou_open','nf_post_purchase_nudge','nf_copy','nf_tool_view','nf_tool_action',
   'nf_cookie_pref_update','nf_cookie_pref_reset','nf_plan_card_missing_data','gtm.js'
 ]);
-
 for (const file of fileEntries) {
   if (file.rel === SELFCHECK_REL) continue;
   const regexes = [
@@ -344,24 +314,19 @@ for (const file of fileEntries) {
     }
   }
 }
-
-
 // (9) Schema governance: duplicate Product JSON-LD and canonical mutation guards
 const schemaFiles = [SITEWIDE_REL, 'Blog Post Template Collection Page Settings Code.txt'];
 for (const rel of schemaFiles) {
   const entry = fileEntries.find((f) => f.rel === rel);
   if (!entry) continue;
-
   const productTypeHits = (entry.content.match(/"@type"\s*:\s*"Product"/g) || []).length;
   if (productTypeHits > 1 && rel === SITEWIDE_REL) {
     failures.push(`${rel} contains multiple Product schema literals; enforce single deterministic Product node`);
   }
-
   const canonicalMutationPattern = /(createElement\(['"]link['"]\)[\s\S]{0,200}canonical|setAttribute\(['"]rel['"],\s*['"]canonical['"]\))/i;
   if (canonicalMutationPattern.test(entry.content)) {
     failures.push(`${rel} appears to mutate canonical link; canonical must be read-only`);
   }
-
   const appendSchemaPattern = /application\/ld\+json[\s\S]{0,260}appendChild\(/gi;
   let m;
   while ((m = appendSchemaPattern.exec(entry.content))) {
@@ -371,7 +336,40 @@ for (const rel of schemaFiles) {
     }
   }
 }
-
+// (10) DLTER save governance checks
+const DLTER_QUIZ_FILE = 'DLTER Quiz Page Settings Code.txt';
+const DLTER_LEGACY_URL_SNIPPET = 'https://script.google.com/macros/s/AKfycbyof7-DsgWWdkZmyOPxEs7UxEWDog1Pip6KqCLykx-NK2ud0qGaFQsXnmE5p3QCYmSC/exec';
+const dlterQuizEntry = fileEntries.find((f) => f.rel === DLTER_QUIZ_FILE);
+if (!dlterQuizEntry) {
+  failures.push(`Missing required file: ${DLTER_QUIZ_FILE}`);
+} else {
+  if (dlterQuizEntry.content.includes('DLTER_SAVE_ENDPOINT_URL') && !dlterQuizEntry.content.includes('DLTER_SAVE_CONFIG')) {
+    failures.push(`${DLTER_QUIZ_FILE} uses DLTER_SAVE_ENDPOINT_URL without required relay preference config block`);
+  }
+  const requiredDlterEvents = [
+    'dlter_save_attempt',
+    'dlter_save_success',
+    'dlter_save_fail',
+    'dlter_save_fallback_to_legacy'
+  ];
+  for (const evt of requiredDlterEvents) {
+    if (!dlterQuizEntry.content.includes(evt)) {
+      failures.push(`${DLTER_QUIZ_FILE} missing required telemetry marker: ${evt}`);
+    }
+  }
+  if (dlterQuizEntry.content.includes('mode: "no-cors"')) {
+    warnings.push(`${DLTER_QUIZ_FILE} contains no-cors usage in DLTER save flow (best-effort only; avoid for deterministic saves)`);
+  }
+}
+for (const file of fileEntries) {
+  if (file.rel === DLTER_QUIZ_FILE || file.rel === SELFCHECK_REL) continue;
+  let idx = file.content.indexOf(DLTER_LEGACY_URL_SNIPPET);
+  while (idx !== -1) {
+    const line = file.content.slice(0, idx).split('\n').length;
+    failures.push(`${file.rel}:${line} contains hardcoded DLTER Apps Script URL outside ${DLTER_QUIZ_FILE}`);
+    idx = file.content.indexOf(DLTER_LEGACY_URL_SNIPPET, idx + DLTER_LEGACY_URL_SNIPPET.length);
+  }
+}
 console.log('NeuForm self-check report');
 console.log('========================');
 for (const info of infos) console.log(`INFO: ${info}`);
@@ -383,6 +381,5 @@ if (failures.length) {
   console.log(`RESULT: FAIL (${failures.length} issue${failures.length === 1 ? '' : 's'})`);
   process.exit(1);
 }
-
 console.log('RESULT: PASS');
 process.exit(0);
