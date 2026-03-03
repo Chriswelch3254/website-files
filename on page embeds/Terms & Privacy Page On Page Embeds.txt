@@ -336,7 +336,7 @@
           <button
             type="button"
             data-consent="accept-all"
-            style="appearance:none;border:1px solid rgba(52,152,219,.55);background:rgba(52,152,219,.20);color:#e9f3f7;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;"
+            style="appearance:none;border:1px solid var(--nf-accent-45);background:var(--nf-accent-20);color:var(--nf-text-strong);padding:var(--nf-space-12) var(--nf-space-12);border-radius:var(--nf-radius-btn);font-weight:700;cursor:pointer;"
           >
             Accept all
           </button>
@@ -344,7 +344,7 @@
           <button
             type="button"
             data-consent="deny-all"
-            style="appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#e9f3f7;padding:10px 12px;border-radius:12px;font-weight:700;cursor:pointer;"
+            style="appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--nf-text-strong);padding:var(--nf-space-12) var(--nf-space-12);border-radius:var(--nf-radius-btn);font-weight:700;cursor:pointer;"
           >
             Deny all
           </button>

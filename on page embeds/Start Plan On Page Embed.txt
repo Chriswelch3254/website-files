@@ -74,7 +74,7 @@
     /* Overlay only — no solid base color at the end */
     background:
       radial-gradient(1100px 620px at 18% 0%, rgba(52,152,219,.16), transparent 58%),
-      radial-gradient(820px 520px at 86% 10%, rgba(52,152,219,.10), transparent 60%),
+      radial-gradient(820px 520px at 86% 10%, var(--nf-accent-10), transparent 60%),
       linear-gradient(180deg, var(--nf-overlay-top), var(--nf-overlay-mid) 42%, var(--nf-overlay-bot));
   }
 
@@ -131,7 +131,7 @@
     border-radius: var(--nf-radius);
     background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04));
     box-shadow: var(--nf-shadow);
-    padding: 18px;
+    padding: var(--nf-space-20);
 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -160,7 +160,7 @@
 
   #nf-start-plan h1{
     margin: 14px 0 10px;
-    font-size: clamp(26px, 3.0vw, 40px);
+    font-size: var(--nf-fs-h1);
     line-height: 1.08;
     letter-spacing: -0.02em;
   }
@@ -169,7 +169,7 @@
     margin: 0;
     color: var(--nf-muted);
     font-size: 15.5px;
-    line-height: 1.65;
+    line-height: var(--nf-lh-body);
     max-width: 72ch;
   }
 
@@ -206,19 +206,19 @@
   #nf-start-plan .nf-step p{
     margin: 0;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   #nf-start-plan .nf-note{
     margin-top: 12px;
-    padding: 10px 12px;
+    padding: var(--nf-space-12) var(--nf-space-12);
     border-radius: var(--nf-radius-sm);
     border: 1px solid var(--nf-border-2);
     background: var(--nf-surface-3);
     color: var(--nf-muted);
-    font-size: 12.5px;
-    line-height: 1.5;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
   #nf-start-plan .nf-note b{ color: rgba(255,255,255,.86); }
 
@@ -270,7 +270,7 @@
     align-items: center;
     width: 100%;
     margin-top: 14px;
-    padding: 14px 14px;
+    padding: var(--nf-space-16) var(--nf-space-16);
     border-radius: var(--nf-radius-sm);
     font-weight: 900;
     text-decoration: none;
@@ -283,12 +283,12 @@
   #nf-start-plan .nf-btn:hover{
     transform: translateY(-1px);
     filter: brightness(1.03);
-    box-shadow: 0 14px 40px rgba(0,0,0,.28);
+    box-shadow: var(--nf-shadow-card-hover);
   }
 
   #nf-start-plan .nf-btn-primary{
     background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(52,152,219,.78));
-    color: #fff;
+    color: var(--nf-primary-contrast);
     border-color: rgba(52,152,219,.60);
     box-shadow: 0 10px 34px rgba(52,152,219,.18);
   }
@@ -306,7 +306,7 @@
     justify-content: center;
     align-items: center;
     color: var(--nf-muted);
-    font-size: 13px;
+    font-size: var(--nf-fs-small);
   }
 
   #nf-start-plan .nf-actionlink{
@@ -470,7 +470,7 @@
         <!-- ASIDE (always visible) -->
         <aside class="nf-card" aria-label="Help and account">
           <div class="nf-badge">Help</div>
-          <h2 style="font-size: clamp(20px, 2.2vw, 28px); margin-top: 12px;">Need anything?</h2>
+          <h2 style="font-size: var(--nf-fs-h2); margin-top: 12px;">Need anything?</h2>
           <p class="nf-sub" style="font-size: 14.5px;">
             If your plan email doesn’t arrive, check Promotions/Spam first. If it’s still missing, contact us and we’ll resend it.
           </p>

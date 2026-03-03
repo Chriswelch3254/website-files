@@ -17,14 +17,14 @@ Embed 1:
   --nf-ink:#e9f3f7; --nf-muted:#9fb4c2;
   --nf-blue:#3498db;
 
-  --blue-08:rgba(52,152,219,.08);
-  --blue-10:rgba(52,152,219,.10);
+  --blue-08:var(--nf-accent-08);
+  --blue-10:var(--nf-accent-10);
   --blue-12:rgba(52,152,219,.12);
-  --blue-20:rgba(52,152,219,.20);
+  --blue-20:var(--nf-accent-20);
   --blue-24:rgba(52,152,219,.24);
-  --blue-30:rgba(52,152,219,.30);
+  --blue-30:var(--nf-accent-30);
   --blue-35:rgba(52,152,219,.35);
-  --blue-45:rgba(52,152,219,.45);
+  --blue-45:var(--nf-accent-45);
   --blue-55:rgba(52,152,219,.55);
 
   --nf-shadow:0 8px 20px rgba(0,0,0,.36);
@@ -313,7 +313,7 @@ Embed 1:
   padding:12px 20px;
   border-radius:12px;
   font:800 15px/1 Inter, system-ui;
-  color:#fff;
+  color:var(--nf-primary-contrast);
   background:linear-gradient(180deg, var(--nf-blue), var(--nf-primary-700));
   box-shadow:0 6px 16px var(--blue-30);
   transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
@@ -364,7 +364,7 @@ Embed 1:
   background:var(--blue-08);
   border:1px solid var(--blue-24);
   border-radius:12px;
-  padding:10px 12px;
+  padding:var(--nf-space-12) var(--nf-space-12);
   position:relative; z-index:3;
 }
 .nf-add-on-label{ display:flex; flex-direction:column; gap:2px; }
@@ -472,7 +472,7 @@ Embed 1:
     overflow:hidden;
 
     border-radius: var(--nf-radius-lg);
-    padding: 22px 20px;
+    padding: var(--nf-space-24) var(--nf-space-20);
 
     background: linear-gradient(180deg, var(--nf-glass-a), var(--nf-glass-b));
     border: 1px solid var(--nf-border);
@@ -503,7 +503,7 @@ Embed 1:
     margin:0 0 6px;
     color:var(--nf-ink);
     font-weight:900;
-    font-size: clamp(20px, 2.2vw, 26px);
+    font-size: var(--nf-fs-h2);
     line-height:1.15;
   }
 
@@ -511,7 +511,7 @@ Embed 1:
     margin:0 0 12px;
     color:var(--nf-muted);
     font-size: 14px;
-    line-height: 1.45;
+    line-height: var(--nf-lh-body);
     max-width: 60ch;
   }
 
@@ -532,14 +532,14 @@ Embed 1:
     justify-content:center;
     gap:8px;
 
-    padding: 10px 14px;
+    padding: var(--nf-space-12) var(--nf-space-16);
     min-height: 40px;
 
     border-radius: 12px;
     text-decoration:none;
 
     font-weight: 850;
-    font-size: 13px;
+    font-size: var(--nf-fs-small);
     letter-spacing: .01em;
 
     transition:
@@ -556,7 +556,7 @@ Embed 1:
   .nf-pr__btn--primary{
     background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(33,125,187,.98));
     color:#050607;
-    box-shadow: 0 14px 30px rgba(52,152,219,.20);
+    box-shadow: 0 14px 30px var(--nf-accent-20);
   }
 
   .nf-pr__btn--ghost{
@@ -622,7 +622,7 @@ Embed 1:
     margin:0 0 10px;
     color: rgba(233,243,247,.92);
     font-size: 14px;
-    line-height: 1.55;
+    line-height: var(--nf-lh-body);
     display:-webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
@@ -634,8 +634,8 @@ Embed 1:
     padding-top:10px;
     border-top: 1px solid rgba(255,255,255,.10);
     color: rgba(233,243,247,.70);
-    font-size: 12.5px;
-    line-height: 1.45;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   @media (max-width: 767px){
@@ -841,7 +841,7 @@ Embed 3:
 
 /* ----- Heading ----- */
 .nf-faq-heading{
-  font-size: 32px;
+  font-size: var(--nf-fs-h2);
   font-weight: 700;
   text-align: center;
   color: var(--nf-ink);
@@ -861,7 +861,7 @@ Embed 3:
 .nf-faq-item{
   background: var(--nf-surface);
   border: 1px solid var(--nf-border);
-  border-radius: 18px;
+  border-radius: var(--nf-radius-btn);
   overflow: hidden;
   box-shadow: var(
     --nf-shadow,
@@ -882,7 +882,7 @@ Embed 3:
   box-shadow:
     var(--nf-shadow, 0 10px 30px rgba(0,0,0,.55)),
     0 0 0 1px rgba(255,255,255,.08),
-    0 0 24px rgba(52,152,219,.45); /* tighter blue halo */
+    0 0 24px var(--nf-accent-45); /* tighter blue halo */
 }
 
 /* Open state — card reacts when its dropdown is open */
@@ -922,13 +922,13 @@ Embed 3:
 
 /* Header when its dropdown is open */
 .nf-faq-accordion.w--open .nf-faq-header{
-  background: rgba(52,152,219,.08);
+  background: var(--nf-accent-08);
 }
 
 /* Focus ring for keyboard users */
 .nf-faq-header:focus-visible{
   box-shadow: 0 0 0 1px var(--nf-ring), 0 0 0 3px rgba(52,152,219,.4);
-  background: rgba(52,152,219,.08);
+  background: var(--nf-accent-08);
 }
 
 /* ----- Question text ----- */
@@ -985,7 +985,7 @@ Embed 3:
   padding: 8px 20px 16px 20px; /* tight gap under header, comfy bottom */
   color: var(--nf-muted);
   font-size: 15px;
-  line-height: 1.7;
+  line-height: var(--nf-lh-body);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
 
   /* Soft motion (Webflow controls display) */
@@ -1233,7 +1233,7 @@ Embed 4:
     display:inline-block;
     line-height:1;
     letter-spacing:2px;
-    font-size:12.5px;
+    font-size:var(--nf-fs-small);
     height: 1em;
   }
   .nf-pr .nf-stars--bg{ display:block; color: rgba(233,243,247,.22); }
@@ -1246,8 +1246,8 @@ Embed 4:
     width:0%;
     color: rgba(233,243,247,.92);
   }
-  .nf-pr .nf-score{ color: rgba(233,243,247,.92); font-weight:800; font-size:12.5px; }
-  .nf-pr .nf-count{ color: rgba(233,243,247,.70); font-weight:800; font-size:12.5px; }
+  .nf-pr .nf-score{ color: rgba(233,243,247,.92); font-weight:800; font-size:var(--nf-fs-small); }
+  .nf-pr .nf-count{ color: rgba(233,243,247,.70); font-weight:800; font-size:var(--nf-fs-small); }
 
   .nf-pr__trust{
     margin-top:4px;
@@ -1268,7 +1268,7 @@ Embed 4:
     justify-content:center;
     gap:8px;
 
-    padding: 10px 14px;
+    padding: var(--nf-space-12) var(--nf-space-16);
     min-height: 40px;
 
     border-radius: 12px;
@@ -1288,8 +1288,8 @@ Embed 4:
 
   .nf-pr__btn--primary{
     background: linear-gradient(180deg, var(--nf-pr-blue), var(--nf-primary-700));
-    color:#fff;
-    box-shadow:0 10px 22px rgba(52,152,219,.30);
+    color:var(--nf-primary-contrast);
+    box-shadow:0 10px 22px var(--nf-accent-30);
   }
 
   .nf-pr__btn--ghost{
@@ -1334,7 +1334,7 @@ Embed 4:
 
   .nf-pr__list-slot .w-dyn-empty{
     background:
-      radial-gradient(680px 220px at 30% 0%, rgba(52,152,219,.10), transparent 60%),
+      radial-gradient(680px 220px at 30% 0%, var(--nf-accent-10), transparent 60%),
       linear-gradient(180deg, rgba(0,0,0,.84), rgba(0,0,0,.74));
     border: 1px solid var(--nf-pr-line);
     border-radius: var(--nf-pr-radius);
@@ -1391,8 +1391,8 @@ Embed 4:
   @media (hover:hover){
     .nf-pr__card:hover{
       transform: translateY(-2px);
-      border-color: rgba(52,152,219,.45);
-      box-shadow: var(--nf-pr-shadow-hover), 0 0 0 1px rgba(52,152,219,.10) inset;
+      border-color: var(--nf-accent-45);
+      box-shadow: var(--nf-pr-shadow-hover), 0 0 0 1px var(--nf-accent-10) inset;
       filter:saturate(1.03);
     }
   }
@@ -1434,7 +1434,7 @@ Embed 4:
     bottom:2px;
     width:2px;
     border-radius:2px;
-    background: rgba(52,152,219,.45);
+    background: var(--nf-accent-45);
   }
 
   /* Show a touch more quote on larger screens */
