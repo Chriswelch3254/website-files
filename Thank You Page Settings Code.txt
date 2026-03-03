@@ -140,7 +140,7 @@ Body:
     if (!once(dedupeKey)) return;
 
     // Fire canonical conversion event (no PII)
-    if (window.neuform.canTrack()) window.neuform.track('nf_lead_submit', Object.assign({
+    if (window.neuform.canTrack()) window.neuform.track('lead_submit_success', Object.assign({
       nf_lead_id: leadId,
       nf_method: 'contact_form',
       nf_source: 'thankyou_fallback'
@@ -184,7 +184,7 @@ Body:
   /* =====================================================
      B) Purchase thank-you page viewed
   ====================================================== */
-  if (window.neuform.canTrack()) window.neuform.trackOnce('view.purchase_thankyou', 'nf_purchase_thankyou_view');
+  if (window.neuform.canTrack()) window.neuform.trackOnce('view.purchase_thankyou', 'purchase_thankyou_view');
 
   /* =====================================================
      C) Delegated click tracking for Thank You CTAs
@@ -222,7 +222,7 @@ Body:
         break;
 
       case 'support':
-        window.neuform.track('nf_support_click', { nf_channel: node.getAttribute('data-channel') || 'email' });
+        window.neuform.track('support_click', { nf_channel: node.getAttribute('data-channel') || 'email' });
         break;
 
       case 'copy':

@@ -259,6 +259,16 @@ Body:
         return;
       }
 
+      var buyLink = t.closest && t.closest('a[href]');
+      var checkoutHref = buyLink && buyLink.href ? buyLink.href : '';
+      push({
+        event: 'checkout_outbound',
+        destination: 'stripe',
+        href: checkoutHref || null,
+        page_path: (location && location.pathname) ? location.pathname : '',
+        plan_slug: p.plan || null
+      });
+
       var item = {
         item_id: p.sku || p.plan || 'plan',
         item_name: p.name || p.plan || 'Plan',
@@ -277,7 +287,7 @@ Body:
       });
 
       push({
-        event: 'nf_buy_click',
+        event: 'buy_click',
         nf_plan: p.plan,
         nf_sku: p.sku,
         nf_price: p.price,
@@ -643,9 +653,17 @@ Body:
         (btn.textContent || '').trim() ||
         'Sticky CTA';
 
-      window.neuform.track('nf_buy_click', {
+      var href = btn && btn.href ? btn.href : null;
+      window.neuform.track('buy_click', {
         nf_source: 'sticky_cta',
         nf_label: label
+      });
+
+      window.neuform.track('checkout_outbound', {
+        destination: 'stripe',
+        href: href,
+        page_path: (location && location.pathname) ? location.pathname : '',
+        plan_slug: btn.getAttribute('data-plan') || null
       });
 
       window.neuform.track('begin_checkout');

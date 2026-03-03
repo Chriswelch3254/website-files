@@ -110,22 +110,5 @@ Body:
     }
   } catch (e) {}
 
-  // Prevent jump-to-top on Memberstack anchors (href="#") while preserving normal hash links.
-  // IMPORTANT: Do NOT stop propagation. Memberstack relies on the click event to open modals / checkout.
-  document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest('a[href="#"]') : null;
-    if (!a) return;
-
-    // Only intercept for Memberstack-driven anchors
-    if (
-      a.hasAttribute("data-ms-price:add") ||
-      a.hasAttribute("data-ms-modal") ||
-      a.hasAttribute("data-ms-action")
-    ) {
-      e.preventDefault();
-      // DO NOT: e.stopPropagation();
-    }
-  }, true);
-
-})();
+  })();
 </script>

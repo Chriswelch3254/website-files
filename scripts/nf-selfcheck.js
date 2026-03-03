@@ -288,6 +288,90 @@ if (!trainingCms) {
   }
 }
 
+
+// (6) Conversion controls / hash-button anti-pattern
+for (const file of fileEntries) {
+  const regex = /<a\b[^>]*href\s*=\s*(["'])#\1[^>]*role\s*=\s*(["'])button\2/gi;
+  let m;
+  while ((m = regex.exec(file.content))) {
+    const line = file.content.slice(0, m.index).split('\n').length;
+    failures.push(`${file.rel}:${line} contains a[href="#"][role="button"] anti-pattern`);
+  }
+}
+
+// (7) Stripe links require checkout_outbound instrumentation (heuristic)
+const stripeEmbed = fileEntries.find((f) => f.rel === TRAINING_CMS_EMBED);
+if (stripeEmbed) {
+  const stripeLinkCount = (stripeEmbed.content.match(/stripe-link-base/g) || []).length;
+  const hasMarker = stripeEmbed.content.includes('data-checkout-destination="stripe"');
+  if (stripeLinkCount > 0 && !hasMarker) {
+    failures.push(`${TRAINING_CMS_EMBED} has Stripe link placeholders without data-checkout-destination="stripe" marker`);
+  }
+}
+const trainingCmsEntry = fileEntries.find((f) => f.rel === TRAINING_CMS_PAGE);
+if (trainingCmsEntry && !trainingCmsEntry.content.includes("event: 'checkout_outbound'")) {
+  failures.push(`${TRAINING_CMS_PAGE} missing checkout_outbound instrumentation`);
+}
+
+// (8) Event dictionary enforcement (canonical OR explicit allowlist)
+const CANONICAL_EVENTS = new Set([
+  'page_view','cta_click','plan_card_click','buy_click','checkout_outbound','begin_checkout',
+  'lead_submit_attempt','lead_submit_success','lead_submit_error','purchase_thankyou_view','support_click','social_click'
+]);
+const EVENT_ALLOWLIST = new Set([
+  'Lead','generate_lead','view_item_list','select_item','nf_terms_block','nf_product_impression',
+  'nf_plan_preview_open','nf_catalog_filter','nf_add_on_toggled','nf_sticky_cta_show','nf_sticky_cta_hide',
+  'nf_download_click','nf_thankyou_open','nf_post_purchase_nudge','nf_copy','nf_tool_view','nf_tool_action',
+  'nf_cookie_pref_update','nf_cookie_pref_reset','nf_plan_card_missing_data','gtm.js'
+]);
+
+for (const file of fileEntries) {
+  if (file.rel === SELFCHECK_REL) continue;
+  const regexes = [
+    /window\.neuform\.track(?:Once)?\(\s*['"]([^'"]+)['"]/g,
+    /\bevent\s*:\s*['"]([^'"]+)['"]/g
+  ];
+  for (const re of regexes) {
+    let m;
+    while ((m = re.exec(file.content))) {
+      const name = m[1];
+      if (CANONICAL_EVENTS.has(name) || EVENT_ALLOWLIST.has(name)) continue;
+      if (/^nf_/.test(name) || /^view\./.test(name) || /^blog_/.test(name) || /^page_/.test(name)) continue;
+      if (/^scroll_depth_/.test(name) || /^gtm\./.test(name)) continue;
+      if (/^nf_ap_access_/.test(name)) continue;
+      const line = file.content.slice(0, m.index).split('\n').length;
+      failures.push(`${file.rel}:${line} uses non-dictionary event '${name}'`);
+    }
+  }
+}
+
+
+// (9) Schema governance: duplicate Product JSON-LD and canonical mutation guards
+const schemaFiles = [SITEWIDE_REL, 'Blog Post Template Collection Page Settings Code.txt'];
+for (const rel of schemaFiles) {
+  const entry = fileEntries.find((f) => f.rel === rel);
+  if (!entry) continue;
+
+  const productTypeHits = (entry.content.match(/"@type"\s*:\s*"Product"/g) || []).length;
+  if (productTypeHits > 1 && rel === SITEWIDE_REL) {
+    failures.push(`${rel} contains multiple Product schema literals; enforce single deterministic Product node`);
+  }
+
+  const canonicalMutationPattern = /(createElement\(['"]link['"]\)[\s\S]{0,200}canonical|setAttribute\(['"]rel['"],\s*['"]canonical['"]\))/i;
+  if (canonicalMutationPattern.test(entry.content)) {
+    failures.push(`${rel} appears to mutate canonical link; canonical must be read-only`);
+  }
+
+  const appendSchemaPattern = /application\/ld\+json[\s\S]{0,260}appendChild\(/gi;
+  let m;
+  while ((m = appendSchemaPattern.exec(entry.content))) {
+    const line = entry.content.slice(0, m.index).split('\n').length;
+    if (!entry.content.slice(Math.max(0, m.index - 200), m.index + 260).includes('replaceWith')) {
+      failures.push(`${rel}:${line} appends JSON-LD without explicit replace/idempotence guard`);
+    }
+  }
+}
+
 console.log('NeuForm self-check report');
 console.log('========================');
 for (const info of infos) console.log(`INFO: ${info}`);
