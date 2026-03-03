@@ -69,7 +69,7 @@
     pointer-events:none;
     background:
       radial-gradient(1100px 620px at 18% 0%, rgba(52,152,219,.14), transparent 58%),
-      radial-gradient(820px 520px at 86% 10%, rgba(52,152,219,.10), transparent 60%),
+      radial-gradient(820px 520px at 86% 10%, var(--nf-accent-10), transparent 60%),
       linear-gradient(180deg, var(--nf-wash-top), var(--nf-wash-mid) 38%, var(--nf-wash-bot)),
       rgba(0,0,0,.14);
   }
@@ -128,7 +128,7 @@
     border: 1px solid var(--nf-border);
     border-radius: var(--nf-radius);
     background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04));
-    padding: 18px;
+    padding: var(--nf-space-20);
     box-shadow: var(--nf-shadow);
 
     backdrop-filter: blur(10px);
@@ -167,7 +167,7 @@
 
   #nf-auto-plan h1{
     margin: 14px 0 10px;
-    font-size: clamp(28px, 3.2vw, 44px);
+    font-size: var(--nf-fs-h1);
     line-height: 1.06;
     letter-spacing: -0.02em;
   }
@@ -176,7 +176,7 @@
     margin: 0;
     color: var(--nf-muted);
     font-size: 15.5px;
-    line-height: 1.65;
+    line-height: var(--nf-lh-body);
     max-width: 72ch;
   }
 
@@ -209,7 +209,7 @@
     flex-wrap: wrap;
     gap: 10px;
     color: rgba(255,255,255,.68);
-    font-size: 12.5px;
+    font-size: var(--nf-fs-small);
   }
 
   #nf-auto-plan .nf-chip{
@@ -246,8 +246,8 @@
     display: grid;
     gap: 8px;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   #nf-auto-plan .nf-prep li{
@@ -301,8 +301,8 @@
   #nf-auto-plan .nf-li span{
     display: block;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   /* Fit / Not fit block */
@@ -329,7 +329,7 @@
 
   #nf-auto-plan .nf-fitbox{
     border: 1px solid var(--nf-border-2);
-    border-radius: 14px;
+    border-radius: var(--nf-radius-btn);
     background: rgba(255,255,255,.03);
     padding: 12px;
   }
@@ -343,8 +343,8 @@
     margin: 0;
     padding-left: 18px;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   /* Steps */
@@ -385,8 +385,8 @@
   #nf-auto-plan .nf-step p{
     margin: 0;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   /* Inline CTA block inside main card */
@@ -395,7 +395,7 @@
     border: 1px solid rgba(52,152,219,.38);
     border-radius: var(--nf-radius-sm);
     padding: 12px;
-    background: rgba(52,152,219,.10);
+    background: var(--nf-accent-10);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -411,8 +411,8 @@
   #nf-auto-plan .nf-inline-cta span{
     display:block;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.45;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   #nf-auto-plan .nf-inline-cta-actions{
@@ -428,7 +428,7 @@
     align-items: center;
     width: 100%;
     margin-top: 14px;
-    padding: 14px 14px;
+    padding: var(--nf-space-16) var(--nf-space-16);
     border-radius: var(--nf-radius-sm);
     font-weight: 900;
     text-decoration: none;
@@ -441,7 +441,7 @@
   #nf-auto-plan .nf-btn:hover{
     transform: translateY(-1px);
     filter: brightness(1.03);
-    box-shadow: 0 14px 40px rgba(0,0,0,.28);
+    box-shadow: var(--nf-shadow-card-hover);
   }
 
   #nf-auto-plan .nf-btn:active{
@@ -451,7 +451,7 @@
 
   #nf-auto-plan .nf-btn-primary{
     background: linear-gradient(180deg, rgba(52,152,219,.98), rgba(52,152,219,.78));
-    color: #fff;
+    color: var(--nf-primary-contrast);
     border-color: rgba(52,152,219,.60);
     box-shadow: 0 10px 34px rgba(52,152,219,.18);
   }
@@ -466,7 +466,7 @@
     width: auto;
     margin-top: 0;
     padding: 12px 14px;
-    border-radius: 14px;
+    border-radius: var(--nf-radius-btn);
     white-space: nowrap;
   }
 
@@ -488,7 +488,7 @@
   }
 
   #nf-auto-plan .nf-price{
-    font-size: 38px;
+    font-size: var(--nf-fs-h1);
     font-weight: 900;
     letter-spacing: -0.02em;
   }
@@ -497,7 +497,7 @@
     margin-top: 8px;
     color: var(--nf-muted);
     font-size: 12px;
-    line-height: 1.45;
+    line-height: var(--nf-lh-body);
   }
 
   #nf-auto-plan .nf-minirow{
@@ -526,7 +526,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 10px 12px;
+    padding: var(--nf-space-12) var(--nf-space-12);
     border-radius: var(--nf-radius-sm);
     border: 1px solid var(--nf-border);
     background: var(--nf-surface-2);
@@ -536,7 +536,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font-size: var(--nf-fs-small);
     color: rgba(255,255,255,.90);
   }
 
@@ -573,8 +573,8 @@
     display: grid;
     gap: 8px;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   #nf-auto-plan .nf-includes li{
@@ -594,13 +594,13 @@
   /* Timing / access note */
   #nf-auto-plan .nf-note{
     margin-top: 10px;
-    padding: 10px 12px;
+    padding: var(--nf-space-12) var(--nf-space-12);
     border-radius: var(--nf-radius-sm);
     border: 1px solid var(--nf-border-2);
     background: var(--nf-surface-3);
     color: var(--nf-muted);
-    font-size: 12.25px;
-    line-height: 1.45;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   #nf-auto-plan .nf-note b{ color: rgba(255,255,255,.86); }
@@ -623,7 +623,7 @@
     justify-content: center;
     align-items: center;
     color: var(--nf-muted);
-    font-size: 13px;
+    font-size: var(--nf-fs-small);
   }
 
   #nf-auto-plan .nf-actionlink{
@@ -689,8 +689,8 @@
   #nf-auto-plan .nf-faq{
     padding: 0 12px 12px 12px;
     color: var(--nf-muted);
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: var(--nf-fs-small);
+    line-height: var(--nf-lh-body);
   }
 
   /* Mobile sticky CTA bar */
@@ -716,7 +716,7 @@
       margin: 0 auto;
       pointer-events: auto;
       border: 1px solid rgba(255,255,255,.16);
-      border-radius: 18px;
+      border-radius: var(--nf-radius-btn);
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -735,7 +735,7 @@
     }
 
     #nf-auto-plan .nf-stickybar-meta b{
-      font-size: 13px;
+      font-size: var(--nf-fs-small);
       line-height: 1.2;
       white-space: nowrap;
       overflow: hidden;
@@ -755,7 +755,7 @@
       margin-top: 0;
       width: auto;
       padding: 12px 14px;
-      border-radius: 14px;
+      border-radius: var(--nf-radius-btn);
       font-weight: 900;
       white-space: nowrap;
     }

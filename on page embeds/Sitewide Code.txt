@@ -484,6 +484,33 @@ Footer:
     --nf-btn-transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
     --nf-badge-radius:999px;
     --nf-badge-pad:4px 10px;
+
+    --nf-fs-h1:clamp(32px, 3.2vw, 44px);
+    --nf-fs-h2:clamp(24px, 2.4vw, 32px);
+    --nf-fs-h3:18px;
+    --nf-fs-body:14px;
+    --nf-fs-small:12px;
+
+    --nf-lh-tight:1.15;
+    --nf-lh-title:1.25;
+    --nf-lh-body:1.55;
+    --nf-lh-small:1.4;
+
+    --nf-space-4:4px;
+    --nf-space-8:8px;
+    --nf-space-12:12px;
+    --nf-space-16:16px;
+    --nf-space-20:20px;
+    --nf-space-24:24px;
+    --nf-space-32:32px;
+    --nf-space-40:40px;
+    --nf-space-56:56px;
+
+    --nf-accent-08:rgba(52,152,219,.08);
+    --nf-accent-10:rgba(52,152,219,.10);
+    --nf-accent-20:rgba(52,152,219,.20);
+    --nf-accent-30:rgba(52,152,219,.30);
+    --nf-accent-45:rgba(52,152,219,.45);
   }
 
   a:focus-visible,
@@ -495,6 +522,70 @@ Footer:
   [tabindex]:not([tabindex="-1"]):focus-visible{
     outline:2px solid var(--nf-focus);
     outline-offset:2px;
+  }
+
+  .nf-btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:var(--nf-space-8);
+    padding:var(--nf-btn-pad-y) var(--nf-btn-pad-x);
+    border-radius:var(--nf-radius-btn);
+    font:var(--nf-btn-font);
+    color:var(--nf-primary-contrast);
+    background:linear-gradient(180deg, var(--nf-primary), var(--nf-primary-700));
+    box-shadow:0 6px 16px var(--nf-accent-30);
+    transition:var(--nf-btn-transition);
+    text-decoration:none;
+  }
+  @media (hover:hover){
+    .nf-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px var(--nf-accent-30);
+      filter:saturate(1.05);
+    }
+  }
+  .nf-btn:focus-visible{
+    outline:2px solid var(--nf-focus);
+    outline-offset:2px;
+  }
+  .nf-btn:disabled,
+  .nf-btn[aria-disabled="true"]{
+    opacity:.55;
+    pointer-events:none;
+    cursor:not-allowed;
+    filter:grayscale(.45);
+  }
+
+  .nf-card{
+    border:var(--nf-border-subtle);
+    border-radius:var(--nf-radius-card);
+    background:var(--nf-bg-surface);
+    color:var(--nf-text);
+    box-shadow:var(--nf-shadow-card);
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease, filter .22s ease;
+  }
+  @media (hover:hover){
+    .nf-card:hover{
+      transform:translateY(-2px);
+      border-color:var(--nf-line);
+      box-shadow:var(--nf-shadow-card-hover);
+      filter:saturate(1.03);
+    }
+  }
+  .nf-card:focus-within{
+    border-color:var(--nf-line);
+    box-shadow:var(--nf-shadow-card-hover);
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .nf-btn,
+    .nf-card{ transition:none; }
+    .nf-btn:hover,
+    .nf-card:hover{ transform:none; filter:none; }
   }
 
   /* Generic “disabled” contract for any buy button surface */
