@@ -134,14 +134,16 @@ The canonical root is recorded in `reports/v3-1-1/source-reconstruction.json` as
 
 ## Checkpoint Sequence
 
-1. [Baseline reconstruction and verification](2026-08-10-strength-lab-v3-1-1-01-baseline-reconstruction.md)
-2. [Visual tokens and primitives](2026-08-10-strength-lab-v3-1-1-02-visual-tokens-primitives.md)
-3. [Phone-first composition](2026-08-10-strength-lab-v3-1-1-03-phone-first-composition.md)
-4. [Tablet and compact-laptop composition](2026-08-10-strength-lab-v3-1-1-04-tablet-laptop-composition.md)
-5. [Desktop and large-screen composition](2026-08-10-strength-lab-v3-1-1-05-desktop-large-screen-composition.md)
-6. [Workspace-by-workspace refinement](2026-08-10-strength-lab-v3-1-1-06-workspace-refinement.md)
-7. [Accessibility and performance closure](2026-08-10-strength-lab-v3-1-1-07-accessibility-performance.md)
-8. [Release candidate, Webflow cutover, and release lock](2026-08-10-strength-lab-v3-1-1-08-release-cutover.md)
+The complete detailed plan suite is preserved in the verified downloadable archive generated with this master plan. It contains these eight checkpoint documents:
+
+1. Baseline reconstruction and verification.
+2. Visual tokens and primitives.
+3. Phone-first composition.
+4. Tablet and compact-laptop composition.
+5. Desktop and large-screen composition.
+6. Workspace-by-workspace refinement.
+7. Accessibility and performance closure.
+8. Release candidate, Webflow cutover, and release lock.
 
 ## Review Gates
 
