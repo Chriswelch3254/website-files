@@ -1,0 +1,21 @@
+{
+  "productVersion": "3.1.1",
+  "sourceGitCommit": "9c1b22c960934e60fa88c22b7e1e5a243489010f",
+  "stylesheet": {
+    "bytes": 62198,
+    "sha256": "de103a51f5422617982c785572ac4fc72993cd98dbc0e28300f78b42a40ab87c",
+    "base64Chars": 82932,
+    "parts": 2
+  },
+  "runtimeCompressed": {
+    "bytes": 278976,
+    "sha256": "36e4226a17bae7c225246cffac82c1c7885beb5de1321ae6f7cba858723b1685",
+    "base64Chars": 371968,
+    "parts": 8
+  },
+  "runtime": {
+    "bytes": 1324458,
+    "sha256": "746dfff91a67d948b3284380eaf745d885a813c9883650b61afe6b0ecde96bcb"
+  },
+  "chunkSize": 48000
+}
