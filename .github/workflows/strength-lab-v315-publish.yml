@@ -1,0 +1,113 @@
+name: Publish Strength Lab 3.1.5 Runtime
+
+on:
+  push:
+    branches:
+      - strength-lab-v3.1.5
+    paths:
+      - .github/workflows/strength-lab-v315-publish.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+          fetch-depth: 0
+
+      - name: Download and verify locked runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_dir='assets/strength-lab-v3/releases/3.1.5'
+          mkdir -p "$release_dir"
+
+          curl --fail --location --retry 4 --retry-all-errors \
+            'https://drive.google.com/uc?export=download&id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs' \
+            --output /tmp/strength-lab-v3.1.5-runtime.js.gz
+
+          test "$(wc -c < /tmp/strength-lab-v3.1.5-runtime.js.gz)" = '256342'
+          printf '%s  %s\n' \
+            '53f784318139415092aede044ffa209937ccf19713d6936d705c78bf4e6c59de' \
+            '/tmp/strength-lab-v3.1.5-runtime.js.gz' | sha256sum --check --strict
+
+          gzip --test /tmp/strength-lab-v3.1.5-runtime.js.gz
+          gunzip --stdout /tmp/strength-lab-v3.1.5-runtime.js.gz \
+            > /tmp/strength-lab-v3.1.5-runtime.js
+
+          test "$(wc -c < /tmp/strength-lab-v3.1.5-runtime.js)" = '1237911'
+          printf '%s  %s\n' \
+            '4b6761503bc214f560b3549bd80ff64355d79230424fe9c1e371a2ffb386fb23' \
+            '/tmp/strength-lab-v3.1.5-runtime.js' | sha256sum --check --strict
+
+          cp /tmp/strength-lab-v3.1.5-runtime.js \
+            "$release_dir/strength-lab-v3.1.5-4b6761503bc2.js"
+          cp /tmp/strength-lab-v3.1.5-runtime.js.gz \
+            "$release_dir/strength-lab-v3.1.5-53f784318139.js.gz"
+
+          cat > "$release_dir/manifest.json" <<'JSON'
+          {
+            "productVersion": "3.1.5",
+            "schemaVersion": 3,
+            "storageKey": "nf.strengthLab.v3",
+            "cloudSyncImplemented": false,
+            "runtime": {
+              "path": "strength-lab-v3.1.5-4b6761503bc2.js",
+              "bytes": 1237911,
+              "sha256": "4b6761503bc214f560b3549bd80ff64355d79230424fe9c1e371a2ffb386fb23"
+            },
+            "gzip": {
+              "path": "strength-lab-v3.1.5-53f784318139.js.gz",
+              "bytes": 256342,
+              "sha256": "53f784318139415092aede044ffa209937ccf19713d6936d705c78bf4e6c59de"
+            },
+            "delivery": {
+              "primary": "jsDelivr immutable tag",
+              "fallback": "raw GitHub immutable tag",
+              "integrityBeforeExecution": true,
+              "runtimeOwnerCount": 1
+            }
+          }
+          JSON
+
+          cat > "$release_dir/RELEASE_LOCK.md" <<'MD'
+          # NeuForm Strength Lab 3.1.5 Release Lock
+
+          Status: boot-repair runtime authority
+          Cloud synchronization: not implemented
+          Storage schema: 3
+          Storage key: `nf.strengthLab.v3`
+          Source lineage: Strength Lab V3 local-first runtime
+
+          ## Locked runtime
+
+          - Runtime bytes: 1,237,911
+          - Runtime SHA-256: `4b6761503bc214f560b3549bd80ff64355d79230424fe9c1e371a2ffb386fb23`
+          - Gzip bytes: 256,342
+          - Gzip SHA-256: `53f784318139415092aede044ffa209937ccf19713d6936d705c78bf4e6c59de`
+          - Runtime execution owners: 1
+          - Integrity verification required before execution
+
+          This release authorizes the boot repair only. Cross-device synchronization remains blocked until both production domains pass the complete live boot gate.
+          MD
+
+          printf 'STRENGTH_LAB_V3_1_5_RUNTIME_PUBLISHED\n' \
+            > "$release_dir/PUBLISH_OK.txt"
+
+      - name: Commit immutable runtime and create release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.5
+          git commit -m 'release: publish immutable Strength Lab 3.1.5 runtime'
+          git push origin HEAD:strength-lab-v3.1.5
+
+          git tag -a strength-lab-v3.1.5 -m 'NeuForm Strength Lab 3.1.5 boot repair runtime'
+          git push origin refs/tags/strength-lab-v3.1.5
