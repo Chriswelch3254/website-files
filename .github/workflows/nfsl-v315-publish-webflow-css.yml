@@ -1,0 +1,80 @@
+name: Strength Lab 3.1.5 Publish Webflow CSS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - strength-lab-v3.1.5
+    paths:
+      - .github/workflows/nfsl-v315-publish-webflow-css.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+          fetch-depth: 0
+
+      - name: Download canonical Strength Lab stylesheet
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --retry-all-errors \
+            'https://drive.google.com/uc?export=download&id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs' \
+            --output /tmp/strength-lab-v3.1.5.css
+
+      - name: Verify stylesheet contract
+        run: |
+          set -euo pipefail
+          test "$(wc -c < /tmp/strength-lab-v3.1.5.css)" -gt 20000
+          test "$(wc -c < /tmp/strength-lab-v3.1.5.css)" -lt 100000
+          grep -Fq '.nfsl-v3-root' /tmp/strength-lab-v3.1.5.css
+          grep -Fq '.nfsl-v3-shell' /tmp/strength-lab-v3.1.5.css
+          grep -Fq '@media' /tmp/strength-lab-v3.1.5.css
+          ! grep -Fq '<script' /tmp/strength-lab-v3.1.5.css
+          ! grep -Fq '</style>' /tmp/strength-lab-v3.1.5.css
+
+      - name: Install stylesheet and manifest
+        run: |
+          set -euo pipefail
+          RELEASE_DIR='assets/strength-lab-v3/releases/3.1.5'
+          mkdir -p "$RELEASE_DIR"
+          cp /tmp/strength-lab-v3.1.5.css "$RELEASE_DIR/strength-lab-v3.1.5.css"
+          python - <<'PY'
+          import base64, hashlib, json
+          from pathlib import Path
+          d = Path('assets/strength-lab-v3/releases/3.1.5')
+          css = d / 'strength-lab-v3.1.5.css'
+          data = css.read_bytes()
+          manifest = {
+              'productVersion': '3.1.5',
+              'path': css.name,
+              'bytes': len(data),
+              'sha256': hashlib.sha256(data).hexdigest(),
+              'sriSha384': 'sha384-' + base64.b64encode(hashlib.sha384(data).digest()).decode('ascii'),
+          }
+          (d / 'webflow-style-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit stylesheet and create immutable complete-release tag
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.5/strength-lab-v3.1.5.css \
+                  assets/strength-lab-v3/releases/3.1.5/webflow-style-manifest.json
+          git diff --cached --quiet || git commit -m 'release: publish Strength Lab 3.1.5 Webflow stylesheet'
+          git push origin HEAD:strength-lab-v3.1.5
+          TAG='strength-lab-v3.1.5-complete-release'
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            REMOTE_TAG="$(git ls-remote --tags origin "refs/tags/$TAG" | awk '{print $1}')"
+            CURRENT="$(git rev-parse HEAD)"
+            test "$REMOTE_TAG" = "$CURRENT" || { echo "Tag already exists at a different commit" >&2; exit 1; }
+          else
+            git tag -a "$TAG" -m 'Strength Lab 3.1.5 complete boot-repair release'
+            git push origin "refs/tags/$TAG"
+          fi
