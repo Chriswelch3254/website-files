@@ -1,0 +1,395 @@
+name: Publish Strength Lab 3.1.4 Immutable Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - strength-lab-v3.1.4
+    paths:
+      - .github/workflows/strength-lab-v314-publish.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: strength-lab-v314-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RELEASE_DIR: assets/strength-lab-v3/releases/3.1.4
+      DRIVE_FILE_ID: 1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs
+      GZIP_FILE: runtime-compressed-a4011964928a.js.gz
+      RUNTIME_FILE: runtime-reconstructed-bc3a6d1add4a.js
+      EXPECTED_GZIP_BYTES: "256342"
+      EXPECTED_GZIP_SHA256: a4011964928a318597a23e302a51a9a235f6d2895d7cb85e8765f0a5ad8882f2
+      EXPECTED_RUNTIME_BYTES: "1237911"
+      EXPECTED_RUNTIME_SHA256: bc3a6d1add4a0388eabc70ed8a5f207055f0416a266c5919df9fbfc1db42ddd4
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.4
+          fetch-depth: 0
+
+      - name: Download verified candidate from Google Drive transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RELEASE_DIR"
+          curl --fail --location --retry 5 --retry-delay 2 --retry-all-errors \
+            "https://drive.usercontent.google.com/download?id=${DRIVE_FILE_ID}&export=download&confirm=t" \
+            --output "/tmp/${GZIP_FILE}"
+
+      - name: Verify compressed and decompressed runtime
+        shell: python
+        run: |
+          from pathlib import Path
+          import gzip
+          import hashlib
+          import json
+          import os
+
+          compressed_path = Path('/tmp') / os.environ['GZIP_FILE']
+          compressed = compressed_path.read_bytes()
+          compressed_sha = hashlib.sha256(compressed).hexdigest()
+          if len(compressed) != int(os.environ['EXPECTED_GZIP_BYTES']):
+              raise SystemExit(f"compressed byte mismatch: {len(compressed)}")
+          if compressed_sha != os.environ['EXPECTED_GZIP_SHA256']:
+              raise SystemExit(f"compressed sha mismatch: {compressed_sha}")
+
+          runtime = gzip.decompress(compressed)
+          runtime_sha = hashlib.sha256(runtime).hexdigest()
+          if len(runtime) != int(os.environ['EXPECTED_RUNTIME_BYTES']):
+              raise SystemExit(f"runtime byte mismatch: {len(runtime)}")
+          if runtime_sha != os.environ['EXPECTED_RUNTIME_SHA256']:
+              raise SystemExit(f"runtime sha mismatch: {runtime_sha}")
+          if b'3.1.4' not in runtime:
+              raise SystemExit('runtime does not identify release 3.1.4')
+          if b'nf.strengthLab.v3' not in runtime:
+              raise SystemExit('canonical local storage key missing')
+
+          release_dir = Path(os.environ['RELEASE_DIR'])
+          release_dir.mkdir(parents=True, exist_ok=True)
+          (release_dir / os.environ['GZIP_FILE']).write_bytes(compressed)
+          (release_dir / os.environ['RUNTIME_FILE']).write_bytes(runtime)
+          print(json.dumps({
+              'compressedBytes': len(compressed),
+              'compressedSha256': compressed_sha,
+              'runtimeBytes': len(runtime),
+              'runtimeSha256': runtime_sha,
+          }, sort_keys=True))
+
+      - name: Remove abandoned transport probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f "$RELEASE_DIR"/runtime-bc3a6d1add4a-part-*-of-19.b64
+          rm -f "$RELEASE_DIR"/file-uri-probe.txt
+          rm -f "$RELEASE_DIR"/upload-file-schema-probe.txt
+          rm -f "$RELEASE_DIR"/.release-asset-route-probe
+          rm -f "$RELEASE_DIR"/runtime-compressed-a4011964928a.b64
+          rm -f "$RELEASE_DIR"/runtime-bc3a6d1add4a.b64
+          rm -f "$RELEASE_DIR"/legacy-pass7-runtime.js.gz
+
+      - name: Write initial immutable asset manifest
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          release_dir = Path(os.environ['RELEASE_DIR'])
+          manifest = {
+              'product': 'NeuForm Strength Lab',
+              'productVersion': '3.1.4',
+              'schemaVersion': 3,
+              'storageKey': 'nf.strengthLab.v3',
+              'sourceLineage': '3.0.0-pass7',
+              'releaseStatus': 'asset-published-loader-pending',
+              'createdAtUtc': datetime.now(timezone.utc).isoformat(),
+              'runtime': {
+                  'file': os.environ['RUNTIME_FILE'],
+                  'bytes': int(os.environ['EXPECTED_RUNTIME_BYTES']),
+                  'sha256': os.environ['EXPECTED_RUNTIME_SHA256'],
+              },
+              'compressedRuntime': {
+                  'file': os.environ['GZIP_FILE'],
+                  'bytes': int(os.environ['EXPECTED_GZIP_BYTES']),
+                  'sha256': os.environ['EXPECTED_GZIP_SHA256'],
+                  'encoding': 'gzip',
+              },
+              'cloudSync': {
+                  'implemented': False,
+                  'publicClaimAllowed': False,
+              },
+          }
+          (release_dir / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+
+      - name: Commit immutable runtime assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "NeuForm Release Automation"
+          git config user.email "noreply@neuform-fitness.com"
+          git add "$RELEASE_DIR"
+          git add -u "$RELEASE_DIR"
+          if git diff --cached --quiet; then
+            echo "Runtime assets already committed."
+          else
+            git commit -m "release: publish Strength Lab 3.1.4 immutable runtime [skip ci]"
+            git push origin HEAD:strength-lab-v3.1.4
+          fi
+          echo "ASSET_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Generate exact-commit verified boot loader
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib
+          import json
+          import os
+
+          release_dir = Path(os.environ['RELEASE_DIR'])
+          commit = os.environ['ASSET_COMMIT']
+          gzip_file = os.environ['GZIP_FILE']
+          runtime_file = os.environ['RUNTIME_FILE']
+          gzip_bytes = int(os.environ['EXPECTED_GZIP_BYTES'])
+          runtime_bytes = int(os.environ['EXPECTED_RUNTIME_BYTES'])
+          gzip_sha = os.environ['EXPECTED_GZIP_SHA256']
+          runtime_sha = os.environ['EXPECTED_RUNTIME_SHA256']
+          repo = 'Chriswelch3254/website-files'
+          asset_path = f"{release_dir.as_posix()}/{gzip_file}"
+          primary = f"https://cdn.jsdelivr.net/gh/{repo}@{commit}/{asset_path}"
+          fallback = f"https://raw.githubusercontent.com/{repo}/{commit}/{asset_path}"
+
+          loader = r'''(function (global) {
+  "use strict";
+  var VERSION = "3.1.4";
+  var RELEASE_COMMIT = "__COMMIT__";
+  var URLS = ["__PRIMARY__", "__FALLBACK__"];
+  var GZIP_BYTES = __GZIP_BYTES__;
+  var GZIP_SHA = "__GZIP_SHA__";
+  var RUNTIME_BYTES = __RUNTIME_BYTES__;
+  var RUNTIME_SHA = "__RUNTIME_SHA__";
+  var transport = global.NFSL_RUNTIME_TRANSPORT = global.NFSL_RUNTIME_TRANSPORT || {
+    productVersion: VERSION,
+    releaseCommit: RELEASE_COMMIT,
+    status: "initializing",
+    uiReady: false,
+    attempts: [],
+    error: ""
+  };
+  var running = false;
+  var delayedTimer = 0;
+  var readyTimer = 0;
+
+  function mount() {
+    return global.document && global.document.querySelector
+      ? global.document.querySelector("[data-nfsl-v3-root], [data-nfsl-release-host]")
+      : null;
+  }
+  function statusNode() {
+    var node = mount();
+    return node ? node.querySelector("[data-nfsl-boot-status]") : null;
+  }
+  function retryNode() {
+    var node = mount();
+    return node ? node.querySelector("[data-nfsl-boot-retry]") : null;
+  }
+  function setState(state, message) {
+    transport.status = state;
+    var node = mount();
+    if (node) {
+      node.setAttribute("data-nfsl-runtime-transport", state);
+      node.setAttribute("data-nfsl-runtime-version", VERSION);
+      node.setAttribute("data-nfsl-release-commit", RELEASE_COMMIT);
+    }
+    var copy = statusNode();
+    if (copy && message) copy.textContent = message;
+    var retry = retryNode();
+    if (retry) retry.hidden = state !== "error";
+  }
+  function fail(code, error) {
+    global.clearTimeout(delayedTimer);
+    global.clearTimeout(readyTimer);
+    transport.error = code + (error && error.message ? ": " + error.message : "");
+    running = false;
+    setState("error", "Strength Lab could not finish loading. Your local records were not erased. Try again or use NeuForm Support.");
+  }
+  function toHex(buffer) {
+    return Array.prototype.map.call(new Uint8Array(buffer), function (byte) {
+      return ("0" + byte.toString(16)).slice(-2);
+    }).join("");
+  }
+  async function digest(bytes) {
+    if (!global.crypto || !global.crypto.subtle) throw new Error("secure_hash_unavailable");
+    return toHex(await global.crypto.subtle.digest("SHA-256", bytes));
+  }
+  async function fetchVerified(url, index) {
+    var response = await global.fetch(url, {
+      method: "GET",
+      mode: "cors",
+      credentials: "omit",
+      cache: "force-cache"
+    });
+    transport.attempts.push({ url: url, status: response.status, sourceIndex: index });
+    if (!response.ok) throw new Error("runtime_http_" + response.status);
+    var bytes = await response.arrayBuffer();
+    if (bytes.byteLength !== GZIP_BYTES) throw new Error("compressed_byte_count_mismatch");
+    if (await digest(bytes) !== GZIP_SHA) throw new Error("compressed_integrity_mismatch");
+    return bytes;
+  }
+  async function fetchWithFallback() {
+    var lastError;
+    for (var index = 0; index < URLS.length; index += 1) {
+      try {
+        return await fetchVerified(URLS[index], index);
+      } catch (error) {
+        lastError = error;
+        transport.attempts.push({ url: URLS[index], error: error && error.message || String(error), sourceIndex: index });
+      }
+    }
+    throw lastError || new Error("runtime_sources_unavailable");
+  }
+  async function decompress(compressed) {
+    if (typeof global.DecompressionStream !== "function") throw new Error("gzip_decompression_unavailable");
+    var stream = new Blob([compressed]).stream().pipeThrough(new global.DecompressionStream("gzip"));
+    return await new Response(stream).arrayBuffer();
+  }
+  function execute(runtimeBytes) {
+    if (global.__NFSL_V314_RUNTIME_EXECUTED__) return;
+    global.__NFSL_V314_RUNTIME_EXECUTED__ = true;
+    var source = new TextDecoder("utf-8").decode(runtimeBytes);
+    var script = global.document.createElement("script");
+    script.type = "text/javascript";
+    script.setAttribute("data-nfsl-runtime", "verified");
+    script.setAttribute("data-nfsl-runtime-version", VERSION);
+    script.setAttribute("data-nfsl-release-commit", RELEASE_COMMIT);
+    script.text = source + "\n//# sourceURL=strength-lab-v3.1.4-runtime.js";
+    (global.document.body || global.document.documentElement).appendChild(script);
+  }
+  async function boot() {
+    if (running || transport.uiReady) return;
+    running = true;
+    transport.error = "";
+    transport.attempts = [];
+    setState("loading", "Preparing your local Strength Lab workspace…");
+    delayedTimer = global.setTimeout(function () {
+      if (!transport.uiReady && running) setState("delayed", "Strength Lab is taking longer than expected. Your local records remain safe in this browser.");
+    }, 2500);
+    try {
+      var compressed = await fetchWithFallback();
+      setState("verifying", "Verifying the Strength Lab release…");
+      var runtime = await decompress(compressed);
+      if (runtime.byteLength !== RUNTIME_BYTES) throw new Error("runtime_byte_count_mismatch");
+      if (await digest(runtime) !== RUNTIME_SHA) throw new Error("runtime_integrity_mismatch");
+      setState("starting", "Opening your local workspace…");
+      execute(runtime);
+      running = false;
+      readyTimer = global.setTimeout(function () {
+        var node = mount();
+        if (!transport.uiReady && (!node || !node.querySelector(".nfsl-v3-app"))) fail("ui_ready_timeout");
+      }, 15000);
+    } catch (error) {
+      fail("runtime_load_failed", error);
+    }
+  }
+  function bind() {
+    var node = mount();
+    if (!node) return;
+    var retry = retryNode();
+    if (retry && !retry.__nfslBound) {
+      retry.__nfslBound = true;
+      retry.addEventListener("click", function () { boot(); });
+    }
+    global.document.addEventListener("nf-strength-lab-v3-ui-ready", function () {
+      global.clearTimeout(delayedTimer);
+      global.clearTimeout(readyTimer);
+      transport.uiReady = true;
+      running = false;
+      setState("ui-ready", "Strength Lab is ready.");
+    }, { once: true });
+    boot();
+  }
+  if (!global.document || !global.fetch || typeof TextDecoder === "undefined") {
+    fail("required_browser_capability_unavailable");
+    return;
+  }
+  if (global.document.readyState === "loading") {
+    global.document.addEventListener("DOMContentLoaded", bind, { once: true });
+  } else {
+    bind();
+  }
+})(window);
+'''
+          loader = (loader
+              .replace('__COMMIT__', commit)
+              .replace('__PRIMARY__', primary)
+              .replace('__FALLBACK__', fallback)
+              .replace('__GZIP_BYTES__', str(gzip_bytes))
+              .replace('__GZIP_SHA__', gzip_sha)
+              .replace('__RUNTIME_BYTES__', str(runtime_bytes))
+              .replace('__RUNTIME_SHA__', runtime_sha))
+          loader_bytes = loader.encode('utf-8')
+          loader_sha = hashlib.sha256(loader_bytes).hexdigest()
+          loader_name = f"boot-loader-{loader_sha[:12]}.js"
+          (release_dir / loader_name).write_bytes(loader_bytes)
+
+          manifest_path = release_dir / 'manifest.json'
+          manifest = json.loads(manifest_path.read_text())
+          manifest['releaseStatus'] = 'immutable-assets-complete-production-cutover-pending'
+          manifest['assetCommit'] = commit
+          manifest['loader'] = {
+              'file': loader_name,
+              'bytes': len(loader_bytes),
+              'sha256': loader_sha,
+              'primaryRuntimeUrl': primary,
+              'fallbackRuntimeUrl': fallback,
+          }
+          manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+          Path('/tmp/loader-name.txt').write_text(loader_name)
+          Path('/tmp/loader-sha.txt').write_text(loader_sha)
+
+      - name: Commit loader and final release manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add "$RELEASE_DIR"
+          git commit -m "release: lock Strength Lab 3.1.4 boot loader [skip ci]"
+          git push origin HEAD:strength-lab-v3.1.4
+          echo "RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "LOADER_FILE=$(cat /tmp/loader-name.txt)" >> "$GITHUB_ENV"
+          echo "LOADER_SHA256=$(cat /tmp/loader-sha.txt)" >> "$GITHUB_ENV"
+
+      - name: Record release completion
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RELEASE_DIR/release-complete.txt" <<EOF
+          productVersion=3.1.4
+          releaseCommit=${RELEASE_COMMIT}
+          assetCommit=${ASSET_COMMIT}
+          loaderFile=${LOADER_FILE}
+          loaderSha256=${LOADER_SHA256}
+          compressedBytes=${EXPECTED_GZIP_BYTES}
+          compressedSha256=${EXPECTED_GZIP_SHA256}
+          runtimeBytes=${EXPECTED_RUNTIME_BYTES}
+          runtimeSha256=${EXPECTED_RUNTIME_SHA256}
+          productionCutover=pending
+          cloudSync=not-implemented
+          EOF
+          git add "$RELEASE_DIR/release-complete.txt"
+          git commit -m "docs: record Strength Lab 3.1.4 release authority [skip ci]"
+          git push origin HEAD:strength-lab-v3.1.4
+
+      - name: Create immutable release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git tag -f -a strength-lab-v3.1.4-release -m "NeuForm Strength Lab 3.1.4 immutable boot release"
+          git push --force origin refs/tags/strength-lab-v3.1.4-release
