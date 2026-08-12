@@ -1,0 +1,162 @@
+name: Strength Lab 3.1.5 Drive Release
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/strength-lab-v315-drive-release.yml'
+
+permissions:
+  contents: write
+
+env:
+  DRIVE_FILE_ID: 1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs
+  EXPECTED_GZIP_SHA_PREFIX: 53f784318139
+  RELEASE_DIR: assets/strength-lab-v3/releases/3.1.5
+  RELEASE_TAG: strength-lab-v3.1.5-runtime
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+          fetch-depth: 0
+
+      - name: Download prepared runtime gzip
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RELEASE_DIR" diagnostics
+          urls=(
+            "https://drive.usercontent.google.com/download?id=${DRIVE_FILE_ID}&export=download&confirm=t"
+            "https://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}&confirm=t"
+          )
+          success=0
+          for url in "${urls[@]}"; do
+            if curl --fail --location --retry 3 --retry-all-errors --connect-timeout 20 --max-time 180 "$url" --output diagnostics/runtime-download; then
+              if gzip -t diagnostics/runtime-download 2>/dev/null; then
+                success=1
+                break
+              fi
+            fi
+          done
+          if [ "$success" -ne 1 ]; then
+            printf 'Drive file was unavailable or was not a valid gzip payload.\n' >&2
+            file diagnostics/runtime-download 2>/dev/null || true
+            head -c 256 diagnostics/runtime-download 2>/dev/null | xxd || true
+            exit 1
+          fi
+
+      - name: Verify runtime and build immutable release manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          gzip_sha="$(sha256sum diagnostics/runtime-download | awk '{print $1}')"
+          gzip_size="$(stat -c '%s' diagnostics/runtime-download)"
+          case "$gzip_sha" in
+            "${EXPECTED_GZIP_SHA_PREFIX}"*) ;;
+            *)
+              echo "Unexpected gzip SHA-256: $gzip_sha" >&2
+              exit 1
+              ;;
+          esac
+
+          gzip -dc diagnostics/runtime-download > diagnostics/runtime.js
+          runtime_sha="$(sha256sum diagnostics/runtime.js | awk '{print $1}')"
+          runtime_size="$(stat -c '%s' diagnostics/runtime.js)"
+
+          grep -q 'nf.strengthLab.v3' diagnostics/runtime.js
+          grep -q 'nf-strength-lab-v3-ui-ready' diagnostics/runtime.js
+          grep -q 'data-nfsl-v3-root' diagnostics/runtime.js
+
+          runtime_name="strength-lab-v3.1.5-runtime-${gzip_sha:0:12}.js.gz"
+          cp diagnostics/runtime-download "$RELEASE_DIR/$runtime_name"
+
+          python3 - "$RELEASE_DIR/manifest.json" "$runtime_name" "$gzip_sha" "$gzip_size" "$runtime_sha" "$runtime_size" <<'PY'
+          import json, pathlib, sys
+          path, runtime_name, gzip_sha, gzip_size, runtime_sha, runtime_size = sys.argv[1:]
+          manifest = {
+              "product": "NeuForm Strength Lab",
+              "version": "3.1.5",
+              "schemaVersion": 3,
+              "storageKey": "nf.strengthLab.v3",
+              "cloudSyncImplemented": False,
+              "runtime": {
+                  "path": runtime_name,
+                  "compression": "gzip",
+                  "compressedBytes": int(gzip_size),
+                  "compressedSha256": gzip_sha,
+                  "decompressedBytes": int(runtime_size),
+                  "decompressedSha256": runtime_sha,
+              },
+              "releaseContract": {
+                  "localFirst": True,
+                  "requiresIntegrityVerificationBeforeExecution": True,
+                  "paidCapabilitiesFailClosed": True,
+                  "analyticsExcludeExactTrainingData": True,
+              },
+          }
+          pathlib.Path(path).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+          PY
+
+          cat > "$RELEASE_DIR/RELEASE_READY.json" <<EOF
+          {
+            "status": "ready",
+            "version": "3.1.5",
+            "runtimePath": "$runtime_name",
+            "compressedSha256": "$gzip_sha",
+            "compressedBytes": $gzip_size,
+            "decompressedSha256": "$runtime_sha",
+            "decompressedBytes": $runtime_size
+          }
+          EOF
+
+          cat "$RELEASE_DIR/RELEASE_READY.json"
+
+      - name: Commit exact release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RELEASE_DIR"
+          if git diff --cached --quiet; then
+            echo 'Release assets already match the verified payload.'
+          else
+            git commit -m 'release: publish Strength Lab 3.1.5 verified runtime'
+            git push origin HEAD:strength-lab-v3.1.5
+          fi
+
+      - name: Create immutable release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin strength-lab-v3.1.5 --tags
+          release_commit="$(git rev-parse origin/strength-lab-v3.1.5)"
+          if git rev-parse -q --verify "refs/tags/$RELEASE_TAG" >/dev/null; then
+            tagged_commit="$(git rev-list -n 1 "$RELEASE_TAG")"
+            if [ "$tagged_commit" != "$release_commit" ]; then
+              echo "Release tag already exists on another commit." >&2
+              exit 1
+            fi
+          else
+            git tag -a "$RELEASE_TAG" "$release_commit" -m 'NeuForm Strength Lab 3.1.5 runtime release'
+            git push origin "$RELEASE_TAG"
+          fi
+          printf '%s\n' "$release_commit" > diagnostics/release-commit.txt
+
+      - name: Upload release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: strength-lab-v3.1.5-release-evidence
+          path: |
+            diagnostics/runtime.js
+            diagnostics/runtime-download
+            diagnostics/release-commit.txt
+            assets/strength-lab-v3/releases/3.1.5/manifest.json
+            assets/strength-lab-v3/releases/3.1.5/RELEASE_READY.json
+          if-no-files-found: error
+          retention-days: 30
