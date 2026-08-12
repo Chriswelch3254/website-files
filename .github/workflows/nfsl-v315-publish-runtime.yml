@@ -1,0 +1,87 @@
+name: Strength Lab 3.1.5 Publish Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - strength-lab-v3.1.5
+    paths:
+      - .github/workflows/nfsl-v315-publish-runtime.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+          fetch-depth: 0
+
+      - name: Download exact staged runtime
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --retry-all-errors \
+            'https://drive.google.com/uc?export=download&id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs' \
+            --output /tmp/nfsl-v315-runtime.js.gz
+
+      - name: Verify compressed and decompressed runtime
+        run: |
+          set -euo pipefail
+          gzip -t /tmp/nfsl-v315-runtime.js.gz
+          COMPRESSED_SHA="$(sha256sum /tmp/nfsl-v315-runtime.js.gz | awk '{print $1}')"
+          case "$COMPRESSED_SHA" in
+            53f784318139*) ;;
+            *) echo "Unexpected compressed runtime SHA-256: $COMPRESSED_SHA" >&2; exit 1 ;;
+          esac
+          gzip -dc /tmp/nfsl-v315-runtime.js.gz > /tmp/nfsl-v315-runtime.js
+          node --check /tmp/nfsl-v315-runtime.js
+          grep -Fq 'nf.strengthLab.v3' /tmp/nfsl-v315-runtime.js
+          grep -Fq '3.1.5' /tmp/nfsl-v315-runtime.js
+          test "$(wc -c < /tmp/nfsl-v315-runtime.js)" -gt 1000000
+
+      - name: Install immutable release files and manifest
+        run: |
+          set -euo pipefail
+          RELEASE_DIR='assets/strength-lab-v3/releases/3.1.5'
+          mkdir -p "$RELEASE_DIR"
+          cp /tmp/nfsl-v315-runtime.js.gz "$RELEASE_DIR/strength-lab-v3.1.5-runtime-53f784318139.js.gz"
+          cp /tmp/nfsl-v315-runtime.js "$RELEASE_DIR/strength-lab-v3.1.5-runtime.js"
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          d = Path('assets/strength-lab-v3/releases/3.1.5')
+          gz = d / 'strength-lab-v3.1.5-runtime-53f784318139.js.gz'
+          js = d / 'strength-lab-v3.1.5-runtime.js'
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          manifest = {
+              'productVersion': '3.1.5',
+              'schemaVersion': 3,
+              'storageKey': 'nf.strengthLab.v3',
+              'sourceLineage': '3.0.0-pass7',
+              'runtime': {'path': js.name, 'bytes': js.stat().st_size, 'sha256': sha(js)},
+              'compressedRuntime': {'path': gz.name, 'bytes': gz.stat().st_size, 'sha256': sha(gz)},
+              'cloudSyncImplemented': False,
+          }
+          (d / 'runtime-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit release and create immutable tag
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.5
+          git diff --cached --quiet || git commit -m 'release: publish Strength Lab 3.1.5 runtime'
+          git push origin HEAD:strength-lab-v3.1.5
+          TAG='strength-lab-v3.1.5-release'
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            REMOTE_TAG="$(git ls-remote --tags origin "refs/tags/$TAG" | awk '{print $1}')"
+            CURRENT="$(git rev-parse HEAD)"
+            test "$REMOTE_TAG" = "$CURRENT" || { echo "Tag already exists at a different commit" >&2; exit 1; }
+          else
+            git tag -a "$TAG" -m 'Strength Lab 3.1.5 boot-repair runtime release'
+            git push origin "refs/tags/$TAG"
+          fi
