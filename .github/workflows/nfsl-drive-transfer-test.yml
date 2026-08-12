@@ -1,0 +1,37 @@
+name: Strength Lab Drive Transfer Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - strength-lab-v3.1.5
+    paths:
+      - .github/workflows/nfsl-drive-transfer-test.yml
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+      - name: Download shared Drive probe
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            'https://drive.google.com/uc?export=download&id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs' \
+            --output /tmp/nfsl-transfer-test.txt
+          grep -Fx 'strength-lab-public-transfer-test' /tmp/nfsl-transfer-test.txt
+      - name: Record success
+        run: |
+          set -euo pipefail
+          mkdir -p assets/strength-lab-v3/releases/3.1.5
+          printf 'DRIVE_TRANSFER_OK\n' > assets/strength-lab-v3/releases/3.1.5/DRIVE_TRANSFER_OK.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.5/DRIVE_TRANSFER_OK.txt
+          git diff --cached --quiet || git commit -m 'ci: confirm Strength Lab Drive transfer path'
+          git push origin HEAD:strength-lab-v3.1.5
