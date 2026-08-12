@@ -1,0 +1,87 @@
+name: Strength Lab 3.1.4 Runtime Probe
+
+on:
+  push:
+    branches:
+      - strength-lab-v3.1.4
+    paths:
+      - .github/workflows/strength-lab-v314-runtime-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download current production Pass 7 runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            'https://cdn.jsdelivr.net/gh/Chriswelch3254/website-files@strength-lab-runtime-repair-20260810/assets/strength-lab-v3/strength-lab-3-0-0-pass7-b93357e6.js' \
+            --output old-runtime.js
+
+      - name: Verify and probe deterministic reconstruction
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib
+          import json
+          import re
+
+          old = Path('old-runtime.js').read_bytes()
+          old_sha = hashlib.sha256(old).hexdigest()
+          print(json.dumps({'old_bytes': len(old), 'old_sha256': old_sha}, sort_keys=True))
+          if len(old) != 1237480:
+              raise SystemExit('unexpected old runtime byte count')
+          if old_sha != 'b93357e64837c0137612b17a415198f50250f3c36ee55607d86a6ff81b0f1b95':
+              raise SystemExit('unexpected old runtime sha256')
+
+          text = old.decode('utf-8')
+          probes = [
+              'var PRODUCT_VERSION =',
+              'var BUILD_REVISION =',
+              'function isUsableSettledSnapshot',
+              'strength-lab-safe-guest-fallback',
+              'fallbackWindowMs',
+              'function acceptSharedSnapshot'
+          ]
+          for needle in probes:
+              print('PROBE', needle, text.count(needle))
+          for line_no, line in enumerate(text.splitlines(), 1):
+              if any(needle in line for needle in probes):
+                  print(f'LINE {line_no}: {line[:600]}')
+
+          patched = re.sub(
+              r'var PRODUCT_VERSION = "[^"]+";',
+              'var PRODUCT_VERSION = "3.1.4";',
+              text,
+              count=1,
+          )
+          patched = re.sub(
+              r'var BUILD_REVISION = "[^"]+";',
+              'var BUILD_REVISION = "strength-lab-v3.1.4-boot-release-2026-08-12";',
+              patched,
+              count=1,
+          )
+          patched_bytes = patched.encode('utf-8')
+          patched_sha = hashlib.sha256(patched_bytes).hexdigest()
+          Path('simple-patched-runtime.js').write_bytes(patched_bytes)
+          print(json.dumps({
+              'simple_patch_bytes': len(patched_bytes),
+              'simple_patch_sha256': patched_sha,
+              'target_bytes': 1237911,
+              'target_sha256': 'bc3a6d1add4a856e89cb5e2b1e77e8959b6af769dd97d4ba41a2092065e6dfc2',
+              'matches_target': len(patched_bytes) == 1237911 and patched_sha == 'bc3a6d1add4a856e89cb5e2b1e77e8959b6af769dd97d4ba41a2092065e6dfc2'
+          }, sort_keys=True))
+
+      - name: Upload diagnostic runtimes
+        uses: actions/upload-artifact@v4
+        with:
+          name: strength-lab-v314-runtime-probe
+          path: |
+            old-runtime.js
+            simple-patched-runtime.js
+          retention-days: 1
