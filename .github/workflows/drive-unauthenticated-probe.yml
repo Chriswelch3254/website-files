@@ -1,0 +1,26 @@
+name: Drive unauthenticated probe
+
+on:
+  push:
+    branches:
+      - strength-lab-v3.1.4
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe uploaded Drive transport file
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://drive.usercontent.google.com/download?id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs&export=download&confirm=t'
+          status=$(curl -sS -L -o probe.out -w '%{http_code}' "$url")
+          echo "http_status=$status"
+          echo "bytes=$(wc -c < probe.out)"
+          echo "sha256=$(sha256sum probe.out | awk '{print $1}')"
+          file probe.out
+          head -c 160 probe.out | tr '\n' ' ' | sed 's/[^[:print:]]/./g'
+          echo
