@@ -1,0 +1,72 @@
+name: Verify Strength Lab 3.1.5 Complete Tagged Assets
+
+on:
+  push:
+    branches:
+      - strength-lab-v3.1.5
+    paths:
+      - .github/workflows/strength-lab-v315-complete-cdn-verify.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.5
+
+      - name: Verify complete immutable tag through jsDelivr
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://cdn.jsdelivr.net/gh/Chriswelch3254/website-files@strength-lab-v3.1.5-assets/assets/strength-lab-v3/releases/3.1.5'
+
+          curl --fail --location --retry 5 --retry-all-errors --compressed \
+            --dump-header /tmp/runtime.headers \
+            "$base/strength-lab-v3.1.5-4b6761503bc2.js" \
+            --output /tmp/runtime.js
+          test "$(wc -c < /tmp/runtime.js)" = '1237911'
+          printf '%s  %s\n' \
+            '4b6761503bc214f560b3549bd80ff64355d79230424fe9c1e371a2ffb386fb23' \
+            '/tmp/runtime.js' | sha256sum --check --strict
+
+          curl --fail --location --retry 5 --retry-all-errors --compressed \
+            --dump-header /tmp/css.headers \
+            "$base/strength-lab-v3.1.5-compat.css" \
+            --output /tmp/strength-lab.css
+          curl --fail --location --retry 5 --retry-all-errors --compressed \
+            "$base/stylesheet-receipt.json" \
+            --output /tmp/stylesheet-receipt.json
+
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          css = Path('/tmp/strength-lab.css').read_bytes()
+          receipt = json.loads(Path('/tmp/stylesheet-receipt.json').read_text())
+          assert len(css) == receipt['bytes'], (len(css), receipt['bytes'])
+          assert hashlib.sha256(css).hexdigest() == receipt['sha256']
+          text = css.decode('utf-8')
+          for token in ['.nfsl-v3-root', '.nfsl-v3-shell', '.nfsl-v3-welcome', '@media (max-width: 560px)']:
+              assert token in text, token
+          PY
+
+          grep -Eiq '^cache-control:.*(immutable|max-age=31536000)' /tmp/runtime.headers
+          grep -Eiq '^cache-control:.*(immutable|max-age=31536000)' /tmp/css.headers
+
+          mkdir -p assets/strength-lab-v3/releases/3.1.5
+          printf 'STRENGTH_LAB_V3_1_5_COMPLETE_CDN_VERIFIED\n' \
+            > assets/strength-lab-v3/releases/3.1.5/COMPLETE_CDN_VERIFY_OK.txt
+
+      - name: Commit complete verification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.5/COMPLETE_CDN_VERIFY_OK.txt
+          git commit -m 'ci: record complete Strength Lab 3.1.5 asset verification'
+          git push origin HEAD:strength-lab-v3.1.5
