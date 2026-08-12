@@ -1,0 +1,89 @@
+name: Strength Lab 3.1.4 CDN Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - strength-lab-v3.1.4
+    paths:
+      - assets/strength-lab-v3/releases/3.1.4/release-complete.txt
+      - .github/workflows/strength-lab-v314-cdn-smoke.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: strength-lab-v314-cdn-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RELEASE_DIR: assets/strength-lab-v3/releases/3.1.4
+      FILE: runtime-compressed-a4011964928a.js.gz
+      EXPECTED_BYTES: "256342"
+      EXPECTED_SHA256: a4011964928a318597a23e302a51a9a235f6d2895d7cb85e8765f0a5ad8882f2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.4
+          fetch-depth: 0
+
+      - name: Require completed release authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RELEASE_DIR/release-complete.txt"
+          git fetch --tags --force
+          git rev-parse refs/tags/strength-lab-v3.1.4-release
+
+      - name: Verify exact tagged raw GitHub asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://raw.githubusercontent.com/Chriswelch3254/website-files/strength-lab-v3.1.4-release/${RELEASE_DIR}/${FILE}"
+          curl --fail --location --retry 8 --retry-delay 3 --retry-all-errors "$URL" --output /tmp/raw.gz
+          test "$(wc -c < /tmp/raw.gz | tr -d ' ')" = "$EXPECTED_BYTES"
+          test "$(sha256sum /tmp/raw.gz | awk '{print $1}')" = "$EXPECTED_SHA256"
+
+      - name: Verify exact tagged jsDelivr asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://cdn.jsdelivr.net/gh/Chriswelch3254/website-files@strength-lab-v3.1.4-release/${RELEASE_DIR}/${FILE}"
+          for attempt in $(seq 1 20); do
+            if curl --fail --location --retry 2 --retry-all-errors "$URL" --output /tmp/cdn.gz; then
+              if [ "$(wc -c < /tmp/cdn.gz | tr -d ' ')" = "$EXPECTED_BYTES" ] && [ "$(sha256sum /tmp/cdn.gz | awk '{print $1}')" = "$EXPECTED_SHA256" ]; then
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo "jsDelivr did not serve the verified release within the smoke window" >&2
+          exit 1
+
+      - name: Record verified public delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG_COMMIT="$(git rev-parse refs/tags/strength-lab-v3.1.4-release^{})"
+          {
+            echo "productVersion=3.1.4"
+            echo "tag=strength-lab-v3.1.4-release"
+            echo "tagCommit=${TAG_COMMIT}"
+            echo "rawGitHub=verified"
+            echo "jsDelivr=verified"
+            echo "bytes=${EXPECTED_BYTES}"
+            echo "sha256=${EXPECTED_SHA256}"
+            echo "verifiedAtUtc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "productionCutover=pending"
+          } > "$RELEASE_DIR/cdn-verified.txt"
+          git config user.name "NeuForm Release Automation"
+          git config user.email "noreply@neuform-fitness.com"
+          git add "$RELEASE_DIR/cdn-verified.txt"
+          if ! git diff --cached --quiet; then
+            git commit -m "qa: verify Strength Lab 3.1.4 public release assets [skip ci]"
+            git push origin HEAD:strength-lab-v3.1.4
+          fi
