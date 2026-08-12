@@ -1,0 +1,41 @@
+name: Strength Lab Drive Access Probe
+
+on:
+  push:
+    paths:
+      - .github/workflows/drive-access-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: strength-lab-v3.1.4
+      - name: Download known Drive probe file
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-all-errors \
+            'https://drive.google.com/uc?export=download&id=1o-GnaE2oar2RO1gfjH0W_R31CGB6C8hs' \
+            --output /tmp/nfsl-drive-probe.bin
+          test "$(wc -c < /tmp/nfsl-drive-probe.bin)" -gt 1000
+          if head -c 256 /tmp/nfsl-drive-probe.bin | grep -Eiq '<!doctype html|<html'; then
+            echo 'Drive returned HTML rather than file bytes' >&2
+            exit 1
+          fi
+      - name: Commit success marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/strength-lab-v3/releases/3.1.4
+          printf 'DRIVE_PUBLIC_ACCESS_OK\n' > assets/strength-lab-v3/releases/3.1.4/DRIVE_PUBLIC_ACCESS_OK.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/strength-lab-v3/releases/3.1.4/DRIVE_PUBLIC_ACCESS_OK.txt
+          git commit -m 'ci: record Drive transfer probe success'
+          git push origin HEAD:strength-lab-v3.1.4
