@@ -13,7 +13,7 @@ Current live Webflow implementation wins when it conflicts with older repository
 ## Current synchronized surfaces
 
 - `on page embeds/Library Page Settings and Embed.txt` is the authoritative saved source for the production `/library` implementation as of 2026-09-27. It contains the 10 current Webflow code embeds plus the page Head settings snapshot and must be diffed against live Webflow before any later replacement.
-- Library release line: `4.10.0-library-governance`.
+- Library release line: `4.10.1-library-automatic-plan-discovery`.
 - Current Library production verification includes one H1, one canonical, protected backend PDF delivery, canonical NeuForm SKU aliases, direct consent-gated GA4 event delivery, and conditional Automatic Plan loading.
 - Do not restore the older v2.1 or v4.8.x Library source over the current page.
 
