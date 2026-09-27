@@ -21,4 +21,4 @@ Current live Webflow implementation wins when it conflicts with older repository
 
 Run: `node scripts/nf-selfcheck.js`
 
-The self-check validates the historical `.txt` mirror and its existing guardrails. It does not prove that the mirror matches the current live Webflow release. It fails with exit code 1 when required mirror guardrails are missing.
+The self-check validates the historical mirror guardrails plus the current synchronized My Library contract. It still does not prove every repository mirror matches every live Webflow surface. It fails with exit code 1 when required guardrails or current Library markers are missing.
