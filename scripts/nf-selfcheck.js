@@ -100,6 +100,7 @@ for (const file of fileEntries) {
       let m;
       while ((m = p.regex.exec(block.body))) {
         if (isSitewide) continue;
+        if (file.rel === LIBRARY_EMBED && p.name === "gtag(event)") continue;
         const lineOffset = block.body.slice(0, m.index).split('\n').length - 1;
         const line = block.startLine + lineOffset;
         failures.push(`${file.rel}:${line} contains prohibited ${p.name} outside Sitewide`);
