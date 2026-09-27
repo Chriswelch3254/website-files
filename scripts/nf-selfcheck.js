@@ -114,13 +114,23 @@ if (!sitewide) {
   failures.push(`Missing required file: ${SITEWIDE_REL}`);
 } else {
   const required = [
-    'window.neuform.canTrack',
-    'window.neuform.track',
-    'window.neuform.trackOnce'
+    { label: 'canTrack', patterns: ['window.neuform.canTrack', 'n.canTrack=function', 't.canTrack=t.canTrack||function'] },
+    { label: 'track', patterns: ['window.neuform.track', 'n.track=function', 't.track=t.track||function'] },
+    { label: 'trackOnce', patterns: ['window.neuform.trackOnce', 'n.trackOnce=n.trackOnce||function', 't.trackOnce=t.trackOnce||function'] }
   ];
   for (const marker of required) {
+    if (!marker.patterns.some((pattern) => sitewide.content.includes(pattern))) {
+      failures.push(`${SITEWIDE_REL} missing canonical API marker: ${marker.label}`);
+    }
+  }
+  const ptDirectAnalyticsMarkers = [
+    'nf_client_hub_action',
+    'nf_marketing_(action|view|faq|disclosure|client_access_resolved|render_failure|restore)',
+    'send_to:"G-KWHP7T6KY9"'
+  ];
+  for (const marker of ptDirectAnalyticsMarkers) {
     if (!sitewide.content.includes(marker)) {
-      failures.push(`${SITEWIDE_REL} missing canonical API marker: ${marker}`);
+      failures.push(`${SITEWIDE_REL} missing consent-gated PT analytics marker: ${marker}`);
     }
   }
 }
@@ -164,7 +174,7 @@ for (const rel of EMBEDS_WITH_LITERAL_BAN) {
 }
 // (2e) No direct gtag("event"|'event') outside self-check itself
 for (const file of fileEntries) {
-  if (file.rel === SELFCHECK_REL || file.rel === LIBRARY_EMBED) continue;
+  if (file.rel === SELFCHECK_REL || file.rel === LIBRARY_EMBED || file.rel === SITEWIDE_REL) continue;
   GTAG_EVENT_PATTERN.lastIndex = 0;
   let m;
   while ((m = GTAG_EVENT_PATTERN.exec(file.content))) {
