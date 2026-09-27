@@ -1,207 +1,1460 @@
-About Page Settings Code:
+About Page Settings Code
 
-Head:
-<!-- Basic meta -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+GOVERNING NOTE
+This file mirrors the current Webflow About page settings/code source. Webflow current implementation truth wins if this file ever drifts.
+
+WEBFLOW IDS
+Site ID: 65d26f254c0a038c1f9198e6
+Page ID: 68ae01e6a467334ce5310465
+About Me component ID: fd11b238-470a-6838-344d-d42982d7c4ed
+
+PAGE METADATA
+{
+  "id": "68ae01e6a467334ce5310465",
+  "siteId": "65d26f254c0a038c1f9198e6",
+  "title": "About",
+  "slug": "about",
+  "createdOn": "2025-08-26T18:50:14.239Z",
+  "lastUpdated": "2026-09-27T04:38:51.422Z",
+  "archived": false,
+  "draft": false,
+  "shouldPublish": true,
+  "canBranch": true,
+  "isBranch": false,
+  "seo": {
+    "title": "About NeuForm Fitness | Structured Training by Chris Welch",
+    "description": "Meet Chris Welch, founder of NeuForm Fitness, and see the training background, principles, plans, tools, articles, and client proof behind the brand."
+  },
+  "openGraph": {
+    "title": "About NeuForm Fitness | Structured Training by Chris Welch",
+    "titleCopied": false,
+    "description": "Meet Chris Welch, founder of NeuForm Fitness, and see the training background, principles, plans, tools, articles, and client proof behind the brand.",
+    "descriptionCopied": false,
+    "imageUrl": null,
+    "imageAssetId": "68c723c44c0ae0a617190d39"
+  },
+  "publishedPath": "/about"
+}
+
+Native About Me component truth:
+- H1: About NeuForm Fitness
+- Lead: Better progress starts with better structure.
+- Founder intro: I’m Chris Welch, founder of NeuForm Fitness. I grew up around sports and physical activity, then began training seriously in 2020.
+- Purpose: I built NeuForm because I wanted fitness to feel clearer and more useful: enough structure to know what to do, and enough flexibility to make it fit real life.
+- Goal: The goal is simple: make training and nutrition more understandable, achievable, and enjoyable while keeping the work honest about what effort, consistency, and good decisions still require.
+- Founder image asset ID: 67aa5c623998324cfbf6d845
+- Founder image alt: Chris Welch at a trail summit.
+
+HEAD FREEFORM CODE
+<!-- NeuForm About Head v1.1 -->
+<!-- Webflow native fields own title, description, canonical, Open Graph, and social metadata. -->
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="theme-color" content="#0b0f12">
+<meta name="theme-color" content="#05080d">
+<meta name="color-scheme" content="dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="NeuForm Fitness">
-<meta property="og:url" content="https://www.neuform-fitness.com/about">
-<meta property="og:title" content="About NeuForm Fitness — Evidence-Based Coaching by Chris Welch">
-<meta property="og:description" content="Our method, values, and results. Practical, joint-smart training plans built by coach Chris Welch.">
-<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="NeuForm Fitness — About">
-<meta property="og:locale" content="en_US">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="About NeuForm Fitness — Evidence-Based Coaching by Chris Welch">
-<meta name="twitter:description" content="Our method, values, and results. Practical, joint-smart training plans built by coach Chris Welch.">
-<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
-<meta name="twitter:image:alt" content="NeuForm Fitness — About">
-
-<!-- Performance niceties -->
 <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
 
+<style id="nf-about-layout-v100">
+/* About layout v1.0.0: retain desktop grid; remove stacked mobile offsets. */
+@media (max-width:900px) {
+ html[data-wf-page="68ae01e6a467334ce5310465"] body > .section {margin-top:0!important;padding:24px 12px 28px!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] body > .section > .holder {width:100%!important;margin:0!important;padding:0!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] .container-23 {box-sizing:border-box!important;width:100%!important;max-width:720px!important;margin:0 auto!important;padding:18px!important;gap:18px!important;grid-template-columns:minmax(0,1fr)!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] .container-23 > .header-text-backing {grid-column:1!important;grid-row:1!important;padding:0!important;min-width:0!important;border:0!important;background:none!important;box-shadow:none!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] .container-23 > .header-text-backing::before {margin:0 0 12px!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] .container-23 .heading-18 {font-size:clamp(32px,7.6vw,42px)!important;line-height:1.1!important;text-align:left!important;margin:0 0 16px!important;padding-bottom:14px!important;}
+ html[data-wf-page="68ae01e6a467334ce5310465"] .container-23 > .image-3 {grid-column:1!important;grid-row:2!important;width:100%!important;height:auto!important;min-height:0!important;max-height:420px!important;aspect-ratio:1/1!important;padding:0!important;object-fit:cover!important;object-position:56% 42%!important;}
+}
+</style>
 
-Body:
-<!-- NeuForm — About Page Helpers -->
+<!-- NeuForm About background delivery v1 -->
+<style id="nf-about-background-delivery">
+  html[data-wf-page="68ae01e6a467334ce5310465"] body{background:transparent!important;background-color:transparent!important}
+  html[data-wf-page="68ae01e6a467334ce5310465"] .nf-bg-fixed{background-image:url("https://s3.amazonaws.com/webflow-prod-assets/65d26f254c0a038c1f9198e6/65de43bfa80010891ea9d084_brian-patrick-tagalog-_8hGFBxWD0A-unsplash-p-2000.jpg")!important}
+  @media (max-width:767px){
+    html[data-wf-page="68ae01e6a467334ce5310465"] .nf-bg-fixed{background-image:url("https://s3.amazonaws.com/webflow-prod-assets/65d26f254c0a038c1f9198e6/65de43bfa80010891ea9d084_brian-patrick-tagalog-_8hGFBxWD0A-unsplash-p-1600.jpg")!important}
+  }
+</style>
+<!-- /NeuForm About background delivery v1 -->
+
+
+ABOUT ME COMPONENT EMBED
+<!-- NeuForm About Page Visual System v2.1 -->
+<style>
+  html.nf-about-page-active,
+  html.nf-about-page-active body {
+    overflow-x: clip;
+  }
+
+  .section:has(.container-23),
+  .section:has(.container-23) *,
+  .holder:has(.container-23),
+  .holder:has(.container-23) *,
+  .container-23,
+  .container-23 *,
+  .nf-about-generated,
+  .nf-about-generated *,
+  .nf-about-generated *::before,
+  .nf-about-generated *::after {
+    box-sizing: border-box !important;
+  }
+
+  .section:has(.container-23),
+  .holder:has(.container-23) {
+    width: 100% !important;
+    max-width: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  .container-23,
+  .nf-about-generated {
+    --nf-about-blue: var(--nf-primary, #3498db);
+    --nf-about-blue-dark: var(--nf-primary-dark, #2d86c2);
+    --nf-about-text: var(--nf-text, #e9f3f7);
+    --nf-about-muted: var(--nf-muted, #9fb4c2);
+    --nf-about-focus: var(--nf-focus, #79c8ff);
+    --nf-about-panel: rgba(3, 8, 13, .96);
+    --nf-about-panel-soft: rgba(8, 14, 20, .88);
+    --nf-about-line: rgba(255, 255, 255, .10);
+    --nf-about-line-blue: rgba(52, 152, 219, .30);
+    --nf-about-radius: 22px;
+    --nf-about-radius-sm: 13px;
+    --nf-about-shadow: 0 24px 66px rgba(0, 0, 0, .50);
+    color: var(--nf-about-text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container-23 {
+    position: relative !important;
+    isolation: isolate !important;
+    display: grid !important;
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) !important;
+    gap: clamp(18px, 2.4vw, 28px) !important;
+    align-items: stretch !important;
+    width: min(1120px, calc(100vw - 32px)) !important;
+    max-width: 1120px !important;
+    margin: clamp(38px, 5vw, 68px) auto 24px !important;
+    padding: clamp(18px, 2.4vw, 26px) !important;
+    overflow: hidden !important;
+    border: 1px solid var(--nf-about-line-blue) !important;
+    border-radius: 26px !important;
+    background:
+      radial-gradient(720px 260px at 18% 0%, rgba(52, 152, 219, .14), transparent 68%),
+      linear-gradient(180deg, rgba(3, 9, 15, .95), rgba(0, 0, 0, .97)) !important;
+    box-shadow:
+      var(--nf-about-shadow),
+      inset 0 1px 0 rgba(255, 255, 255, .045) !important;
+  }
+
+  .container-23::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, .12), transparent 50%, rgba(0, 0, 0, .22)),
+      radial-gradient(circle at 50% 100%, rgba(52, 152, 219, .07), transparent 58%) !important;
+  }
+
+  .container-23::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .container-23 > * {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .container-23 > .w-embed,
+  .container-23 > [class*="embed" i] {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .container-23 > .image-3,
+  .container-23 .image-3 {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 460px !important;
+    max-height: 560px !important;
+    margin: 0 !important;
+    border: 1px solid rgba(52, 152, 219, .30) !important;
+    border-radius: 20px !important;
+    object-fit: cover !important;
+    object-position: 56% 42% !important;
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, .40),
+      inset 0 1px 0 rgba(255, 255, 255, .04) !important;
+  }
+
+  .container-23 > .header-text-backing,
+  .container-23 .header-text-backing {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: clamp(28px, 3.6vw, 46px) !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(52, 152, 219, .26) !important;
+    border-radius: 20px !important;
+    background:
+      radial-gradient(660px 220px at 50% 0%, rgba(52, 152, 219, .11), transparent 68%),
+      linear-gradient(180deg, rgba(4, 11, 18, .88), rgba(0, 0, 0, .78)) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .04),
+      0 16px 34px rgba(0, 0, 0, .30) !important;
+  }
+
+  .container-23 > .header-text-backing::before,
+  .container-23 .header-text-backing::before {
+    content: "ABOUT NEUFORM" !important;
+    width: fit-content !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 0 15px !important;
+    padding: 7px 10px !important;
+    border: 1px solid rgba(52, 152, 219, .36) !important;
+    border-radius: 999px !important;
+    background: rgba(52, 152, 219, .11) !important;
+    color: rgba(255, 255, 255, .88) !important;
+    font: 850 10.5px/1 Inter, system-ui, sans-serif !important;
+    letter-spacing: .10em !important;
+    text-transform: uppercase !important;
+  }
+
+  .heading-18,
+  .header-text-backing h1 {
+    max-width: 720px !important;
+    margin: 0 0 20px !important;
+    padding: 0 0 16px !important;
+    border-bottom: 1px solid rgba(52, 152, 219, .28) !important;
+    color: #fff !important;
+    font-family: "Plus Jakarta Sans", Inter, system-ui, sans-serif !important;
+    font-size: clamp(38px, 4.8vw, 58px) !important;
+    font-weight: 950 !important;
+    line-height: 1.01 !important;
+    letter-spacing: -.035em !important;
+    text-align: left !important;
+    text-wrap: balance !important;
+    text-shadow: 0 12px 28px rgba(0, 0, 0, .42) !important;
+  }
+
+  .rich-text-block-4 {
+    max-width: 720px !important;
+    margin: 0 !important;
+    color: rgba(226, 238, 247, .90) !important;
+    font: 600 clamp(15.5px, 1.15vw, 17px)/1.70 Inter, system-ui, sans-serif !important;
+    text-align: left !important;
+  }
+
+  .rich-text-block-4 p {
+    margin: 0 0 1em !important;
+    color: inherit !important;
+  }
+
+  .rich-text-block-4 p:first-child {
+    color: #fff !important;
+    font-size: 1.08em !important;
+    line-height: 1.55 !important;
+  }
+
+  .rich-text-block-4 p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .rich-text-block-4 strong {
+    color: #fff !important;
+    font-weight: 900 !important;
+  }
+
+  .nf-about-generated {
+    position: relative;
+    width: 100%;
+    padding: 0 16px clamp(60px, 8vw, 94px);
+    background: transparent;
+  }
+
+  .nf-about-generated__inner {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    display: grid;
+    gap: 22px;
+  }
+
+  .nf-about-panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(24px, 4vw, 40px);
+    border: 1px solid var(--nf-about-line-blue);
+    border-radius: var(--nf-about-radius);
+    background:
+      radial-gradient(720px 250px at 20% 0%, rgba(52, 152, 219, .12), transparent 68%),
+      linear-gradient(180deg, rgba(4, 10, 16, .95), rgba(0, 0, 0, .98));
+    box-shadow:
+      0 20px 54px rgba(0, 0, 0, .44),
+      inset 0 1px 0 rgba(255, 255, 255, .04);
+  }
+
+  .nf-about-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, .10), transparent 50%, rgba(0, 0, 0, .20)),
+      radial-gradient(circle at 50% 100%, rgba(52, 152, 219, .055), transparent 60%);
+  }
+
+  .nf-about-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 27px;
+    padding: 7px 10px;
+    border: 1px solid rgba(52, 152, 219, .34);
+    border-radius: 999px;
+    background: rgba(52, 152, 219, .10);
+    color: rgba(226, 238, 247, .92);
+    font: 850 10.5px/1 Inter, system-ui, sans-serif;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+  }
+
+  .nf-about-section-head {
+    max-width: 800px;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .nf-about-section-head h2,
+  .nf-about-origin h2,
+  .nf-about-starting-points h2,
+  .nf-about-cta h2 {
+    margin: 0;
+    color: #fff;
+    font-family: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+    font-size: clamp(29px, 3.7vw, 46px);
+    font-weight: 950;
+    line-height: 1.06;
+    letter-spacing: -.025em;
+    text-wrap: balance;
+  }
+
+  .nf-about-section-head p,
+  .nf-about-origin__copy p,
+  .nf-about-starting-points__main > p,
+  .nf-about-cta > p {
+    margin: 0;
+    color: rgba(174, 195, 208, .94);
+    font-size: 14.5px;
+    font-weight: 650;
+    line-height: 1.62;
+  }
+
+  .nf-about-steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .nf-about-step {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, .085);
+    border-radius: var(--nf-about-radius-sm);
+    background: rgba(255, 255, 255, .026);
+  }
+
+  .nf-about-step__number {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(52, 152, 219, .30);
+    border-radius: 10px;
+    background: rgba(52, 152, 219, .10);
+    color: #fff;
+    font: 900 11px/1 Inter, system-ui, sans-serif;
+  }
+
+  .nf-about-step strong {
+    color: rgba(121, 200, 255, .94);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .nf-about-step h3 {
+    margin: 5px 0 0;
+    color: #fff;
+    font: 900 17px/1.24 "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  }
+
+  .nf-about-step p {
+    margin: 7px 0 0;
+    color: rgba(159, 180, 194, .92);
+    font-size: 12.75px;
+    font-weight: 600;
+    line-height: 1.52;
+  }
+
+  .nf-about-approach__summary {
+    margin: 14px 0 0;
+    padding: 11px 12px;
+    border-left: 3px solid var(--nf-about-blue);
+    background: rgba(52, 152, 219, .045);
+    color: rgba(210, 226, 236, .92);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .nf-about-origin {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+    gap: 20px;
+    align-items: center;
+  }
+
+  .nf-about-origin__copy {
+    display: grid;
+    gap: 12px;
+  }
+
+  .nf-about-origin__copy strong {
+    color: #fff;
+    font-weight: 900;
+  }
+
+  .nf-about-origin__callout {
+    display: grid;
+    gap: 9px;
+    padding: 20px;
+    border: 1px solid rgba(121, 200, 255, .26);
+    border-radius: 16px;
+    background:
+      radial-gradient(380px 150px at 100% 0%, rgba(52, 152, 219, .14), transparent 72%),
+      rgba(52, 152, 219, .045);
+  }
+
+  .nf-about-origin__callout span {
+    color: rgba(121, 200, 255, .92);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  .nf-about-origin__callout strong {
+    color: #fff;
+    font: 950 clamp(23px, 2.7vw, 34px)/1.08 "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  }
+
+  .nf-about-origin__callout p {
+    margin: 0;
+    color: rgba(174, 195, 208, .92);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.55;
+  }
+
+  .nf-about-principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+  }
+
+  .nf-about-principles article {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .026);
+  }
+
+  .nf-about-principles article > span {
+    color: rgba(121, 200, 255, .92);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .08em;
+  }
+
+  .nf-about-principles h3 {
+    margin: 10px 0 0;
+    color: #fff;
+    font: 900 16px/1.24 "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  }
+
+  .nf-about-principles p {
+    margin: 7px 0 0;
+    color: rgba(159, 180, 194, .92);
+    font-size: 12.75px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .nf-about-starting-points {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nf-about-starting-points__main {
+    display: grid;
+    gap: 12px;
+  }
+
+  .nf-about-audiences {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .nf-about-audiences span {
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    border: 1px solid rgba(52, 152, 219, .24);
+    border-radius: 999px;
+    background: rgba(52, 152, 219, .07);
+    color: rgba(226, 238, 247, .90);
+    font-size: 11.5px;
+    font-weight: 850;
+  }
+
+  .nf-about-delivery {
+    display: grid;
+    gap: 10px;
+  }
+
+  .nf-about-delivery article {
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, .085);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .025);
+  }
+
+  .nf-about-delivery strong {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .nf-about-delivery p {
+    margin: 7px 0 10px;
+    color: rgba(159, 180, 194, .92);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .nf-about-delivery a {
+    color: #8fd2ff;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: underline;
+    text-decoration-color: rgba(143, 210, 255, .42);
+    text-underline-offset: 4px;
+  }
+
+  .nf-about-cta {
+    text-align: center;
+  }
+
+  .nf-about-cta > .nf-about-eyebrow {
+    margin: 0 auto 13px;
+  }
+
+  .nf-about-cta h2 {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .nf-about-cta > p {
+    max-width: 760px;
+    margin: 13px auto 0;
+  }
+
+  .nf-about-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .nf-about-btn {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 19px;
+    border-radius: 13px;
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      transform .18s ease,
+      box-shadow .18s ease,
+      border-color .18s ease,
+      background .18s ease;
+  }
+
+  .nf-about-btn--primary {
+    border: 1px solid rgba(255, 255, 255, .09);
+    background: linear-gradient(180deg, var(--nf-about-blue), var(--nf-about-blue-dark));
+    box-shadow: 0 14px 30px rgba(52, 152, 219, .26);
+  }
+
+  .nf-about-btn--secondary {
+    border: 1px solid rgba(52, 152, 219, .34);
+    background: rgba(52, 152, 219, .09);
+  }
+
+  .nf-about-btn--text {
+    color: rgba(214, 230, 239, .94);
+    text-decoration: underline;
+    text-decoration-color: rgba(52, 152, 219, .46);
+    text-underline-offset: 5px;
+  }
+
+  .nf-about-btn:focus-visible,
+  .nf-about-delivery a:focus-visible {
+    outline: 2px solid var(--nf-about-focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(121, 200, 255, .15);
+  }
+
+  @media (hover:hover) {
+    .nf-about-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .nf-about-btn--primary:hover {
+      box-shadow: 0 17px 36px rgba(52, 152, 219, .31);
+    }
+
+    .nf-about-btn--secondary:hover {
+      border-color: rgba(52, 152, 219, .50);
+      background: rgba(52, 152, 219, .13);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .container-23 {
+      grid-template-columns: 1fr !important;
+      width: min(720px, calc(100vw - 20px)) !important;
+      gap: 14px !important;
+      padding: 12px !important;
+      margin-top: 20px !important;
+    }
+
+    .container-23 > .image-3,
+    .container-23 .image-3 {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      aspect-ratio: 4 / 5 !important;
+      object-position: 56% 42% !important;
+    }
+
+    .container-23 > .header-text-backing,
+    .container-23 .header-text-backing {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+      padding: 24px 20px !important;
+    }
+
+    .container-23 > .header-text-backing::before,
+    .container-23 .header-text-backing::before {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    .heading-18,
+    .header-text-backing h1 {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      text-align: center !important;
+      font-size: clamp(34px, 9.2vw, 46px) !important;
+    }
+
+    .rich-text-block-4 {
+      text-align: left !important;
+    }
+
+    .nf-about-origin,
+    .nf-about-starting-points {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .nf-about-generated {
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-bottom: 62px;
+    }
+
+    .nf-about-generated__inner {
+      gap: 15px;
+    }
+
+    .nf-about-panel {
+      padding: 20px 17px;
+      border-radius: 18px;
+    }
+
+    .nf-about-steps {
+      grid-template-columns: 1fr;
+    }
+
+    .nf-about-cta__actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .nf-about-btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .container-23 {
+      width: calc(100vw - 12px) !important;
+      padding: 8px !important;
+      border-radius: 18px !important;
+    }
+
+    .container-23 > .image-3,
+    .container-23 .image-3,
+    .container-23 > .header-text-backing,
+    .container-23 .header-text-backing {
+      border-radius: 15px !important;
+    }
+
+    .container-23 > .header-text-backing,
+    .container-23 .header-text-backing {
+      padding: 22px 16px !important;
+    }
+
+    .rich-text-block-4 {
+      font-size: 15.5px !important;
+    }
+
+    .nf-about-step {
+      grid-template-columns: 1fr;
+    }
+
+    .nf-about-step__number {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nf-about-generated *,
+    .nf-about-generated *::before,
+    .nf-about-generated *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    .nf-about-btn:hover {
+      transform: none !important;
+    }
+  }
+
+  @supports not selector(:has(*)) {
+    .section,
+    .holder,
+    .container-23,
+    .nf-about-generated {
+      width: 100% !important;
+      max-width: none !important;
+      overflow: visible !important;
+    }
+
+    .container-23 {
+      max-width: 1120px !important;
+      width: calc(100% - 32px) !important;
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .container-23,
+    .nf-about-panel {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+  .nf-about-founder{
+    display:grid;
+    grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+    gap:20px;
+    align-items:start;
+  }
+
+  .nf-about-founder__copy{
+    display:grid;
+    gap:12px;
+  }
+
+  .nf-about-founder__copy h2,
+  .nf-about-proof h2{
+    margin:0;
+    color:#fff;
+    font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;
+    font-size:clamp(29px,3.7vw,46px);
+    font-weight:950;
+    line-height:1.06;
+    letter-spacing:-.025em;
+    text-wrap:balance;
+  }
+
+  .nf-about-founder__copy p,
+  .nf-about-proof__intro{
+    margin:0;
+    color:rgba(174,195,208,.94);
+    font-size:14.5px;
+    font-weight:650;
+    line-height:1.62;
+  }
+
+  .nf-about-founder__facts{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .nf-about-founder__facts article{
+    padding:16px;
+    border:1px solid rgba(255,255,255,.085);
+    border-radius:14px;
+    background:rgba(255,255,255,.026);
+  }
+
+  .nf-about-founder__facts strong{
+    display:block;
+    color:#fff;
+    font-size:14px;
+    font-weight:900;
+  }
+
+  .nf-about-founder__facts span{
+    display:block;
+    margin-top:6px;
+    color:rgba(159,180,194,.92);
+    font-size:12.5px;
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .nf-about-founder__note{
+    display:grid;
+    gap:9px;
+    padding:20px;
+    border:1px solid rgba(121,200,255,.26);
+    border-radius:16px;
+    background:
+      radial-gradient(380px 150px at 100% 0%,rgba(52,152,219,.14),transparent 72%),
+      rgba(52,152,219,.045);
+  }
+
+  .nf-about-founder__note span{
+    color:rgba(121,200,255,.92);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+  }
+
+  .nf-about-founder__note strong{
+    color:#fff;
+    font:950 clamp(23px,2.7vw,34px)/1.08 "Plus Jakarta Sans",Inter,system-ui,sans-serif;
+  }
+
+  .nf-about-founder__note p{
+    margin:0;
+    color:rgba(174,195,208,.92);
+    font-size:13px;
+    font-weight:650;
+    line-height:1.55;
+  }
+
+  .nf-about-proof__intro{
+    max-width:800px;
+    margin-top:12px;
+  }
+
+  .nf-about-proof__grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:20px;
+  }
+
+  .nf-about-proof__grid article{
+    min-width:0;
+    display:grid;
+    gap:8px;
+    padding:17px;
+    border:1px solid rgba(255,255,255,.085);
+    border-radius:14px;
+    background:rgba(255,255,255,.026);
+  }
+
+  .nf-about-proof__grid strong{
+    color:#fff;
+    font-size:15px;
+    font-weight:900;
+  }
+
+  .nf-about-proof__grid p{
+    margin:0;
+    color:rgba(159,180,194,.92);
+    font-size:12.75px;
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .nf-about-proof__grid a{
+    width:fit-content;
+    color:#8fd2ff;
+    font-size:12px;
+    font-weight:900;
+    text-decoration:underline;
+    text-decoration-color:rgba(143,210,255,.42);
+    text-underline-offset:4px;
+  }
+
+  .nf-about-proof__grid a:focus-visible{
+    outline:2px solid var(--nf-about-focus);
+    outline-offset:3px;
+  }
+
+  @media (max-width:900px){
+    .nf-about-founder{grid-template-columns:1fr}
+  }
+
+  @media (max-width:680px){
+    .nf-about-founder__facts,
+    .nf-about-proof__grid{grid-template-columns:1fr}
+  }
+
+</style>
+
+PAGE-LEVEL EMBED
+<!-- NeuForm About legacy Automatic Plan normalization retired in Runtime v2.3 -->
+
+FOOTER FREEFORM CODE
+<!-- NeuForm About Page Runtime v2.3 -->
 <script>
 (function(){
   "use strict";
 
-  // Idempotence guard
-  if (window.__NF_ABOUT_HELPERS__) return;
-  window.__NF_ABOUT_HELPERS__ = true;
+  if (window.__NF_ABOUT_PAGE_V23__) return;
+  window.__NF_ABOUT_PAGE_V23__ = true;
 
-  window.neuform.trackOnce('view.about', 'nf_about_view');
+  var VERSION = "v2.3";
+  var ROOT_ID = "nf-about-sections";
+  var observer = null;
 
-  var $  = function(s, r){ return (r||document).querySelector(s); };
-  var $$ = function(s, r){ return Array.from((r||document).querySelectorAll(s)); };
+  function clean(value, limit){
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, limit || 120);
+  }
 
-  function outboundMetaFromHref(href){
-    try{
-      href = String(href || '').trim();
-      if (!href) return null;
-
-      var lower = href.toLowerCase();
-      if (lower.indexOf('mailto:') === 0 || lower.indexOf('tel:') === 0) return null;
-      if (lower.charAt(0) === '#') return null;
-
-      var u = new URL(href, window.location.origin);
-      if (!u.hostname || u.origin === window.location.origin) return null;
-
-      return {
-        host: u.hostname,
-        path: (u.pathname || '/'),
-        // hostname + pathname only (no query/hash)
-        url: u.hostname + (u.pathname || '/')
-      };
-    }catch(e){
-      return null;
+  function canTrack(){
+    try {
+      return !!(
+        window.neuform &&
+        (
+          typeof window.neuform.homeTrack === "function" ||
+          typeof window.neuform.track === "function"
+        ) &&
+        (
+          typeof window.neuform.canTrack !== "function" ||
+          window.neuform.canTrack()
+        )
+      );
+    } catch (_) {
+      return false;
     }
   }
 
-  /** 1) Section impressions (IDs optional — add if present in markup) **/
-  function observe(id, evt){
-    var el = document.getElementById(id);
-    if (!el || !('IntersectionObserver' in window)) return;
-    var seen = false;
+  function track(name, payload){
+    if (!canTrack()) return false;
+
+    var params = Object.assign({
+      nf_page: "about",
+      nf_version: VERSION,
+      nf_path: window.location.pathname || "",
+      nf_page_title: document.title || ""
+    }, payload || {});
+
+    try {
+      if (typeof window.neuform.homeTrack === "function") {
+        window.neuform.homeTrack(name, params);
+        return true;
+      }
+
+      if (typeof window.neuform.track === "function") {
+        window.neuform.track(name, params);
+        return true;
+      }
+    } catch (_) {}
+
+    return false;
+  }
+
+  function trackOnce(key, name, payload){
+    if (!canTrack()) return false;
+
+    try {
+      if (typeof window.neuform.trackOnce === "function") {
+        return !!window.neuform.trackOnce(key, name, payload || {});
+      }
+    } catch (_) {}
+
+    try {
+      var storageKey = "nf.about.once." + String(key || name || "");
+      if (sessionStorage.getItem(storageKey)) return false;
+      var sent = track(name, payload || {});
+      if (sent) sessionStorage.setItem(storageKey, "1");
+      return sent;
+    } catch (_) {
+      return track(name, payload || {});
+    }
+  }
+
+  function safePath(raw){
+    try {
+      var url = new URL(String(raw || ""), window.location.origin);
+      if (url.origin !== window.location.origin) return "";
+      return url.pathname || "/";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function markPage(){
+    try {
+      document.documentElement.classList.add("nf-about-page-active");
+      if (document.body) document.body.classList.add("nf-about-page-active");
+    } catch (_) {}
+  }
+
+  function prepareNativeHero(hero){
+    if (!hero) return;
+
+    hero.id = "main";
+    hero.setAttribute("data-nf-about-hero", VERSION);
+
+    var image = hero.querySelector(".image-3, img");
+    if (image) {
+      if (!clean(image.getAttribute("alt"))) {
+        image.setAttribute("alt", "Chris Welch, founder of NeuForm Fitness");
+      }
+      image.setAttribute("loading", "eager");
+      image.setAttribute("fetchpriority", "high");
+      image.setAttribute("decoding", "async");
+    }
+
+    var heading = hero.querySelector(".heading-18, h1");
+    if (heading) heading.setAttribute("id", "nf-about-title");
+  }
+
+  function aboutMarkup(){
+    return '' +
+      '<div class="nf-about-generated__inner">' +
+
+        '<section class="nf-about-panel nf-about-approach" aria-labelledby="nf-about-approach-title" data-nf-about-section="approach">' +
+          '<header class="nf-about-section-head">' +
+            '<span class="nf-about-eyebrow">The NeuForm approach</span>' +
+            '<h2 id="nf-about-approach-title">A clearer way to make training decisions.</h2>' +
+            '<p>Every NeuForm plan, tool, and coaching service is built to help answer four practical questions.</p>' +
+          '</header>' +
+          '<div class="nf-about-steps">' +
+            '<article class="nf-about-step">' +
+              '<span class="nf-about-step__number">01</span>' +
+              '<div><strong>Goal</strong><h3>What are you trying to accomplish?</h3><p>Start with the outcome instead of collecting disconnected exercises and advice.</p></div>' +
+            '</article>' +
+            '<article class="nf-about-step">' +
+              '<span class="nf-about-step__number">02</span>' +
+              '<div><strong>Plan</strong><h3>What structure fits your current situation?</h3><p>Account for experience, equipment, schedule, preferences, and real constraints.</p></div>' +
+            '</article>' +
+            '<article class="nf-about-step">' +
+              '<span class="nf-about-step__number">03</span>' +
+              '<div><strong>Execute</strong><h3>How should you perform and progress it?</h3><p>Use clear exercise guidance, progression targets, and repeatable training standards.</p></div>' +
+            '</article>' +
+            '<article class="nf-about-step">' +
+              '<span class="nf-about-step__number">04</span>' +
+              '<div><strong>Adapt</strong><h3>What should change when your needs or results change?</h3><p>Use feedback and evidence to adjust without losing the direction of the plan.</p></div>' +
+            '</article>' +
+          '</div>' +
+          '<p class="nf-about-approach__summary">That process shapes NeuForm training plans, Nutrition Lab, Strength Lab, and the educational resources around them.</p>' +
+        '</section>' +
+
+
+        '<section class="nf-about-panel nf-about-founder" aria-labelledby="nf-about-founder-title" data-nf-about-section="founder">' +
+          '<div class="nf-about-founder__copy">' +
+            '<span class="nf-about-eyebrow">Founder-led by design</span>' +
+            '<h2 id="nf-about-founder-title">NeuForm is built and run by me.</h2>' +
+            '<p>I grew up around team sports, running, recreational sports, and a generally active life. Strength training became the thing I really fell in love with in 2020, and it pushed me to study programming, exercise selection, progression, recovery, and how to make good fitness decisions easier to repeat.</p>' +
+            '<p>My background includes coursework in Joliet Junior College&apos;s personal training program and ongoing independent study. I run NeuForm entirely myself, from the plans and educational content to the tools, support, and day-to-day product decisions.</p>' +
+            '<div class="nf-about-founder__facts">' +
+              '<article><strong>Training seriously since 2020</strong><span>Built on a much longer background in sports and physical activity.</span></article>' +
+              '<article><strong>Personal-training coursework</strong><span>Joliet Junior College coursework plus continued independent study.</span></article>' +
+              '<article><strong>Founder-operated</strong><span>One person owns the product decisions, content, support, and day-to-day direction.</span></article>' +
+              '<article><strong>Founder-operated in Illinois</strong><span>NeuForm is built and maintained near New Lenox, with plans, tools, and education available online.</span></article>' +
+            '</div>' +
+          '</div>' +
+          '<aside class="nf-about-founder__note" aria-label="What founder-led means at NeuForm">' +
+            '<span>What founder-led means</span>' +
+            '<strong>The work stays close to the person responsible for it.</strong>' +
+            '<p>When you read a NeuForm article, use a tool, buy a plan, or contact support, you are interacting with work I personally created, reviewed, maintain, or support.</p>' +
+          '</aside>' +
+        '</section>' +
+
+        '<section class="nf-about-panel nf-about-origin" aria-labelledby="nf-about-origin-title" data-nf-about-section="origin">' +
+          '<div class="nf-about-origin__copy">' +
+            '<span class="nf-about-eyebrow">Why the name NeuForm?</span>' +
+            '<h2 id="nf-about-origin-title">A name built around rebuilding.</h2>' +
+            '<p>The name comes from my mother&apos;s recovery journey. Her maiden name, <strong>Neubauer</strong>, became a symbol of rebuilding, resilience, and moving forward in a new form.</p>' +
+            '<p>That meaning reflects how I view training. Progress rarely follows a perfect straight line. It comes from applying structure, learning from the result, and adapting without losing direction.</p>' +
+            '<p>To me, a NeuForm athlete is not defined by competition. It is someone willing to train with purpose, learn from feedback, and keep rebuilding toward a healthier, stronger, more capable version of themselves.</p>' +
+          '</div>' +
+          '<aside class="nf-about-origin__callout" aria-label="NeuForm origin principle">' +
+            '<span>Rebuild with purpose.</span>' +
+            '<strong>Adapt without losing direction.</strong>' +
+            '<p>Progress is not built through intensity alone. It is built through decisions you can repeat, review, and improve.</p>' +
+          '</aside>' +
+        '</section>' +
+
+        '<section class="nf-about-panel nf-about-expectations" aria-labelledby="nf-about-expectations-title" data-nf-about-section="expectations">' +
+          '<header class="nf-about-section-head">' +
+            '<span class="nf-about-eyebrow">What you can expect</span>' +
+            '<h2 id="nf-about-expectations-title">Principles that show up in the work.</h2>' +
+            '<p>NeuForm&apos;s philosophy matters only when it changes the quality of the plan, tool, or coaching decision.</p>' +
+          '</header>' +
+          '<div class="nf-about-principles">' +
+            '<article><span>01</span><h3>Clear progression</h3><p>Understand what you are working toward and how the next step is earned.</p></article>' +
+            '<article><span>02</span><h3>Purposeful exercise selection</h3><p>Choose movements that fit the goal, equipment, experience level, and constraints.</p></article>' +
+            '<article><span>03</span><h3>Controlled execution</h3><p>Make technique, effort, consistency, and repeatability part of the plan.</p></article>' +
+            '<article><span>04</span><h3>Deliberate recovery</h3><p>Manage fatigue so quality training can be repeated instead of forced.</p></article>' +
+            '<article><span>05</span><h3>Useful independence</h3><p>Leave with clearer decisions and a system you can continue using.</p></article>' +
+          '</div>' +
+        '</section>' +
+
+
+        '<section class="nf-about-panel nf-about-proof" aria-labelledby="nf-about-proof-title" data-nf-about-section="proof">' +
+          '<span class="nf-about-eyebrow">See the work</span>' +
+          '<h2 id="nf-about-proof-title">You can inspect NeuForm before deciding whether it fits you.</h2>' +
+          '<p class="nf-about-proof__intro">The best way to judge the approach is to look at the work itself: the plans, the reasoning behind the articles, the product previews, and the client experiences that have been approved for public use.</p>' +
+          '<div class="nf-about-proof__grid">' +
+            '<article><strong>Training Plans</strong><p>See how goals, progression, equipment, schedule, and experience level are translated into a repeatable training structure.</p><a href="/training-plans" data-about-cta="proof-training-plans">Browse Training Plans</a></article>' +
+            '<article><strong>Articles</strong><p>Read the practical reasoning, evidence, and limitations behind NeuForm training and recovery decisions.</p><a href="/blog" data-about-cta="proof-articles">Read Articles</a></article>' +
+            '<article><strong>Client Results</strong><p>Review selected, permissioned, client-reported experiences with clear context around individual outcomes.</p><a href="/results" data-about-cta="proof-results">View Client Results</a></article>' +
+            '<article><strong>Nutrition Fundamentals</strong><p>Inspect real interior pages from the published guide before deciding whether the resource is useful for you.</p><a href="/nutrition-fundamentals" data-about-cta="proof-nutrition-guide">Preview the Guide</a></article>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="nf-about-panel nf-about-starting-points" aria-labelledby="nf-about-starting-title" data-nf-about-section="starting-points">' +
+          '<div class="nf-about-starting-points__main">' +
+            '<span class="nf-about-eyebrow">Different starting points</span>' +
+            '<h2 id="nf-about-starting-title">The standard stays consistent. The structure adapts.</h2>' +
+            '<p>NeuForm supports beginners, returning lifters, intermediates, and advanced trainees. The recommendation should fit the person, but every recommendation should still have a reason, a progression method, and a clear connection to the goal.</p>' +
+            '<div class="nf-about-audiences" aria-label="NeuForm experience levels">' +
+              '<span>Beginners</span><span>Returning lifters</span><span>Intermediate</span><span>Advanced</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="nf-about-delivery">' +
+            '<article><strong>Built near New Lenox</strong><p>NeuForm is founder-operated in Illinois, while its plans, tools, and educational resources are available online.</p><a href="/about#nf-about-founder-title" data-about-cta="founder-story">Founder Story</a></article>' +
+            '<article><strong>Available online</strong><p>Training plans, Nutrition Lab, Strength Lab, tools, and educational resources are available online.</p><a href="/training-plans" data-about-cta="online-training">Browse Training Plans</a></article>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="nf-about-panel nf-about-cta" aria-labelledby="nf-about-cta-title" data-nf-about-section="cta">' +
+          '<span class="nf-about-eyebrow">Find your starting point</span>' +
+          '<h2 id="nf-about-cta-title">Choose the NeuForm path that fits what you need now.</h2>' +
+          '<p>Use the plan finder for a guided starting point, browse the ready-made catalog, or explore the tools and education that support the work.</p>' +
+          '<div class="nf-about-cta__actions">' +
+            '<a class="nf-about-btn nf-about-btn--primary" href="/training-plans#plan-finder" data-about-cta="find-starting-point">Find My Starting Point</a>' +
+            '<a class="nf-about-btn nf-about-btn--secondary" href="/training-plans" data-about-cta="browse-plans">Browse Training Plans</a>' +
+            '<a class="nf-about-btn nf-about-btn--text" href="/tools" data-about-cta="explore-tools">Explore Tools</a>' +
+          '</div>' +
+        '</section>' +
+
+      '</div>';
+  }
+
+  function bindClicks(root){
+    if (!root || root.dataset.nfAboutClicksBound === "1") return;
+    root.dataset.nfAboutClicksBound = "1";
+
+    root.addEventListener("click", function(event){
+      var link = event.target && event.target.closest
+        ? event.target.closest("[data-about-cta]")
+        : null;
+
+      if (!link || !root.contains(link)) return;
+
+      track("nf_about_cta_click", {
+        nf_component: "about_page",
+        nf_action: clean(link.getAttribute("data-about-cta"), 60),
+        nf_dest: safePath(link.getAttribute("href") || ""),
+        nf_text: clean(link.textContent, 100)
+      });
+    });
+  }
+
+  function observeSections(root){
+    if (!root || !("IntersectionObserver" in window)) return;
+
+    var sections = Array.prototype.slice.call(
+      root.querySelectorAll("[data-nf-about-section]")
+    );
+
+    if (!sections.length) return;
+
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if (!seen && entry.isIntersecting){
-          seen = true; io.disconnect();
-          window.neuform.track(evt);
+        if (!entry.isIntersecting) return;
+
+        var section = clean(
+          entry.target.getAttribute("data-nf-about-section"),
+          60
+        );
+
+        if (section) {
+          trackOnce(
+            "section:" + section,
+            "nf_about_section_impression",
+            {
+              nf_component: "about_page",
+              nf_section: section
+            }
+          );
         }
+
+        io.unobserve(entry.target);
       });
-    }, { threshold: 0.3 });
-    io.observe(el);
-    window.addEventListener('pagehide', function(){ try{ io.disconnect(); }catch(_){} }, { once:true });
-  }
-  // Hook to these if you add them:
-  observe('nf-story', 'nf_about_story_impression');
-  observe('nf-method', 'nf_about_method_impression');          // your “3-bullet Method” strip
-  observe('nf-proof', 'nf_testimonials_impression');           // testimonials block
-  observe('nf-cta', 'nf_about_cta_impression');
+    }, { threshold:0.30 });
 
-  /** 2) Testimonial interactions (stars/expand/next-prev) **/
-  // Give your testimonial items data-testimonial-id and use a container id="nf-proof"
-  var proof = $('#nf-proof');
-  if (proof){
-    proof.addEventListener('click', function(e){
-      var next = e.target.closest && e.target.closest('[data-proof-next]');
-      var prev = e.target.closest && e.target.closest('[data-proof-prev]');
-      var expand = e.target.closest && e.target.closest('[data-proof-expand]');
-      var star = e.target.closest && e.target.closest('[data-star-rating]'); // optional
+    sections.forEach(function(section){
+      io.observe(section);
+    });
 
-      if (next){ window.neuform.track('nf_testimonial_nav', { nf_dir:'next' }); }
-      if (prev){ window.neuform.track('nf_testimonial_nav', { nf_dir:'prev' }); }
-      if (expand){
-        var tid = expand.getAttribute('data-proof-expand') || null;
-        window.neuform.track('nf_testimonial_expand', { nf_id: tid });
-      }
-      if (star){
-        var val = Number(star.getAttribute('data-star-rating')||0) || 0;
-        window.neuform.track('nf_star_rating_view', { nf_value: val, nf_context:'about' });
-      }
-    }, { passive:true });
+    window.addEventListener("pagehide", function(){
+      try { io.disconnect(); } catch (_) {}
+    }, { once:true });
   }
 
-  /** 3) Video tracking (hero/about clips) **/
-  // For native <video id="about-video">…
-  function wireHTMLVideo(id){
-    var v = document.getElementById(id);
-    if (!v || !v.play) return;
-    var started=false, quartiles={25:false,50:false,75:false};
-    v.addEventListener('play', function(){
-      if(!started){
-        started=true;
-        window.neuform.track('nf_video_start', { nf_video:id, nf_page:'about' });
-      }
+  function inject(){
+    var hero = document.querySelector(".container-23");
+    if (!hero) return false;
+
+    prepareNativeHero(hero);
+
+    var existing = document.getElementById(ROOT_ID);
+    if (existing) return true;
+
+    var root = document.createElement("div");
+    root.id = ROOT_ID;
+    root.className = "nf-about-generated";
+    root.setAttribute("data-nf-about-generated", VERSION);
+    root.innerHTML = aboutMarkup();
+
+    var anchor =
+      hero.closest(".section") ||
+      hero.closest(".holder") ||
+      hero;
+
+    if (!anchor.parentNode) return false;
+    anchor.parentNode.insertBefore(root, anchor.nextSibling);
+
+    bindClicks(root);
+    observeSections(root);
+
+    trackOnce("view", "nf_about_view", {
+      nf_component: "about_page"
     });
-    v.addEventListener('timeupdate', function(){
-      var p = (v.currentTime / Math.max(1, v.duration)) * 100;
-      if(!quartiles[25] && p>=25){
-        quartiles[25]=true;
-        window.neuform.track('nf_video_q25', { nf_video:id, nf_page:'about' });
-      }
-      if(!quartiles[50] && p>=50){
-        quartiles[50]=true;
-        window.neuform.track('nf_video_q50', { nf_video:id, nf_page:'about' });
-      }
-      if(!quartiles[75] && p>=75){
-        quartiles[75]=true;
-        window.neuform.track('nf_video_q75', { nf_video:id, nf_page:'about' });
-      }
-    });
-    v.addEventListener('ended', function(){
-      window.neuform.track('nf_video_complete', { nf_video:id, nf_page:'about' });
-    });
-  }
-  wireHTMLVideo('about-video'); // call this if you use a native video element
 
-  /** 4) Outbound & social clicks (footer/social strip on About)
-      ✅ Updated: log hostname+pathname only (no query/hash) **/
-  document.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a[href]');
-    if (!a) return;
-
-    var href = a.getAttribute('href') || '';
-    var social = a.getAttribute('data-social');
-
-    var meta = outboundMetaFromHref(href);
-
-    if (social){
-      window.neuform.track('nf_social_follow', {
-        nf_network: social,
-        nf_dest: meta ? meta.url : (href ? href : null),
-        nf_context:'about'
-      });
-      return;
-    }
-
-    if (meta){
-      window.neuform.track('nf_outbound_click', {
-        nf_url: meta.url,     // hostname + pathname only
-        nf_host: meta.host,
-        nf_path: meta.path,
-        nf_context:'about'
-      });
-    }
-  }, { passive:true });
-
-  /** 5) “Why trust us” micro-CTA tracking **/
-  // Give the block id="nf-method" and buttons/links data-about-cta="plans|results|reviews|contact"
-  document.addEventListener('click', function(e){
-    var node = e.target.closest && e.target.closest('[data-about-cta]');
-    if (!node) return;
-    var dest = node.getAttribute('data-about-cta');
-    var href = node.tagName === 'A' ? node.getAttribute('href') : (node.getAttribute('data-href') || null);
-    window.neuform.track('nf_about_cta_click', { nf_dest: dest, nf_href: href });
-  }, { passive:true });
-
-  /** 6) Optional: reveal “Reply within 24h” note after a short dwell **/
-  (function(){
-    var el = document.getElementById('reply-window');
-    if (!el) return;
-    setTimeout(function(){ el.hidden = false; }, 2500);
-  })();
-
-  /** 7) Small accessibility nicety: focus skip if you include a “Skip to content” link **/
-  var skip = document.querySelector('a[href="#main"]');
-  var main = document.getElementById('main');
-  if (skip && main){
-    skip.addEventListener('click', function(){
-      main.setAttribute('tabindex','-1');
-      main.focus();
-    });
+    return true;
   }
 
+  function init(){
+    markPage();
+
+    if (inject()) return;
+
+    if (!window.MutationObserver || !document.body) return;
+
+    observer = new MutationObserver(function(){
+      if (!inject()) return;
+      try { observer.disconnect(); } catch (_) {}
+      observer = null;
+    });
+
+    observer.observe(document.body, {
+      childList:true,
+      subtree:true
+    });
+
+    window.setTimeout(function(){
+      if (!observer) return;
+      try { observer.disconnect(); } catch (_) {}
+      observer = null;
+    }, 2500);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once:true });
+  } else {
+    init();
+  }
 })();
 </script>
+
+
+JSON-LD SCHEMA
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.neuform-fitness.com/#organization",
+      "name": "NeuForm Fitness LLC",
+      "alternateName": "NeuForm Fitness",
+      "url": "https://www.neuform-fitness.com",
+      "description": "NeuForm Fitness is a founder-operated fitness business offering structured training plans, Nutrition Lab, Strength Lab, and educational resources designed to make fitness decisions clearer and more repeatable.",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c4b8dcb89d7048d1a6_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited%20-%20Edited.png"
+      },
+      "founder": {
+        "@id": "https://www.neuform-fitness.com/about#chris-welch"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "New Lenox",
+        "addressRegion": "IL",
+        "addressCountry": "US"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "New Lenox"
+        },
+        {
+          "@type": "Country",
+          "name": "United States"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/neuformfitness/",
+        "https://www.facebook.com/NeuformFitness"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.neuform-fitness.com/about#chris-welch",
+      "name": "Chris Welch",
+      "jobTitle": "Founder, NeuForm Fitness",
+      "url": "https://www.neuform-fitness.com/about",
+      "worksFor": {
+        "@id": "https://www.neuform-fitness.com/#organization"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://s3.amazonaws.com/webflow-prod-assets/65d26f254c0a038c1f9198e6/67aa5c623998324cfbf6d845_IMG_7970-p-800.avif"
+      },
+      "description": "Founder and sole operator of NeuForm Fitness, with a background in sports, serious strength training since 2020, personal-training coursework at Joliet Junior College, and ongoing independent study."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.neuform-fitness.com/#website",
+      "name": "NeuForm Fitness",
+      "url": "https://www.neuform-fitness.com",
+      "publisher": {
+        "@id": "https://www.neuform-fitness.com/#organization"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "AboutPage",
+      "@id": "https://www.neuform-fitness.com/about#webpage",
+      "name": "About NeuForm Fitness",
+      "description": "Meet Chris Welch, founder of NeuForm Fitness, and learn about the training background, principles, plans, tools, educational work, and client proof behind the brand.",
+      "url": "https://www.neuform-fitness.com/about",
+      "isPartOf": {
+        "@id": "https://www.neuform-fitness.com/#website"
+      },
+      "about": {
+        "@id": "https://www.neuform-fitness.com/#organization"
+      },
+      "mainEntity": {
+        "@id": "https://www.neuform-fitness.com/about#chris-welch"
+      },
+      "breadcrumb": {
+        "@id": "https://www.neuform-fitness.com/about#breadcrumb"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.neuform-fitness.com/about#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.neuform-fitness.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About",
+          "item": "https://www.neuform-fitness.com/about"
+        }
+      ]
+    }
+  ]
+}
