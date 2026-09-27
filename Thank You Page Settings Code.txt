@@ -1,250 +1,1577 @@
 Thank You Page Settings Code
+
+Page: /thank-you
+Webflow page ID: 679bd4d12e15eecd3ac7f82b
+Last synchronized from current Webflow implementation: 2026-09-27
+
+Native Webflow page settings:
+SEO title: Purchase Complete | NeuForm Fitness
+SEO description: Open My Library to access recent NeuForm purchases, continue Automatic Plan intake, open Nutrition Fundamentals, or get support if access is missing.
+Open Graph title: Purchase Complete | NeuForm Fitness
+Open Graph description: Open My Library to access recent NeuForm purchases, continue Automatic Plan intake, open Nutrition Fundamentals, or get support if access is missing.
+Robots behavior: noindex,follow (reinforced in page Head code)
+
 Head:
-<!-- Basic meta -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,follow">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="NeuForm Fitness">
-<meta property="og:url" content="https://www.neuform-fitness.com/thank-you">
-<meta property="og:title" content="Thank You | NeuForm Fitness">
-<meta property="og:description" content="Thanks for your purchase—check your email for the download link. Need help with access? Reply to the receipt or use our contact page.">
-<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="NeuForm Fitness thank-you message over dark stone background">
-<meta property="og:locale" content="en_US">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thank You | NeuForm Fitness">
-<meta name="twitter:description" content="Thanks for your purchase—check your email for the download link. Need help with access? Reply to the receipt or use our contact page.">
-<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
-<meta name="twitter:image:alt" content="NeuForm Fitness thank-you message over dark stone background">
-
-<!-- Performance niceties -->
+<!-- NeuForm Purchase Thank You Head v5 -->
+<!-- Webflow native fields own title, description, canonical, Open Graph, and social metadata. -->
+<meta name="robots" content="noindex,follow,noarchive,max-image-preview:large">
+<meta name="theme-color" content="#05080d">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
-<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- NeuForm — Thank You Page Helpers (Lead conversion + CTA tracking; no PII) -->
+<!--
+  Normalize purchase-return context before GTM evaluates this page.
+  GTM remains the only owner of completed-purchase conversion events.
 
-Body:
+  v4 reads the normal same-tab session context first and can also
+  consume the optional same-origin localStorage backup written by
+  the Nutrition Fundamentals sales page reliability patch.
+-->
 <script>
 (function(){
   "use strict";
 
-  if (window.__NF_THANKYOU_HELPERS__) return;
-  window.__NF_THANKYOU_HELPERS__ = true;
+  if (window.__NF_PURCHASE_RETURN_CONTEXT_V4__) return;
+  window.__NF_PURCHASE_RETURN_CONTEXT_V4__ = true;
 
-  /* =====================================================
-     A) Lead Conversion (FALLBACK ONLY; strict + deduped)
-     - This page is purchase-themed. Lead conversion may only fire here
-       if a recent contact submit attempt was recorded in sessionStorage.
-     - Fires GA4 generate_lead + Meta Lead + dataLayer nf_lead_submit
-     - Dedupe + cleanup aligns with /contact-thank-you
-     - Never sends PII (only uses meta saved by contact page: lengths/domains)
-  ====================================================== */
-  (function(){
-    var FIRED_TS_KEY = 'nf.leadFiredTs';
-    var FIRED_ID_KEY = 'nf.leadFiredId';
-    var PENDING_KEY  = 'nf.leadPending';
-    var META_KEY     = 'nf.leadMeta';
-    var LEAD_ID_KEY  = 'nf.leadId';
-    var LEGACY_ID_KEY= 'nf.lead_id';
+  var LEGACY_RAW_KEY = "nf_last_purchase_ctx";
+  var BOOK_RAW_KEY = "nf.purchase.context.v1";
+  var BOOK_BACKUP_KEY = "nf.purchase.context.backup.v1";
+  var DISPLAY_KEY = "nf.thankyou.display.v4";
+  var PREPARED_KEY = "nf.thankyou.prepared.v3";
+  var FIRED_KEY = "nf_purchase_fired";
 
-    var MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
+  var MAX_AGE_MS = 4 * 60 * 60 * 1000;
+  var BOOK_SKU = "guide_nutrition_fundamentals_v1";
+  var BOOK_PRICE = 34.99;
+  var BOOK_NAME = "NeuForm Nutrition Fundamentals Digital Edition";
 
-    function ssGet(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
-    function ssSet(k,v){ try { sessionStorage.setItem(k, v); } catch(e){} }
-    function ssDel(k){ try { sessionStorage.removeItem(k); } catch(e){} }
+  function getSession(key){
+    try { return sessionStorage.getItem(key); }
+    catch (_) { return null; }
+  }
 
-    function genId(){
-      try{
-        if (window.crypto && crypto.getRandomValues) {
-          var a = new Uint8Array(16);
-          crypto.getRandomValues(a);
-          return Array.from(a).map(function(b){ return ('0'+b.toString(16)).slice(-2); }).join('');
-        }
-      }catch(e){}
-      return (Date.now().toString(36) + Math.random().toString(36).slice(2));
-    }
-
-    function once(key) {
-      try {
-        if (sessionStorage.getItem(key)) return false;
-        sessionStorage.setItem(key, "1");
-        return true;
-      } catch (e) {
-        return true;
-      }
-    }
-
-    function pendingTs(){
-      try { return Number(ssGet(PENDING_KEY) || 0); } catch(e){ return 0; }
-    }
-
-    function firedTs(){
-      try { return Number(ssGet(FIRED_TS_KEY) || 0); } catch(e){ return 0; }
-    }
-
-    function readMeta(){
-      try{
-        var raw = ssGet(META_KEY);
-        if (!raw) return {};
-        var m = JSON.parse(raw);
-        return (m && typeof m === 'object') ? m : {};
-      }catch(e){ return {}; }
-    }
-
-    function shouldFire(meta){
-      var p = pendingTs();
-      if (!p) return false;
-
-      // Stale pending → clear to prevent future accidental fires
-      if ((Date.now() - p) > MAX_AGE_MS){
-        ssDel(PENDING_KEY);
-        ssDel(META_KEY);
-        return false;
-      }
-
-      // Already fired after this pending timestamp
-      var f = firedTs();
-      if (f && f >= p) return false;
-
-      // Only accept contact-form pending meta
-      if (meta && meta.nf_method && meta.nf_method !== 'contact_form') return false;
-
+  function setSession(key, value){
+    try {
+      sessionStorage.setItem(key, value);
       return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function removeSession(key){
+    try { sessionStorage.removeItem(key); }
+    catch (_) {}
+  }
+
+  function getLocal(key){
+    try { return localStorage.getItem(key); }
+    catch (_) { return null; }
+  }
+
+  function removeLocal(key){
+    try { localStorage.removeItem(key); }
+    catch (_) {}
+  }
+
+  function parseJson(raw){
+    if (!raw) return null;
+    try {
+      var value = JSON.parse(raw);
+      return value && typeof value === "object" ? value : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function safeSku(value){
+    var sku = String(value || "").trim();
+    return /^[A-Za-z0-9._-]{2,120}$/.test(sku) ? sku : "";
+  }
+
+  function safeText(value, limit){
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .replace(/[<>{}"'`\\]/g, "")
+      .trim()
+      .slice(0, limit || 120);
+  }
+
+  function safePrice(value){
+    var price = Number(value);
+    if (!isFinite(price) || price <= 0 || price > 10000) return 0;
+    return Math.round(price * 100) / 100;
+  }
+
+  function timestampIsFresh(timestamp, maxAge){
+    var ts = Number(timestamp || 0);
+    if (!ts) return false;
+    var age = Date.now() - ts;
+    return age >= -60000 && age <= (maxAge || MAX_AGE_MS);
+  }
+
+  function normalizeLegacy(value){
+    if (!value || typeof value !== "object") return null;
+
+    var sku = safeSku(value.sku);
+    var price = safePrice(value.price);
+    var timestamp = Number(value.ts || value.createdAt || 0);
+
+    if (!sku || !price) return null;
+    if (timestamp && !timestampIsFresh(timestamp, MAX_AGE_MS)) return null;
+
+    return {
+      version:4,
+      ts:timestamp || Date.now(),
+      sku:sku,
+      price:price,
+      productName:safeText(
+        value.productName ||
+        value.plan ||
+        value.item_name ||
+        "",
+        120
+      ),
+      source:safeText(value.source || "purchase_return", 40),
+      contextType:sku === BOOK_SKU ? "book" : "purchase"
+    };
+  }
+
+  function normalizeBook(value){
+    if (!value || typeof value !== "object") return null;
+    if (safeSku(value.sku) !== BOOK_SKU) return null;
+
+    var createdAt = Number(value.createdAt || value.ts || 0);
+    var expiresAt = Number(value.expiresAt || 0);
+
+    if (!timestampIsFresh(createdAt, MAX_AGE_MS)) return null;
+    if (expiresAt && expiresAt <= Date.now()) return null;
+
+    return {
+      version:4,
+      ts:createdAt,
+      sku:BOOK_SKU,
+      price:BOOK_PRICE,
+      productName:BOOK_NAME,
+      source:safeText(
+        value.source || "nutrition_fundamentals_sales",
+        40
+      ),
+      contextType:"book"
+    };
+  }
+
+  function queryContext(){
+    try {
+      var params = new URLSearchParams(window.location.search || "");
+      return normalizeLegacy({
+        ts:Date.now(),
+        sku:params.get("sku") || "",
+        price:params.get("price") || "",
+        productName:
+          params.get("plan") ||
+          params.get("item_name") ||
+          "",
+        source:"thankyou_query"
+      });
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function returnFingerprint(context){
+    var sessionId = "";
+
+    try {
+      sessionId = new URLSearchParams(
+        window.location.search || ""
+      ).get("session_id") || "";
+    } catch (_) {}
+
+    if (/^cs_(?:test_)?[A-Za-z0-9_]{12,220}$/.test(sessionId)) {
+      return "session:" + sessionId;
     }
 
-    var meta = readMeta();
-    if (!shouldFire(meta)) return;
+    return [
+      "ctx",
+      context.sku,
+      String(context.price),
+      String(context.ts || "")
+    ].join(":");
+  }
 
-    // Use Contact-page generated lead ID if available; else create one
-    var leadId = ssGet(LEAD_ID_KEY) || ssGet(LEGACY_ID_KEY) || genId();
-    ssSet(LEAD_ID_KEY, leadId);
-    ssSet(LEGACY_ID_KEY, leadId);
+  function legacyPayload(context){
+    return {
+      version:4,
+      ts:context.ts,
+      sku:context.sku,
+      price:context.price,
+      plan:context.productName,
+      productName:context.productName,
+      source:context.source
+    };
+  }
 
-    // Unified dedupe: if this leadId is already the firedId, bail
-    var already = ssGet(FIRED_ID_KEY);
-    if (already && already === leadId) {
-      ssDel(PENDING_KEY);
-      ssDel(META_KEY);
+  try {
+    document.documentElement.classList.add(
+      "nf-purchase-thankyou-page"
+    );
+  } catch (_) {}
+
+  var sessionBookContext = normalizeBook(
+    parseJson(getSession(BOOK_RAW_KEY))
+  );
+
+  var backupBookContext = sessionBookContext
+    ? null
+    : normalizeBook(
+        parseJson(getLocal(BOOK_BACKUP_KEY))
+      );
+
+  var bookContext =
+    sessionBookContext ||
+    backupBookContext;
+
+  var legacyContext = normalizeLegacy(
+    parseJson(getSession(LEGACY_RAW_KEY))
+  );
+
+  var context =
+    bookContext ||
+    legacyContext ||
+    queryContext();
+
+  if (!context) return;
+
+  var fingerprint = returnFingerprint(context);
+  var alreadyPrepared =
+    getSession(PREPARED_KEY) === fingerprint;
+
+  setSession(DISPLAY_KEY, JSON.stringify(context));
+
+  /*
+   * Rehydrate the same-tab book context when the checkout return
+   * arrived in a different browsing context.
+   */
+  if (backupBookContext) {
+    setSession(
+      BOOK_RAW_KEY,
+      JSON.stringify({
+        version:1,
+        sku:BOOK_SKU,
+        productName:BOOK_NAME,
+        source:context.source,
+        createdAt:context.ts,
+        expiresAt:context.ts + MAX_AGE_MS
+      })
+    );
+    removeLocal(BOOK_BACKUP_KEY);
+  }
+
+  /*
+   * Bridge the account-first book checkout context into the
+   * legacy purchase context expected by the current GTM pipeline.
+   * This prepares data only. It does not fire purchase.
+   */
+  if (bookContext) {
+    setSession(
+      LEGACY_RAW_KEY,
+      JSON.stringify(legacyPayload(context))
+    );
+  }
+
+  if (!alreadyPrepared) {
+    setSession(PREPARED_KEY, fingerprint);
+    removeSession(FIRED_KEY);
+
+    if (!legacyContext && !bookContext) {
+      setSession(
+        LEGACY_RAW_KEY,
+        JSON.stringify(legacyPayload(context))
+      );
+    }
+  }
+})();
+</script>
+
+
+Body / On-page Embed:
+<!-- NeuForm Purchase Thank You v5 -->
+<style>
+  .nf-purchase-thankyou,
+  .nf-purchase-thankyou *{
+    box-sizing:border-box;
+  }
+
+  html.nf-purchase-thankyou-page,
+  html.nf-purchase-thankyou-page body{
+    max-width:100%;
+    overflow-x:clip;
+  }
+
+  html.nf-purchase-thankyou-page .section-5,
+  html.nf-purchase-thankyou-page .section-5 > .w-embed{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  .nf-purchase-thankyou{
+    --nf-pty-blue:var(--nf-primary,#3498db);
+    --nf-pty-blue-dark:var(--nf-primary-dark,#2d86c2);
+    --nf-pty-text:var(--nf-text,#e9f3f7);
+    --nf-pty-muted:var(--nf-text-muted,#9fb4c2);
+    --nf-pty-focus:var(--nf-focus,#79c8ff);
+    --nf-pty-radius:var(--nf-radius-card,22px);
+    --nf-pty-radius-sm:var(--nf-radius-btn,13px);
+
+    width:100%;
+    min-height:clamp(580px,72svh,780px);
+    display:grid;
+    place-items:center;
+    padding:clamp(44px,7vw,88px) 16px;
+    color:var(--nf-pty-text);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+
+  .nf-purchase-card{
+    position:relative;
+    min-width:0;
+    max-width:100%;
+    isolation:isolate;
+    overflow:hidden;
+    width:min(720px,100%);
+    padding:clamp(28px,4vw,44px);
+    border:1px solid rgba(52,152,219,.30);
+    border-radius:var(--nf-pty-radius);
+    background:
+      radial-gradient(900px 320px at 50% 0%,rgba(52,152,219,.18),transparent 65%),
+      radial-gradient(660px 260px at 10% 100%,rgba(255,255,255,.05),transparent 68%),
+      linear-gradient(180deg,rgba(1,7,12,.95),rgba(0,0,0,.98));
+    box-shadow:
+      0 28px 76px rgba(0,0,0,.58),
+      inset 0 1px 0 rgba(255,255,255,.045);
+    text-align:center;
+  }
+
+  .nf-purchase-card::before{
+    content:"";
+    position:absolute;
+    inset:auto -20% -52% -20%;
+    z-index:-1;
+    height:320px;
+    pointer-events:none;
+    background:radial-gradient(
+      closest-side,
+      rgba(52,152,219,.13),
+      transparent 72%
+    );
+    filter:blur(34px);
+  }
+
+  .nf-purchase-status{
+    width:58px;
+    height:58px;
+    display:grid;
+    place-items:center;
+    margin:0 auto 17px;
+    border:1px solid rgba(121,200,255,.36);
+    border-radius:50%;
+    background:rgba(52,152,219,.12);
+    box-shadow:
+      0 12px 28px rgba(52,152,219,.18),
+      inset 0 1px 0 rgba(255,255,255,.06);
+    color:#dff3ff;
+    font-size:27px;
+    font-weight:950;
+    line-height:1;
+  }
+
+  .nf-purchase-thankyou[data-nf-purchase-state="book"] .nf-purchase-status{
+    box-shadow:
+      0 14px 34px rgba(52,152,219,.24),
+      inset 0 1px 0 rgba(255,255,255,.07);
+  }
+
+  .nf-purchase-thankyou[data-nf-purchase-state="unconfirmed"] .nf-purchase-status{
+    background:rgba(255,255,255,.055);
+    border-color:rgba(255,255,255,.15);
+    color:rgba(233,243,247,.82);
+  }
+
+  .nf-purchase-thankyou[data-nf-purchase-state="unconfirmed"] .nf-purchase-status::before{
+    content:"?";
+  }
+
+  .nf-purchase-thankyou[data-nf-purchase-state="unconfirmed"] .nf-purchase-status span{
+    display:none;
+  }
+
+  .nf-purchase-kicker{
+    display:block;
+    margin-bottom:8px;
+    color:rgba(121,200,255,.94);
+    font:900 11px/1 Inter,system-ui,sans-serif;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+  }
+
+  .nf-purchase-heading{
+    max-width:17ch;
+    margin:0 auto;
+    color:#fff;
+    font:950 clamp(35px,5vw,52px)/1.02 "Plus Jakarta Sans",Inter,system-ui,sans-serif;
+    letter-spacing:-.04em;
+    text-wrap:balance;
+  }
+
+  .nf-purchase-primary{
+    max-width:640px;
+    margin:16px auto 0;
+    color:rgba(244,248,251,.95);
+    font:750 clamp(16px,1.5vw,18px)/1.55 Inter,system-ui,sans-serif;
+    text-wrap:pretty;
+  }
+
+  .nf-purchase-secondary{
+    max-width:610px;
+    margin:10px auto 0;
+    color:rgba(159,180,194,.94);
+    font:650 14px/1.58 Inter,system-ui,sans-serif;
+    text-wrap:pretty;
+  }
+
+  .nf-purchase-meta{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    max-width:100%;
+    margin:17px auto 0;
+    padding:9px 12px;
+    border:1px solid rgba(121,200,255,.18);
+    border-radius:999px;
+    background:rgba(52,152,219,.07);
+    color:rgba(226,240,248,.84);
+    font:800 12px/1.35 Inter,system-ui,sans-serif;
+    text-align:center;
+  }
+
+  .nf-purchase-meta[hidden]{
+    display:none!important;
+  }
+
+  .nf-purchase-next{
+    margin-top:clamp(22px,3vw,30px);
+    padding-top:clamp(18px,2.6vw,24px);
+    border-top:1px solid rgba(121,200,255,.15);
+  }
+
+  .nf-purchase-next-label{
+    margin-bottom:12px;
+    color:rgba(159,180,194,.90);
+    font:900 11px/1 Inter,system-ui,sans-serif;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+  }
+
+  .nf-purchase-actions{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .nf-purchase-action{
+    min-width:0;
+    min-height:48px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 14px;
+    border:1px solid rgba(121,200,255,.24);
+    border-radius:var(--nf-pty-radius-sm);
+    background:rgba(255,255,255,.045);
+    color:#fff!important;
+    font:900 13px/1.15 Inter,system-ui,sans-serif;
+    text-align:center;
+    text-decoration:none!important;
+    transition:
+      transform .16s ease,
+      border-color .16s ease,
+      background .16s ease,
+      box-shadow .16s ease,
+      filter .16s ease;
+  }
+
+  .nf-purchase-action[hidden]{
+    display:none!important;
+  }
+
+  .nf-purchase-action--primary{
+    border-color:rgba(255,255,255,.10);
+    background:linear-gradient(
+      180deg,
+      var(--nf-pty-blue),
+      var(--nf-pty-blue-dark)
+    );
+    box-shadow:0 12px 26px rgba(52,152,219,.24);
+  }
+
+  .nf-purchase-note{
+    margin:18px auto 0;
+    padding:12px 14px;
+    border:1px solid rgba(52,152,219,.18);
+    border-radius:var(--nf-pty-radius-sm);
+    background:rgba(52,152,219,.055);
+    color:rgba(226,238,247,.80);
+    font:700 12.75px/1.5 Inter,system-ui,sans-serif;
+    text-align:left;
+  }
+
+  @media(hover:hover){
+    .nf-purchase-action:hover{
+      transform:translateY(-1px);
+      border-color:rgba(121,200,255,.58);
+      background:rgba(52,152,219,.14);
+      box-shadow:0 12px 26px rgba(0,0,0,.25);
+    }
+
+    .nf-purchase-action--primary:hover{
+      background:linear-gradient(
+        180deg,
+        var(--nf-pty-blue),
+        var(--nf-pty-blue-dark)
+      );
+      box-shadow:0 16px 32px rgba(52,152,219,.31);
+      filter:saturate(1.04);
+    }
+  }
+
+  .nf-purchase-action:focus-visible{
+    outline:2px solid var(--nf-pty-focus);
+    outline-offset:3px;
+    box-shadow:0 0 0 4px rgba(121,200,255,.17);
+  }
+
+  @media(max-width:640px){
+    .nf-purchase-thankyou{
+      min-height:0;
+      padding:34px 14px 54px;
+    }
+
+    .nf-purchase-card{
+      padding:26px 18px;
+      border-radius:20px;
+    }
+
+    .nf-purchase-heading{
+      max-width:13ch;
+      font-size:clamp(33px,10vw,45px);
+    }
+
+    .nf-purchase-actions{
+      grid-template-columns:1fr;
+    }
+
+    .nf-purchase-action{
+      width:100%;
+    }
+
+    .nf-purchase-meta{
+      border-radius:13px;
+    }
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .nf-purchase-action{
+      transition:none!important;
+    }
+
+    @media(hover:hover){
+      .nf-purchase-action:hover{
+        transform:none!important;
+      }
+    }
+  }
+
+  @media(forced-colors:active){
+    .nf-purchase-card,
+    .nf-purchase-action,
+    .nf-purchase-note,
+    .nf-purchase-meta,
+    .nf-purchase-status{
+      border:1px solid CanvasText;
+    }
+  }
+</style>
+
+<main
+  class="nf-purchase-thankyou"
+  data-nf-purchase-thankyou
+  data-nf-purchase-state="checking"
+  data-nf-account-bridge="off"
+  aria-labelledby="nf-purchase-heading"
+  aria-live="polite"
+  aria-busy="true"
+>
+  <section class="nf-purchase-card" aria-label="Purchase access">
+    <div class="nf-purchase-status" aria-hidden="true">
+      <span data-nf-purchase-status-icon>…</span>
+    </div>
+
+    <span
+      class="nf-purchase-kicker"
+      data-nf-purchase-kicker
+    >
+      Purchase access
+    </span>
+
+    <h1
+      class="nf-purchase-heading"
+      id="nf-purchase-heading"
+      data-nf-purchase-heading
+    >
+      Confirming your access
+    </h1>
+
+    <p
+      class="nf-purchase-primary"
+      data-nf-purchase-primary
+    >
+      Checking recent checkout context and the NeuForm account connected to this visit.
+    </p>
+
+    <p
+      class="nf-purchase-secondary"
+      data-nf-purchase-secondary
+    >
+      My Library is the primary access hub for NeuForm purchases.
+    </p>
+
+    <div
+      class="nf-purchase-meta"
+      data-nf-purchase-meta
+      hidden
+    ></div>
+
+    <div class="nf-purchase-next">
+      <div class="nf-purchase-next-label">
+        Next steps
+      </div>
+
+      <div class="nf-purchase-actions">
+        <a
+          class="nf-purchase-action nf-purchase-action--primary"
+          href="/library"
+          data-nf-purchase-action-slot="1"
+          data-nf-purchase-action="library"
+          data-dest="/library"
+        >
+          Open My Library
+        </a>
+
+        <a
+          class="nf-purchase-action"
+          href="/support"
+          data-nf-purchase-action-slot="2"
+          data-nf-purchase-action="support"
+          data-dest="/support"
+        >
+          Open Support
+        </a>
+
+        <a
+          class="nf-purchase-action"
+          href="/"
+          data-nf-purchase-action-slot="3"
+          data-nf-purchase-action="home"
+          data-dest="/"
+        >
+          Return Home
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="nf-purchase-note"
+      data-nf-purchase-note
+    >
+      Do not purchase again while this check completes. If access is still missing afterward, open Support.
+    </div>
+  </section>
+</main>
+
+
+Footer:
+<!-- NeuForm Purchase Thank You Helper v5 -->
+<script>
+(function(){
+  "use strict";
+
+  if (window.__NF_PURCHASE_THANKYOU_V5__) return;
+  window.__NF_PURCHASE_THANKYOU_V5__ = true;
+
+  var DISPLAY_KEY = "nf.thankyou.display.v4";
+  var MAX_AGE_MS = 4 * 60 * 60 * 1000;
+
+  var BOOK_SKU = "guide_nutrition_fundamentals_v1";
+  var BOOK_NAME =
+    "NeuForm Nutrition Fundamentals Digital Edition";
+  var BOOK_PRICE = 34.99;
+  var BOOK_PLAN_ID =
+    "pln_neuform-nutrition-fundamentals-digital-edition-a3ab0mga";
+  var BOOK_PRICE_ID =
+    "prc_2026-digital-edition-xvac0m16";
+
+  var AUTOMATIC_PLAN_PLAN_ID =
+    "pln_automatic-plan-7ftp07w4";
+  var AUTOMATIC_PLAN_PRICE_ID =
+    "prc_automatic-plan-jbwk0hc7";
+
+  var AUTOMATIC_PLAN_SKUS = {
+    "automatic_plan_4wk_v1":true,
+    "automatic-plan-4-week":true,
+    "nf_training.automatic_plan.4wk.v1":true,
+    "nf_training.automatic_plan_4wk.v1":true,
+    "nf_service.automatic_plan.4wk.v1":true
+  };
+
+  function onReady(fn){
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        fn,
+        { once:true }
+      );
+    } else {
+      fn();
+    }
+  }
+
+  function sleep(ms){
+    return new Promise(function(resolve){
+      window.setTimeout(resolve, ms);
+    });
+  }
+
+  function getSession(key){
+    try { return sessionStorage.getItem(key); }
+    catch (_) { return null; }
+  }
+
+  function safeText(value, limit){
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .replace(/[<>{}"'`\\]/g, "")
+      .trim()
+      .slice(0, limit || 120);
+  }
+
+  function parseContext(){
+    var raw = getSession(DISPLAY_KEY);
+    if (!raw) return null;
+
+    try {
+      var context = JSON.parse(raw);
+      if (!context || typeof context !== "object") {
+        return null;
+      }
+
+      var sku = String(context.sku || "").trim();
+      var price = Number(context.price);
+      var timestamp = Number(context.ts || 0);
+
+      if (!/^[A-Za-z0-9._-]{2,120}$/.test(sku)) {
+        return null;
+      }
+
+      if (
+        !isFinite(price) ||
+        price <= 0 ||
+        price > 10000
+      ) {
+        return null;
+      }
+
+      if (
+        !timestamp ||
+        (Date.now() - timestamp) < -60000 ||
+        (Date.now() - timestamp) > MAX_AGE_MS
+      ) {
+        return null;
+      }
+
+      return {
+        sku:sku,
+        price:Math.round(price * 100) / 100,
+        productName:safeText(
+          context.productName ||
+          context.plan ||
+          "",
+          120
+        ),
+        source:safeText(context.source || "", 40),
+        contextType:safeText(
+          context.contextType || "purchase",
+          24
+        ),
+        verifiedBy:"purchase_context"
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function canTrack(){
+    try {
+      return !!(
+        window.neuform &&
+        typeof window.neuform.canTrack === "function" &&
+        window.neuform.canTrack() &&
+        typeof window.neuform.track === "function"
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function track(name, payload){
+    try {
+      if (canTrack()) {
+        return !!window.neuform.track(
+          name,
+          payload || {}
+        );
+      }
+    } catch (_) {}
+
+    return false;
+  }
+
+  function trackOnce(key, name, payload){
+    try {
+      if (
+        canTrack() &&
+        typeof window.neuform.trackOnce === "function"
+      ) {
+        return !!window.neuform.trackOnce(
+          key,
+          name,
+          payload || {}
+        );
+      }
+    } catch (_) {}
+
+    return track(name, payload || {});
+  }
+
+  function safeInternalDest(raw){
+    try {
+      var url = new URL(
+        String(raw || ""),
+        window.location.origin
+      );
+
+      if (url.origin !== window.location.origin) {
+        return "";
+      }
+
+      if (
+        url.protocol !== "http:" &&
+        url.protocol !== "https:"
+      ) {
+        return "";
+      }
+
+      return url.pathname + url.search + url.hash;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function setText(root, selector, value){
+    var element = root.querySelector(selector);
+    if (element) element.textContent = value;
+  }
+
+  function setProductMeta(root, value){
+    var element = root.querySelector(
+      "[data-nf-purchase-meta]"
+    );
+
+    if (!element) return;
+
+    element.textContent = value || "";
+    element.hidden = !value;
+  }
+
+  function setAction(root, index, config){
+    var action = root.querySelector(
+      '[data-nf-purchase-action-slot="' +
+      String(index) +
+      '"]'
+    );
+
+    if (!action) return;
+
+    if (!config) {
+      action.hidden = true;
+      action.removeAttribute("href");
+      action.removeAttribute("data-dest");
+      action.removeAttribute("data-nf-purchase-action");
       return;
     }
 
-    // Extra reload-safe guard per lead id
-    var dedupeKey = 'nf.lead.sent.' + leadId;
-    if (!once(dedupeKey)) return;
+    action.hidden = false;
+    action.textContent = config.label;
+    action.setAttribute("href", config.href);
+    action.setAttribute("data-dest", config.href);
+    action.setAttribute(
+      "data-nf-purchase-action",
+      config.action
+    );
 
-    // Fire canonical conversion event (no PII)
-    if (window.neuform.canTrack()) window.neuform.track('lead_submit_success', Object.assign({
-      nf_lead_id: leadId,
-      nf_method: 'contact_form',
-      nf_source: 'thankyou_fallback'
-    }, meta || {}));
-
-    // GA4 conversion
-    if (window.neuform.canTrack()) {
-      try {
-        window.neuform.track('generate_lead', {
-          lead_id: leadId,
-          method: 'contact_form',
-
-          // safe meta (non-PII)
-          nf_plan_interest: meta && meta.nf_plan_interest ? meta.nf_plan_interest : null,
-          nf_email_domain: meta && meta.nf_email_domain ? meta.nf_email_domain : null,
-          nf_message_len: (meta && typeof meta.nf_message_len === 'number') ? meta.nf_message_len : null,
-          nf_newsletter_optin: (meta && typeof meta.nf_newsletter_optin === 'boolean') ? meta.nf_newsletter_optin : null
-        });
-      } catch(e) {}
-    }
-
-    // Meta Pixel conversion (dedupe via eventID)
-    if (window.neuform.canTrack()) {
-      try {
-        window.neuform.track('Lead', { lead_id: leadId, eventID: leadId });
-      } catch(e) {}
-    }
-
-    // Mark fired + clear pending/meta to prevent any other page from firing again
-    try{
-      var now = String(Date.now());
-      ssSet(FIRED_TS_KEY, now);
-      ssSet(FIRED_ID_KEY, leadId);
-      ssSet('nf.leadFired', '1'); // legacy
-
-      ssDel(PENDING_KEY);
-      ssDel(META_KEY);
-    }catch(e){}
-  })();
-
-  /* =====================================================
-     B) Purchase thank-you page viewed
-  ====================================================== */
-  if (window.neuform.canTrack()) window.neuform.trackOnce('view.purchase_thankyou', 'purchase_thankyou_view');
-
-  /* =====================================================
-     C) Delegated click tracking for Thank You CTAs
-     (works only if you add data-thanks-action attrs)
-  ====================================================== */
-  function closestAction(el){
-    return el && el.closest ? el.closest('[data-thanks-action]') : null;
+    action.classList.toggle(
+      "nf-purchase-action--primary",
+      !!config.primary
+    );
   }
 
-  document.addEventListener('click', function(e){
-    var node = closestAction(e.target);
-    if (!node) return;
+  function setActions(root, actions){
+    [1,2,3].forEach(function(index){
+      setAction(root, index, actions[index - 1] || null);
+    });
+  }
 
-    if (!window.neuform.canTrack()) return;
+  function setStatusIcon(root, value){
+    var icon = root.querySelector(
+      "[data-nf-purchase-status-icon]"
+    );
+    if (icon) icon.textContent = value || "✓";
+  }
 
-    var act   = node.getAttribute('data-thanks-action');
-    var plan  = node.getAttribute('data-plan') || null;
-    var file  = node.getAttribute('data-file') || null;
-    var dest  = node.getAttribute('data-dest') || (node.tagName === 'A' ? node.getAttribute('href') : null);
-    var pack  = node.getAttribute('data-pack') || null;
-    var field = node.getAttribute('data-field') || null;
+  function setStateCopy(root, config){
+    root.setAttribute(
+      "data-nf-purchase-state",
+      config.state
+    );
+    root.setAttribute(
+      "aria-busy",
+      config.state === "checking" ? "true" : "false"
+    );
 
-    switch(act){
-      case 'download':
-        window.neuform.track('nf_download_click', { nf_plan: plan, nf_file: file });
-        break;
+    setStatusIcon(root, config.icon || "✓");
 
-      case 'open':
-        window.neuform.track('nf_thankyou_open', { nf_dest: dest });
-        break;
+    setText(
+      root,
+      "[data-nf-purchase-kicker]",
+      config.kicker
+    );
 
-      case 'add_pack':
-        window.neuform.track('nf_post_purchase_nudge', { nf_attach_pack: true, nf_pack: pack || 'warmup_stretch' });
-        try { sessionStorage.setItem('nf.attach_pack', '1'); } catch(e){}
-        break;
+    setText(
+      root,
+      "[data-nf-purchase-heading]",
+      config.heading
+    );
 
-      case 'support':
-        window.neuform.track('support_click', { nf_channel: node.getAttribute('data-channel') || 'email' });
-        break;
+    setText(
+      root,
+      "[data-nf-purchase-primary]",
+      config.primary
+    );
 
-      case 'copy':
-        (function(){
-          var val = '';
-          if (field === 'order_id') {
-            try {
-              var qp = new URLSearchParams(window.location.search || '');
-              val = qp.get('session_id') || '';
-            } catch(e){}
-          }
-          if (!val && node.hasAttribute('data-value')) val = node.getAttribute('data-value');
-          if (!val || !navigator.clipboard || !navigator.clipboard.writeText) return;
-          try {
-            navigator.clipboard.writeText(val);
-            // ✅ Only length is tracked (no copied value)
-            window.neuform.track('nf_copy', { nf_field: field || 'unknown', nf_len: String(val).length });
-          } catch(e){}
-        })();
-        break;
+    setText(
+      root,
+      "[data-nf-purchase-secondary]",
+      config.secondary
+    );
+
+    setText(
+      root,
+      "[data-nf-purchase-note]",
+      config.note
+    );
+
+    setProductMeta(root, config.meta || "");
+    setActions(root, config.actions || []);
+  }
+
+  function renderChecking(root){
+    setStateCopy(root, {
+      state:"checking",
+      icon:"…",
+      kicker:"Purchase access",
+      heading:"Confirming your access",
+      primary:
+        "Checking recent checkout context and the NeuForm account connected to this visit.",
+      secondary:
+        "My Library is the primary access hub for NeuForm purchases.",
+      meta:"",
+      note:
+        "Do not purchase again while this check completes. If access is still missing afterward, open Support.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        },
+        {
+          label:"Return Home",
+          href:"/",
+          action:"home"
+        }
+      ]
+    });
+  }
+
+  function renderBook(root, source){
+    var fromAccount = source === "account_entitlement";
+
+    setStateCopy(root, {
+      state:"book",
+      icon:"✓",
+      kicker:"Nutrition Fundamentals Digital Edition",
+      heading:fromAccount
+        ? "Your Digital Edition is in My Library"
+        : "Open your book in My Library",
+      primary:fromAccount
+        ? "This NeuForm account has access to the searchable 2026 Digital Edition."
+        : "Your checkout return was received. The Digital Edition is being connected to the NeuForm account used during checkout.",
+      secondary:
+        "Open My Library, go to Books & Guides, and select Open Digital Edition. Access may take a moment to appear.",
+      meta:
+        "$34.99 · Searchable 2026 Digital Edition · Personal-use access",
+      note:
+        "If the book is missing, refresh My Library before purchasing again. If it still does not appear, open Support and include the email used during checkout.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Nutrition Lab",
+          href:"/tools-nutrition-lab",
+          action:"nutrition_lab"
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        }
+      ]
+    });
+  }
+
+  function renderAutomaticPlan(root, source){
+    var fromAccount = source === "account_entitlement";
+
+    setStateCopy(root, {
+      state:"automatic-plan",
+      icon:"✓",
+      kicker:"Automatic Plan order",
+      heading:"Complete your intake next",
+      primary:fromAccount
+        ? "This NeuForm account has Automatic Plan access. Open My Library to continue to intake."
+        : "Open My Library to continue to the Automatic Plan intake after order setup finishes.",
+      secondary:
+        "Your personalized plan cannot be created until the intake is complete. Your finished plan will appear in My Library.",
+      meta:"4-week personalized plan · Intake required",
+      note:
+        "If intake access is missing, do not pay again. Open Support with your checkout email and NeuForm login email if they are different.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Strength Lab",
+          href:"/tools-strength-lab",
+          action:"strength_lab"
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        }
+      ]
+    });
+  }
+
+  function renderGeneric(root, context){
+    var productLabel =
+      context.productName ||
+      "NeuForm purchase";
+
+    setStateCopy(root, {
+      state:"confirmed",
+      icon:"✓",
+      kicker:"Purchase access",
+      heading:"Thanks for your purchase",
+      primary:
+        "Open My Library with the NeuForm account connected to checkout to access your purchase.",
+      secondary:
+        "Email may provide a receipt, instructions, notifications, or a link back to My Library.",
+      meta:
+        productLabel +
+        " · $" +
+        context.price.toFixed(2),
+      note:
+        "If access is missing, do not pay again. Open Support with your checkout email and NeuForm login email if they are different.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        },
+        {
+          label:"Explore Tools",
+          href:"/tools",
+          action:"tools"
+        }
+      ]
+    });
+  }
+
+  function renderAccountAccess(root){
+    setStateCopy(root, {
+      state:"account-access",
+      icon:"✓",
+      kicker:"NeuForm account access",
+      heading:"Open My Library to continue",
+      primary:
+        "This visit returned without enough product detail to name the purchase safely, but your NeuForm account is available.",
+      secondary:
+        "Open My Library to view current purchases and access. If the expected item is missing, refresh once before using Support.",
+      meta:"",
+      note:
+        "Do not pay again while access is processing. Include the checkout email and NeuForm login email in Support if they are different.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        },
+        {
+          label:"Explore Tools",
+          href:"/tools",
+          action:"tools"
+        }
+      ]
+    });
+  }
+
+  function renderUnconfirmed(root){
+    setStateCopy(root, {
+      state:"unconfirmed",
+      icon:"?",
+      kicker:"Purchase access",
+      heading:"Looking for your purchase?",
+      primary:
+        "I cannot confirm a recent checkout or account-linked purchase from this visit.",
+      secondary:
+        "Open My Library first. If an item is missing, use Support before paying again.",
+      meta:"",
+      note:
+        "Use the checkout email and NeuForm login email when possible. Include both in Support if they are different.",
+      actions:[
+        {
+          label:"Open My Library",
+          href:"/library",
+          action:"library",
+          primary:true
+        },
+        {
+          label:"Open Support",
+          href:"/support",
+          action:"support"
+        },
+        {
+          label:"Return Home",
+          href:"/",
+          action:"home"
+        }
+      ]
+    });
+  }
+
+  function unwrapMember(result){
+    var data = result;
+    if (
+      data &&
+      Object.prototype.hasOwnProperty.call(data, "data")
+    ) {
+      data = data.data;
     }
-  }, { passive: true });
+    if (data && data.member) data = data.member;
+    return data && typeof data === "object"
+      ? data
+      : null;
+  }
 
+  function connectionInactive(connection){
+    if (!connection || typeof connection !== "object") {
+      return false;
+    }
+
+    if (connection.active === false) return true;
+
+    var status = safeText(
+      connection.status ||
+      (
+        connection.payment &&
+        connection.payment.status
+      ) ||
+      "",
+      40
+    ).toLowerCase();
+
+    return [
+      "canceled",
+      "cancelled",
+      "expired",
+      "inactive"
+    ].indexOf(status) >= 0;
+  }
+
+  function containsExactId(value, targets, depth){
+    if (depth > 6 || value == null) return false;
+
+    if (typeof value === "string") {
+      return targets.indexOf(value) >= 0;
+    }
+
+    if (Array.isArray(value)) {
+      for (var i = 0; i < value.length; i += 1) {
+        if (
+          containsExactId(
+            value[i],
+            targets,
+            depth + 1
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    if (typeof value === "object") {
+      var keys = Object.keys(value);
+
+      for (var j = 0; j < keys.length; j += 1) {
+        var child = value[keys[j]];
+
+        if (
+          typeof child === "string" &&
+          targets.indexOf(child) >= 0
+        ) {
+          return true;
+        }
+
+        if (
+          child &&
+          typeof child === "object" &&
+          containsExactId(
+            child,
+            targets,
+            depth + 1
+          )
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function memberHasTargets(member, targets){
+    if (!member || typeof member !== "object") {
+      return false;
+    }
+
+    var collections = [];
+
+    [
+      member.planConnections,
+      member.plans,
+      member.plan_connections,
+      member.memberships
+    ].forEach(function(candidate){
+      if (Array.isArray(candidate)) {
+        collections.push(candidate);
+      } else if (
+        candidate &&
+        Array.isArray(candidate.data)
+      ) {
+        collections.push(candidate.data);
+      }
+    });
+
+    for (var i = 0; i < collections.length; i += 1) {
+      for (var j = 0; j < collections[i].length; j += 1) {
+        var connection = collections[i][j];
+
+        if (connectionInactive(connection)) continue;
+
+        if (
+          containsExactId(
+            connection,
+            targets,
+            0
+          )
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  async function waitForMemberstack(timeoutMs){
+    var end = Date.now() + (timeoutMs || 6000);
+
+    while (Date.now() < end) {
+      if (
+        window.$memberstackDom &&
+        typeof window.$memberstackDom.getCurrentMember ===
+          "function"
+      ) {
+        return window.$memberstackDom;
+      }
+      await sleep(120);
+    }
+
+    return null;
+  }
+
+  async function recoverAccountAccess(){
+    var ms = await waitForMemberstack(6000);
+
+    if (!ms) {
+      return {
+        state:"unavailable",
+        member:null,
+        book:false,
+        automaticPlan:false
+      };
+    }
+
+    try {
+      var result = await ms.getCurrentMember();
+      var member = unwrapMember(result);
+
+      if (!member) {
+        return {
+          state:"logged-out",
+          member:null,
+          book:false,
+          automaticPlan:false
+        };
+      }
+
+      var book = memberHasTargets(
+        member,
+        [BOOK_PLAN_ID, BOOK_PRICE_ID]
+      );
+
+      var automaticPlan = memberHasTargets(
+        member,
+        [
+          AUTOMATIC_PLAN_PLAN_ID,
+          AUTOMATIC_PLAN_PRICE_ID
+        ]
+      );
+
+      return {
+        state:"logged-in",
+        member:member,
+        book:book,
+        automaticPlan:automaticPlan
+      };
+    } catch (_) {
+      return {
+        state:"unavailable",
+        member:null,
+        book:false,
+        automaticPlan:false
+      };
+    }
+  }
+
+  function renderFromContext(root, context){
+    var isBook = !!(
+      context &&
+      context.sku === BOOK_SKU
+    );
+
+    var isAutomaticPlan = !!(
+      context &&
+      AUTOMATIC_PLAN_SKUS[context.sku]
+    );
+
+    if (isBook) {
+      renderBook(root, "purchase_context");
+    } else if (isAutomaticPlan) {
+      renderAutomaticPlan(
+        root,
+        "purchase_context"
+      );
+    } else if (context) {
+      renderGeneric(root, context);
+    }
+
+    return {
+      isBook:isBook,
+      isAutomaticPlan:isAutomaticPlan
+    };
+  }
+
+  onReady(async function(){
+    var root = document.querySelector(
+      "[data-nf-purchase-thankyou]"
+    );
+
+    if (!root) return;
+
+    var context = parseContext();
+    var contextState = {
+      isBook:false,
+      isAutomaticPlan:false
+    };
+    var recovery = null;
+    var resolvedType = "unconfirmed";
+    var verifiedBy = "none";
+
+    if (context) {
+      contextState = renderFromContext(
+        root,
+        context
+      );
+      resolvedType = contextState.isBook
+        ? "book"
+        : contextState.isAutomaticPlan
+          ? "automatic_plan"
+          : "purchase";
+      verifiedBy = "purchase_context";
+    } else {
+      renderChecking(root);
+      recovery = await recoverAccountAccess();
+
+      if (
+        recovery.state === "logged-in" &&
+        recovery.book &&
+        !recovery.automaticPlan
+      ) {
+        renderBook(root, "account_entitlement");
+        resolvedType = "book";
+        verifiedBy = "account_entitlement";
+      } else if (
+        recovery.state === "logged-in" &&
+        recovery.automaticPlan &&
+        !recovery.book
+      ) {
+        renderAutomaticPlan(
+          root,
+          "account_entitlement"
+        );
+        resolvedType = "automatic_plan";
+        verifiedBy = "account_entitlement";
+      } else if (
+        recovery.state === "logged-in"
+      ) {
+        renderAccountAccess(root);
+        resolvedType = "account_access";
+        verifiedBy = "account_session";
+      } else {
+        renderUnconfirmed(root);
+        resolvedType = "unconfirmed";
+        verifiedBy = recovery
+          ? recovery.state
+          : "none";
+      }
+    }
+
+    trackOnce(
+      "view.purchase_thankyou",
+      "nf_purchase_thankyou_view",
+      {
+        nf_purchase_context:!!context,
+        nf_sku:context ? context.sku : null,
+        nf_context_type:resolvedType,
+        nf_automatic_plan:
+          resolvedType === "automatic_plan",
+        nf_book:resolvedType === "book",
+        nf_verified_by:verifiedBy,
+        nf_source_page:"purchase_thankyou",
+        nf_path:
+          window.location.pathname ||
+          "/thank-you"
+      }
+    );
+
+    document.addEventListener(
+      "click",
+      function(event){
+        var target = event.target;
+        var action =
+          target &&
+          target.closest
+            ? target.closest(
+                "[data-nf-purchase-action]"
+              )
+            : null;
+
+        if (!action) return;
+
+        track(
+          "nf_purchase_thankyou_action_click",
+          {
+            nf_action:
+              action.getAttribute(
+                "data-nf-purchase-action"
+              ) || "",
+            nf_dest:safeInternalDest(
+              action.getAttribute("href") ||
+              action.getAttribute("data-dest") ||
+              ""
+            ),
+            nf_purchase_context:!!context,
+            nf_sku:context ? context.sku : null,
+            nf_context_type:resolvedType,
+            nf_verified_by:verifiedBy,
+            nf_source_page:
+              "purchase_thankyou"
+          }
+        );
+      },
+      { passive:true }
+    );
+  });
 })();
 </script>
+
