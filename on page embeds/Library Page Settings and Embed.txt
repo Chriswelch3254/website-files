@@ -16,7 +16,7 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 ===== WEBFLOW CODE EMBED 01 =====
-<!-- NeuForm My Library v4.10.0 foundation styles and mount markup -->
+<!-- NeuForm My Library v4.10.1 foundation styles and mount markup -->
 <style id="nf-library-v493-styles">
 #nf-library-root{
   --nf-lib-blue:#3498db;--nf-lib-blue-2:#79c8ff;--nf-lib-blue-deep:#0b5fb8;--nf-lib-green:#56d8b3;--nf-lib-gold:#f2c45c;--nf-lib-purple:#b98cff;--nf-lib-red:#ff8b8b;
@@ -183,7 +183,7 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
   TRAINING_PLANS.forEach(function(plan){if(!plan.maxBytes) plan.maxBytes = 6291456;if(!plan.timeoutMs) plan.timeoutMs = 30000;});
 
   var CONFIG = {
-    version:"4.10.0-library-governance",
+    version:"4.10.1-library-automatic-plan-discovery",
     rootId:"nf-library-root",
     endpoints:{
       access:"https://downloads.neuform-fitness.com/api/library/access",
@@ -2344,22 +2344,30 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
 </script>
 
 ===== WEBFLOW CODE EMBED 06 =====
-<!-- NeuForm Automatic Plan VNext Library integration v1.1.0: load only when relevant -->
+<!-- NeuForm Automatic Plan VNext Library integration v1.2.0: entitlement-or-order discovery -->
 <script>
 (function(){
   "use strict";
-  if(window.__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V11__) return;
-  window.__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V11__ = true;
+  if(window.__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V12__) return;
+  window.__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V12__ = true;
 
   var sourceId = "automatic_plan_vnext_loader";
   var src = "https://downloads.neuform-fitness.com/automatic-plan-vnext/library-loader.js";
   var requested = false;
   var failed = false;
   var verifyTimer = null;
+  var probeStarted = false;
+  var probeDone = false;
+  var probeHasOrders = false;
+  var probeGeneration = 0;
 
   function processingReturn(){
     try{return new URLSearchParams(window.location.search).get("automatic-plan") === "processing";}
     catch(_){return false;}
+  }
+
+  function signedIn(NF){
+    return !!(NF && NF.state && NF.state.signedIn === true);
   }
 
   function automaticPlanOwned(NF){
@@ -2376,7 +2384,14 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
 
   function relevant(){
     var NF = window.NF_LIBRARY;
-    return processingReturn() || !!(NF && NF.state && NF.state.signedIn === true && automaticPlanOwned(NF));
+    return processingReturn() || probeHasOrders || !!(signedIn(NF) && automaticPlanOwned(NF));
+  }
+
+  function resetProbe(){
+    probeGeneration += 1;
+    probeStarted = false;
+    probeDone = false;
+    probeHasOrders = false;
   }
 
   function clearNotice(){
@@ -2388,7 +2403,7 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
 
   function showFailure(){
     var NF = window.NF_LIBRARY;
-    if(!NF || typeof NF.setNotice !== "function" || !NF.state || NF.state.signedIn !== true || !relevant()) return;
+    if(!NF || typeof NF.setNotice !== "function" || !signedIn(NF) || !relevant()) return;
     NF.setNotice(sourceId,{
       section:"continue",
       tone:"error",
@@ -2425,12 +2440,54 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
     document.head.appendChild(script);
   }
 
+  async function probeOrders(){
+    var NF = window.NF_LIBRARY;
+    if(requested || probeStarted || probeDone || processingReturn() || !signedIn(NF) || automaticPlanOwned(NF)) return;
+    if(!NF || typeof NF.currentSession !== "function" || !NF.config || !NF.config.endpoints || !NF.config.endpoints.automaticList) return;
+    probeStarted = true;
+    var generation = probeGeneration;
+    var controller = new AbortController();
+    var timeout = window.setTimeout(function(){try{controller.abort();}catch(_){}},12000);
+    try{
+      var sessionInfo = await NF.currentSession();
+      if(generation !== probeGeneration) return;
+      if(!sessionInfo || !sessionInfo.token) return;
+      var response = await fetch(NF.config.endpoints.automaticList,{
+        method:"GET",
+        headers:{Authorization:"Bearer " + sessionInfo.token,Accept:"application/json"},
+        credentials:"omit",
+        cache:"no-store",
+        signal:controller.signal
+      });
+      if(generation !== probeGeneration) return;
+      if(response.status !== 200) return;
+      var body = await response.text();
+      if(body.length > 700000) return;
+      var payload = null;
+      try{payload = JSON.parse(body);}catch(_){payload = null;}
+      if(payload && Array.isArray(payload.orders) && payload.orders.length > 0) probeHasOrders = true;
+    }catch(_){}
+    finally{
+      window.clearTimeout(timeout);
+      if(generation === probeGeneration){
+        probeStarted = false;
+        probeDone = true;
+        if(probeHasOrders) load();
+      }
+    }
+  }
+
   function evaluate(){
-    if(relevant()) load();
+    if(relevant()){load();return;}
+    probeOrders();
   }
 
   document.addEventListener("nf:library-state",evaluate);
-  document.addEventListener("nf:library-auth",evaluate);
+  document.addEventListener("nf:library-auth",function(event){
+    if(event && event.detail && event.detail.signedIn === false) resetProbe();
+    evaluate();
+  });
+  document.addEventListener("nf:library-account-switch",function(){resetProbe();window.setTimeout(evaluate,0);});
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded",evaluate,{once:true});
   else evaluate();
   window.setTimeout(evaluate,0);
