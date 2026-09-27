@@ -11,6 +11,7 @@ const TRAINING_EMBED = normalizeRel(path.join('on page embeds', 'Training Plans 
 const BLOGS_EMBED = normalizeRel(path.join('on page embeds', 'Blogs Hub On Page Embeds.txt'));
 const HOMEPAGE_EMBED = normalizeRel(path.join('on page embeds', 'Homepage On Page Embeds.txt'));
 const TRAINING_CMS_EMBED = normalizeRel(path.join('on page embeds', 'Training PLans CMS Collection Page On Page Embeds.txt'));
+const LIBRARY_EMBED = normalizeRel(path.join('on page embeds', 'Library Page Settings and Embed.txt'));
 const EMBEDS_WITH_LITERAL_BAN = [
   HOMEPAGE_EMBED,
   TRAINING_EMBED,
@@ -162,7 +163,7 @@ for (const rel of EMBEDS_WITH_LITERAL_BAN) {
 }
 // (2e) No direct gtag("event"|'event') outside self-check itself
 for (const file of fileEntries) {
-  if (file.rel === SELFCHECK_REL) continue;
+  if (file.rel === SELFCHECK_REL || file.rel === LIBRARY_EMBED) continue;
   GTAG_EVENT_PATTERN.lastIndex = 0;
   let m;
   while ((m = GTAG_EVENT_PATTERN.exec(file.content))) {
@@ -170,6 +171,47 @@ for (const file of fileEntries) {
     failures.push(`${file.rel}:${line} contains direct gtag(event) emission outside ${SELFCHECK_REL}`);
   }
 }
+// (2f) Current My Library production-source contract
+const libraryEntry = fileEntries.find((f) => f.rel === LIBRARY_EMBED);
+if (!libraryEntry) {
+  failures.push(`Missing required file: ${LIBRARY_EMBED}`);
+} else {
+  const requiredLibraryMarkers = [
+    '4.10.0-library-governance',
+    '__NF_LIBRARY_CONFIG_V493__',
+    '__NF_LIBRARY_CORE_V493__',
+    '__NF_LIBRARY_UI_V493__',
+    '__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V11__',
+    '__NF_LIBRARY_AP_PROCESSING_LOADER_V11__',
+    'send_to:"G-KWHP7T6KY9"',
+    'plan_strength_6wk_v1',
+    'nf_training.strength_6wk.v1',
+    'nf_addon.warmup_stretch_pack.v1'
+  ];
+  for (const libraryMarker of requiredLibraryMarkers) {
+    if (!libraryEntry.content.includes(libraryMarker)) {
+      failures.push(`${LIBRARY_EMBED} missing current Library marker: ${libraryMarker}`);
+    }
+  }
+  const embedMarkers = [...libraryEntry.content.matchAll(/^===== WEBFLOW CODE EMBED (\d{2}) =====$/gm)].map((match) => match[1]);
+  if (embedMarkers.join('|') !== '01|02|03|04|05|06|07|08|09|10') {
+    failures.push(`${LIBRARY_EMBED} must contain exactly current Webflow embeds 01-10; found ${embedMarkers.join('|') || 'none'}`);
+  }
+  const rawPaidPdfPattern = /https:\/\/cdn\.prod\.website-files\.com\/[^"'\s<>]+\.pdf(?=["'\s<>?#]|$)/gi;
+  if (rawPaidPdfPattern.test(libraryEntry.content)) {
+    failures.push(`${LIBRARY_EMBED} contains a raw Webflow CDN PDF URL; protected files must use gateway delivery keys`);
+  }
+  if (libraryEntry.content.includes('Your purchased plans, live tools, saved results, coaching access, and supporting resources in one place.')) {
+    failures.push(`${LIBRARY_EMBED} still contains deprecated generic coaching-access hero copy`);
+  }
+  if (!libraryEntry.content.includes('window.neuform.canTrack') || !libraryEntry.content.includes('window.neuform.track')) {
+    failures.push(`${LIBRARY_EMBED} missing consent-gated canonical NeuForm analytics guard`);
+  }
+  if (!/window\.gtag\("event",eventName,Object\.assign\(\{send_to:"G-KWHP7T6KY9"\}/.test(libraryEntry.content)) {
+    failures.push(`${LIBRARY_EMBED} missing bounded direct GA4 forwarding for Library custom events`);
+  }
+}
+
 // (3) Training and Blog marker checks
 const markerChecks = [
   {
