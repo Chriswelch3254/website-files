@@ -178,13 +178,15 @@ if (!libraryEntry) {
   failures.push(`Missing required file: ${LIBRARY_EMBED}`);
 } else {
   const requiredLibraryMarkers = [
-    '4.10.0-library-governance',
+    '4.10.1-library-automatic-plan-discovery',
     '__NF_LIBRARY_CONFIG_V493__',
     '__NF_LIBRARY_CORE_V493__',
     '__NF_LIBRARY_UI_V493__',
-    '__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V11__',
+    '__NF_LIBRARY_AUTOMATIC_PLAN_VNEXT_BOOTSTRAP_V12__',
     '__NF_LIBRARY_AP_PROCESSING_LOADER_V11__',
     'send_to:"G-KWHP7T6KY9"',
+    'NF.config.endpoints.automaticList',
+    'payload.orders.length > 0',
     'plan_strength_6wk_v1',
     'nf_training.strength_6wk.v1',
     'nf_addon.warmup_stretch_pack.v1'
