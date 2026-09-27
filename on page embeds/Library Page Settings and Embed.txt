@@ -416,7 +416,7 @@ Open Graph description: Open your NeuForm account-linked purchases, delivered pl
   CONFIG.realityTypes.types=TYPE_REGISTRY.slice();
   CONFIG.realityTypes.typeNames=typeNames;
   CONFIG.blueprints=TYPE_REGISTRY.map(function(type){return [type.key,type.shortName];});
-  CONFIG.version=VERSION;
+  CONFIG.realityTypes.version=VERSION;
 
   /* These evidence forms mirror the current Reality Types backend
      compatibility contract. Normalization makes hyphen/underscore
