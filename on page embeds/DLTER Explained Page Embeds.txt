@@ -1,6 +1,6 @@
 DLTER Explained Page Embeds
 LIVE WEBFLOW MIRROR
-Version: Reality Types Explained v3.0.1
+Version: Reality Types Explained v3.0.2
 Webflow Page ID: 6949aa053c93b77c095dc5b4
 Synced: 2026-09-28
 Authority note: Embeds are listed in current Webflow Navigator order. Git history preserves retired v2 source.
@@ -276,6 +276,22 @@ body.rtx3-explained-body{background:#05080d;color:var(--rt3-muted)}
   font-size:.78rem;
 }
 </style>
+<style id="nfrealitytypesexplained-v302-background-fix">
+/* Restore the shared NeuForm rocky background. Page-specific content surfaces remain opaque/translucent for readability. */
+html.rtx3-explained-page,
+body.rtx3-explained-body{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+}
+body.rtx3-explained-body>section.dlterx-section,
+body.rtx3-explained-body>section.dlterx-section>.nf,
+body.rtx3-explained-body>section.dlterx-section .nf-lab-container{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+}
+</style>
 
 ==============================
 EMBED 2
@@ -299,7 +315,7 @@ Element ID: 3032592e-6271-128a-2b5c-4e960e7677ae
 EMBED 5
 Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
 ==============================
-<main id="rtx3-explained" class="rtx3-page" data-rtx-explained-version="3.0.1">
+<main id="rtx3-explained" class="rtx3-page" data-rtx-explained-version="3.0.2">
   <section id="top" class="rtx3-hero" aria-labelledby="rtx3-title">
     <div class="rtx3-container rtx3-hero-grid">
       <article class="rtx3-panel rtx3-hero-copy">
@@ -666,7 +682,7 @@ Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
 EMBED 6
 Element ID: ad0ccf12-a915-8ddf-69e0-bb9c85b2ca9e
 ==============================
-<div id="rtx3-explained-tail" class="rtx3-tail" data-rtx-explained-tail-version="3.0.1">
+<div id="rtx3-explained-tail" class="rtx3-tail" data-rtx-explained-tail-version="3.0.2">
   <section id="faq" class="rtx3-section" aria-labelledby="rtx3-faq-title">
     <div class="rtx3-container">
       <article class="rtx3-panel rtx3-faq-wrap">
@@ -740,7 +756,7 @@ Element ID: df313f2c-a9ae-9b02-e912-6b9f874f290c
   if(window.__NF_RT_EXPLAINED_V300__) return;
   window.__NF_RT_EXPLAINED_V300__=true;
 
-  var VERSION="3.0.1";
+  var VERSION="3.0.2";
   var root=document.getElementById("rtx3-explained");
   var tail=document.getElementById("rtx3-explained-tail");
   if(!root) return;
