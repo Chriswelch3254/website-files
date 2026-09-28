@@ -1,6 +1,6 @@
 DLTER Explained Page Settings Code
 LIVE WEBFLOW MIRROR
-Version: Reality Types Explained v3.0.1
+Version: Reality Types Explained v3.0.2
 Webflow Page ID: 6949aa053c93b77c095dc5b4
 Synced: 2026-09-28
 Authority note: This file mirrors the current published Webflow page settings. Git history preserves earlier revisions.
@@ -8,7 +8,7 @@ Authority note: This file mirrors the current published Webflow page settings. G
 ==============================
 HEAD
 ==============================
-<!-- Reality Types Explained v3.0.1 - Page Settings Head -->
+<!-- Reality Types Explained v3.0.2 - Page Settings Head -->
 <meta charset="utf-8" />
 <script>
   try {
@@ -40,7 +40,7 @@ HEAD
 ==============================
 BEFORE </body>
 ==============================
-<!-- Reality Types Explained v3.0.1 - Before </body> -->
+<!-- Reality Types Explained v3.0.2 - Before </body> -->
 <script>
   try {
     document.body.classList.add("rtx3-explained-body");
