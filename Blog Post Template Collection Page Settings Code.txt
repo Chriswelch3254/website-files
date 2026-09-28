@@ -1,471 +1,2059 @@
 Blog Post Template CMS Collection Page Page Settings Code
 
+CURRENT LIVE SOURCE SNAPSHOT
+Site: NeuForm Fitness
+CMS template page ID: 6910d71b54acfa4e64560867
+Blog Posts collection ID: 6910d71a54acfa4e64560861
+Template release: v4.5.7
+Published: 2026-09-28
+
+SOURCE WRAPPER REQUIREMENTS
+Designer element: 25fd33ab-8c19-90d0-7e42-e45bab217151
+Class: Div Block 22
+Required attributes:
+- data-nf-rte-source-wrapper=""
+- role="region"
+- aria-label="Article content"
+- Do NOT add a static aria-hidden attribute. The early head runtime applies aria-hidden while JavaScript enhancement is healthy. This allows the noscript/fail-open article body to remain accessible if JavaScript is unavailable or the hydration runtime fails.
+
 Head:
-<!-- Viewport -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- NeuForm Article Template Head v4.5.7 -->
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0b0f12">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 
-<!-- Robots (CMS-controlled) -->
-<meta name="robots" content="{{wf {&quot;path&quot;:&quot;indexing-control&quot;,&quot;type&quot;:&quot;Option&quot;\} }}">
-
-<!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="NeuForm Fitness">
 <meta property="og:url" content="https://www.neuform-fitness.com/blog-posts/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
-<meta property="og:title" content="{{wf {&quot;path&quot;:&quot;meta-title&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | NeuForm Fitness">
-<meta property="og:description" content="{{wf {&quot;path&quot;:&quot;meta-description&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
 <meta property="og:locale" content="en_US">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{wf {&quot;path&quot;:&quot;meta-title&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | NeuForm Fitness">
-<meta name="twitter:description" content="{{wf {&quot;path&quot;:&quot;meta-description&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
+<meta property="article:published_time" content="{{wf {&quot;path&quot;:&quot;publish-date&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;YYYY-MM-DD&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}">
+<meta property="article:modified_time" content="{{wf {&quot;path&quot;:&quot;last-updated&quot;,&quot;transformers&quot;:[{&quot;name&quot;:&quot;date&quot;,&quot;arguments&quot;:[&quot;YYYY-MM-DD&quot;]\}],&quot;type&quot;:&quot;Date&quot;\} }}">
+<meta property="article:section" content="{{wf {&quot;path&quot;:&quot;primary-category&quot;,&quot;type&quot;:&quot;Option&quot;\} }}">
+<meta property="article:author" content="{{wf {&quot;path&quot;:&quot;author-name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
 
-<!-- Performance niceties -->
 <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- NOTE:
-     Canonical/title/description MUST be managed via Webflow SEO fields + Publishing domain.
-     This page script will NOT inject/override canonical or robots.
-     JSON-LD is injected in the BODY by id (safe replace), and uses the page’s canonical URL from <link rel="canonical"> when present. -->
+<!-- Webflow CMS fields own title, description, canonical, Open Graph image/text, and standard Twitter metadata. Schema is handled by the template JSON-LD. -->
+
+<!-- NeuForm article mobile TOC default v1.0.0; reader choices remain native. -->
+<script>
+(function () {
+  "use strict";
+  function setInitialTocState() {
+    var root = document.querySelector("[data-nf-blog-post]");
+    var toc = root && root.querySelector("details[data-toc-wrap]");
+    if (!toc || toc.getAttribute("data-nf-toc-default-set") === "1") return;
+    toc.setAttribute("data-nf-toc-default-set", "1");
+    if (window.matchMedia && window.matchMedia("(max-width: 767px)").matches) {
+      toc.open = false;
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setInitialTocState, { once: true });
+  } else {
+    setInitialTocState();
+  }
+})();
+</script>
+
+<style id="nf-blog-template-surface-v1">
+  html[data-wf-page="6910d71b54acfa4e64560867"] body{background-color:#050607!important}
+</style>
+
+<!-- NeuForm Article background delivery v1 -->
+<style id="nf-article-background-delivery">
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-bg-fixed{background-image:url("https://s3.amazonaws.com/webflow-prod-assets/65d26f254c0a038c1f9198e6/65de43bfa80010891ea9d084_brian-patrick-tagalog-_8hGFBxWD0A-unsplash-p-2000.jpg")!important}
+  @media (max-width:767px){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-bg-fixed{background-image:url("https://s3.amazonaws.com/webflow-prod-assets/65d26f254c0a038c1f9198e6/65de43bfa80010891ea9d084_brian-patrick-tagalog-_8hGFBxWD0A-unsplash-p-1600.jpg")!important}
+  }
+</style>
+<!-- /NeuForm Article background delivery v1 -->
 
 
-Body:
-<!-- NeuForm — Blog Page Scripts (v1.8 • code-only hardening)
-Update:
-  • No longer requires data-nf-blog-section / data-nf-blog
-  • Auto-detects root via .nf-wrap and host via nearest section (or document)
-  • RTE clone falls back to .nf-body-rte/.nf-takeaways and will NOT blank content if slots are missing
-  • ensureVisibleForInit restores previous display state (no forced display:none)
-  • Read time / external links / takeaways hiding now support class fallbacks
--->
+<!-- NeuForm Article Reading Polish v4.4.0 -->
+<style id="nf-article-reading-polish-v440">
+  @media (min-width:1120px){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__inner{
+      width:min(1180px,100%);
+    }
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__layout,
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post[data-nf-body-ready="true"] .nf-blog-post__layout{
+      grid-template-columns:minmax(0,74ch) minmax(270px,320px);
+      gap:clamp(28px,3.8vw,46px);
+    }
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__content{
+      max-width:74ch;
+    }
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__toc nav{
+    max-height:min(56vh,520px);
+    overflow:auto;
+    padding-right:4px;
+    scrollbar-width:thin;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__chip-link{
+    text-decoration:none;
+    transition:border-color .16s ease,background-color .16s ease,color .16s ease,transform .16s ease;
+  }
+
+  @media (hover:hover){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__chip-link:hover{
+      transform:translateY(-1px);
+      border-color:rgba(121,200,255,.46);
+      background:rgba(52,152,219,.18);
+      color:#fff;
+    }
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading{
+    position:relative;
+    overflow:hidden;
+    margin:20px 0 0;
+    padding:20px 22px;
+    border:1px solid rgba(52,152,219,.24);
+    border-radius:16px;
+    background:
+      radial-gradient(620px 190px at 0 0,rgba(52,152,219,.11),transparent 72%),
+      linear-gradient(180deg,rgba(3,12,19,.94),rgba(1,7,11,.98));
+    box-shadow:0 16px 40px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.035);
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading::before{
+    content:"";
+    position:absolute;
+    left:22px;
+    right:22px;
+    top:0;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(121,200,255,.48),transparent);
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading h2{
+    margin:0 0 12px!important;
+    color:#fff!important;
+    font-size:clamp(22px,2.6vw,28px)!important;
+    line-height:1.15!important;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading ul{
+    display:grid;
+    gap:9px;
+    margin:0!important;
+    padding:0!important;
+    list-style:none!important;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading li{
+    margin:0!important;
+    padding:0!important;
+    list-style:none!important;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading li::marker{
+    content:"";
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading a{
+    display:flex;
+    align-items:center;
+    min-height:44px;
+    padding:10px 12px;
+    border:1px solid rgba(52,152,219,.20);
+    border-radius:11px;
+    background:rgba(52,152,219,.065);
+    color:#dff2ff!important;
+    font-size:14px;
+    font-weight:800;
+    line-height:1.4;
+    text-decoration:none!important;
+    transition:border-color .16s ease,background-color .16s ease,transform .16s ease;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading a::after{
+    content:"→";
+    margin-left:auto;
+    padding-left:12px;
+    color:#79c8ff;
+    font-weight:900;
+  }
+
+  @media (hover:hover){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading a:hover{
+      transform:translateY(-1px);
+      border-color:rgba(121,200,255,.42);
+      background:rgba(52,152,219,.12);
+    }
+  }
+
+  @media (max-width:640px){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading{
+      padding:17px 15px;
+      border-radius:14px;
+    }
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__related-reading::before{
+      left:15px;
+      right:15px;
+    }
+  }
+</style>
+<!-- /NeuForm Article Reading Polish v4.4.0 -->
+
+<!-- NeuForm Article Critical Hydration v4.4.0 -->
+<style id="nf-article-critical-hydration-v440">
+  /* The shared header skip link is translated off-canvas when idle.
+     Keep it visibility-visible so keyboard focus can actually reach it. */
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-site-nav__skip{
+    visibility:visible!important;
+  }
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-site-nav__skip:focus,
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-site-nav__skip:focus-visible{
+    transform:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+
+  @media (min-width:1120px){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-takeaways-wrap][hidden]{
+      display:block!important;
+      visibility:hidden!important;
+      min-height:420px!important;
+      pointer-events:none!important;
+    }
+
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-body-slot]{
+      min-height:100vh!important;
+    }
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) .nf-blog-post__side,
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-cta-wrap],
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) .nf-blog-post__article-nav{
+      display:none!important;
+    }
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__side-section > summary{
+    min-height:32px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__side-section > summary::after{
+    float:none;
+    margin-left:auto;
+    flex:0 0 auto;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__meta a{
+    color:inherit;
+    font-weight:850;
+    text-decoration:underline;
+    text-decoration-color:rgba(121,200,255,.52);
+    text-underline-offset:3px;
+  }
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__meta a:hover{
+    color:#fff;
+    text-decoration-color:#79c8ff;
+  }
+
+  html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post__toc a[aria-current="location"]{
+    border-left-color:#79c8ff;
+    background:linear-gradient(90deg,rgba(52,152,219,.14),transparent);
+    color:#fff;
+    font-weight:900;
+  }
+</style>
+<!-- /NeuForm Article Critical Hydration v4.4.0 -->
+
+
+<!-- NeuForm Article Source Fail-Open v4.5.6 -->
+<style id="nf-article-source-failopen-v456">
+  html.nf-article-failopen .nf-blog-post__layout,
+  html.nf-article-failopen .nf-blog-post__reading-progress,
+  html.nf-article-failopen [data-rte-related]{
+    display:none!important;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper]{
+    display:flex!important;
+    flex-direction:column;
+    width:min(680px,calc(100% - 32px));
+    margin:28px auto 72px;
+    padding:0;
+    color:#e9f3f7;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+
+  html.nf-article-failopen [data-rte-takeaways]{
+    order:1;
+    margin:0 0 28px;
+    padding:20px 22px;
+    border:1px solid rgba(52,152,219,.24);
+    border-radius:16px;
+    background:linear-gradient(180deg,rgba(3,12,19,.94),rgba(1,7,11,.98));
+    color:#e9f3f7;
+  }
+
+  html.nf-article-failopen [data-rte-body]{
+    order:2;
+    color:#e9f3f7;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext p,
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext li{
+    color:rgba(233,243,247,.90);
+    font-size:18px;
+    line-height:1.72;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext h2,
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext h3,
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext h4{
+    color:#fff;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext h2{
+    margin:42px 0 16px;
+    font-size:clamp(27px,3.4vw,36px);
+    line-height:1.15;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext h3{
+    margin:32px 0 12px;
+    font-size:clamp(22px,2.6vw,28px);
+    line-height:1.2;
+  }
+
+  html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext a{
+    color:#79c8ff;
+    text-underline-offset:3px;
+  }
+
+  html.nf-article-failopen [data-rte-takeaways] h2{
+    margin-top:0;
+  }
+
+  @media(max-width:640px){
+    html.nf-article-failopen [data-nf-rte-source-wrapper]{
+      width:calc(100% - 24px);
+      margin:20px auto 54px;
+    }
+    html.nf-article-failopen [data-rte-takeaways]{
+      padding:17px 15px;
+      border-radius:14px;
+    }
+    html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext p,
+    html.nf-article-failopen [data-nf-rte-source-wrapper] .w-richtext li{
+      font-size:17px;
+    }
+  }
+</style>
+
+<noscript>
+<style>
+  .nf-blog-post__layout,
+  .nf-blog-post__reading-progress,
+  [data-rte-related]{
+    display:none!important;
+  }
+
+  [data-nf-rte-source-wrapper]{
+    display:flex!important;
+    flex-direction:column;
+    width:min(680px,calc(100% - 32px));
+    margin:28px auto 72px;
+    color:#e9f3f7;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+
+  [data-rte-takeaways]{
+    order:1;
+    margin:0 0 28px;
+    padding:20px 22px;
+    border:1px solid rgba(52,152,219,.24);
+    border-radius:16px;
+    background:linear-gradient(180deg,rgba(3,12,19,.94),rgba(1,7,11,.98));
+    color:#e9f3f7;
+  }
+
+  [data-rte-body]{
+    order:2;
+    color:#e9f3f7;
+  }
+
+  [data-nf-rte-source-wrapper] .w-richtext p,
+  [data-nf-rte-source-wrapper] .w-richtext li{
+    color:rgba(233,243,247,.90);
+    font-size:18px;
+    line-height:1.72;
+  }
+
+  [data-nf-rte-source-wrapper] .w-richtext h2,
+  [data-nf-rte-source-wrapper] .w-richtext h3,
+  [data-nf-rte-source-wrapper] .w-richtext h4{
+    color:#fff;
+  }
+
+  [data-nf-rte-source-wrapper] .w-richtext h2{
+    margin:42px 0 16px;
+    font-size:clamp(27px,3.4vw,36px);
+    line-height:1.15;
+  }
+
+  [data-nf-rte-source-wrapper] .w-richtext h3{
+    margin:32px 0 12px;
+    font-size:clamp(22px,2.6vw,28px);
+    line-height:1.2;
+  }
+
+  [data-nf-rte-source-wrapper] .w-richtext a{
+    color:#79c8ff;
+    text-underline-offset:3px;
+  }
+
+  @media(max-width:640px){
+    [data-nf-rte-source-wrapper]{
+      width:calc(100% - 24px);
+      margin:20px auto 54px;
+    }
+    [data-rte-takeaways]{
+      padding:17px 15px;
+      border-radius:14px;
+    }
+    [data-nf-rte-source-wrapper] .w-richtext p,
+    [data-nf-rte-source-wrapper] .w-richtext li{
+      font-size:17px;
+    }
+  }
+</style>
+</noscript>
+
 <script>
 (function(){
-  // ---------- dataLayer ----------
-  // ---------- helpers ----------
-  var $  = (s,el)=> (el||document).querySelector(s);
-  var $$ = (s,el)=> Array.from((el||document).querySelectorAll(s));
-  var iso = (s)=>{
-    try{
-      if(!s || /^\s*$/.test(s)) return '';
-      var d = new Date(s);
-      if (isNaN(d.getTime())) return '';
-      return d.toISOString();
-    }catch(e){ return ''; }
-  };
+  "use strict";
 
-  function getCanonicalUrl(){
+  var SOURCE_SELECTOR="[data-nf-rte-source-wrapper]";
+  var READY_SELECTOR="[data-nf-blog-post]";
+
+  function source(){
+    return document.querySelector(SOURCE_SELECTOR);
+  }
+
+  function root(){
+    return document.querySelector(READY_SELECTOR);
+  }
+
+  function hideSource(){
+    var el=source();
+    if(el) el.setAttribute("aria-hidden","true");
+  }
+
+  function ready(){
+    var el=root();
+    return !!(el&&el.getAttribute("data-nf-body-ready")==="true");
+  }
+
+  function restoreNormal(){
+    document.documentElement.classList.remove("nf-article-failopen");
+    hideSource();
+  }
+
+  hideSource();
+
+  var observer=null;
+  if("MutationObserver" in window){
+    observer=new MutationObserver(function(){
+      hideSource();
+      if(ready()){
+        restoreNormal();
+        try{observer.disconnect();}catch(_){}
+      }
+    });
+
     try{
-      var link = document.querySelector('link[rel="canonical"]');
-      var href = link && link.href ? String(link.href) : '';
-      if (href) return href.split('#')[0];
-    }catch(e){}
-    try{
-      return (location.origin + location.pathname + location.search).split('#')[0];
-    }catch(e2){
-      return (location.href || '').split('#')[0];
+      observer.observe(document.documentElement,{
+        childList:true,
+        subtree:true,
+        attributes:true,
+        attributeFilter:["data-nf-body-ready"]
+      });
+    }catch(_){
+      observer=null;
     }
   }
 
-  // Wait until a selector exists (CMS render timing safe)
-  function waitFor(sel, root, tries, gap, cb){
-    var n=0, max=(tries||80), delay=(gap||50);
-    (function loop(){
-      var el = (root||document).querySelector(sel);
-      if (el || n>=max) { cb(el); return; }
-      n++; setTimeout(loop, delay);
-    })();
+  window.setTimeout(function(){
+    if(ready()){
+      restoreNormal();
+      return;
+    }
+
+    var el=source();
+    if(!el) return;
+
+    document.documentElement.classList.add("nf-article-failopen");
+    el.removeAttribute("aria-hidden");
+  },4500);
+})();
+</script>
+<!-- /NeuForm Article Source Fail-Open v4.5.6 -->
+
+<!-- NeuForm Article Mobile Hydration Stability v4.5.7 -->
+<style id="nf-article-mobile-hydration-stability-v457">
+  @media (max-width:1119px){
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-toc-wrap][hidden]{
+      display:block!important;
+      visibility:hidden!important;
+      min-height:64px!important;
+      pointer-events:none!important;
+    }
+
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-takeaways-wrap][hidden]{
+      display:block!important;
+      visibility:hidden!important;
+      min-height:380px!important;
+      pointer-events:none!important;
+    }
+
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-body-slot]{
+      min-height:100vh!important;
+    }
+
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) [data-cta-wrap],
+    html[data-wf-page="6910d71b54acfa4e64560867"] .nf-blog-post:not([data-nf-body-ready="true"]) .nf-blog-post__article-nav{
+      display:none!important;
+    }
+  }
+</style>
+<!-- /NeuForm Article Mobile Hydration Stability v4.5.7 -->
+
+Footer:
+<!-- NeuForm Article Template Runtime v4.5.7. Schema is handled only by the JSON-LD block. -->
+<script>
+(function(){
+  "use strict";
+
+  var VERSION = "v4.5.7";
+  var ROOT_SELECTOR = "[data-nf-blog-post]";
+  var BODY_SLOT_SELECTOR = "[data-body-slot]";
+  var TAKEAWAYS_SLOT_SELECTOR = "[data-takeaways-slot]";
+  var TOC_WRAP_SELECTOR = "[data-toc-wrap]";
+  var TOC_LIST_SELECTOR = "[data-toc-list]";
+  var PROGRESS_SELECTOR = "[data-reading-progress]";
+  var MAX_BRIDGE_ATTEMPTS = 24;
+  var BRIDGE_RETRY_DELAY = 125;
+  var root = null;
+  var calculatedReadMinutes = 0;
+  var articleViewTracked = false;
+  var scrollTrackingStarted = false;
+  var bridgeAttempts = 0;
+  var bridgeTimer = 0;
+  var bridgeObserver = null;
+  var bodyBridgeDone = false;
+  var takeawaysBridgeDone = false;
+  var tocBuilt = false;
+  var booted = false;
+
+  function qs(sel, ctx){ return (ctx || document).querySelector(sel); }
+  function qsa(sel, ctx){ return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+
+  function clean(value){
+    value = String(value == null ? "" : value).replace(/\s+/g, " ").trim();
+    var lower = value.toLowerCase();
+    if (!value || /\{\{\s*wf/i.test(value) || lower === "undefined" || lower === "null") return "";
+    return value;
   }
 
-  // ---------- host/root detection (NO attr dependency) ----------
-  // Prefer explicit markers if present, otherwise infer from existing structure.
-  var root =
-    document.querySelector('[data-nf-blog]') ||
-    document.querySelector('.nf-wrap') ||
-    document.querySelector('.nf-article') ||
-    document.body;
+  function hide(el){
+    if (!el) return;
+    el.hidden = true;
+    el.style.display = "none";
+  }
 
-  var host =
-    document.querySelector('[data-nf-blog-section]') ||
-    (root && root.closest && root.closest('section')) ||
-    document;
+  function show(el){
+    if (!el) return;
+    el.hidden = false;
+    el.style.display = "";
+  }
 
-  // --- idempotence guard ---
-  if (root.__nfBlogInit) return;
-  root.__nfBlogInit = true;
+  function data(name){
+    return clean(root.getAttribute("data-" + name));
+  }
 
-  // ---------- dataset ----------
-  var ds = root.dataset || {};
-  var title = ds.title || document.title;
-  var slug  = ds.slug  || location.pathname.replace(/^\/|\/$/g,'');
-  var primaryCat = ds.primaryCategory || '';
-  var secondaryCat = ds.secondaryCategory || '';
-  var tags = (ds.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
-  var author = ds.author || '';
-  var authorRole = ds.authorRole || '';
-  var published = ds.published || '';
-  var updated   = ds.updated   || '';
-  var readMins  = parseInt(ds.readMins||'',10);
-  var metaTitle = ds.metaTitle || '';
-  var metaDesc  = ds.metaDesc  || '';
-  var articleId = ds.articleId || '';
-  var convType  = ds.convType  || '';
-  var ctaHeader = ds.ctaHeader || '';
-  var ctaText   = ds.ctaText   || '';
-  var ctaLabel  = (ds.ctaLabel||'See the Plan →').trim();
-  var ctaHref   = (ds.ctaHref||'/training-plans').trim();
-  var videoUrl  = (ds.videoUrl||'').trim();
-  var audioUrl  = (ds.audioUrl||'').trim();
-
-  // ---------- RTE cloning (safe) ----------
-  function findSource(selectors){
-    for (var i=0;i<selectors.length;i++){
-      var el = $(selectors[i], host);
-      if (el) return el;
+  function validUrl(raw){
+    raw = clean(raw);
+    if (!raw) return "";
+    try {
+      var url = new URL(raw, window.location.origin);
+      if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+      return url.href;
+    } catch(e) {
+      return "";
     }
+  }
+
+  function safePath(raw){
+    var href = validUrl(raw);
+    if (!href) return "";
+    try {
+      var url = new URL(href);
+      if (url.origin !== window.location.origin) return "external";
+      var path = url.pathname || "/";
+      return path.slice(0, 180);
+    } catch(e) {
+      return "";
+    }
+  }
+
+  function addPayloadValue(payload, key, value){
+    value = clean(value);
+    if (value) payload[key] = value;
+  }
+
+  function safeAnalyticsText(value, maxLength){
+    value = clean(value);
+    if (!value) return "";
+
+    value = value
+      .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/ig, "")
+      .replace(/\+?\d[\d\s().-]{7,}\d/g, "")
+      .replace(/https?:\/\/\S+/ig, "external")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return value ? value.slice(0, maxLength || 120) : "";
+  }
+
+  function canTrack(){
+    try {
+      return !(
+        window.neuform &&
+        typeof window.neuform.canTrack === "function" &&
+        !window.neuform.canTrack()
+      );
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function track(name, payload){
+    if (!canTrack()) return false;
+
+    try {
+      if (window.neuform && typeof window.neuform.track === "function") {
+        return window.neuform.track(name, payload || {});
+      }
+    } catch(e) {}
+
+    return false;
+  }
+
+  function trackOnce(key, name, payload){
+    if (!canTrack()) return false;
+
+    try {
+      if (window.neuform && typeof window.neuform.trackOnce === "function") {
+        return window.neuform.trackOnce(key, name, payload || {});
+      }
+    } catch(e) {}
+
+    try {
+      var storageKey = "nf.once." + key;
+      if (window.sessionStorage && sessionStorage.getItem(storageKey)) return false;
+      if (window.sessionStorage) sessionStorage.setItem(storageKey, "1");
+    } catch(e) {}
+
+    return track(name, payload || {});
+  }
+
+  function tuneStructuredData(){
+    var node = document.getElementById("nf-blog-post-jsonld");
+    if (!node) return;
+
+    try {
+      var graph = JSON.parse(node.textContent || "{}");
+      var nodes = graph && graph["@graph"] ? graph["@graph"] : [];
+      var post = nodes.find(function(item){ return item && item["@type"] === "BlogPosting"; });
+      if (!post) return;
+
+      if (post.author && typeof post.author === "object") {
+        post.author.url = "https://www.neuform-fitness.com/about";
+      }
+
+      if (
+        post.image &&
+        typeof post.image === "object" &&
+        /68c723c44c0ae0a617190d39/i.test(String(post.image.url || ""))
+      ) {
+        delete post.image;
+      }
+
+      node.textContent = JSON.stringify(graph);
+    } catch (_) {}
+  }
+
+  function hideEmptyNodes(){
+    qsa("[data-hide-if-empty]", root).forEach(function(el){
+      var value = clean(el.getAttribute("data-value"));
+      if (!value) value = clean(el.textContent);
+      if (!value) hide(el);
+    });
+  }
+
+  function isHidden(el){
+    return !el || el.hidden || el.style.display === "none";
+  }
+
+  function hasShownChild(el){
+    if (!el) return false;
+    return Array.prototype.slice.call(el.children || []).some(function(child){
+      return !isHidden(child);
+    });
+  }
+
+  function hideEmptyContainers(){
+    var chips = qs(".nf-blog-post__chips", root);
+    if (chips && !hasShownChild(chips)) hide(chips);
+
+    var side = qs(".nf-blog-post__side", root);
+    if (side && !hasShownChild(side)) hide(side);
+  }
+
+  function stripIds(node){
+    if (!node) return;
+    qsa("[id]", node).forEach(function(el){ el.removeAttribute("id"); });
+  }
+
+  function sanitizeRte(scope){
+    if (!scope) return;
+
+    qsa("script, style, link, meta, object, embed", scope).forEach(function(el){
+      el.remove();
+    });
+
+    qsa("*", scope).forEach(function(el){
+      Array.prototype.slice.call(el.attributes || []).forEach(function(attr){
+        var name = attr.name.toLowerCase();
+        var value = clean(attr.value);
+        if (name.indexOf("on") === 0) el.removeAttribute(attr.name);
+        if ((name === "href" || name === "src") && /^(javascript|data):/i.test(value)) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+
+    qsa("iframe[src], img[src], video[src], audio[src], source[src]", scope).forEach(function(el){
+      var src = validUrl(el.getAttribute("src"));
+      if (!src) {
+        el.remove();
+        return;
+      }
+      el.setAttribute("src", src);
+    });
+  }
+
+  function lazyMedia(scope){
+    qsa("img", scope).forEach(function(img){
+      if (!img.hasAttribute("loading")) img.setAttribute("loading", "lazy");
+      if (!img.hasAttribute("decoding")) img.setAttribute("decoding", "async");
+    });
+    qsa("iframe", scope).forEach(function(frame){
+      if (!frame.hasAttribute("loading")) frame.setAttribute("loading", "lazy");
+    });
+  }
+
+  function hasSlotContent(slot){
+    if (!slot) return false;
+    if (clean(slot.textContent)) return true;
+    return !!qs("img, iframe, video, audio, picture, table, ul, ol, blockquote, pre", slot);
+  }
+
+  function hasRteContent(rte){
+    if (!rte) return false;
+    if (clean(rte.textContent)) return true;
+    return !!qs("img, iframe, video, audio, picture, table, ul, ol, blockquote, pre", rte);
+  }
+
+  function headingId(text, used){
+    var base = clean(text)
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 72);
+
+    if (!base) base = "section";
+
+    var next = base;
+    var index = 2;
+
+    while (used[next]) {
+      next = base + "-" + index;
+      index += 1;
+    }
+
+    used[next] = true;
+    return next;
+  }
+
+  function buildToc(){
+    if (!root) return;
+
+    var wrap = qs(TOC_WRAP_SELECTOR, root);
+    var list = qs(TOC_LIST_SELECTOR, root);
+    var body = qs(BODY_SLOT_SELECTOR, root);
+
+    if (!wrap || !list || !body) return;
+
+    var primaryHeadings = qsa("h2", body).filter(function(heading){
+      return !!clean(heading.textContent);
+    });
+    var headings = primaryHeadings.length >= 2
+      ? primaryHeadings
+      : qsa("h2, h3", body).filter(function(heading){
+          return !!clean(heading.textContent);
+        });
+
+    if (headings.length < 2) {
+      hide(wrap);
+      tocBuilt = true;
+      return;
+    }
+
+    var used = {};
+    list.innerHTML = "";
+
+    headings.forEach(function(heading, index){
+      var label = clean(heading.textContent);
+      var id = clean(heading.id);
+
+      if (!id || used[id]) {
+        id = headingId(label, used);
+        heading.id = id;
+      } else {
+        used[id] = true;
+      }
+
+      heading.setAttribute("tabindex", "-1");
+
+      var item = document.createElement("li");
+      item.className = heading.tagName.toLowerCase() === "h3"
+        ? "nf-blog-post__toc-item nf-blog-post__toc-item--sub"
+        : "nf-blog-post__toc-item";
+
+      var link = document.createElement("a");
+      link.href = "#" + id;
+      link.textContent = label;
+      link.setAttribute("data-toc-index", String(index + 1));
+
+      link.addEventListener("click", function(event){
+        event.preventDefault();
+
+        var reduced = false;
+        try {
+          reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        } catch(e) {}
+
+        try {
+          heading.scrollIntoView({
+            behavior: reduced ? "auto" : "smooth",
+            block: "start"
+          });
+        } catch(e) {
+          window.location.hash = id;
+        }
+
+        try {
+          history.replaceState(null, "", "#" + id);
+        } catch(e) {}
+
+        window.setTimeout(function(){
+          try { heading.focus({ preventScroll: true }); } catch(e) {
+            try { heading.focus(); } catch(_) {}
+          }
+        }, reduced ? 0 : 260);
+
+        var payload = blogPayload();
+        payload.toc_index = index + 1;
+        addPayloadValue(payload, "toc_heading", safeAnalyticsText(label, 100));
+        track("nf_blog_toc_click", payload);
+      });
+
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+
+    show(wrap);
+    tocBuilt = true;
+    updateTocCurrent();
+  }
+
+  function updateTocCurrent(){
+    if (!root || root.getAttribute("data-nf-body-ready") !== "true") return;
+
+    var body = qs(BODY_SLOT_SELECTOR, root);
+    var list = qs(TOC_LIST_SELECTOR, root);
+    if (!body || !list) return;
+
+    var headings = qsa("h2[id]", body).filter(function(heading){
+      return !!clean(heading.textContent);
+    });
+    var links = qsa('a[href^="#"]', list);
+    if (!headings.length || !links.length) return;
+
+    var navOffset = 96;
+    try {
+      var rawOffset = getComputedStyle(document.documentElement).getPropertyValue("--nf-site-nav-offset");
+      var parsedOffset = parseFloat(rawOffset);
+      if (Number.isFinite(parsedOffset)) navOffset = parsedOffset + 40;
+    } catch(e) {}
+
+    var current = headings[0];
+    headings.forEach(function(heading){
+      if (heading.getBoundingClientRect().top <= navOffset) current = heading;
+    });
+
+    var currentId = clean(current && current.id);
+    links.forEach(function(link){
+      var active = currentId && link.getAttribute("href") === "#" + currentId;
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function updateReadingProgress(){
+    if (!root || root.getAttribute("data-nf-body-ready") !== "true") return;
+
+    var body = qs(BODY_SLOT_SELECTOR, root);
+    var progress = qs(PROGRESS_SELECTOR, root);
+    if (!body || !progress) return;
+
+    var rect = body.getBoundingClientRect();
+    var pageY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var viewportBottom = pageY + (window.innerHeight || document.documentElement.clientHeight || 0);
+    var bodyTop = rect.top + pageY;
+    var bodyHeight = Math.max(body.scrollHeight, rect.height, 1);
+    var value = Math.max(0, Math.min(100, ((viewportBottom - bodyTop) / bodyHeight) * 100));
+
+    progress.style.transform = "scaleX(" + (value / 100).toFixed(4) + ")";
+    progress.setAttribute("aria-valuenow", String(Math.round(value)));
+  }
+
+  function markSourceHidden(rte){
+    if (!rte) return;
+    var sourceRoot = rte.closest(".nf-rte-source");
+    if (sourceRoot) {
+      sourceRoot.setAttribute("aria-hidden", "true");
+      hide(sourceRoot);
+      return;
+    }
+
+    var sourceWrap = rte.closest("[data-rte-body], [data-rte-takeaways], .nf-rte-body, .nf-rte-takeaways, .nf-body-rte, .nf-takeaways") || rte;
+    sourceWrap.setAttribute("aria-hidden", "true");
+    hide(sourceWrap);
+  }
+
+  function setBodyReady(){
+    root.setAttribute("data-nf-body-ready", "true");
+    root.removeAttribute("data-nf-body-missing");
+    root.removeAttribute("data-nf-body-missing-reason");
+
+    var progress = qs(PROGRESS_SELECTOR, root);
+    if (progress && progress.parentElement) {
+      progress.parentElement.hidden = false;
+    }
+  }
+
+  function setBodyMissing(reason){
+    root.setAttribute("data-nf-body-missing", "true");
+    root.setAttribute("data-nf-body-missing-reason", reason || "source-not-found");
+    root.removeAttribute("data-nf-body-ready");
+
+    hide(qs(TOC_WRAP_SELECTOR, root));
+
+    var progress = qs(PROGRESS_SELECTOR, root);
+    if (progress && progress.parentElement) {
+      progress.parentElement.hidden = true;
+    }
+  }
+
+  function setTakeawaysReady(){
+    root.setAttribute("data-nf-takeaways-ready", "true");
+  }
+
+  function setTakeawaysMissing(){
+    root.removeAttribute("data-nf-takeaways-ready");
+    hide(qs("[data-takeaways-wrap]", root));
+  }
+
+  function findRteSource(sourceCandidates){
+    sourceCandidates = Array.isArray(sourceCandidates) ? sourceCandidates : [sourceCandidates];
+
+    for (var i = 0; i < sourceCandidates.length; i++) {
+      var candidate = sourceCandidates[i];
+      var source = "";
+
+      if (!candidate) continue;
+      if (typeof candidate === "string") {
+        source = qs(candidate);
+      } else if (candidate.nodeType === 1) {
+        source = candidate;
+      }
+
+      if (!source) continue;
+      if (source.classList && source.classList.contains("w-richtext")) return source;
+
+      var rte = qs(".w-richtext", source);
+      if (rte) return rte;
+    }
+
     return null;
   }
 
-  function ensureVisibleForInit(node){
-    if (!node) return function(){};
-    var prev = {
-      hiddenAttr: node.hasAttribute('hidden'),
-      display: node.style.display,
-      visibility: node.style.visibility,
-      opacity: node.style.opacity
+  function isTakeawaysSource(rte){
+    if (!rte) return false;
+    return !!(rte.matches && rte.matches("[data-rte-takeaways], .nf-rte-takeaways")) ||
+      !!(rte.closest && rte.closest("[data-rte-takeaways], .nf-rte-takeaways"));
+  }
+
+  function findBodySource(){
+    var source = findRteSource([
+      "[data-rte-body].w-richtext",
+      "[data-rte-body] .w-richtext",
+      ".nf-rte-source [data-rte-body].w-richtext",
+      ".nf-rte-source [data-rte-body] .w-richtext",
+      ".nf-rte-source .nf-rte-body.w-richtext",
+      ".nf-rte-source .nf-rte-body .w-richtext",
+      ".nf-body-rte.w-richtext",
+      ".nf-body-rte .w-richtext",
+      ".nf-wrap .nf-body-rte.w-richtext",
+      ".nf-wrap .nf-body-rte .w-richtext"
+    ]);
+
+    if (source) return source;
+
+    var fallback = qsa(".nf-rte-source .w-richtext").filter(function(rte){
+      return !isTakeawaysSource(rte);
+    });
+
+    return fallback.length === 1 ? fallback[0] : null;
+  }
+
+  function findTakeawaysSource(){
+    return findRteSource([
+      "[data-rte-takeaways].w-richtext",
+      "[data-rte-takeaways] .w-richtext",
+      ".nf-rte-source [data-rte-takeaways].w-richtext",
+      ".nf-rte-source [data-rte-takeaways] .w-richtext",
+      ".nf-rte-source .nf-rte-takeaways.w-richtext",
+      ".nf-rte-source .nf-rte-takeaways .w-richtext",
+      ".nf-takeaways.w-richtext",
+      ".nf-takeaways .w-richtext",
+      ".nf-wrap .nf-takeaways.w-richtext",
+      ".nf-wrap .nf-takeaways .w-richtext"
+    ]);
+  }
+
+  function cloneRteIntoSlot(rte, slot){
+    slot.innerHTML = rte.innerHTML;
+    stripIds(slot);
+    sanitizeRte(slot);
+    lazyMedia(slot);
+    markSourceHidden(rte);
+    externalizeLinks();
+    return hasSlotContent(slot);
+  }
+
+  function updateReadTime(allowFallback){
+    var el = qs("[data-read-time]", root);
+    if (!el) return;
+
+    var mins = parseInt(data("read-mins"), 10);
+    if ((!mins || mins < 1) && allowFallback) {
+      var body = qs(BODY_SLOT_SELECTOR, root);
+      var words = body ? ((body.innerText || body.textContent || "").match(/\S+/g) || []).length : 0;
+      mins = words ? Math.max(1, Math.round(words / 225)) : 0;
+      calculatedReadMinutes = mins || 0;
+    }
+
+    if (!mins) {
+      hide(el);
+      return;
+    }
+
+    el.textContent = mins + " min read";
+    el.setAttribute("data-value", String(mins));
+    show(el);
+  }
+
+  function hideDuplicateUpdatedDate(){
+    var published = qs("[data-published-date]", root);
+    var updated = qs("[data-updated-date]", root);
+    var publishedValue = clean(published && (published.getAttribute("datetime") || published.getAttribute("data-value")));
+    var updatedValue = clean(updated && (updated.getAttribute("datetime") || updated.getAttribute("data-value")));
+
+    if (publishedValue && updatedValue && publishedValue === updatedValue) hide(updated);
+  }
+
+  function renderTags(){
+    var box = qs("[data-tags-list]", root);
+    if (!box) return;
+
+    var raw = clean(box.getAttribute("data-raw-tags") || box.textContent);
+    var seen = {};
+    var tags = raw.split(/[,;\n]/).map(clean).filter(function(tag){
+      var key = tag.toLowerCase();
+      if (!tag || seen[key]) return false;
+      seen[key] = true;
+      return true;
+    }).slice(0, 16);
+
+    if (!tags.length) {
+      hide(box.closest("[data-hide-if-empty]") || box);
+      return;
+    }
+
+    box.innerHTML = "";
+    tags.forEach(function(tag){
+      var span = document.createElement("span");
+      span.className = "nf-blog-post__tag";
+      span.textContent = tag;
+      box.appendChild(span);
+    });
+  }
+
+  function planInfo(raw){
+    var value = clean(raw);
+    if (!value) return null;
+
+    var slug = value
+      .split(/[?#]/)[0]
+      .replace(/^https?:\/\/[^/]+/i, "")
+      .replace(/^\/?training-plans\//i, "")
+      .replace(/^\/+|\/+$/g, "");
+
+    if (!slug) return null;
+
+    var labels = {
+      "6-week-advanced-hypertrophy-training-plan": "6-Week Advanced Hypertrophy Plan",
+      "6-week-strength-hypertrophy-training-plan": "6-Week Strength + Hypertrophy Plan",
+      "6-week-strength-training-plan": "6-Week Strength Plan",
+      "6-week-functional-fitness-training-plan": "6-Week Functional Fitness Plan",
+      "6-week-beginner-foundation-training-plan": "6-Week Beginner Foundation Plan",
+      "6-week-speed-power-training-plan": "6-Week Speed & Power Plan",
+      "6-week-fat-loss-training-plan": "6-Week Fat-Loss Plan",
+      "dynamic-warm-up-static-stretch-pack": "Warm-Up + Stretch Pack",
+      "full-body-dynamic-warm-up-routine": "Full-Body Dynamic Warm-Up Routine",
+      "full-body-static-stretching-routine": "Full-Body Static Stretching Routine"
     };
-    node.removeAttribute('hidden');
-    node.style.visibility = 'hidden';
-    node.style.opacity = '0';
-    // important: do NOT force a new display mode; just let it be
-    if (node.style.display === 'none') node.style.display = '';
-    return function restore(){
-      node.style.visibility = prev.visibility || '';
-      node.style.opacity = prev.opacity || '';
-      node.style.display = prev.display || '';
-      if (prev.hiddenAttr) node.setAttribute('hidden','');
+
+    var label = labels[slug];
+
+    if (!label) {
+      label = slug
+        .replace(/[-_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .map(function(part){
+          if (/^\d+$/.test(part)) return part;
+          if (part.toLowerCase() === "bfr") return "BFR";
+          return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+        })
+        .join(" ");
+    }
+
+    return {
+      slug: slug,
+      label: label,
+      href: "/training-plans/" + slug
     };
   }
 
-  function lazyfyMedia(scope){
-    if(!scope) return;
-    $$('img', scope).forEach(function(img){
-      if(!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
-      if(!img.decoding) img.decoding = 'async';
-    });
-    $$('iframe', scope).forEach(function(ifr){
-      if(!ifr.hasAttribute('loading')) ifr.setAttribute('loading','lazy');
-    });
-  }
+  function renderRelatedPlans(){
+    var box = qs("[data-related-plans-list]", root);
+    if (!box) return;
 
-  function stripIdsFromTree(node){
-    if(!node || node.nodeType !== 1) return;
-    try{
-      if (node.hasAttribute('id')) node.removeAttribute('id');
-      $$('[id]', node).forEach(function(el){
-        try { el.removeAttribute('id'); } catch(_){}
+    var raw = data("related-plans");
+    var row = box.closest("[data-related-plans-wrap]") || box;
+    var seen = {};
+    var plans = raw.split(/[,;\n]/).map(planInfo).filter(function(plan){
+      if (!plan || !plan.slug || seen[plan.slug]) return false;
+      seen[plan.slug] = true;
+      return true;
+    }).slice(0, 6);
+
+    if (!plans.length) {
+      hide(row);
+      return;
+    }
+
+    box.innerHTML = "";
+    show(row);
+
+    plans.forEach(function(plan){
+      var link = document.createElement("a");
+      link.className = "nf-blog-post__plan-link";
+      link.href = plan.href;
+      link.textContent = plan.label;
+      link.setAttribute("data-related-plan-slug", plan.slug);
+      link.setAttribute("data-nf-preserve-attribution", "");
+      link.addEventListener("click", function(){
+        var payload = blogPayload();
+        addPayloadValue(payload, "plan_slug", plan.slug);
+        addPayloadValue(payload, "plan_path", plan.href);
+        track("nf_blog_related_plan_click", payload);
       });
-    }catch(e){}
-  }
-
-  // cloneRTE now:
-  //  • supports your current classes (.nf-body-rte, .nf-takeaways)
-  //  • if no destination slot exists, it will simply lazyfy the existing RTE and NOT hide anything
-  function cloneRTE(srcSelectors, destSelectors, after){
-    var srcWrap = findSource(srcSelectors);
-    if(!srcWrap) return;
-
-    // destination: first match wins (if none, we fail-soft)
-    var dest = null;
-    for (var i=0;i<destSelectors.length;i++){
-      dest = $(destSelectors[i], host);
-      if(dest) break;
-    }
-
-    var restore = ensureVisibleForInit(srcWrap);
-
-    // Rich Text element might be:
-    //  • a descendant .w-richtext, OR
-    //  • the srcWrap itself
-    var rte = srcWrap.classList && srcWrap.classList.contains('w-richtext') ? srcWrap : null;
-
-    if (rte){
-      // If we have a real destination and it’s not the same node, clone into it.
-      if (dest && dest !== srcWrap){
-        var clone = rte.cloneNode(true);
-        dest.innerHTML = '';
-        dest.appendChild(clone);
-        lazyfyMedia(clone);
-        stripIdsFromTree(rte);
-        restore();
-        if (typeof after === 'function') after(clone);
-      } else {
-        // No destination slot in DOM → just enhance existing content.
-        lazyfyMedia(rte);
-        restore();
-        if (typeof after === 'function') after(rte);
-      }
-      return;
-    }
-
-    waitFor('.w-richtext', srcWrap, 80, 50, function(found){
-      if(!found){ restore(); return; }
-
-      if (dest && dest !== srcWrap){
-        var clone = found.cloneNode(true);
-        dest.innerHTML = '';
-        dest.appendChild(clone);
-        lazyfyMedia(clone);
-        stripIdsFromTree(found);
-        restore();
-        if (typeof after === 'function') after(clone);
-      } else {
-        // No destination slot → enhance existing
-        lazyfyMedia(found);
-        restore();
-        if (typeof after === 'function') after(found);
-      }
+      box.appendChild(link);
     });
+
+    show(row);
   }
 
-  // Body & Takeaways (attr-first, class fallback)
-  cloneRTE(
-    ['[data-rte-body]', '.nf-rte-body', '.nf-body-rte'],
-    ['[data-body-slot]', '.nf-body-slot', '.nf-body', '.nf-body-rte'],
-    updateReadTime
-  );
-
-  cloneRTE(
-    ['[data-rte-takeaways]', '.nf-rte-takeaways', '.nf-takeaways'],
-    ['[data-takeaways-slot]', '.nf-takeaways-slot', '.nf-takeaways'],
-    hideEmptyTakeaways
-  );
-
-  // ---------- read time ----------
-  function updateReadTime(){
-    var meter =
-      $('[data-read-time]', host) ||
-      $('.nf-read', host);
-
-    if(!meter) return;
-
-    if(readMins){
-      meter.textContent = readMins + '-min read';
-      return;
-    }
-
-    var bodyRte =
-      $('[data-body-slot] .w-richtext', host) ||
-      $('.nf-body-rte .w-richtext', host) ||
-      $('.nf-body-rte', host);
-
-    var txt = bodyRte ? (bodyRte.innerText || bodyRte.textContent || '') : '';
-    var words = (txt.match(/\S+/g)||[]).length;
-    var mins = Math.max(1, Math.round(words/225));
-    meter.textContent = mins + '-min read';
-  }
-
-  // ---------- hide takeaways box if empty ----------
-  function hideEmptyTakeaways(){
-    var slot =
-      $('[data-takeaways-slot]', host) ||
-      $('.nf-takeaways', host);
-
-    if(!slot) return;
-
-    var text = (slot.textContent||'').replace(/\s+/g,'').trim();
-    if(!text){
-      var wrap = slot.closest('.nf-takeaways') || slot;
-      wrap.setAttribute('style','display:none');
-    }
-  }
-
-  // ---------- dates (attr-first, class fallback) ----------
-  (function dates(){
-    var pub =
-      $('[data-date-published]', host) ||
-      $('.nf-date', host);
-
-    var upd =
-      $('[data-date-updated]', host) ||
-      $('[data-updated-wrap] [datetime], [data-updated-wrap]', host);
-
-    if(pub && published){
-      var d = new Date(published);
-      if (!isNaN(d.getTime())){
-        pub.textContent = d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
-        var di = iso(published);
-        if (di) pub.setAttribute('datetime', di);
-      }
-    }
-
-    if(upd && updated){
-      var d2 = new Date(updated);
-      if (!isNaN(d2.getTime())){
-        // If upd is a container, write into it; otherwise write directly.
-        if (upd.nodeType === 1){
-          upd.textContent = 'Updated ' + d2.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  function externalizeLinks(){
+    qsa("[data-body-slot] a, [data-takeaways-slot] a", root).forEach(function(link){
+      var href = link.getAttribute("href") || "";
+      var absolute = validUrl(href);
+      if (!absolute) return;
+      try {
+        var url = new URL(absolute);
+        if (url.origin !== window.location.origin) {
+          link.setAttribute("target", "_blank");
+          link.setAttribute("rel", "noopener noreferrer");
         }
-        var ui = iso(updated);
-        try{ if (ui && upd.setAttribute) upd.setAttribute('datetime', ui); }catch(e){}
-        var uw = upd.closest && upd.closest('[data-updated-wrap]');
-        if (uw && uw.classList) uw.classList.remove('hide');
+      } catch(e) {}
+    });
+  }
+
+  function readMinutesValue(){
+    var mins = parseInt(data("read-mins"), 10);
+    if (!mins || mins < 1) {
+      mins = calculatedReadMinutes;
+    }
+    if (!mins || mins < 1) {
+      var el = qs("[data-read-time]", root);
+      mins = parseInt(clean(el && el.getAttribute("data-value")), 10);
+    }
+    return mins && mins > 0 ? mins : 0;
+  }
+
+  function blogPayload(){
+    var payload = {
+      page_type: "blog_article",
+      nf_component: "blog_post_template",
+      nf_version: VERSION,
+      nf_path: window.location.pathname || ""
+    };
+    var slug = data("slug");
+    addPayloadValue(payload, "blog_slug", slug);
+    addPayloadValue(payload, "primary_category", data("primary-category"));
+    addPayloadValue(payload, "secondary_category", data("secondary-category"));
+    addPayloadValue(payload, "series", data("series"));
+    addPayloadValue(payload, "route", slug ? "/blog-posts/" + slug : "/blog-posts");
+
+    var mins = readMinutesValue();
+    if (mins > 0) payload.read_minutes = mins;
+
+    return payload;
+  }
+
+  function youtubeVimeoEmbed(raw){
+    var href = validUrl(raw);
+    if (!href) return "";
+    try {
+      var url = new URL(href);
+      var host = url.hostname.replace(/^www\./, "");
+      var id = "";
+
+      if (host === "youtu.be") {
+        id = url.pathname.replace(/^\/+/, "").split("/")[0];
+        return id ? "https://www.youtube.com/embed/" + encodeURIComponent(id) : "";
+      }
+
+      if (host === "youtube.com" || host === "m.youtube.com") {
+        id = url.searchParams.get("v") || "";
+        if (!id && url.pathname.indexOf("/embed/") === 0) id = url.pathname.split("/embed/")[1].split("/")[0];
+        return id ? "https://www.youtube.com/embed/" + encodeURIComponent(id) : "";
+      }
+
+      if (host === "vimeo.com" || host === "player.vimeo.com") {
+        id = (url.pathname.match(/\d+/) || [])[0] || "";
+        return id ? "https://player.vimeo.com/video/" + encodeURIComponent(id) : "";
+      }
+    } catch(e) {}
+    return "";
+  }
+
+  function setupVideo(){
+    var section = qs("[data-video-section]", root);
+    var wrap = qs("[data-video-wrap]", root);
+    var raw = data("video-url");
+    var href = validUrl(raw);
+    if (!section || !wrap || !href) {
+      hide(section);
+      return;
+    }
+
+    var embed = youtubeVimeoEmbed(href);
+    wrap.innerHTML = "";
+
+    if (embed) {
+      var frame = document.createElement("iframe");
+      frame.src = embed;
+      frame.title = "Article video";
+      frame.loading = "lazy";
+      frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      frame.setAttribute("allowfullscreen", "");
+      wrap.appendChild(frame);
+      show(section);
+      return;
+    }
+
+    if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(href)) {
+      var video = document.createElement("video");
+      video.controls = true;
+      video.playsInline = true;
+      video.src = href;
+      wrap.appendChild(video);
+      show(section);
+      return;
+    }
+
+    var link = document.createElement("a");
+    link.className = "nf-blog-post__media-link";
+    link.href = href;
+    link.textContent = "Open video";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    wrap.appendChild(link);
+    show(section);
+  }
+
+  function setupAudio(){
+    var section = qs("[data-audio-section]", root);
+    var wrap = qs("[data-audio-wrap]", root);
+    var raw = data("audio-url");
+    var href = validUrl(raw);
+    if (!section || !wrap || !href) {
+      hide(section);
+      return;
+    }
+
+    wrap.innerHTML = "";
+
+    if (/\.(mp3|m4a|ogg|wav|aac)(\?.*)?$/i.test(href)) {
+      var audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = href;
+      wrap.appendChild(audio);
+      show(section);
+      return;
+    }
+
+    var link = document.createElement("a");
+    link.className = "nf-blog-post__media-link";
+    link.href = href;
+    link.textContent = "Open audio";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    wrap.appendChild(link);
+    show(section);
+  }
+
+  function articleIntentText(){
+    return [
+      data("title"),
+      data("primary-category"),
+      data("secondary-category"),
+      data("tags"),
+      data("related-plans")
+    ].join(" ").toLowerCase();
+  }
+
+  function fallbackCta(){
+    var haystack = articleIntentText();
+
+    if (/(recover|mobility|warm|stretch|prep|sore|joint)/.test(haystack)) {
+      return {
+        source: "fallback_recovery",
+        title: "Add prep and recovery support",
+        text: "Use the warm-up and stretching pack when your next step is better session prep and recovery.",
+        label: "View Warm-Up + Stretch Pack",
+        href: "/training-plans/dynamic-warm-up-static-stretch-pack"
+      };
+    }
+
+    if (/(nutrition|meal|macro|calorie|protein|hydration|recipe|pantry|shopping)/.test(haystack)) {
+      return {
+        source: "fallback_nutrition",
+        title: "Build your nutrition targets next",
+        text: "Use Nutrition Lab for calories, protein, macros, meals, and weekly structure.",
+        label: "Start Free in Nutrition Lab",
+        href: "/tools-nutrition-lab"
+      };
+    }
+
+    if (/(train|strength|hypertrophy|fat loss|fat-loss|workout|program|split|conditioning|performance|muscle|lift)/.test(haystack)) {
+      return {
+        source: "fallback_training",
+        title: "Find the right training plan",
+        text: "Answer a few questions and get a recommended NeuForm plan plus a secondary option.",
+        label: "Use Plan Finder",
+        href: "/training-plans#plan-finder"
+      };
+    }
+
+    return {
+      source: "fallback_default",
+      title: "Start with a free setup",
+      text: "Build nutrition targets first, then choose a training path when your next step is clear.",
+      label: "Start Free in Nutrition Lab",
+      href: "/tools-nutrition-lab"
+    };
+  }
+
+  function setupCta(){
+    var wrap = qs("[data-cta-wrap]", root);
+    var btn = qs("[data-cta-btn]", root);
+    if (!wrap || !btn) return;
+
+    var label = clean(btn.textContent);
+    var href = validUrl(btn.getAttribute("href"));
+    var title = qs("[data-cta-title]", wrap);
+    var text = qs("[data-cta-text]", wrap);
+    var hasCopy = !!(clean(title && title.getAttribute("data-value")) || clean(text && text.getAttribute("data-value")));
+    var ctaSource = "cms";
+
+    if (!label || !href || !hasCopy) {
+      var fallback = fallbackCta();
+      label = fallback.label;
+      href = validUrl(fallback.href);
+      ctaSource = fallback.source;
+
+      if (title) {
+        title.textContent = fallback.title;
+        title.setAttribute("data-value", fallback.title);
+        show(title);
+      }
+
+      if (text) {
+        text.textContent = fallback.text;
+        text.setAttribute("data-value", fallback.text);
+        show(text);
+      }
+
+      if (!label || !href) {
+        hide(wrap);
+        return;
       }
     }
-  })();
 
-  // ---------- external links safety (body + takeaways; attr + class fallback) ----------
-  (function externalize(){
-    var scopes = [
-      '[data-body-slot]',
-      '.nf-body-rte',
-      '[data-takeaways-slot]',
-      '.nf-takeaways'
-    ];
-    scopes.forEach(function(scopeSel){
-      $$(scopeSel + ' a', host).forEach(function(a){
-        var href = (a.getAttribute('href')||'').trim();
-        if(!href || href.startsWith('#') || href.startsWith('/') || href.startsWith(location.origin)) return;
-        a.setAttribute('target','_blank'); a.setAttribute('rel','noopener noreferrer');
+    btn.textContent = label;
+    btn.setAttribute("href", href);
+    btn.setAttribute("data-nf-cta-source", ctaSource);
+    btn.setAttribute("data-nf-cta-location", "blog_article_primary_cta");
+
+    try {
+      var url = new URL(href);
+      if (url.origin !== window.location.origin) {
+        btn.setAttribute("target", "_blank");
+        btn.setAttribute("rel", "noopener noreferrer");
+      }
+    } catch(e) {}
+
+    btn.addEventListener("click", function(){
+      var payload = blogPayload();
+      addPayloadValue(payload, "cta_label", safeAnalyticsText(label, 80));
+      addPayloadValue(payload, "cta_path", safePath(href));
+      addPayloadValue(payload, "nf_cta_source", ctaSource);
+      addPayloadValue(payload, "nf_cta_location", "blog_article_primary_cta");
+      addPayloadValue(payload, "nf_source_page", "blog-post");
+      track("nf_blog_cta_click", payload);
+    });
+  }
+
+
+
+  function normalizeArticleSemantics(){
+    var chips = qs(".nf-blog-post__chips", root);
+    if (chips && chips.hasAttribute("aria-label")) {
+      chips.setAttribute("role", "group");
+    }
+
+    var meta = qs(".nf-blog-post__meta", root);
+    if (meta && meta.hasAttribute("aria-label")) {
+      meta.setAttribute("role", "group");
+    }
+
+    var content = qs("#article-content", root);
+    if (content) {
+      content.removeAttribute("aria-label");
+    }
+  }
+
+  function setupAuthorLink(){
+    var meta = qs(".nf-blog-post__meta", root);
+    if (!meta) return;
+
+    var author = qsa("[data-hide-if-empty]", meta).find(function(el){
+      return /^By\s+/i.test(clean(el.textContent));
+    });
+
+    if (!author || qs("a[href]", author)) return;
+
+    var label = clean(author.textContent);
+    var name = label.replace(/^By\s+/i, "");
+    if (!name) return;
+
+    author.textContent = "By ";
+
+    var link = document.createElement("a");
+    link.href = "/about";
+    link.rel = "author";
+    link.textContent = name;
+    link.setAttribute("data-nf-article-nav", "author_profile");
+    link.setAttribute("aria-label", "About " + name);
+    author.appendChild(link);
+  }
+
+  function setupArticleNav(){
+    qsa("[data-nf-article-nav]", root).forEach(function(link){
+      if (link.dataset.nfArticleNavBound === "1") return;
+      link.dataset.nfArticleNavBound = "1";
+
+      link.addEventListener("click", function(){
+        var payload = blogPayload();
+        addPayloadValue(payload, "nav_action", link.getAttribute("data-nf-article-nav"));
+        addPayloadValue(payload, "nav_path", safePath(link.getAttribute("href") || ""));
+        track("nf_blog_article_nav_click", payload);
       });
     });
-  })();
+  }
 
-  // ---------- auto-hide helpers ----------
-  (function autoHide(){
-    $$('[data-hide-when-empty]', host).forEach(function(box){
-      if((box.textContent||'').trim()==='') box.style.display='none';
-    });
-    $$('[data-hide-if-no-children]', host).forEach(function(w){
-      if(!w.querySelector('*')) w.style.display='none';
-    });
-  })();
+  function trackView(){
+    if (articleViewTracked) return;
+    articleViewTracked = true;
 
-  // ---------- CTA ----------
-  (function cta(){
-    var btn = $('[data-cta-btn]', host);
-    var head = $('[data-cta-head]', host);
-    var copy = $('[data-cta-copy]', host);
+    var payload = blogPayload();
+    trackOnce("blog-article-" + (data("slug") || location.pathname), "nf_blog_article_view", payload);
+  }
 
-    if(head) head.textContent = ctaHeader;
-    if(copy) copy.textContent = ctaText;
+  function maybeTrackView(){
+    if (articleViewTracked) return;
+    if (readMinutesValue() > 0 || bodyBridgeDone) trackView();
+  }
 
-    if(btn){
-      btn.textContent = ctaLabel;
-      btn.setAttribute('href', ctaHref);
+  function setupScrollDepthTracking(){
+    if (scrollTrackingStarted) return;
+    if (!root || root.getAttribute("data-nf-body-ready") !== "true") return;
+    var body = qs(BODY_SLOT_SELECTOR, root);
+    if (!body || !hasSlotContent(body)) return;
+    scrollTrackingStarted = true;
 
-      var isExternal = /^https?:\/\//i.test(ctaHref) && !ctaHref.startsWith(location.origin);
-      if(isExternal){ btn.setAttribute('target','_blank'); btn.setAttribute('rel','noopener noreferrer'); }
-      btn.setAttribute('aria-label', ctaLabel);
+    var thresholds = [25, 50, 75, 100];
+    var eventNames = {
+      25: "nf_blog_scroll_25",
+      50: "nf_blog_scroll_50",
+      75: "nf_blog_scroll_75",
+      100: "nf_blog_scroll_100"
+    };
+    var fired = {};
+    var ticking = false;
 
-      btn.addEventListener('click', function(){
-        if (!window.neuform.canTrack()) return;
-        window.neuform.track('blog_cta_click', {
-          blog_slug:slug,
-          blog_title:title,
-          cta_label:ctaLabel,
-          cta_href:ctaHref,
-          conversion_tag: convType || null
-        });
-      }, { once:false, passive:true });
-    }
-  })();
+    function onScrollDepth(){
+      ticking = false;
+      updateReadingProgress();
+      updateTocCurrent();
 
-  // ---------- video/audio embeds ----------
-  (function embeds(){
-    var vWrap = $('[data-video-wrap]', host);
-    var aWrap = $('[data-audio-wrap]', host);
+      var rect = body.getBoundingClientRect();
+      var pageY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var viewportBottom = pageY + (window.innerHeight || document.documentElement.clientHeight || 0);
+      var bodyTop = rect.top + pageY;
+      var bodyHeight = Math.max(body.scrollHeight, rect.height, 1);
+      var progress = Math.max(0, Math.min(100, ((viewportBottom - bodyTop) / bodyHeight) * 100));
 
-    function ytOrVimeo(url){
-      if(/youtu\.be\/|youtube\.com\/watch/.test(url)){
-        var id = (url.match(/youtu\.be\/([^?&]+)/)||[])[1] || (url.match(/[?&]v=([^?&]+)/)||[])[1] || '';
-        if(id) return 'https://www.youtube.com/embed/' + encodeURIComponent(id);
-      }
-      var vm = url.match(/vimeo\.com\/(\d+)/);
-      if(vm) return 'https://player.vimeo.com/video/' + vm[1];
-      return '';
-    }
-
-    if(vWrap && videoUrl){
-      var src = ytOrVimeo(videoUrl);
-      if(src){
-        var ifr = document.createElement('iframe');
-        ifr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-        ifr.setAttribute('allowfullscreen',''); ifr.title='Video'; ifr.src = src;
-        ifr.setAttribute('loading','lazy');
-        vWrap.innerHTML=''; vWrap.appendChild(ifr);
-      }else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(videoUrl)){
-        var vid = document.createElement('video');
-        vid.controls = true; vid.src = videoUrl; vid.setAttribute('playsinline','');
-        vWrap.innerHTML=''; vWrap.appendChild(vid);
-      }
-    }
-
-    if(aWrap && audioUrl && /\.(mp3|m4a|ogg|wav|aac)(\?.*)?$/i.test(audioUrl)){
-      var au = document.createElement('audio'); au.controls = true; au.src = audioUrl;
-      aWrap.innerHTML=''; aWrap.appendChild(au);
-    }
-  })();
-
-  // ---------- analytics ----------
-  if (window.neuform.canTrack()) window.neuform.track('page_context', {
-    page_type: 'blog_article',
-    blog: {
-      title, slug, primary_category: primaryCat, secondary_category: secondaryCat,
-      tags, author, author_role: authorRole, published: published || null, updated: updated || null,
-      conversion_tag: convType || null,
-      canonical_url: getCanonicalUrl()
-    }
-  });
-
-  // ---------- JSON-LD ----------
-  (function jsonld(){
-    function addOrReplaceLd(id, obj){
-      var prev = document.getElementById(id);
-      var scripts = Array.prototype.slice.call(document.querySelectorAll('script[type="application/ld+json"]'));
-      scripts.forEach(function(node){
-        if (prev && node === prev) return;
-        if (node.id === id) { try { node.remove(); } catch(_){} return; }
-        try {
-          var parsed = JSON.parse(node.textContent || '{}');
-          if (parsed && parsed['@type'] === obj['@type'] && parsed.headline === obj.headline) {
-            node.remove();
-          }
-        } catch(_e){}
+      thresholds.forEach(function(depth){
+        if (fired[depth] || progress < depth) return;
+        var payload = blogPayload();
+        payload.scroll_depth = depth;
+        trackOnce("blog-article-scroll-" + (data("slug") || location.pathname) + "-" + depth, eventNames[depth], payload);
+        fired[depth] = true;
       });
 
-      var s = document.createElement('script'); s.type='application/ld+json'; s.id=id;
-      s.textContent = JSON.stringify(obj, null, 2);
-      if(prev) prev.replaceWith(s); else (document.head || document.body || document.documentElement).appendChild(s);
     }
 
-    var canonUrl = getCanonicalUrl();
+    function scheduleScrollDepth(){
+      if (ticking) return;
+      ticking = true;
+      (window.requestAnimationFrame || function(fn){ return window.setTimeout(fn, 16); })(onScrollDepth);
+    }
 
-    var ld = {
-      '@context':'https://schema.org',
-      '@type':'Article',
-      '@id': articleId || undefined,
-      'headline': metaTitle || title,
-      'name': title,
-      'datePublished': published ? iso(published) : undefined,
-      'dateModified' : updated   ? iso(updated)   : undefined,
-      'author': author ? { '@type':'Person', 'name': author, 'jobTitle': authorRole || undefined } : undefined,
-      'publisher': { '@type':'Organization', 'name':'NeuForm Fitness' },
-      'description': metaDesc || undefined,
-      'mainEntityOfPage': canonUrl
-    };
-    addOrReplaceLd('nf-article-jsonld', ld);
+    window.addEventListener("scroll", scheduleScrollDepth, { passive: true });
+    window.addEventListener("resize", scheduleScrollDepth);
+    scheduleScrollDepth();
+  }
 
-    var bc = {
-      '@context':'https://schema.org',
-      '@type':'BreadcrumbList',
-      'itemListElement': [
-        { '@type':'ListItem', position:1, name:'Home', item: location.origin + '/' },
-        { '@type':'ListItem', position:2, name:'Blog', item: location.origin + '/blog' },
-        { '@type':'ListItem', position:3, name:title, item: canonUrl }
-      ]
-    };
-    addOrReplaceLd('nf-breadcrumbs-jsonld', bc);
-  })();
+  function tryCloneBody(finalAttempt){
+    if (bodyBridgeDone && root.getAttribute("data-nf-body-ready") === "true") return true;
+
+    var slot = qs(BODY_SLOT_SELECTOR, root);
+    if (!slot) {
+      if (finalAttempt) {
+        setBodyMissing("slot-missing");
+        bodyBridgeDone = true;
+        maybeTrackView();
+      }
+      return false;
+    }
+
+    if (hasSlotContent(slot)) {
+      stripIds(slot);
+      sanitizeRte(slot);
+      lazyMedia(slot);
+      externalizeLinks();
+      setBodyReady();
+      bodyBridgeDone = true;
+      updateReadTime(true);
+      buildToc();
+      setupScrollDepthTracking();
+      maybeTrackView();
+      return true;
+    }
+
+    var source = findBodySource();
+    if (!source) {
+      if (finalAttempt) {
+        setBodyMissing("source-not-found");
+        bodyBridgeDone = true;
+        maybeTrackView();
+      }
+      return false;
+    }
+
+    if (!hasRteContent(source)) {
+      if (finalAttempt) {
+        setBodyMissing("source-empty");
+        bodyBridgeDone = true;
+        maybeTrackView();
+      }
+      return false;
+    }
+
+    if (!cloneRteIntoSlot(source, slot)) {
+      if (finalAttempt) {
+        setBodyMissing("source-empty");
+        bodyBridgeDone = true;
+        maybeTrackView();
+      }
+      return false;
+    }
+
+    setBodyReady();
+    bodyBridgeDone = true;
+    updateReadTime(true);
+    buildToc();
+    setupScrollDepthTracking();
+    maybeTrackView();
+    return true;
+  }
+
+  function tryCloneTakeaways(finalAttempt){
+    if (takeawaysBridgeDone && root.getAttribute("data-nf-takeaways-ready") === "true") return true;
+
+    var slot = qs(TAKEAWAYS_SLOT_SELECTOR, root);
+    var wrap = qs("[data-takeaways-wrap]", root);
+    if (!slot) {
+      if (finalAttempt) {
+        setTakeawaysMissing();
+        takeawaysBridgeDone = true;
+      }
+      return false;
+    }
+
+    if (hasSlotContent(slot)) {
+      stripIds(slot);
+      sanitizeRte(slot);
+      lazyMedia(slot);
+      externalizeLinks();
+      setTakeawaysReady();
+      if (wrap) show(wrap);
+      takeawaysBridgeDone = true;
+      return true;
+    }
+
+    var source = findTakeawaysSource();
+    if (!source || !hasRteContent(source)) {
+      if (finalAttempt) {
+        setTakeawaysMissing();
+        takeawaysBridgeDone = true;
+      }
+      return false;
+    }
+
+    if (!cloneRteIntoSlot(source, slot)) {
+      if (finalAttempt) {
+        setTakeawaysMissing();
+        takeawaysBridgeDone = true;
+      }
+      return false;
+    }
+
+    setTakeawaysReady();
+    if (wrap) show(wrap);
+    takeawaysBridgeDone = true;
+    return true;
+  }
+
+  function stopBridgeBoot(){
+    if (bridgeTimer) {
+      window.clearTimeout(bridgeTimer);
+      bridgeTimer = 0;
+    }
+    if (bridgeObserver) {
+      try { bridgeObserver.disconnect(); } catch(e) {}
+      bridgeObserver = null;
+    }
+  }
+
+  function runBridgeAttempt(finalAttempt){
+    if (!root) return;
+
+    var bodyOk = tryCloneBody(finalAttempt);
+    var takeawaysOk = tryCloneTakeaways(finalAttempt);
+    var done = bodyBridgeDone && takeawaysBridgeDone;
+
+    if (bodyOk && takeawaysOk) done = true;
+    if (done || finalAttempt) {
+      if (!bodyBridgeDone) tryCloneBody(true);
+      if (!takeawaysBridgeDone) tryCloneTakeaways(true);
+      hideEmptyContainers();
+      stopBridgeBoot();
+      return;
+    }
+
+    scheduleBridgeAttempt();
+  }
+
+  function scheduleBridgeAttempt(){
+    if (bridgeTimer) return;
+    if (bridgeAttempts >= MAX_BRIDGE_ATTEMPTS) {
+      runBridgeAttempt(true);
+      return;
+    }
+
+    bridgeTimer = window.setTimeout(function(){
+      bridgeTimer = 0;
+      bridgeAttempts += 1;
+      runBridgeAttempt(bridgeAttempts >= MAX_BRIDGE_ATTEMPTS);
+    }, BRIDGE_RETRY_DELAY);
+  }
+
+  function observeBridgeSources(){
+    if (!("MutationObserver" in window) || bridgeObserver || !document.body) return;
+
+    bridgeObserver = new MutationObserver(function(){
+      if (bodyBridgeDone && takeawaysBridgeDone) {
+        stopBridgeBoot();
+        return;
+      }
+      runBridgeAttempt(false);
+    });
+
+    try {
+      bridgeObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["class", "hidden", "style", "data-rte-body", "data-rte-takeaways"]
+      });
+    } catch(e) {
+      bridgeObserver = null;
+    }
+  }
+
+  function startBridgeBoot(){
+    bridgeAttempts = 1;
+    observeBridgeSources();
+    runBridgeAttempt(false);
+    scheduleBridgeAttempt();
+  }
+
+  function init(){
+    if (booted) return;
+
+    root = qs(ROOT_SELECTOR);
+    if (!root) {
+      scheduleRootBoot();
+      return;
+    }
+
+    if (root.__nfBlogPostReady) return;
+    root.__nfBlogPostReady = true;
+    booted = true;
+
+    if (!document.querySelector('main, [role="main"]')) {
+      root.setAttribute("role", "main");
+    }
+    if (!root.hasAttribute("tabindex")) {
+      root.setAttribute("tabindex", "-1");
+    }
+
+    tuneStructuredData();
+    hideEmptyNodes();
+    renderTags();
+    renderRelatedPlans();
+    updateReadTime(false);
+    hideDuplicateUpdatedDate();
+    setupVideo();
+    setupAudio();
+    setupCta();
+    normalizeArticleSemantics();
+    setupAuthorLink();
+    setupArticleNav();
+    hideEmptyContainers();
+    maybeTrackView();
+    startBridgeBoot();
+  }
+
+  function scheduleRootBoot(){
+    if (booted || bridgeTimer) return;
+    if (bridgeAttempts >= MAX_BRIDGE_ATTEMPTS) return;
+
+    bridgeTimer = window.setTimeout(function(){
+      bridgeTimer = 0;
+      bridgeAttempts += 1;
+      init();
+    }, BRIDGE_RETRY_DELAY);
+  }
+
+  function onReady(){
+    init();
+  }
+
+  init();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", onReady, { once: true });
+  } else {
+    onReady();
+  }
 })();
 </script>
+
+
+<!-- NeuForm Strength Curves inline conversion v1.0.0 -->
+<style id="nf-strength-curves-inline-conversion-v100">
+.nf-blog-inline-bridge{margin:34px 0;padding:21px 22px;border:1px solid rgba(121,200,255,.24);border-radius:16px;background:radial-gradient(520px 180px at 0 0,rgba(52,152,219,.11),transparent 72%),rgba(4,13,21,.91);box-shadow:0 18px 42px rgba(0,0,0,.28)}
+.nf-blog-inline-bridge__eyebrow{display:block;margin:0 0 7px;color:#79c8ff;font-size:10.5px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}
+.nf-blog-inline-bridge h2{margin:0!important;font-size:clamp(23px,3vw,30px)!important;line-height:1.15!important}
+.nf-blog-inline-bridge p{margin:9px 0 0!important;color:rgba(225,237,244,.84)!important;font-size:15px!important;line-height:1.6!important}
+.nf-blog-inline-bridge__actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px 14px;margin-top:16px}
+.nf-blog-inline-bridge__primary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:linear-gradient(180deg,#1687eb,#0b61bb);color:#fff!important;font-size:13px;font-weight:800;text-decoration:none!important;box-shadow:0 12px 26px rgba(11,95,184,.24)}
+.nf-blog-inline-bridge__secondary{display:inline-flex;align-items:center;min-height:32px;color:#a9ddff!important;font-size:12.5px;font-weight:700;text-underline-offset:3px}
+@media(max-width:640px){.nf-blog-inline-bridge{margin:28px 0;padding:18px 16px}.nf-blog-inline-bridge__actions{align-items:stretch;flex-direction:column}.nf-blog-inline-bridge__primary{width:100%}.nf-blog-inline-bridge__secondary{justify-content:center;text-align:center}}
+</style>
+<script>
+(function(){
+  "use strict";
+  var SLUG="strength-curves-matching-resistance-to-muscle-mechanics";
+  var inserted=false, observer=null, tries=0;
+
+  function track(action){
+    try{
+      if(!window.neuform||typeof window.neuform.track!=="function") return;
+      if(typeof window.neuform.canTrack==="function"&&!window.neuform.canTrack()) return;
+      window.neuform.track("nf_blog_inline_bridge_click",{
+        nf_component:"blog_inline_bridge",
+        blog_slug:SLUG,
+        nf_action:action,
+        nf_source_page:"blog-post",
+        nf_path:location.pathname||""
+      });
+    }catch(_){}
+  }
+
+  function build(){
+    var aside=document.createElement("aside");
+    aside.className="nf-blog-inline-bridge";
+    aside.setAttribute("data-nf-inline-plan-bridge","");
+    aside.setAttribute("aria-label","Apply these exercise-selection principles to a NeuForm plan");
+    aside.innerHTML=
+      '<span class="nf-blog-inline-bridge__eyebrow">Apply the principles</span>'+
+      '<h2>Want the programming decisions handled for you?</h2>'+
+      '<p>Use the Plan Finder to narrow NeuForm plans by goal, training experience, schedule, and equipment, then compare the best-fit options.</p>'+
+      '<div class="nf-blog-inline-bridge__actions">'+
+        '<a class="nf-blog-inline-bridge__primary" href="/training-plans#plan-finder" data-nf-inline-action="plan-finder" data-nf-preserve-attribution>Use Plan Finder</a>'+
+        '<a class="nf-blog-inline-bridge__secondary" href="/training-plans/6-week-advanced-hypertrophy-training-plan" data-nf-inline-action="advanced-hypertrophy" data-nf-preserve-attribution>Advanced Hypertrophy</a>'+
+        '<a class="nf-blog-inline-bridge__secondary" href="/training-plans/6-week-strength-hypertrophy-training-plan" data-nf-inline-action="strength-hypertrophy" data-nf-preserve-attribution>Strength + Hypertrophy</a>'+
+      '</div>';
+    aside.addEventListener("click",function(e){
+      var a=e.target&&e.target.closest?e.target.closest("[data-nf-inline-action]"):null;
+      if(a) track(a.getAttribute("data-nf-inline-action")||"");
+    },true);
+    return aside;
+  }
+
+  function tryInsert(){
+    if(inserted) return true;
+    var root=document.querySelector('[data-nf-blog-post][data-slug="'+SLUG+'"]');
+    if(!root) return false;
+    var body=root.querySelector("[data-body-slot]");
+    if(!body||root.getAttribute("data-nf-body-ready")!=="true") return false;
+    if(body.querySelector("[data-nf-inline-plan-bridge]")){inserted=true;return true;}
+    var headings=Array.prototype.slice.call(body.querySelectorAll("h2"));
+    var target=headings.find(function(h){return String(h.textContent||"").trim().toLowerCase()==="practical examples by muscle group";});
+    if(!target||!target.parentNode) return false;
+    target.parentNode.insertBefore(build(),target);
+    inserted=true;
+    if(observer){try{observer.disconnect();}catch(_){} observer=null;}
+    return true;
+  }
+
+  function boot(){
+    if(location.pathname.indexOf("/blog-posts/"+SLUG)===-1) return;
+    if(tryInsert()) return;
+    var root=document.querySelector('[data-nf-blog-post][data-slug="'+SLUG+'"]');
+    if(root&&"MutationObserver" in window){
+      observer=new MutationObserver(tryInsert);
+      observer.observe(root,{attributes:true,childList:true,subtree:true,attributeFilter:["data-nf-body-ready"]});
+    }
+    var timer=window.setInterval(function(){
+      tries+=1;
+      if(tryInsert()||tries>=24){window.clearInterval(timer);if(observer){try{observer.disconnect();}catch(_){} observer=null;}}
+    },150);
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot,{once:true}); else boot();
+})();
+</script>
+<!-- /NeuForm Strength Curves inline conversion v1.0.0 -->
+
+<!-- NeuForm Article Related Reading Runtime v4.4.0 -->
+<script>
+(function(){
+  "use strict";
+  if(window.__NF_ARTICLE_RELATED_V440__) return;
+  window.__NF_ARTICLE_RELATED_V440__=true;
+
+  function clean(v){return String(v==null?"":v).replace(/\s+/g," ").trim();}
+
+  function safeKey(v){
+    return clean(v).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,100);
+  }
+
+  function track(action,dest){
+    try{
+      if(!window.neuform||typeof window.neuform.track!=="function") return;
+      if(typeof window.neuform.canTrack==="function"&&!window.neuform.canTrack()) return;
+      var root=document.querySelector("[data-nf-blog-post]");
+      window.neuform.track("nf_blog_article_nav_click",{
+        page_type:"blog_article",
+        nf_component:"blog_post_template",
+        nf_version:"v4.4.0",
+        blog_slug:clean(root&&root.getAttribute("data-slug")),
+        nf_path:location.pathname||"",
+        nav_action:action||"",
+        nav_path:dest||""
+      });
+    }catch(_){}
+  }
+
+  function decorateChips(root){
+    if(!root) return;
+    var chips=root.querySelector(".nf-blog-post__chips");
+    if(!chips||chips.getAttribute("data-nf-chip-links-ready")==="1") return;
+
+    var primary=clean(root.getAttribute("data-primary-category"));
+    var secondary=clean(root.getAttribute("data-secondary-category"));
+    var series=clean(root.getAttribute("data-series"));
+
+    Array.prototype.slice.call(chips.children||[]).forEach(function(node){
+      if(!node||node.tagName==="A") return;
+      var text=clean(node.textContent);
+      var href="",action="";
+
+      if(primary&&text===primary){
+        href="/blog?cat="+encodeURIComponent(primary.toLowerCase())+"#articles";
+        action="category_"+safeKey(primary);
+      }else if(secondary&&text===secondary){
+        href="/blog?cat="+encodeURIComponent(secondary.toLowerCase())+"#articles";
+        action="category_"+safeKey(secondary);
+      }else if(series&&text===series){
+        href="/blog?topic="+encodeURIComponent(series.toLowerCase())+"#articles";
+        action="topic_"+safeKey(series);
+      }
+
+      if(!href) return;
+      var link=document.createElement("a");
+      link.className=node.className+" nf-blog-post__chip-link";
+      link.href=href;
+      link.textContent=text;
+      link.setAttribute("aria-label","Browse "+text+" articles");
+      link.addEventListener("click",function(){track(action,href.split("?")[0]||"/blog");});
+      node.replaceWith(link);
+    });
+
+    chips.setAttribute("data-nf-chip-links-ready","1");
+  }
+
+  function moveRelated(root){
+    if(!root) return false;
+    var source=document.querySelector("[data-rte-related]");
+    if(!source) return false;
+    if(source.getAttribute("data-nf-related-ready")==="1") return true;
+
+    var content=root.querySelector(".nf-blog-post__content");
+    var nav=root.querySelector(".nf-blog-post__article-nav");
+    if(!content||!nav) return false;
+
+    if(!clean(source.textContent)&&!source.querySelector("a,ul,ol")){
+      source.remove();
+      return true;
+    }
+
+    source.classList.add("nf-blog-post__related-reading","nf-blog-post__rte");
+    source.setAttribute("data-nf-related-ready","1");
+
+    var title=source.querySelector("h2,h3,h4");
+    source.setAttribute("role","region");
+    if(title){
+      if(!title.id) title.id="nf-blog-related-reading-title";
+      source.removeAttribute("aria-label");
+      source.setAttribute("aria-labelledby",title.id);
+    }else{
+      source.setAttribute("aria-label","Related reading");
+    }
+
+    source.querySelectorAll("a[href]").forEach(function(link){
+      var href=link.getAttribute("href")||"";
+      link.addEventListener("click",function(){track("related_reading",href.split("?")[0]||"");});
+    });
+
+    content.insertBefore(source,nav);
+    return true;
+  }
+
+  function boot(){
+    var root=document.querySelector("[data-nf-blog-post]");
+    if(!root) return;
+    decorateChips(root);
+    if(moveRelated(root)) return;
+
+    var tries=0;
+    var timer=window.setInterval(function(){
+      tries+=1;
+      decorateChips(root);
+      if(moveRelated(root)||tries>=20) window.clearInterval(timer);
+    },150);
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",boot,{once:true});
+  }else{
+    boot();
+  }
+})();
+</script>
+<!-- /NeuForm Article Related Reading Runtime v4.4.0 -->
