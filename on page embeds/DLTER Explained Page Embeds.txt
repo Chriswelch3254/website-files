@@ -1,9 +1,9 @@
 DLTER Explained Page Embeds
 LIVE WEBFLOW MIRROR
-Version: Reality Types Explained v3.0.2
+Version: Reality Types Explained v3.0.3
 Webflow Page ID: 6949aa053c93b77c095dc5b4
 Synced: 2026-09-28
-Authority note: Embeds are listed in current Webflow Navigator order. Git history preserves retired v2 source.
+Authority note: Embeds are listed in current Webflow Navigator order. Git history preserves retired source.
 
 ==============================
 EMBED 1
@@ -292,6 +292,115 @@ body.rtx3-explained-body>section.dlterx-section .nf-lab-container{
   background-image:none!important;
 }
 </style>
+<style id="nfrealitytypesexplained-v303-final-polish">
+/* Final visual rhythm and readability pass. */
+#rtx3-explained .rtx3-curiosity{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+#rtx3-explained .rtx3-nav a{
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  font-size:.82rem;
+}
+#rtx3-explained .rtx3-section-head>p{
+  font-size:.95rem;
+  line-height:1.56;
+}
+#rtx3-explained .rtx3-domain{
+  position:relative;
+  overflow:hidden;
+}
+#rtx3-explained .rtx3-domain::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:2px;
+  background:var(--rt3-domain-accent,rgba(121,200,255,.65));
+}
+#rtx3-explained .rtx3-domain:nth-child(1){
+  --rt3-domain-accent:rgba(121,200,255,.75);
+}
+#rtx3-explained .rtx3-domain:nth-child(2){
+  --rt3-domain-accent:rgba(114,217,173,.70);
+}
+#rtx3-explained .rtx3-domain:nth-child(3){
+  --rt3-domain-accent:rgba(183,156,255,.72);
+}
+#rtx3-explained .rtx3-domain:nth-child(2)>.rtx3-kicker{
+  color:var(--rt3-green);
+}
+#rtx3-explained .rtx3-domain:nth-child(3)>.rtx3-kicker{
+  color:var(--rt3-violet);
+}
+#rtx3-explained .rtx3-domain-note{
+  font-size:.82rem;
+  line-height:1.48;
+}
+#rtx3-explained .rtx3-type-card,
+#rtx3-explained .rtx3-all-types a{
+  transition:transform .15s ease,border-color .15s ease,background .15s ease;
+}
+@media(hover:hover){
+  #rtx3-explained .rtx3-type-card:hover,
+  #rtx3-explained .rtx3-all-types a:hover{
+    transform:translateY(-1px);
+    border-color:rgba(121,200,255,.30);
+    background:rgba(52,152,219,.055);
+  }
+}
+#rtx3-explained #result>.rtx3-container>.rtx3-actions{
+  width:max-content;
+  max-width:100%;
+  margin-top:14px;
+  padding:7px;
+  border:1px solid rgba(121,200,255,.14);
+  border-radius:13px;
+  background:rgba(3,10,15,.88);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+#rtx3-explained .rtx3-trust{
+  min-height:112px;
+}
+#rtx3-explained .rtx3-limits{
+  height:100%;
+}
+#rtx3-explained-tail .rtx3-faq-wrap{
+  background:
+    radial-gradient(620px 200px at 8% 0%,rgba(52,152,219,.09),transparent 68%),
+    linear-gradient(180deg,rgba(4,11,18,.94),rgba(2,7,12,.97));
+}
+#rtx3-explained-tail .rtx3-final-inner{
+  border-color:rgba(121,200,255,.22);
+  background:
+    radial-gradient(620px 200px at 8% 0%,rgba(52,152,219,.13),transparent 68%),
+    linear-gradient(180deg,rgba(4,11,18,.95),rgba(2,7,12,.98));
+}
+#rtx3-explained-tail .rtx3-final h2{
+  max-width:22ch;
+}
+@media(max-width:900px){
+  #rtx3-explained .rtx3-curiosity{
+    justify-content:flex-start;
+  }
+}
+@media(max-width:640px){
+  #rtx3-explained #result>.rtx3-container>.rtx3-actions{
+    width:100%;
+  }
+  #rtx3-explained #result>.rtx3-container>.rtx3-actions .rtx3-btn{
+    width:100%;
+  }
+  #rtx3-explained .rtx3-nav a{
+    min-height:36px;
+    font-size:.80rem;
+  }
+}
+</style>
 
 ==============================
 EMBED 2
@@ -315,7 +424,7 @@ Element ID: 3032592e-6271-128a-2b5c-4e960e7677ae
 EMBED 5
 Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
 ==============================
-<main id="rtx3-explained" class="rtx3-page" data-rtx-explained-version="3.0.2">
+<main id="rtx3-explained" class="rtx3-page" data-rtx-explained-version="3.0.3">
   <section id="top" class="rtx3-hero" aria-labelledby="rtx3-title">
     <div class="rtx3-container rtx3-hero-grid">
       <article class="rtx3-panel rtx3-hero-copy">
@@ -682,7 +791,7 @@ Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
 EMBED 6
 Element ID: ad0ccf12-a915-8ddf-69e0-bb9c85b2ca9e
 ==============================
-<div id="rtx3-explained-tail" class="rtx3-tail" data-rtx-explained-tail-version="3.0.2">
+<div id="rtx3-explained-tail" class="rtx3-tail" data-rtx-explained-tail-version="3.0.3">
   <section id="faq" class="rtx3-section" aria-labelledby="rtx3-faq-title">
     <div class="rtx3-container">
       <article class="rtx3-panel rtx3-faq-wrap">
@@ -756,7 +865,7 @@ Element ID: df313f2c-a9ae-9b02-e912-6b9f874f290c
   if(window.__NF_RT_EXPLAINED_V300__) return;
   window.__NF_RT_EXPLAINED_V300__=true;
 
-  var VERSION="3.0.2";
+  var VERSION="3.0.3";
   var root=document.getElementById("rtx3-explained");
   var tail=document.getElementById("rtx3-explained-tail");
   if(!root) return;
@@ -878,7 +987,7 @@ Element ID: df313f2c-a9ae-9b02-e912-6b9f874f290c
       if(window.neuform&&typeof window.neuform.track==="function"){
         window.neuform.track("nf_reality_types_explainer_cta",{
           surface:"dlter_explained",
-          explainer_version:"3.0.1",
+          explainer_version:"3.0.3",
           action_id:"rt_explainer_pattern",
           placement:a.closest("details")?"all_patterns":"pattern_examples",
           destination:a.getAttribute("href")||"",
