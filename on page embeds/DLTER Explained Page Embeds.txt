@@ -1,905 +1,876 @@
-Embed 1:
-<!-- ==============================
-     DLTER Explained — Embed A (CSS) (Rev 4.3)
-     Paste into: Code Embed ABOVE the HTML embed (inside nf-lab-container)
-     Notes:
-       - Fully scoped to #dlterx-top so it won't bleed site-wide
-       - Avoids collision with the Webflow wrapper section class (also dlterx-section)
-       - Anchor offset uses CSS var: --dlterx-anchor-offset (fallback 88px)
-     ============================== -->
+DLTER Explained Page Embeds
+LIVE WEBFLOW MIRROR
+Version: Reality Types Explained v3.0.1
+Webflow Page ID: 6949aa053c93b77c095dc5b4
+Synced: 2026-09-28
+Authority note: Embeds are listed in current Webflow Navigator order. Git history preserves retired v2 source.
 
-<style id="dlterx-explained-embedA-css-v43">
-  /* =========================================================
-     Scope + layout insurance (scoped to this embed only)
-     ========================================================= */
-  #dlterx-top { position: relative; }
-  #dlterx-top, #dlterx-top * { box-sizing: border-box; }
+==============================
+EMBED 1
+Element ID: 47a989e2-d7c6-4ac3-653b-a3d4bda51c34
+==============================
+<style id="nfrealitytypesexplained-v300">
+:root{
+  --rt3-blue:#79c8ff;
+  --rt3-blue-strong:#3498db;
+  --rt3-gold:#f2c96d;
+  --rt3-violet:#b79cff;
+  --rt3-green:#72d9ad;
+  --rt3-text:#f7fbff;
+  --rt3-muted:rgba(224,235,243,.80);
+  --rt3-soft:rgba(183,201,214,.70);
+  --rt3-line:rgba(121,200,255,.18);
+  --rt3-line-strong:rgba(121,200,255,.34);
+  --rt3-panel:radial-gradient(760px 260px at 10% 0%,rgba(52,152,219,.12),transparent 68%),linear-gradient(180deg,rgba(4,11,18,.94),rgba(2,7,12,.97));
+  --rt3-panel-soft:radial-gradient(620px 210px at 12% 0%,rgba(52,152,219,.08),transparent 70%),linear-gradient(180deg,rgba(5,13,21,.90),rgba(3,9,15,.94));
+  --rt3-shadow:0 20px 58px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.035);
+  --rt3-radius:20px;
+  --rt3-radius-sm:14px;
+  --rt3-max:1120px;
+  --rt3-gutter:clamp(14px,3.2vw,28px);
+  --rt3-anchor:calc(110px + var(--nf-account-universal-offset,0px));
+}
 
-  /* Optional safety: ensure this card is content-driven (matches your Head intent) */
-  #dlterx-top .card.dlterx-card{
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
+html.rtx3-explained-page{scroll-behavior:smooth;background:#05080d;-webkit-text-size-adjust:100%}
+body.rtx3-explained-body{background:#05080d;color:var(--rt3-muted)}
+#rtx3-explained,#rtx3-explained *,#rtx3-explained *::before,#rtx3-explained *::after,
+#rtx3-explained-tail,#rtx3-explained-tail *,#rtx3-explained-tail *::before,#rtx3-explained-tail *::after{box-sizing:border-box}
+#rtx3-explained,#rtx3-explained-tail{position:relative;isolation:isolate;width:100%;overflow:clip;color:var(--rt3-muted);font:400 16px/1.64 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#rtx3-explained :is(h1,h2,h3,h4),#rtx3-explained-tail :is(h2,h3,h4){margin:0;color:var(--rt3-text);font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;font-weight:850;letter-spacing:-.035em;text-wrap:balance}
+#rtx3-explained :is(p,ul,ol),#rtx3-explained-tail :is(p,ul,ol){margin-top:0}
+#rtx3-explained a,#rtx3-explained-tail a{color:inherit}
+#rtx3-explained :is(a,button,summary):focus-visible,#rtx3-explained-tail :is(a,button,summary):focus-visible{outline:3px solid rgba(121,200,255,.92);outline-offset:4px}
+#rtx3-explained [hidden],#rtx3-explained-tail [hidden]{display:none!important}
 
-  /* Screen-reader only helper */
-  #dlterx-top .dlterx-sr{
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
-  }
+.rtx3-container{width:min(var(--rt3-max),calc(100% - (2 * var(--rt3-gutter))));margin-inline:auto}
+.rtx3-section{padding:clamp(16px,2.4vw,28px) 0;scroll-margin-top:var(--rt3-anchor)}
+.rtx3-panel{border:1px solid var(--rt3-line);border-radius:var(--rt3-radius);background:var(--rt3-panel);box-shadow:var(--rt3-shadow);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.rtx3-panel-soft{border:1px solid rgba(121,200,255,.14);border-radius:var(--rt3-radius-sm);background:var(--rt3-panel-soft);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.rtx3-kicker{margin:0 0 10px;color:var(--rt3-blue);font-size:.75rem;font-weight:900;line-height:1.2;letter-spacing:.13em;text-transform:uppercase}
+.rtx3-lede{color:var(--rt3-muted);font-size:clamp(1.02rem,1.45vw,1.14rem);line-height:1.68}
+.rtx3-muted{color:var(--rt3-soft)}
+.rtx3-eyebrow-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:10px}
+.rtx3-chip{display:inline-flex;align-items:center;min-height:28px;padding:5px 9px;border:1px solid rgba(121,200,255,.20);border-radius:999px;background:rgba(52,152,219,.07);color:#cdeaff;font-size:.75rem;font-weight:800;line-height:1.2}
+.rtx3-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:20px}
+.rtx3-btn{display:inline-flex;min-height:46px;align-items:center;justify-content:center;padding:11px 17px;border:1px solid rgba(121,200,255,.28);border-radius:11px;background:rgba(14,36,52,.84);color:#fff!important;font-size:.9rem;font-weight:850;line-height:1.2;text-decoration:none;transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.rtx3-btn-primary{border-color:rgba(161,216,255,.46);background:linear-gradient(180deg,#1788eb,#0b61bb);box-shadow:0 12px 28px rgba(11,95,184,.25)}
+.rtx3-btn-quiet{background:rgba(52,152,219,.06);color:#cdeaff!important}
+.rtx3-text-link{display:inline-flex;align-items:center;gap:5px;color:#aedaef!important;font-size:.85rem;font-weight:800;text-decoration:none}
+@media(hover:hover){.rtx3-btn:hover,.rtx3-text-link:hover{transform:translateY(-1px)}}
 
-  /* Anchor offset (avoid collision with wrapper section class) */
-  #dlterx-top .dlterx-section{
-    scroll-margin-top: var(--dlterx-anchor-offset, 88px);
-  }
+/* Hero */
+.rtx3-hero{padding:clamp(28px,4vw,44px) 0 18px}
+.rtx3-hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:16px}
+.rtx3-hero-copy,.rtx3-curiosity{padding:clamp(24px,3.5vw,38px)}
+.rtx3-hero-copy h1{max-width:12.5ch;margin-bottom:18px;font-size:clamp(2.7rem,5vw,4.3rem);line-height:.98;letter-spacing:-.055em}
+.rtx3-hero-copy .rtx3-lede{max-width:62ch;margin-bottom:0}
+.rtx3-thesis{margin:17px 0 0;padding:13px 14px;border-left:2px solid var(--rt3-blue);background:rgba(52,152,219,.055);color:#eef7fc;font-size:.95rem;line-height:1.5}
+.rtx3-curiosity{align-self:stretch}
+.rtx3-curiosity h2{margin-bottom:8px;font-size:1.35rem;line-height:1.18}
+.rtx3-question-list{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none}
+.rtx3-question-list li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;padding:12px;border:1px solid rgba(121,200,255,.13);border-radius:12px;background:rgba(255,255,255,.022);color:rgba(235,244,249,.88);font-size:.88rem;line-height:1.46}
+.rtx3-question-list span{display:grid;width:28px;height:28px;place-items:center;border-radius:9px;background:rgba(52,152,219,.09);color:var(--rt3-blue);font-size:.72rem;font-weight:900}
 
-  /* =========================================================
-     Header + typography helpers
-     ========================================================= */
-  #dlterx-top .dlterx-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    flex-wrap:wrap;
-  }
+/* Compact nav */
+.rtx3-nav-wrap{position:sticky;z-index:18;top:calc(54px + var(--nf-account-universal-offset,0px));padding:8px 0 4px;pointer-events:none}
+.rtx3-nav{display:flex;gap:5px;overflow:auto;padding:7px;border:1px solid rgba(121,200,255,.14);border-radius:13px;background:rgba(3,9,14,.90);box-shadow:0 10px 26px rgba(0,0,0,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);pointer-events:auto;scrollbar-width:none}
+.rtx3-nav::-webkit-scrollbar{display:none}
+.rtx3-nav a{flex:0 0 auto;padding:8px 10px;border-radius:9px;color:rgba(219,233,242,.74)!important;font-size:.77rem;font-weight:820;text-decoration:none;white-space:nowrap}
+.rtx3-nav a[aria-current="location"]{background:rgba(52,152,219,.11);color:#fff!important}
 
-  #dlterx-top .dlterx-title{ margin: 6px 0 10px; }
+/* Section heading surfaces */
+.rtx3-section-head{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(260px,.88fr);gap:24px;align-items:end;margin-bottom:14px;padding:19px 21px}
+.rtx3-section-head h2{font-size:clamp(1.8rem,3.2vw,2.55rem);line-height:1.04}
+.rtx3-section-head>p{max-width:49ch;margin:0;color:rgba(211,225,234,.78);font-size:.91rem;line-height:1.58}
 
-  #dlterx-top .dlterx-lede{
-    margin: 0 0 10px;
-    font-size: 1.02rem;
-    color: rgba(229,231,235,0.88);
-    line-height: 1.65;
-  }
+/* Domain map */
+.rtx3-domain-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rtx3-domain{padding:18px}
+.rtx3-domain h3{margin-bottom:6px;font-size:1.05rem}
+.rtx3-domain>p{margin-bottom:13px;color:var(--rt3-soft);font-size:.84rem;line-height:1.5}
+.rtx3-pair{display:grid;gap:7px;margin-top:8px}
+.rtx3-pair-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 9px;border:1px solid rgba(121,200,255,.10);border-radius:10px;background:rgba(255,255,255,.018)}
+.rtx3-code{color:var(--rt3-blue);font-size:.75rem;font-weight:900}
+.rtx3-pair-name{color:#f1f7fb;font-size:.81rem;font-weight:760}
+.rtx3-pair-kind{color:rgba(189,207,219,.64);font-size:.67rem;font-weight:780;text-transform:uppercase;letter-spacing:.05em}
+.rtx3-coord .rtx3-code{color:var(--rt3-gold)}
+.rtx3-coord{border-color:rgba(242,201,109,.13);background:rgba(242,201,109,.025)}
+.rtx3-domain-note{margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);color:rgba(203,218,229,.72);font-size:.77rem;line-height:1.48}
 
-  #dlterx-top .dlterx-sublede{ margin: 0 0 12px; }
+.rtx3-example{margin-top:14px;padding:22px}
+.rtx3-example-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:16px}
+.rtx3-example-head h3{font-size:1.2rem}
+.rtx3-example-head p{max-width:50ch;margin:0;color:var(--rt3-soft);font-size:.81rem;line-height:1.45}
+.rtx3-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rtx3-score-domain{padding:14px;border:1px solid rgba(121,200,255,.11);border-radius:12px;background:rgba(255,255,255,.018)}
+.rtx3-score-domain>strong{display:block;margin-bottom:10px;color:#fff;font-size:.83rem}
+.rtx3-score-row{display:grid;grid-template-columns:28px minmax(0,1fr) 30px;gap:8px;align-items:center;margin:7px 0}
+.rtx3-score-row>span:first-child{color:#bde5ff;font-size:.72rem;font-weight:900}
+.rtx3-score-row b{color:#fff;font-size:.74rem;text-align:right}
+.rtx3-bar{height:7px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.07)}
+.rtx3-bar::before{content:"";display:block;width:var(--score);height:100%;border-radius:inherit;background:linear-gradient(90deg,#176d9f,#79c8ff)}
+.rtx3-score-row.is-coord .rtx3-bar::before{background:linear-gradient(90deg,#9f7c2c,#f2c96d)}
+.rtx3-score-row.is-coord>span:first-child{color:#f7d98b}
+.rtx3-scale-note{margin:14px 0 0;color:rgba(187,206,218,.68);font-size:.75rem;line-height:1.45;text-align:center}
 
-  #dlterx-top .dlterx-h2{ margin: 0 0 10px; }
+/* Interpretation */
+.rtx3-interpret-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);gap:12px}
+.rtx3-interpret-card{padding:20px}
+.rtx3-interpret-card h3{margin-bottom:8px;font-size:1.15rem}
+.rtx3-interpret-card p{color:var(--rt3-muted);font-size:.88rem;line-height:1.58}
+.rtx3-shape-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.rtx3-shape{padding:11px;border:1px solid rgba(121,200,255,.12);border-radius:10px;background:rgba(255,255,255,.02)}
+.rtx3-shape strong{display:block;margin-bottom:4px;color:#fff;font-size:.80rem}
+.rtx3-shape span{display:block;color:var(--rt3-soft);font-size:.72rem;line-height:1.4}
+.rtx3-match-example{display:grid;gap:10px;margin-top:14px}
+.rtx3-match-primary,.rtx3-resonance{padding:12px;border:1px solid rgba(121,200,255,.14);border-radius:11px;background:rgba(52,152,219,.04)}
+.rtx3-match-primary small,.rtx3-resonance small{display:block;margin-bottom:3px;color:var(--rt3-blue);font-size:.68rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase}
+.rtx3-match-primary strong{color:#fff;font-size:1rem}
+.rtx3-resonance strong{color:#eef7fc;font-size:.85rem}
+.rtx3-convergence{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.rtx3-convergence span{padding:5px 8px;border:1px solid rgba(121,200,255,.12);border-radius:999px;color:rgba(214,230,240,.74);font-size:.7rem;font-weight:800}
 
-  #dlterx-top .dlterx-h3{
-    margin:0;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(148,163,184,0.75);
-  }
+/* Reference patterns */
+.rtx3-reference{margin-top:12px;padding:20px}
+.rtx3-reference-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.7fr);gap:20px;align-items:end}
+.rtx3-reference-head h3{font-size:1.18rem}
+.rtx3-reference-head p{margin:0;color:var(--rt3-soft);font-size:.80rem;line-height:1.5}
+.rtx3-type-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:14px}
+.rtx3-type-card{display:block;padding:13px;border:1px solid rgba(121,200,255,.12);border-radius:11px;background:rgba(255,255,255,.018);text-decoration:none}
+.rtx3-type-card strong{display:block;margin-bottom:5px;color:#fff;font-size:.84rem}
+.rtx3-type-card span{display:block;color:var(--rt3-soft);font-size:.72rem;line-height:1.4}
+.rtx3-assessment-first{margin:13px 0 0;padding:10px 12px;border-left:2px solid var(--rt3-gold);background:rgba(242,201,109,.035);color:rgba(230,224,199,.82);font-size:.76rem;line-height:1.45}
+.rtx3-details{margin-top:12px;border:1px solid rgba(121,200,255,.14);border-radius:12px;background:rgba(1,6,10,.38)}
+.rtx3-details summary{display:flex;min-height:46px;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;cursor:pointer;color:#eaf6fc;font-size:.83rem;font-weight:850;list-style:none}
+.rtx3-details summary::-webkit-details-marker{display:none}
+.rtx3-details summary::after{content:"+";color:var(--rt3-blue);font-size:1rem}
+.rtx3-details[open] summary::after{content:"–"}
+.rtx3-details-body{padding:0 14px 14px;color:var(--rt3-muted);font-size:.84rem;line-height:1.58}
+.rtx3-all-types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.rtx3-all-types a{padding:9px 10px;border:1px solid rgba(121,200,255,.10);border-radius:9px;background:rgba(255,255,255,.018);color:#eaf6fc!important;font-size:.76rem;font-weight:760;text-decoration:none}
 
-  #dlterx-top .dlterx-p{ margin: 0 0 10px; }
+/* Offer */
+.rtx3-offer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rtx3-offer{padding:21px}
+.rtx3-offer.is-paid{border-color:rgba(242,201,109,.24);background:radial-gradient(600px 220px at 10% 0%,rgba(242,201,109,.07),transparent 68%),linear-gradient(180deg,rgba(8,14,19,.94),rgba(3,8,12,.97))}
+.rtx3-offer-label{margin:0 0 7px;color:var(--rt3-blue);font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.rtx3-offer.is-paid .rtx3-offer-label{color:var(--rt3-gold)}
+.rtx3-offer h3{font-size:1.25rem}
+.rtx3-price{display:flex;align-items:baseline;gap:7px;margin:7px 0 13px}
+.rtx3-price strong{color:#fff;font:850 1.7rem/1 "Plus Jakarta Sans",Inter,sans-serif}
+.rtx3-price span{color:var(--rt3-soft);font-size:.77rem}
+.rtx3-checks{display:grid;gap:8px;margin:13px 0 0;padding:0;list-style:none}
+.rtx3-checks li{position:relative;padding-left:21px;color:rgba(226,237,244,.82);font-size:.84rem;line-height:1.45}
+.rtx3-checks li::before{content:"✓";position:absolute;left:0;top:0;color:var(--rt3-green);font-weight:900}
+.rtx3-offer-note{margin:14px 0 0;padding:11px;border:1px solid rgba(121,200,255,.11);border-radius:10px;background:rgba(52,152,219,.035);color:rgba(202,219,230,.75);font-size:.76rem;line-height:1.45}
 
-  #dlterx-top .dlterx-kicker{
-    margin-top: 12px;
-    font-size: 0.88rem;
-    color: rgba(148,163,184,0.78);
-  }
+/* Trust */
+.rtx3-trust-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.rtx3-trust{padding:15px}
+.rtx3-trust strong{display:block;margin-bottom:5px;color:#fff;font-size:.84rem}
+.rtx3-trust span{display:block;color:var(--rt3-soft);font-size:.74rem;line-height:1.42}
+.rtx3-method-details{margin-top:12px}
+.rtx3-method-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.rtx3-method-block{padding:13px;border:1px solid rgba(121,200,255,.10);border-radius:10px;background:rgba(255,255,255,.018)}
+.rtx3-method-block h4{margin-bottom:6px;font-size:.89rem}
+.rtx3-method-block p,.rtx3-method-block li{color:rgba(210,225,235,.76);font-size:.76rem;line-height:1.5}
+.rtx3-method-block ul{margin-bottom:0;padding-left:18px}
+.rtx3-formula{padding:11px;border-radius:8px;background:rgba(0,0,0,.24);color:#d8effe;font:700 .76rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
-  /* Focus visibility (accessibility) */
-  #dlterx-top .dlterx-toclink:focus-visible,
-  #dlterx-top .dlterx-footlink:focus-visible,
-  #dlterx-top .dlter-link:focus-visible,
-  #dlterx-top .dlterx-summary:focus-visible{
-    outline: 2px solid rgba(52,152,219,0.9);
-    outline-offset: 3px;
-    border-radius: 10px;
-  }
+/* DLTER connection + limits */
+.rtx3-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rtx3-connection,.rtx3-limits{padding:20px}
+.rtx3-connection h3,.rtx3-limits h3{margin-bottom:8px;font-size:1.15rem}
+.rtx3-connection p,.rtx3-limits p{font-size:.86rem;line-height:1.56}
+.rtx3-limit-list{display:grid;gap:8px;margin:13px 0 0;padding:0;list-style:none}
+.rtx3-limit-list li{padding:10px 11px;border:1px solid rgba(121,200,255,.10);border-radius:9px;background:rgba(255,255,255,.018)}
+.rtx3-limit-list strong{display:block;color:#fff;font-size:.79rem}
+.rtx3-limit-list span{display:block;margin-top:3px;color:var(--rt3-soft);font-size:.72rem;line-height:1.42}
+.rtx3-best-use{margin-top:12px;padding:14px 15px;border:1px solid rgba(114,217,173,.18);border-radius:12px;background:rgba(114,217,173,.035)}
+.rtx3-best-use strong{display:block;color:#eafff5;font-size:.85rem}
+.rtx3-best-use span{display:block;margin-top:4px;color:rgba(205,229,217,.74);font-size:.76rem;line-height:1.48}
 
-  /* =========================================================
-     TOC pills (top navigation)
-     ========================================================= */
-  #dlterx-top .dlterx-toc{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin: 12px 0 8px;
-  }
+/* FAQ + final */
+.rtx3-faq-wrap{padding:20px}
+.rtx3-faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.rtx3-faq{margin:0;border:1px solid rgba(121,200,255,.12);border-radius:11px;background:rgba(255,255,255,.018)}
+.rtx3-faq summary{min-height:48px;padding:12px 13px;cursor:pointer;color:#eef7fc;font-size:.82rem;font-weight:820;list-style:none}
+.rtx3-faq summary::-webkit-details-marker{display:none}
+.rtx3-faq summary::after{content:"+";float:right;color:var(--rt3-blue)}
+.rtx3-faq[open] summary::after{content:"–"}
+.rtx3-faq p{margin:0;padding:0 13px 13px;color:var(--rt3-muted);font-size:.79rem;line-height:1.52}
+.rtx3-final{padding:20px 0 46px}
+.rtx3-final-inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center;padding:23px 25px}
+.rtx3-final h2{font-size:clamp(1.6rem,2.6vw,2.1rem);line-height:1.05}
+.rtx3-final p{max-width:64ch;margin:8px 0 0;color:var(--rt3-muted);font-size:.88rem;line-height:1.52}
+.rtx3-final .rtx3-actions{margin-top:0}
+.rtx3-back{display:block;width:max-content;margin:12px auto 0;color:rgba(190,210,222,.62)!important;font-size:.75rem;text-decoration:none}
 
-  #dlterx-top .dlterx-toclink{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.32);
-    background: rgba(15,23,42,0.75);
-    color: rgba(229,231,235,0.86);
-    text-decoration:none;
-    font-size: 0.82rem;
-    font-weight: 700;
-    transition: border-color 0.18s ease-out, transform 0.18s ease-out, box-shadow 0.18s ease-out;
-  }
-
-  #dlterx-top .dlterx-toclink:hover{
-    border-color: var(--dm-border-interactive, #3498db);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
-    transform: translateY(-1px);
-  }
-
-  /* If your JS adds is-active, this gives it a clear state */
-  #dlterx-top .dlterx-toclink.is-active{
-    border-color: var(--dm-border-interactive, #3498db);
-    background: rgba(15,23,42,0.88);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
-  }
-
-  /* =========================================================
-     Callout
-     ========================================================= */
-  #dlterx-top .dlterx-callout{
-    margin: 14px 0 18px;
-    border-radius: var(--nf-radius, 14px);
-    border: 1px solid rgba(148,163,184,0.32);
-    background: linear-gradient(135deg, rgba(15,23,42,0.82), rgba(2,6,23,0.72));
-    padding: 12px 12px 10px;
-    box-shadow: var(--nf-glass-shadow-sm, 0 8px 24px rgba(0,0,0,0.45));
-  }
-
-  #dlterx-top .dlterx-callout-title{
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(249,250,251,0.9);
-    margin-bottom: 8px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-
-  /* Lists */
-  #dlterx-top .dlterx-list{
-    margin: 0;
-    padding-left: 18px;
-    color: rgba(229,231,235,0.88);
-  }
-  #dlterx-top .dlterx-list li{ margin: 0 0 10px; }
-  #dlterx-top .dlterx-list li:last-child{ margin-bottom: 0; }
-
-  /* =========================================================
-     Axis grid + cards
-     ========================================================= */
-  #dlterx-top .dlterx-axis-grid{
-    display:grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 10px;
-  }
-
-  #dlterx-top .dlterx-panel{
-    border: 1px solid rgba(148,163,184,0.28);
-    background: rgba(2,6,23,0.55);
-    border-radius: var(--nf-radius-sm, 10px);
-    padding: 12px 12px 10px;
-    box-shadow: var(--nf-glass-shadow-sm, 0 8px 24px rgba(0,0,0,0.45));
-  }
-
-  #dlterx-top .dlterx-panel-head{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom: 8px;
-  }
-
-  #dlterx-top .dlterx-mini{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    align-items:center;
-    margin-top: 4px;
-  }
-
-  #dlterx-top .dlterx-mini-code{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding: 2px 8px;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.28);
-    background: rgba(15,23,42,0.85);
-    color: rgba(249,250,251,0.9);
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-
-  #dlterx-top .dlterx-mini-text{
-    font-size: 0.82rem;
-    color: rgba(148,163,184,0.78);
-  }
-
-  #dlterx-top .dlterx-axis-dot{
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-    margin-top: 2px;
-    box-shadow: 0 0 14px rgba(255,255,255,0.06);
-  }
-
-  #dlterx-top .dlterx-axis-dot--p{ background: var(--dlter-axis-perception, #38bdf8); }
-  #dlterx-top .dlterx-axis-dot--e{ background: var(--dlter-axis-emergence, #22c55e); }
-  #dlterx-top .dlterx-axis-dot--i{ background: var(--dlter-axis-identity, #eab308); }
-
-  /* Inline code pill */
-  #dlterx-top .dlterx-code{
-    display:inline-flex;
-    align-items:center;
-    padding: 2px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.28);
-    background: rgba(15,23,42,0.88);
-    color: rgba(249,250,251,0.92);
-    font-size: 0.9rem;
-    letter-spacing: 0.04em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    white-space: nowrap;
-  }
-
-  /* =========================================================
-     Geometry / grids
-     ========================================================= */
-  #dlterx-top .dlterx-geo-grid{
-    display:grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 10px;
-  }
-
-  #dlterx-top .dlterx-geo-item{
-    border: 1px solid rgba(148,163,184,0.22);
-    background: rgba(2,6,23,0.45);
-    border-radius: var(--nf-radius-sm, 10px);
-    padding: 12px 12px 10px;
-  }
-
-  #dlterx-top .dlterx-geo-title{
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(148,163,184,0.78);
-    margin-bottom: 8px;
-    font-weight: 800;
-  }
-
-  /* =========================================================
-     Details / summary
-     ========================================================= */
-  #dlterx-top .dlterx-details{
-    margin-top: 12px;
-    border-radius: var(--nf-radius, 14px);
-    border: 1px solid rgba(148,163,184,0.28);
-    background: rgba(2,6,23,0.46);
-    overflow: hidden;
-  }
-
-  #dlterx-top .dlterx-summary{
-    cursor: pointer;
-    list-style: none;
-    padding: 10px 12px;
-    font-weight: 800;
-    color: rgba(249,250,251,0.9);
-    background: rgba(15,23,42,0.65);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-  }
-
-  #dlterx-top .dlterx-summary::-webkit-details-marker{ display:none; }
-
-  #dlterx-top .dlterx-summary::after{
-    content: "＋";
-    color: rgba(148,163,184,0.9);
-    flex: 0 0 auto;
-  }
-
-  #dlterx-top details[open] > .dlterx-summary::after{ content: "－"; }
-
-  #dlterx-top .dlterx-details-body{ padding: 12px 12px 10px; }
-
-  /* Steps */
-  #dlterx-top .dlterx-steps{
-    display:grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin: 10px 0 12px;
-  }
-
-  #dlterx-top .dlterx-step{
-    border: 1px solid rgba(148,163,184,0.22);
-    background: rgba(2,6,23,0.42);
-    border-radius: var(--nf-radius-sm, 10px);
-    padding: 12px 12px 10px;
-  }
-
-  #dlterx-top .dlterx-step-title{
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(148,163,184,0.78);
-    margin-bottom: 8px;
-    font-weight: 800;
-  }
-
-  /* Table */
-  #dlterx-top .dlterx-tablewrap{
-    overflow: auto;
-    border-radius: var(--nf-radius-sm, 10px);
-    border: 1px solid rgba(148,163,184,0.22);
-    background: rgba(2,6,23,0.55);
-  }
-
-  #dlterx-top .dlterx-tablewrap:focus-visible{
-    outline: 2px solid rgba(52,152,219,0.9);
-    outline-offset: 3px;
-  }
-
-  #dlterx-top .dlterx-table{
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 640px;
-  }
-
-  #dlterx-top .dlterx-table th,
-  #dlterx-top .dlterx-table td{
-    text-align: left;
-    padding: 10px 12px;
-    border-bottom: 1px solid rgba(148,163,184,0.18);
-    color: rgba(229,231,235,0.88);
-    font-size: 0.95rem;
-  }
-
-  #dlterx-top .dlterx-table th{
-    position: sticky;
-    top: 0;
-    background: rgba(15,23,42,0.85);
-    color: rgba(249,250,251,0.92);
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  #dlterx-top .dlterx-table tbody tr:nth-child(even){
-    background: rgba(15,23,42,0.25);
-  }
-
-  /* NeuForm split blocks */
-  #dlterx-top .dlterx-split{
-    display:grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin: 12px 0 12px;
-  }
-
-  #dlterx-top .dlterx-split-item{
-    border: 1px solid rgba(148,163,184,0.22);
-    background: rgba(2,6,23,0.45);
-    border-radius: var(--nf-radius-sm, 10px);
-    padding: 12px 12px 10px;
-  }
-
-  #dlterx-top .dlterx-split-title{
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(148,163,184,0.78);
-    margin-bottom: 8px;
-    font-weight: 800;
-  }
-
-  /* CTA row */
-  #dlterx-top .dlterx-cta{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    flex-wrap:wrap;
-  }
-
-  #dlterx-top .dlterx-footerlinks{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  #dlterx-top .dlterx-footlink{
-    color: rgba(229,231,235,0.86);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.95rem;
-  }
-
-  #dlterx-top .dlterx-footlink:hover{ text-decoration: underline; }
-
-  #dlterx-top .dlterx-footsep{ color: rgba(148,163,184,0.6); }
-
-  /* =========================================================
-     Responsive
-     ========================================================= */
-  @media (max-width: 980px){
-    #dlterx-top .dlterx-axis-grid{ grid-template-columns: 1fr; }
-    #dlterx-top .dlterx-geo-grid{ grid-template-columns: 1fr; }
-    #dlterx-top .dlterx-split{ grid-template-columns: 1fr; }
-    #dlterx-top .dlterx-steps{ grid-template-columns: 1fr; }
-
-    #dlterx-top .dlterx-toclink:hover{ transform: none; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    #dlterx-top .dlterx-toclink{ transition: none !important; }
-    #dlterx-top .dlterx-toclink:hover{ transform: none !important; }
-  }
+/* Mobile */
+@media(max-width:900px){
+  .rtx3-hero-grid,.rtx3-section-head,.rtx3-interpret-grid,.rtx3-reference-head,.rtx3-two-col,.rtx3-final-inner{grid-template-columns:1fr}
+  .rtx3-domain-grid,.rtx3-score-grid,.rtx3-trust-grid{grid-template-columns:1fr 1fr}
+  .rtx3-type-grid{grid-template-columns:1fr 1fr}
+  .rtx3-final .rtx3-actions{margin-top:4px}
+}
+@media(max-width:640px){
+  #rtx3-explained,#rtx3-explained-tail{font-size:16px}
+  .rtx3-container{width:calc(100% - 24px)}
+  .rtx3-hero{padding-top:20px}
+  .rtx3-hero-copy,.rtx3-curiosity{padding:20px 17px}
+  .rtx3-hero-copy h1{max-width:15ch;font-size:clamp(2.45rem,12vw,3.2rem)}
+  .rtx3-nav-wrap{top:calc(50px + var(--nf-account-universal-offset,0px))}
+  .rtx3-section{padding:12px 0}
+  .rtx3-section-head{padding:16px}
+  .rtx3-section-head h2{font-size:1.65rem}
+  .rtx3-domain-grid,.rtx3-score-grid,.rtx3-offer-grid,.rtx3-trust-grid,.rtx3-method-grid,.rtx3-faq-grid{grid-template-columns:1fr}
+  .rtx3-domain,.rtx3-example,.rtx3-interpret-card,.rtx3-reference,.rtx3-offer,.rtx3-connection,.rtx3-limits,.rtx3-faq-wrap{padding:16px}
+  .rtx3-shape-grid{grid-template-columns:1fr}
+  .rtx3-all-types{grid-template-columns:1fr 1fr}
+  .rtx3-example-head{display:grid}
+  .rtx3-type-grid{grid-template-columns:1fr}
+  .rtx3-reference .rtx3-type-card:nth-child(n+4){display:none}
+  .rtx3-final-inner{padding:18px}
+  .rtx3-actions{align-items:stretch;flex-direction:column}
+  .rtx3-actions .rtx3-btn{width:100%}
+  .rtx3-final .rtx3-actions{width:100%}
+}
+@media(max-width:410px){
+  .rtx3-all-types{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html.rtx3-explained-page{scroll-behavior:auto}
+  #rtx3-explained *,#rtx3-explained-tail *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+</style>
+<style id="nfrealitytypesexplained-v301-hotfix">
+#rtx3-explained .rtx3-best-use{
+  border-color:rgba(114,217,173,.24);
+  background:linear-gradient(180deg,rgba(7,24,18,.92),rgba(3,14,11,.90));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+#rtx3-explained-tail .rtx3-back{
+  min-height:32px;
+  align-items:center;
+  padding:6px 10px;
+  border:1px solid rgba(121,200,255,.12);
+  border-radius:999px;
+  background:rgba(3,10,15,.86);
+  color:rgba(205,222,233,.72)!important;
+}
+#rtx3-explained :is(.rtx3-pair-kind,.rtx3-type-card span,.rtx3-shape span,.rtx3-convergence span,.rtx3-method-block p,.rtx3-method-block li,.rtx3-limit-list span),
+#rtx3-explained-tail .rtx3-faq p{
+  font-size:max(.75rem,12px);
+}
+</style>
+<style id="nfrealitytypesexplained-v301-font-polish">
+#rtx3-explained .rtx3-match-primary small,
+#rtx3-explained .rtx3-resonance small,
+#rtx3-explained .rtx3-question-list span,
+#rtx3-explained .rtx3-score-row>span:first-child,
+#rtx3-explained .rtx3-offer-label{
+  font-size:.75rem;
+}
+#rtx3-explained .rtx3-score-row b,
+#rtx3-explained .rtx3-trust span{
+  font-size:.78rem;
+}
 </style>
 
-Embed 2:
-<!-- ==============================
-     DLTER Explained — Embed B (HTML) (Rev 4.3)
-     Paste into: Code Embed BELOW the CSS embed (inside nf-lab-container)
-     Updates:
-       - Adds stable data markers for JS targeting
-       - Removes inline <style> (now in Embed A)
-     ============================== -->
+==============================
+EMBED 2
+Element ID: 476f0af8-2d29-df17-8619-3cf47465189b
+==============================
+<!-- DLTER Explained v2 premium CSS retired by v3.0.0 -->
 
-<div id="dlterx-top" data-dlterx-scope="explained" data-dlterx-root="dlter-explained" data-dlterx-version="4.3">
-  <div class="card dlterx-card" role="region" aria-labelledby="dlterx-title">
-    <div class="dlter-explained-shell">
+==============================
+EMBED 3
+Element ID: 7dfb9785-0d4c-a3ea-0b5a-884d20e652bc
+==============================
+<!-- DLTER Explained v2 enhancement CSS retired by v3.0.0 -->
 
-      <!-- Header -->
-      <header class="dlterx-header">
-        <div class="dlter-badge" aria-label="DLTER system badge">
-          <span class="dlter-badge-dot" aria-hidden="true"></span>
-          <span>DLTER System · Identity Geometry</span>
+==============================
+EMBED 4
+Element ID: 3032592e-6271-128a-2b5c-4e960e7677ae
+==============================
+<!-- DLTER Explained v2 tail CSS retired by v3.0.0 -->
+
+==============================
+EMBED 5
+Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
+==============================
+<main id="rtx3-explained" class="rtx3-page" data-rtx-explained-version="3.0.1">
+  <section id="top" class="rtx3-hero" aria-labelledby="rtx3-title">
+    <div class="rtx3-container rtx3-hero-grid">
+      <article class="rtx3-panel rtx3-hero-copy">
+        <div class="rtx3-eyebrow-row">
+          <span class="rtx3-kicker">Reality Types by DLTER</span>
+          <span class="rtx3-chip">Free assessment</span>
+          <span class="rtx3-chip">9-score map</span>
         </div>
+        <h1 id="rtx3-title">How do you build clarity when life gets complicated?</h1>
+        <p class="rtx3-lede">Reality Types maps recurring patterns in how you make sense of information, create stability, and adapt through change. Your result is a continuous nine-score Reality Map, plus the reference patterns that most closely resemble its shape.</p>
+        <p class="rtx3-thesis"><strong>Your map is the fuller result.</strong> The type name is a reference point, not a permanent identity.</p>
+        <div class="rtx3-actions">
+          <a class="rtx3-btn rtx3-btn-primary" href="/dlter-quiz" data-nf-action-id="rt_explainer_assessment_hero" data-nf-placement="hero">Take the Free Assessment</a>
+          <a class="rtx3-btn rtx3-btn-quiet" href="#map" data-nf-action-id="rt_explainer_example_map" data-nf-placement="hero">See an Example Map</a>
+        </div>
+      </article>
 
-        <a
-          class="dlter-link"
-          href="https://www.neuform-fitness.com/dlter-quiz"
-          aria-label="Go to the DLTER Quiz"
-        >
-          Back to the quiz →
-        </a>
-      </header>
-
-      <h1 id="dlterx-title" class="dlterx-title">DLTER Explained</h1>
-
-      <p class="dlterx-lede">
-        <strong>DLTER</strong> (Dimension-Labeled Theory of Emergent Reality) is built around one idea:
-        <strong>reality becomes usable when information is organized, stabilized, and updated around an observer</strong>.
-        In its full technical form, DLTER is a quantum-information framework that explores how spacetime, matter, and forces could
-        <strong>emerge</strong> from deeper informational structure (a “theory-of-everything” style attempt).
-        In NeuForm, we use a human-scale translation—<strong>DLTER Reality Types</strong>—to map how you tend to
-        <strong>process information</strong>, <strong>adapt to change</strong>, and <strong>maintain identity over time</strong>.
-        It’s not a label for who you are. It’s a model of your default settings when life requires an update.
-      </p>
-
-      <p class="dlter-muted dlterx-sublede">
-        Optional reading · skimmable by design · go as deep as you want. You can take the quiz without reading this page.
-        This exists for context, clarity, and the “show me the logic” crowd.
-      </p>
-
-      <!-- Quick navigation -->
-      <nav class="dlterx-toc" aria-label="On this page" data-dlterx-toc="pills">
-        <a class="dlterx-toclink" href="#dlterx-axes">The three axes</a>
-        <a class="dlterx-toclink" href="#dlterx-geometry">The geometry model</a>
-        <a class="dlterx-toclink" href="#dlterx-quizworks">Why the quiz works</a>
-        <a class="dlterx-toclink" href="#dlterx-underhood">Under the hood</a>
-        <a class="dlterx-toclink" href="#dlterx-not">What DLTER is not</a>
-        <a class="dlterx-toclink" href="#dlterx-neuform">Why NeuForm uses it</a>
-        <a class="dlterx-toclink" href="#dlterx-cta">Take the quiz</a>
-      </nav>
-
-      <!-- Important framing -->
-      <aside class="dlterx-callout" role="note" aria-label="Important framing">
-        <div class="dlterx-callout-title">Important framing</div>
-        <ul class="dlterx-list">
-          <li>
-            <strong>DLTER describes response dynamics under change</strong>—how your system routes input, stabilizes, and updates—not “traits” you’re stuck with.
-          </li>
-          <li>
-            <strong>Types are stable baselines</strong>, not boxes. Stress, learning, environment, and skills can shift how you show up day-to-day.
-          </li>
-          <li>
-            <strong>Usefulness beats perfection.</strong> If a DLTER idea helps you train, decide, or stay consistent—use it. If it doesn’t, ignore it.
-          </li>
+      <aside class="rtx3-panel rtx3-curiosity" aria-label="Questions Reality Types explores">
+        <p class="rtx3-kicker">Three questions</p>
+        <h2>Different people can reach clarity in very different ways.</h2>
+        <ul class="rtx3-question-list">
+          <li><span>01</span><div>Do you understand something best by thinking it through first, by engaging with it, or through both?</div></li>
+          <li><span>02</span><div>When circumstances change, do you preserve stability through structure, adaptation, or a coordinated mix?</div></li>
+          <li><span>03</span><div>When you change direction, what helps the new version still feel connected to what mattered before?</div></li>
         </ul>
       </aside>
+    </div>
+  </section>
 
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
+  <div class="rtx3-nav-wrap" aria-label="Reality Types explainer navigation">
+    <nav class="rtx3-container rtx3-nav">
+      <a href="#map">Reality Map</a>
+      <a href="#interpret">Interpretation</a>
+      <a href="#result">Free + Blueprint</a>
+      <a href="#method">Method</a>
+      <a href="#limits">Limits</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
 
-      <!-- AXES -->
-      <section id="dlterx-axes" class="dlterx-section" aria-labelledby="dlterx-axes-h">
-        <h2 id="dlterx-axes-h" class="dlterx-h2">The three axes</h2>
-
-        <p class="dlterx-p">
-          DLTER Reality Types come from three <strong>independent (orthogonal) axes</strong>.
-          Think of them as three dials your system tends to return to—especially when things feel uncertain,
-          fast-moving, stressful, or high-stakes.
-        </p>
-
-        <p class="dlterx-p">
-          In plain language, the three axes describe:
-          <strong>how you route information</strong> (Perception),
-          <strong>how you create stability</strong> (Emergence),
-          and <strong>how you update identity</strong> (Identity Dynamics).
-        </p>
-
-        <div class="dlterx-axis-grid" role="list" aria-label="DLTER axes">
-          <!-- Perception -->
-          <article class="dlterx-panel" role="listitem" aria-label="Perception Axis">
-            <div class="dlterx-panel-head">
-              <div>
-                <h3 class="dlterx-h3">Perception Axis</h3>
-                <div class="dlterx-mini">
-                  <span class="dlterx-mini-code">IN ↔ EX</span>
-                  <span class="dlterx-mini-text">Where clarity tends to come from first</span>
-                </div>
-              </div>
-              <span class="dlterx-axis-dot dlterx-axis-dot--p" aria-hidden="true"></span>
-            </div>
-
-            <p class="dlterx-p">
-              <strong>Perception</strong> describes your default input route under change:
-              do you form coherence by fitting information into an <strong>internal model</strong> first,
-              or by using <strong>external feedback</strong> first?
-              Everyone does both—DLTER is about which route you instinctively trust when you’re moving fast.
-            </p>
-
-            <ul class="dlterx-list">
-              <li>
-                <strong>IN — Internal Reality Framer</strong><br />
-                You tend to pause, interpret, and “make it make sense” internally before committing.
-                You often want the <em>why</em> and the framework. Strength: depth and coherence. Watch-out: overthinking can delay action.
-              </li>
-              <li>
-                <strong>EX — External Reality Absorber</strong><br />
-                You tend to gain clarity through interaction—doing, testing, talking, iterating, getting feedback.
-                Strength: momentum and learning-by-contact. Watch-out: without feedback loops, you can feel scattered.
-              </li>
-            </ul>
-          </article>
-
-          <!-- Emergence -->
-          <article class="dlterx-panel" role="listitem" aria-label="Emergence Axis">
-            <div class="dlterx-panel-head">
-              <div>
-                <h3 class="dlterx-h3">Emergence Axis</h3>
-                <div class="dlterx-mini">
-                  <span class="dlterx-mini-code">ST ↔ FL</span>
-                  <span class="dlterx-mini-text">How you create stability when life shifts</span>
-                </div>
-              </div>
-              <span class="dlterx-axis-dot dlterx-axis-dot--e" aria-hidden="true"></span>
-            </div>
-
-            <p class="dlterx-p">
-              <strong>Emergence</strong> describes your stability strategy:
-              do you stabilize through <strong>structure</strong> (repeatable patterns),
-              or through <strong>adaptive flow</strong> (flexible reconfiguration)?
-              Neither is “better.” They solve different problems.
-            </p>
-
-            <ul class="dlterx-list">
-              <li>
-                <strong>ST — Structured Stabilizer</strong><br />
-                You prefer consistent systems: routines, repeatable schedules, clear rules, and predictable progressions.
-                Strength: reliability and compounding. Watch-out: too much disruption can feel draining—or trigger rigidity.
-              </li>
-              <li>
-                <strong>FL — Fluid Transmuter</strong><br />
-                You prefer flexible systems: options, improvisation, rapid adaptation, and learning as you go.
-                Strength: resilience and responsiveness. Watch-out: without anchors, “flexible” can slide into inconsistent.
-              </li>
-            </ul>
-          </article>
-
-          <!-- Identity -->
-          <article class="dlterx-panel" role="listitem" aria-label="Identity Dynamics Axis">
-            <div class="dlterx-panel-head">
-              <div>
-                <h3 class="dlterx-h3">Identity Dynamics Axis</h3>
-                <div class="dlterx-mini">
-                  <span class="dlterx-mini-code">FX ↔ TR</span>
-                  <span class="dlterx-mini-text">How your self-model tends to update</span>
-                </div>
-              </div>
-              <span class="dlterx-axis-dot dlterx-axis-dot--i" aria-hidden="true"></span>
-            </div>
-
-            <p class="dlterx-p">
-              <strong>Identity Dynamics</strong> describes how your sense of self stays coherent over time:
-              do you update through <strong>refinement</strong>, or through <strong>phases</strong> and deeper reorganizations?
-              This axis matters a lot for long-term change—because behavior tends to follow identity.
-            </p>
-
-            <ul class="dlterx-list">
-              <li>
-                <strong>FX — Fixed Pattern Holder</strong><br />
-                You tend to keep a stable identity core and improve by upgrading the system around it.
-                Strength: consistency and commitment. Watch-out: if the current identity story can’t fit the next chapter, you may resist needed change.
-              </li>
-              <li>
-                <strong>TR — Transformational Observer</strong><br />
-                You tend to update identity through meaningful shifts, seasons, and reinvention phases.
-                Strength: ability to evolve and re-author the self. Watch-out: “reset energy” can become a loop if you don’t keep anchors.
-              </li>
-            </ul>
-          </article>
+  <section id="map" class="rtx3-section" aria-labelledby="rtx3-map-title">
+    <div class="rtx3-container">
+      <header class="rtx3-panel rtx3-section-head">
+        <div>
+          <p class="rtx3-kicker">The Reality Map</p>
+          <h2 id="rtx3-map-title">Nine scores across three human questions.</h2>
         </div>
+        <p>You do not get one score or one label. Each domain contains two separately scored tendencies and one separately scored coordination process.</p>
+      </header>
 
-        <p class="dlterx-kicker">
-          Middle scores are not a flaw. They often signal <strong>blend capacity</strong>—you can operate near the center without collapsing into one extreme.
-          DLTER includes dedicated “liminal” types specifically to represent common, stable midpoint patterns.
-        </p>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- GEOMETRY MODEL -->
-      <section id="dlterx-geometry" class="dlterx-section" aria-labelledby="dlterx-geometry-h">
-        <h2 id="dlterx-geometry-h" class="dlterx-h2">The geometry model</h2>
-
-        <p class="dlterx-p">
-          DLTER is easiest to understand as a <strong>coordinate system</strong>.
-          You’re not being “typed” from one trait—you’re being mapped by a <strong>pattern</strong> across three independent dimensions.
-          Your result is an “identity geometry” profile: a readable snapshot of how your system tends to stay coherent under change.
-        </p>
-
-        <div class="dlterx-geo-grid" role="list" aria-label="How the DLTER geometry model works">
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">1) Axis scores are continuous</div>
-            <p class="dlterx-p" style="margin:0;">
-              You’re not a binary label. You can be strongly ST, lightly ST, or right down the middle.
-              Near-center scores often mean you can switch strategies depending on context.
-            </p>
+      <div class="rtx3-domain-grid">
+        <article class="rtx3-panel-soft rtx3-domain">
+          <p class="rtx3-kicker">Sensemaking</p>
+          <h3>How does information become usable clarity?</h3>
+          <p>Two routes to understanding, plus how consistently they appear to work together.</p>
+          <div class="rtx3-pair">
+            <div class="rtx3-pair-row"><span class="rtx3-code">RS</span><span class="rtx3-pair-name">Reflective Synthesis</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row"><span class="rtx3-code">EC</span><span class="rtx3-pair-name">Experiential Calibration</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row rtx3-coord"><span class="rtx3-code">BS</span><span class="rtx3-pair-name">Bidirectional Sensemaking</span><span class="rtx3-pair-kind">coordination</span></div>
           </div>
+          <p class="rtx3-domain-note">Reflective and experiential routes are not opposite ends of one slider.</p>
+        </article>
 
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">2) Types are prototypes</div>
-            <p class="dlterx-p" style="margin:0;">
-              A Reality Type is a stable “best-fit” configuration—useful as a reference point for decisions and self-coaching.
-              It’s less “this is who you are” and more “this is your default settings menu.”
-            </p>
+        <article class="rtx3-panel-soft rtx3-domain">
+          <p class="rtx3-kicker">Stability</p>
+          <h3>What helps you stay effective when conditions change?</h3>
+          <p>Structure and adaptation are scored separately, then their coordination is scored separately too.</p>
+          <div class="rtx3-pair">
+            <div class="rtx3-pair-row"><span class="rtx3-code">SA</span><span class="rtx3-pair-name">Structural Anchoring</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row"><span class="rtx3-code">AR</span><span class="rtx3-pair-name">Adaptive Reconfiguration</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row rtx3-coord"><span class="rtx3-code">FS</span><span class="rtx3-pair-name">Flexible Structure</span><span class="rtx3-pair-kind">coordination</span></div>
           </div>
+          <p class="rtx3-domain-note">You can be structured and adaptive at the same time. The scores do not have to add to 100.</p>
+        </article>
 
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">3) Liminal types exist on purpose</div>
-            <p class="dlterx-p" style="margin:0;">
-              Some people are genuinely stable near key midpoints (for example, ST/FL blend).
-              DLTER includes prototypes for those patterns instead of forcing everyone into extremes.
-            </p>
+        <article class="rtx3-panel-soft rtx3-domain">
+          <p class="rtx3-kicker">Identity development</p>
+          <h3>How does change stay connected across time?</h3>
+          <p>Continuity and revision are measured separately, along with how consistently they appear to integrate.</p>
+          <div class="rtx3-pair">
+            <div class="rtx3-pair-row"><span class="rtx3-code">CP</span><span class="rtx3-pair-name">Continuity Preservation</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row"><span class="rtx3-code">TR</span><span class="rtx3-pair-name">Transformative Revision</span><span class="rtx3-pair-kind">mode</span></div>
+            <div class="rtx3-pair-row rtx3-coord"><span class="rtx3-code">ID</span><span class="rtx3-pair-name">Integrated Identity Development</span><span class="rtx3-pair-kind">coordination</span></div>
           </div>
-        </div>
+          <p class="rtx3-domain-note">A higher score means more characteristic in your responses, not better, healthier, or more mature.</p>
+        </article>
+      </div>
 
-        <p class="dlterx-kicker">
-          Your quiz result also shows a <strong>match strength</strong>. If it’s “Exploratory,” treat your top type as a starting point
-          and pay attention to your “neighbor” (secondary resonance) type—both can explain you.
-        </p>
-
-        <details class="dlterx-details" aria-label="Liminal types explanation">
-          <summary class="dlterx-summary">Why 12 types (not 8) and what “liminal” actually means</summary>
-          <div class="dlterx-details-body">
-            <p class="dlterx-p">
-              If you only used extremes, you’d get 8 “corner” configurations (one for each IN/EX × ST/FL × FX/TR combination).
-              DLTER adds <strong>4 additional prototypes</strong> to represent common boundary patterns that many people live in consistently.
-            </p>
-            <ul class="dlterx-list">
-              <li><strong>Axis Synthesizer</strong> and <strong>Resonant Fieldholder</strong> represent a stable <strong>ST/FL blend</strong> on the Emergence axis.</li>
-              <li><strong>Dimensional Anchor</strong> and <strong>Horizon Breaker</strong> represent a stable <strong>IN/EX blend</strong> on the Perception axis.</li>
-            </ul>
-            <p class="dlterx-p" style="margin-bottom:0;">
-              Translation: “liminal” doesn’t mean unclear. It means you can stabilize near the midpoint on a key dimension—real mode, real strengths.
-            </p>
-          </div>
-        </details>
-
-        <details class="dlterx-details" aria-label="Prototype vectors table">
-          <summary class="dlterx-summary">The 12 type prototypes (coordinate shorthand used under the hood)</summary>
-          <div class="dlterx-details-body">
-            <p class="dlterx-p">
-              If you like clean structure, here’s the compact way the prototypes are represented internally.
-              Midpoint (“liminal”) prototypes sit at 0 on the blended axis.
-            </p>
-
-            <div class="dlterx-tablewrap" role="region" aria-label="DLTER type vectors table" tabindex="0">
-              <table class="dlterx-table">
-                <caption class="dlterx-sr">DLTER type codes and prototype vectors in [Perception, Emergence, Identity Dynamics] format.</caption>
-                <thead>
-                  <tr>
-                    <th>Type</th><th>Code</th><th>Prototype vector [P,E,I]</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>1 · Inner Frameworker</td><td>IN–ST–FX</td><td>[-1, -1, -1]</td></tr>
-                  <tr><td>2 · Internal Alchemist</td><td>IN–FL–TR</td><td>[-1, +1, +1]</td></tr>
-                  <tr><td>3 · Dimensional Flowweaver</td><td>EX–FL–TR</td><td>[+1, +1, +1]</td></tr>
-                  <tr><td>4 · External Catalyst</td><td>EX–FL–FX</td><td>[+1, +1, -1]</td></tr>
-                  <tr><td>5 · Reality Architect</td><td>EX–ST–FX</td><td>[+1, -1, -1]</td></tr>
-                  <tr><td>6 · Structured Empathic Lens</td><td>IN–ST–TR</td><td>[-1, -1, +1]</td></tr>
-                  <tr><td>7 · Analytical Evolver</td><td>EX–ST–TR</td><td>[+1, -1, +1]</td></tr>
-                  <tr><td>8 · Fluxbound Weaver</td><td>IN–FL–FX</td><td>[-1, +1, -1]</td></tr>
-                  <tr><td>9 · Axis Synthesizer</td><td>IN–(ST/FL)–TR</td><td>[-1, 0, +1]</td></tr>
-                  <tr><td>10 · Resonant Fieldholder</td><td>EX–(ST/FL)–TR</td><td>[+1, 0, +1]</td></tr>
-                  <tr><td>11 · Dimensional Anchor</td><td>(IN/EX)–ST–FX</td><td>[0, -1, -1]</td></tr>
-                  <tr><td>12 · Horizon Breaker</td><td>(IN/EX)–FL–TR</td><td>[0, +1, +1]</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p class="dlterx-kicker" style="margin-top:10px;">
-              Practical tip: if you’re near the midpoint on an axis, adjacent types can behave like “neighbors.”
-            </p>
-          </div>
-        </details>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- WHY THE QUIZ WORKS -->
-      <section id="dlterx-quizworks" class="dlterx-section" aria-labelledby="dlterx-quizworks-h">
-        <h2 id="dlterx-quizworks-h" class="dlterx-h2">Why the quiz works</h2>
-
-        <p class="dlterx-p">
-          The quiz works because it measures the same thing DLTER is modeling at the human scale:
-          your <strong>default response tendencies under change</strong> across three independent axes.
-          No single question “decides” your type. Your result comes from the <strong>pattern across repeated signals</strong>.
-        </p>
-
-        <div class="dlterx-geo-grid" role="list" aria-label="Why the quiz works conceptually">
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">1) Axis separation</div>
-            <p class="dlterx-p" style="margin:0;">Items are written to reflect one axis at a time, so your result isn’t one blended “personality soup.”</p>
-          </div>
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">2) Redundancy beats noise</div>
-            <p class="dlterx-p" style="margin:0;">Multiple items per axis reduce randomness. The tendency that repeats is usually the meaningful one.</p>
-          </div>
-          <div class="dlterx-geo-item" role="listitem">
-            <div class="dlterx-geo-title">3) Stable prototypes</div>
-            <p class="dlterx-p" style="margin:0;">Types are stable prototypes of common configurations. Your result is simply the best-fit match.</p>
-          </div>
-        </div>
-
-        <p class="dlterx-kicker">
-          Answer for accuracy: respond as “<strong>what you default to when life is changing</strong>,” not your best day.
-        </p>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- UNDER THE HOOD -->
-      <section id="dlterx-underhood" class="dlterx-section" aria-labelledby="dlterx-underhood-h">
-        <h2 id="dlterx-underhood-h" class="dlterx-h2">Under the hood</h2>
-
-        <p class="dlterx-p">
-          DLTER started as a quantum-information lens exploring how <strong>spacetime geometry</strong>, <strong>matter</strong>, and <strong>forces</strong>
-          could emerge from deeper informational structure. Whether or not that technical layer ultimately succeeds, the logic translates cleanly:
-          systems become coherent through labeled information, stabilization strategies, and update rules.
-        </p>
-
-        <p class="dlterx-p" style="margin-bottom:0;">
-          NeuForm uses DLTER as a practical framework—not metaphysics or identity dogma.
-        </p>
-
-        <details class="dlterx-details">
-          <summary class="dlterx-summary">DLTER’s core model (plain language)</summary>
-          <div class="dlterx-details-body">
-            <ul class="dlterx-list">
-              <li><strong>Input + labeling:</strong> what gets noticed and what it means.</li>
-              <li><strong>Stabilization:</strong> structure (ST) vs adaptive flow (FL).</li>
-              <li><strong>Update rule:</strong> refinement (FX) vs phases (TR).</li>
-              <li><strong>Coherence under constraint:</strong> limited attention/energy compresses complexity into a workable model.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="dlterx-details">
-          <summary class="dlterx-summary">What DLTER is careful not to claim</summary>
-          <div class="dlterx-details-body">
-            <ul class="dlterx-list">
-              <li><strong>Not destiny:</strong> it describes defaults, not limits.</li>
-              <li><strong>Not diagnosis:</strong> it doesn’t assess disorders or mental health.</li>
-              <li><strong>Not astrology:</strong> no mysticism or fate narratives.</li>
-              <li><strong>Not an excuse:</strong> “that’s my type” isn’t a reason to stay stuck.</li>
-            </ul>
-          </div>
-        </details>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- NOT -->
-      <section id="dlterx-not" class="dlterx-section" aria-labelledby="dlterx-not-h">
-        <h2 id="dlterx-not-h" class="dlterx-h2">What DLTER is not</h2>
-        <ul class="dlterx-list">
-          <li><strong>Not a diagnostic tool.</strong> It does not assess mental health, disorders, or pathology.</li>
-          <li><strong>Not a moral ranking.</strong> There are no “better” types—only different defaults with different tradeoffs.</li>
-          <li><strong>Not astrology.</strong> It’s not based on birth data, mysticism, or fate narratives.</li>
-          <li><strong>Not a typical personality test.</strong> It focuses on how you respond to change.</li>
-          <li><strong>Not a box.</strong> You can grow across all axes while still having a recognizable baseline.</li>
-        </ul>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- NEUFORM -->
-      <section id="dlterx-neuform" class="dlterx-section" aria-labelledby="dlterx-neuform-h">
-        <h2 id="dlterx-neuform-h" class="dlterx-h2">Why this shows up inside NeuForm Fitness</h2>
-
-        <p class="dlterx-p">
-          NeuForm is built around one principle: <strong>the best plan is the one you can execute</strong>.
-          Most people don’t fail because they “don’t want it.” They fail because the plan fights their default stability strategy,
-          their information style, or their identity update pattern.
-        </p>
-
-        <p class="dlterx-p">
-          DLTER helps us coach and design programs that match how you naturally stabilize and adapt—so the fundamentals
-          (training, nutrition, recovery, habits) become <strong>less friction</strong>, more consistency, and better outcomes.
-        </p>
-
-        <div class="dlterx-split" role="list" aria-label="DLTER in NeuForm mapping">
-          <div class="dlterx-split-item" role="listitem">
-            <div class="dlterx-split-title">Training structure</div>
-            <ul class="dlterx-list">
-              <li><strong>ST</strong> thrives with repeating templates, predictable progressions, and clear tracking.</li>
-              <li><strong>FL</strong> thrives with modular plans, smart variation, and options when life gets messy.</li>
-            </ul>
-          </div>
-
-          <div class="dlterx-split-item" role="listitem">
-            <div class="dlterx-split-title">Adherence loops</div>
-            <ul class="dlterx-list">
-              <li><strong>IN</strong> adheres when the “why” clicks: rationale and internal buy-in.</li>
-              <li><strong>EX</strong> adheres with feedback: accountability, environment, visible metrics.</li>
-            </ul>
-          </div>
-
-          <div class="dlterx-split-item" role="listitem">
-            <div class="dlterx-split-title">Long-term change</div>
-            <ul class="dlterx-list">
-              <li><strong>FX</strong> changes via refinement: stable identity, upgraded systems.</li>
-              <li><strong>TR</strong> changes via phases: “chapters,” resets, meaningful shifts.</li>
-            </ul>
-          </div>
-        </div>
-
-        <p class="dlterx-p" style="margin-bottom:0;">
-          DLTER doesn’t replace fundamentals—it helps you <strong>apply</strong> fundamentals in a way that matches how you actually function.
-        </p>
-      </section>
-
-      <div class="dlter-divider" role="separator" aria-hidden="true"></div>
-
-      <!-- CTA -->
-      <section id="dlterx-cta" class="dlterx-section" aria-label="Call to action">
-        <div class="dlterx-cta">
+      <article class="rtx3-panel rtx3-example" aria-labelledby="rtx3-example-title">
+        <div class="rtx3-example-head">
           <div>
-            <h2 class="dlterx-h2" style="margin:0 0 6px;">Ready to see your Reality Type?</h2>
-            <p class="dlter-muted" style="margin:0;">24 questions · ~4–6 minutes · instant result (with match strength + axis breakdown)</p>
+            <p class="rtx3-kicker">Illustrative only</p>
+            <h3 id="rtx3-example-title">What a nine-score map looks like</h3>
           </div>
-
-          <a class="btn primary tiny" href="https://www.neuform-fitness.com/dlter-quiz" aria-label="Take the DLTER Quiz">
-            Take the quiz →
-          </a>
+          <p>These numbers are an example, not a personal result. The 0–100 scale is not a percentile, grade, or population norm.</p>
         </div>
-
-        <div class="dlterx-footerlinks" aria-label="Footer links">
-          <a class="dlterx-footlink" href="#dlterx-top">Back to top ↑</a>
-          <span class="dlterx-footsep" aria-hidden="true">·</span>
-          <a class="dlterx-footlink" href="https://www.neuform-fitness.com/dlter-quiz">Back to quiz →</a>
+        <div class="rtx3-score-grid">
+          <section class="rtx3-score-domain" aria-label="Illustrative Sensemaking scores">
+            <strong>Sensemaking</strong>
+            <div class="rtx3-score-row"><span>RS</span><div class="rtx3-bar" style="--score:80%"></div><b>80</b></div>
+            <div class="rtx3-score-row"><span>EC</span><div class="rtx3-bar" style="--score:77%"></div><b>77</b></div>
+            <div class="rtx3-score-row is-coord"><span>BS</span><div class="rtx3-bar" style="--score:62%"></div><b>62</b></div>
+          </section>
+          <section class="rtx3-score-domain" aria-label="Illustrative Stability scores">
+            <strong>Stability</strong>
+            <div class="rtx3-score-row"><span>SA</span><div class="rtx3-bar" style="--score:36%"></div><b>36</b></div>
+            <div class="rtx3-score-row"><span>AR</span><div class="rtx3-bar" style="--score:82%"></div><b>82</b></div>
+            <div class="rtx3-score-row is-coord"><span>FS</span><div class="rtx3-bar" style="--score:58%"></div><b>58</b></div>
+          </section>
+          <section class="rtx3-score-domain" aria-label="Illustrative Identity Development scores">
+            <strong>Identity development</strong>
+            <div class="rtx3-score-row"><span>CP</span><div class="rtx3-bar" style="--score:41%"></div><b>41</b></div>
+            <div class="rtx3-score-row"><span>TR</span><div class="rtx3-bar" style="--score:39%"></div><b>39</b></div>
+            <div class="rtx3-score-row is-coord"><span>ID</span><div class="rtx3-bar" style="--score:54%"></div><b>54</b></div>
+          </section>
         </div>
+        <p class="rtx3-scale-note">The midpoint is the middle of the response scale. It is not a population average.</p>
+        <div class="rtx3-actions">
+          <a class="rtx3-btn rtx3-btn-primary" href="/dlter-quiz" data-nf-action-id="rt_explainer_assessment_map" data-nf-placement="map">See Your Reality Map</a>
+        </div>
+      </article>
+    </div>
+  </section>
 
-        <p class="dlterx-kicker" style="margin-top:10px;">
-          You don’t need to memorize anything here. Use your type as a starting point: reduce friction, build consistency,
-          and make the identity you want easier to live.
-        </p>
-      </section>
+  <section id="interpret" class="rtx3-section" aria-labelledby="rtx3-interpret-title">
+    <div class="rtx3-container">
+      <header class="rtx3-panel rtx3-section-head">
+        <div>
+          <p class="rtx3-kicker">Interpretation</p>
+          <h2 id="rtx3-interpret-title">The pattern helps you talk about the map. It does not replace it.</h2>
+        </div>
+        <p>All nine scores are compared with 12 versioned reference profiles. The closest pattern becomes the primary reference, while the next two are retained as nearby resonances.</p>
+      </header>
 
-    </div><!-- /.dlter-explained-shell -->
-  </div><!-- /.card.dlterx-card -->
-</div><!-- /#dlterx-top -->
+      <div class="rtx3-interpret-grid">
+        <article class="rtx3-panel-soft rtx3-interpret-card">
+          <h3>The paired modes can form very different shapes.</h3>
+          <p>A pair is not forced into a single either/or axis. That creates more than one useful pattern within each domain.</p>
+          <div class="rtx3-shape-grid">
+            <div class="rtx3-shape"><strong>Both higher</strong><span>Both routes were relatively characteristic in the responses.</span></div>
+            <div class="rtx3-shape"><strong>One leads</strong><span>One route was substantially more characteristic than the other.</span></div>
+            <div class="rtx3-shape"><strong>Both lower</strong><span>Neither route was especially characteristic in the response pattern.</span></div>
+          </div>
+        </article>
+
+        <article class="rtx3-panel-soft rtx3-interpret-card">
+          <h3>An example interpretation</h3>
+          <p>Using the illustrative map above, the closest reference pattern is not presented as an identity verdict.</p>
+          <div class="rtx3-match-example">
+            <div class="rtx3-match-primary"><small>Closest reference</small><strong>The Horizon Breaker</strong></div>
+            <div class="rtx3-resonance"><small>Nearby resonances</small><strong>The Internal Alchemist · The Dimensional Flowweaver</strong></div>
+          </div>
+          <div class="rtx3-convergence" aria-label="Possible convergence labels"><span>Clear</span><span>Close</span><span>Broad</span></div>
+        </article>
+      </div>
+
+      <article class="rtx3-panel rtx3-reference">
+        <div class="rtx3-reference-head">
+          <div>
+            <p class="rtx3-kicker">Reference patterns</p>
+            <h3>Twelve memorable landmarks for comparing map shapes.</h3>
+          </div>
+          <p>The names make recurring profile shapes easier to discuss. Your individual scores remain more informative than the name alone.</p>
+        </div>
+        <div class="rtx3-type-grid">
+          <a class="rtx3-type-card" href="/dlter-reality-types/inner-frameworker"><strong>The Inner Frameworker</strong><span>Reflection, repeatable structure, and continuity.</span></a>
+          <a class="rtx3-type-card" href="/dlter-reality-types/reality-architect"><strong>The Reality Architect</strong><span>Outside feedback, structure, and lasting commitments.</span></a>
+          <a class="rtx3-type-card" href="/dlter-reality-types/axis-synthesizer"><strong>The Axis Synthesizer</strong><span>Coordinates structure and adaptation while revising direction.</span></a>
+          <a class="rtx3-type-card" href="/dlter-reality-types/horizon-breaker"><strong>The Horizon Breaker</strong><span>Explores possibilities while letting meaningful change reshape the path.</span></a>
+        </div>
+        <p class="rtx3-assessment-first"><strong>Planning to take the assessment?</strong> You may prefer to complete it before reading every pattern so the descriptions do not influence your answers.</p>
+        <details class="rtx3-details" data-nf-rt-disclosure="all_patterns">
+          <summary>Explore all 12 reference patterns</summary>
+          <div class="rtx3-details-body">
+            <div class="rtx3-all-types">
+              <a href="/dlter-reality-types/inner-frameworker">The Inner Frameworker</a>
+              <a href="/dlter-reality-types/internal-alchemist">The Internal Alchemist</a>
+              <a href="/dlter-reality-types/dimensional-flowweaver">The Dimensional Flowweaver</a>
+              <a href="/dlter-reality-types/external-catalyst">The External Catalyst</a>
+              <a href="/dlter-reality-types/reality-architect">The Reality Architect</a>
+              <a href="/dlter-reality-types/structured-empathic-lens">The Structured Empathic Lens</a>
+              <a href="/dlter-reality-types/analytical-evolver">The Analytical Evolver</a>
+              <a href="/dlter-reality-types/fluxbound-weaver">The Fluxbound Weaver</a>
+              <a href="/dlter-reality-types/axis-synthesizer">The Axis Synthesizer</a>
+              <a href="/dlter-reality-types/resonant-fieldholder">The Resonant Fieldholder</a>
+              <a href="/dlter-reality-types/dimensional-anchor">The Dimensional Anchor</a>
+              <a href="/dlter-reality-types/horizon-breaker">The Horizon Breaker</a>
+            </div>
+          </div>
+        </details>
+      </article>
+    </div>
+  </section>
+
+  <section id="result" class="rtx3-section" aria-labelledby="rtx3-result-title">
+    <div class="rtx3-container">
+      <header class="rtx3-panel rtx3-section-head">
+        <div>
+          <p class="rtx3-kicker">What you receive</p>
+          <h2 id="rtx3-result-title">Your Reality Map is free. The Blueprint adds optional depth.</h2>
+        </div>
+        <p>The assessment does not hide your scores behind a purchase. The paid guide adds interpretation, application, and retake context.</p>
+      </header>
+
+      <div class="rtx3-offer-grid">
+        <article class="rtx3-panel rtx3-offer">
+          <p class="rtx3-offer-label">Free result</p>
+          <h3>Complete Reality Map</h3>
+          <div class="rtx3-price"><strong>Free</strong><span>No account required to view</span></div>
+          <ul class="rtx3-checks">
+            <li>All nine scores remain visible</li>
+            <li>Closest reference pattern + two nearby resonances</li>
+            <li>Clear, close, or broad convergence</li>
+            <li>One seven-day experiment to test the interpretation</li>
+            <li>Optional account save to My Library</li>
+          </ul>
+          <p class="rtx3-offer-note">The free result is complete and usable on its own.</p>
+        </article>
+
+        <article class="rtx3-panel rtx3-offer is-paid">
+          <p class="rtx3-offer-label">Optional deeper guide</p>
+          <h3>Personal Reality Blueprint</h3>
+          <div class="rtx3-price"><strong>$29</strong><span>one time · no subscription</span></div>
+          <ul class="rtx3-checks">
+            <li>12 guided chapters built from a saved Reality Map</li>
+            <li>Deeper map, domain, and reference-pattern interpretation</li>
+            <li>Supporting conditions and overextension/recovery prompts</li>
+            <li>Decision protocol, application labs, and 30-day plan</li>
+            <li>Retake comparison when saved-map history is available</li>
+          </ul>
+          <p class="rtx3-offer-note"><strong>It does not unlock hidden scores.</strong> Your nine-score map remains the primary result.</p>
+        </article>
+      </div>
+
+      <div class="rtx3-actions">
+        <a class="rtx3-btn rtx3-btn-primary" href="/dlter-quiz" data-nf-action-id="rt_explainer_assessment_offer" data-nf-placement="offer">Take the Free Assessment</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="method" class="rtx3-section" aria-labelledby="rtx3-method-title">
+    <div class="rtx3-container">
+      <header class="rtx3-panel rtx3-section-head">
+        <div>
+          <p class="rtx3-kicker">Trust + methodology</p>
+          <h2 id="rtx3-method-title">Simple to use. Specific about how the result is built.</h2>
+        </div>
+        <p>Reality Types is rule-based and versioned. That makes the computation reproducible, but it does not make the framework clinically validated or certain about who you are.</p>
+      </header>
+
+      <div class="rtx3-trust-grid">
+        <div class="rtx3-panel-soft rtx3-trust"><strong>48 fixed statements</strong><span>Each item is assigned to a predefined scale before you answer.</span></div>
+        <div class="rtx3-panel-soft rtx3-trust"><strong>9 separate scores</strong><span>Six mode scores plus three coordination scores on the same 0–100 scale.</span></div>
+        <div class="rtx3-panel-soft rtx3-trust"><strong>12 versioned profiles</strong><span>Your full map is compared with every reference profile under fixed rules.</span></div>
+        <div class="rtx3-panel-soft rtx3-trust"><strong>Visible uncertainty</strong><span>Clear, close, and broad results communicate how distinct the closest match is.</span></div>
+      </div>
+
+      <details class="rtx3-details rtx3-method-details" data-nf-rt-disclosure="exact_method">
+        <summary>See the exact scoring method</summary>
+        <div class="rtx3-details-body">
+          <div class="rtx3-method-grid">
+            <section class="rtx3-method-block">
+              <h4>Items and scale construction</h4>
+              <p>The current instrument is <strong>rt-48-2026-08-04-v1</strong>. RS, EC, SA, AR, CP, and TR each use six statements. BS, FS, and ID each use four. Some statements are reverse-keyed before scoring.</p>
+              <p>Responses use a 1–6 scale. The mean for each score is linearly converted to 0–100.</p>
+              <div class="rtx3-formula">score = ((mean response - 1) / 5) × 100</div>
+            </section>
+
+            <section class="rtx3-method-block">
+              <h4>Reference-pattern matching</h4>
+              <p>The current scoring model is <strong>rt2-archetypes-1.0</strong>. Matching uses weighted root-mean-square distance across all nine scores.</p>
+              <ul>
+                <li>RS / EC / SA / AR / CP / TR weight: 1.00 each</li>
+                <li>BS / FS weight: 0.78 each</li>
+                <li>ID weight: 0.72</li>
+              </ul>
+              <p>So all nine scores contribute, but the six mode scores currently carry somewhat more matching weight than the coordination scores.</p>
+            </section>
+
+            <section class="rtx3-method-block">
+              <h4>Convergence labels</h4>
+              <p><strong>Clear:</strong> best distance ≤ 23 and lead over second place ≥ 5.</p>
+              <p><strong>Close:</strong> lead over second place ≥ 2.75 when the Clear rule is not met.</p>
+              <p><strong>Broad:</strong> other profiles where no reference pattern separates enough under those rules.</p>
+            </section>
+
+            <section class="rtx3-method-block">
+              <h4>Response-quality flag</h4>
+              <p>The current engine flags low differentiation when the response pattern is unusually uniform, including cases where one response is used for at least 75% of items, the same answer runs for 18 or more items, or response standard deviation is below 0.55.</p>
+              <p>This is a quality flag, not a diagnosis or statement about the person.</p>
+            </section>
+          </div>
+        </div>
+      </details>
+
+      <div class="rtx3-two-col" style="margin-top:12px">
+        <article class="rtx3-panel rtx3-connection">
+          <p class="rtx3-kicker">Why DLTER?</p>
+          <h3>Shared questions. Separate evidence.</h3>
+          <p>Reality Types grew from some of the same broad questions DLTER explores: information, observation, stability, and change. Reality Types is a separate human-scale self-reflection framework with its own constructs, scoring, and evidence requirements.</p>
+          <details class="rtx3-details" data-nf-rt-disclosure="dlter_connection">
+            <summary>Read the deeper DLTER connection</summary>
+            <div class="rtx3-details-body">
+              <p>DLTER is a physics research program. Reality Types is not derived from DLTER field equations, and a Reality Types result cannot test or validate DLTER physics.</p>
+              <p>Evidence supporting DLTER would not automatically validate Reality Types. Evidence supporting Reality Types would not validate DLTER. The connection explains where some design questions came from, not why an assessment claim should be believed.</p>
+            </div>
+          </details>
+        </article>
+
+        <article class="rtx3-panel rtx3-connection">
+          <p class="rtx3-kicker">Interpretation rule</p>
+          <h3>Treat the result as a hypothesis you can test.</h3>
+          <p>Recognition alone is not proof. Compare the interpretation with recurring examples from your own life, try a low-risk experiment, and revise the interpretation when the evidence does not fit.</p>
+          <div class="rtx3-best-use">
+            <strong>Best use</strong>
+            <span>Use the map to generate better questions and experiments, not to explain every decision after the fact.</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="limits" class="rtx3-section" aria-labelledby="rtx3-limits-title">
+    <div class="rtx3-container">
+      <header class="rtx3-panel rtx3-section-head">
+        <div>
+          <p class="rtx3-kicker">Limits</p>
+          <h2 id="rtx3-limits-title">Useful self-reflection requires boundaries.</h2>
+        </div>
+        <p>The framework is meant to make patterns discussable, not to turn a score or type name into false certainty.</p>
+      </header>
+
+      <div class="rtx3-two-col">
+        <article class="rtx3-panel rtx3-limits">
+          <h3>What it can do</h3>
+          <ul class="rtx3-limit-list">
+            <li><strong>Keep continuous scores visible</strong><span>Your map remains available beyond the closest reference pattern.</span></li>
+            <li><strong>Show nearby alternatives</strong><span>Resonances make close matches visible instead of pretending one label is exact.</span></li>
+            <li><strong>Support structured reflection</strong><span>The result can give you a consistent set of questions to compare with experience.</span></li>
+            <li><strong>Encourage low-risk testing</strong><span>The seven-day experiment asks whether an interpretation is actually useful in practice.</span></li>
+          </ul>
+        </article>
+
+        <article class="rtx3-panel rtx3-limits">
+          <h3>What it should not be used for</h3>
+          <ul class="rtx3-limit-list">
+            <li><strong>Not diagnosis or treatment</strong><span>It is not a clinical, medical, or mental-health assessment.</span></li>
+            <li><strong>Not a measure of value or ability</strong><span>Scores do not measure intelligence, worth, empathy, trauma, attachment, or neurotype.</span></li>
+            <li><strong>Not for high-stakes decisions</strong><span>Do not use it for hiring, treatment, admissions, insurance, or deterministic compatibility.</span></li>
+            <li><strong>Not a permanent identity</strong><span>Scores can shift, and a reference pattern is not a fixed definition of who you are.</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="rtx3-best-use">
+        <strong>Use it as a structured hypothesis, not a verdict.</strong>
+        <span>Keep what repeatedly helps you understand and act. Question what does not fit.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+==============================
+EMBED 6
+Element ID: ad0ccf12-a915-8ddf-69e0-bb9c85b2ca9e
+==============================
+<div id="rtx3-explained-tail" class="rtx3-tail" data-rtx-explained-tail-version="3.0.1">
+  <section id="faq" class="rtx3-section" aria-labelledby="rtx3-faq-title">
+    <div class="rtx3-container">
+      <article class="rtx3-panel rtx3-faq-wrap">
+        <header class="rtx3-section-head" style="padding:0;border:0;background:transparent;box-shadow:none;margin-bottom:0">
+          <div>
+            <p class="rtx3-kicker">Common questions</p>
+            <h2 id="rtx3-faq-title">What people usually want to know before they begin.</h2>
+          </div>
+          <p>The short answers cover cost, interpretation, retakes, Blueprint access, and the evidence boundary.</p>
+        </header>
+
+        <div class="rtx3-faq-grid">
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_free">
+            <summary>Is the assessment free?</summary>
+            <p>Yes. The assessment and complete nine-score Reality Map are free. No account is required to view the result. Creating or using an account is optional if you want to save the map to My Library.</p>
+          </details>
+
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_scores">
+            <summary>Can both modes in a domain score high?</summary>
+            <p>Yes. The paired modes are scored separately, so both can be high, both can be low, or one can be more characteristic than the other. The coordination score is also calculated separately.</p>
+          </details>
+
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_resonances">
+            <summary>Why do I get nearby resonances?</summary>
+            <p>Your full map is compared with all 12 reference profiles. The closest becomes the primary reference, while the next two are retained so close neighboring patterns remain visible rather than being hidden behind one label.</p>
+          </details>
+
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_blueprint">
+            <summary>Do I have to buy the $29 Blueprint?</summary>
+            <p>No. The free result is complete and usable on its own. The Blueprint is an optional one-time guide that adds deeper interpretation, application exercises, a 30-day plan, and saved-map comparison context. It does not unlock hidden scores.</p>
+          </details>
+
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_retake">
+            <summary>Can my result change if I retake it?</summary>
+            <p>Yes. Reality Types is not framed as a permanent identity. Responses can change with experience, context, and how you understand the statements. A retake is most useful when you compare the maps rather than treating one result as the permanent truth.</p>
+          </details>
+
+          <details class="rtx3-faq" data-nf-rt-disclosure="faq_clinical">
+            <summary>Is this a personality test or clinical assessment?</summary>
+            <p>No. Reality Types is an educational self-reflection framework. It is not a clinically validated personality test, diagnosis, therapy, medical advice, or a tool for high-stakes decisions. DLTER supplied conceptual inspiration, not clinical authority.</p>
+          </details>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="rtx3-final" aria-labelledby="rtx3-final-title">
+    <div class="rtx3-container">
+      <article class="rtx3-panel rtx3-final-inner">
+        <div>
+          <p class="rtx3-kicker">See your own map</p>
+          <h2 id="rtx3-final-title">Curious which patterns actually show up in your answers?</h2>
+          <p>Take the free 48-statement assessment to receive all nine scores, your closest reference pattern, nearby resonances, and one practical experiment.</p>
+        </div>
+        <div class="rtx3-actions">
+          <a class="rtx3-btn rtx3-btn-primary" href="/dlter-quiz" data-nf-action-id="rt_explainer_assessment_final" data-nf-placement="final">Take the Free Assessment</a>
+        </div>
+      </article>
+      <a class="rtx3-back" href="#top">Back to top ↑</a>
+    </div>
+  </section>
+</div>
+
+==============================
+EMBED 7
+Element ID: df313f2c-a9ae-9b02-e912-6b9f874f290c
+==============================
+<script id="nfrealitytypesexplained-js-3-0-0">
+(function(){
+  "use strict";
+  if(window.__NF_RT_EXPLAINED_V300__) return;
+  window.__NF_RT_EXPLAINED_V300__=true;
+
+  var VERSION="3.0.1";
+  var root=document.getElementById("rtx3-explained");
+  var tail=document.getElementById("rtx3-explained-tail");
+  if(!root) return;
+
+  try{
+    document.documentElement.classList.add("rtx3-explained-page");
+    document.documentElement.classList.remove("rtx2-explained-page");
+    document.body.classList.add("rtx3-explained-body");
+    document.body.classList.remove("rtx2-explained-body");
+    document.body.setAttribute("data-reality-types-surface","explainer");
+    document.body.setAttribute("data-rt-explainer-version",VERSION);
+  }catch(e){}
+
+  function track(name,data){
+    try{
+      if(window.neuform&&typeof window.neuform.track==="function"){
+        return window.neuform.track(name,Object.assign({
+          surface:"dlter_explained",
+          explainer_version:VERSION,
+          path:location.pathname||""
+        },data||{}));
+      }
+    }catch(e){}
+    return false;
+  }
+
+  try{
+    var key="nf.rt.explainer.view."+VERSION;
+    if(!sessionStorage.getItem(key)){
+      if(track("nf_reality_types_explainer_view",{section:"top"})) sessionStorage.setItem(key,"1");
+    }
+  }catch(e){
+    track("nf_reality_types_explainer_view",{section:"top"});
+  }
+
+  document.addEventListener("click",function(event){
+    var a=event.target&&event.target.closest&&event.target.closest("a[data-nf-action-id]");
+    if(!a||!(root.contains(a)||(tail&&tail.contains(a)))) return;
+    var href=a.getAttribute("href")||"";
+    var id=a.getAttribute("data-nf-action-id")||"";
+    var placement=a.getAttribute("data-nf-placement")||"";
+    track("nf_reality_types_explainer_cta",{
+      action_id:id,
+      placement:placement,
+      destination:href
+    });
+  },{passive:true});
+
+  Array.prototype.slice.call(document.querySelectorAll("[data-nf-rt-disclosure]")).forEach(function(d){
+    d.addEventListener("toggle",function(){
+      if(!d.open) return;
+      track("nf_reality_types_explainer_disclosure",{
+        disclosure:d.getAttribute("data-nf-rt-disclosure")||"unknown"
+      });
+    });
+  });
+
+  var navLinks=Array.prototype.slice.call(document.querySelectorAll(".rtx3-nav a[href^='#']"));
+  function setCurrent(id){
+    navLinks.forEach(function(a){
+      if(a.getAttribute("href")==="#"+id) a.setAttribute("aria-current","location");
+      else a.removeAttribute("aria-current");
+    });
+  }
+
+  var seen={};
+  var sections=["map","interpret","result","method","limits","faq"].map(function(id){return document.getElementById(id)}).filter(Boolean);
+
+  if("IntersectionObserver" in window){
+    var observer=new IntersectionObserver(function(entries){
+      var visible=entries.filter(function(x){return x.isIntersecting}).sort(function(a,b){return b.intersectionRatio-a.intersectionRatio});
+      if(visible.length){
+        var id=visible[0].target.id;
+        setCurrent(id);
+      }
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting||entry.intersectionRatio<0.18) return;
+        var id=entry.target.id;
+        if(seen[id]) return;
+        seen[id]=true;
+        track("nf_reality_types_explainer_section_view",{section:id});
+      });
+    },{rootMargin:"-18% 0px -55% 0px",threshold:[0.18,0.35]});
+    sections.forEach(function(section){observer.observe(section)});
+  }else{
+    setCurrent("map");
+  }
+
+  navLinks.forEach(function(a){
+    a.addEventListener("click",function(){
+      var id=(a.getAttribute("href")||"").replace(/^#/,"");
+      if(id) setCurrent(id);
+    });
+  });
+
+  var back=document.querySelector(".rtx3-back");
+  if(back){
+    back.addEventListener("click",function(event){
+      var target=document.getElementById("top");
+      if(!target) return;
+      event.preventDefault();
+      var reduce=false;
+      try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+      target.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+      try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+    });
+  }
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  if(window.__NF_RT_EXPLAINED_PATTERN_TRACK_V1__) return;
+  window.__NF_RT_EXPLAINED_PATTERN_TRACK_V1__=true;
+  document.addEventListener("click",function(event){
+    var a=event.target&&event.target.closest&&event.target.closest('#rtx3-explained a[href^="/dlter-reality-types/"]');
+    if(!a) return;
+    try{
+      if(window.neuform&&typeof window.neuform.track==="function"){
+        window.neuform.track("nf_reality_types_explainer_cta",{
+          surface:"dlter_explained",
+          explainer_version:"3.0.1",
+          action_id:"rt_explainer_pattern",
+          placement:a.closest("details")?"all_patterns":"pattern_examples",
+          destination:a.getAttribute("href")||"",
+          pattern:(a.getAttribute("href")||"").split("/").pop()||""
+        });
+      }
+    }catch(e){}
+  },{passive:true});
+})();
+</script>
+
