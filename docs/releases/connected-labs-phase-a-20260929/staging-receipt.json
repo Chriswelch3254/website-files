@@ -1,0 +1,38 @@
+{
+  "status": "staged-in-Webflow-not-published",
+  "published": false,
+  "sourceCommit": "6c8e12367774fd75f38c7c0fcf2d637936bf6076",
+  "mirrorCommit": "683880eb230dbb2872c5ae9e6b2243ca1579cd58",
+  "readbacks": [
+    {
+      "kind": "embed",
+      "elementId": "2b2b6718-1a13-f605-d79e-b272df3800e3",
+      "exactMatch": true,
+      "expectedSha256": "17b69cf5f54ab0b23a4fb25966f154a632e83c9da127f585929804ce21b00ef0"
+    },
+    {
+      "kind": "embed",
+      "elementId": "14b0e905-27a9-36d9-e294-4f9581ecbf21",
+      "exactMatch": true,
+      "expectedSha256": "275bb9a924dc03c1ec770c45173272b927dfe3fbfa274652fd0e550d6a175e78"
+    },
+    {
+      "kind": "embed",
+      "elementId": "55fb5ccb-a751-f2ac-5729-b3acd12dce48",
+      "exactMatch": true,
+      "expectedSha256": "6517b1757aa9a8ba1471cc5248174de85c5d0ea5dd18b92c72c17a7b7e2dea31"
+    },
+    {
+      "kind": "embed",
+      "elementId": "40bd871d-7c8b-7d21-9d8b-08ea3f43d5a2",
+      "exactMatch": true,
+      "expectedSha256": "46a60fc452766602697da199718b14a69d83738439cae311612209677c436526"
+    },
+    {
+      "kind": "site-footer",
+      "elementId": null,
+      "exactMatch": true,
+      "expectedSha256": "a49a5a2e540aac2b4eabc3c79f666797aa1b60c4aa52d892dca4db9d1aa54e08"
+    }
+  ]
+}
