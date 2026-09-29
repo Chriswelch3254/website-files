@@ -12,6 +12,20 @@ HEAD
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://www.neuform-fitness.com/dlter-quiz">
+<script id="nf-rt-quiz-schema-name-fix">
+(function(){
+  "use strict";
+  var replacements={
+    "The Structured Empathic Lens":"The Structured Insight Lens",
+    "The Resonant Fieldholder":"The Resonant Integrator"
+  };
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(function(node){
+    var text=node.textContent||"",updated=text;
+    Object.keys(replacements).forEach(function(from){updated=updated.split(from).join(replacements[from]);});
+    if(updated!==text)node.textContent=updated;
+  });
+})();
+</script>
 <meta name="theme-color" content="#071018">
 <meta name="color-scheme" content="dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
