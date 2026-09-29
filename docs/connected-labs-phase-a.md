@@ -1,6 +1,6 @@
 # Connected Labs Phase A: published foundation repair
 
-Status: **foundation published and browser-verified; source PR checks remain blocked**. Verified 2026-09-29. Phase B has not started.
+Status: **foundation published, browser-verified and merged**. Verified 2026-09-29. The owner elected to continue with local/live verification without paid GitHub Actions; the jobs remain NOT RUN. Phase B's contract work is separate and not activated.
 
 ## Current truth after release
 
@@ -12,7 +12,7 @@ Status: **foundation published and browser-verified; source PR checks remain blo
 | Logout | Actual logout returned Strength to guest mode. A guest stop attempt asked for sign-in and did not report success. | Account-switch, storage-failure and concurrency cases also have synthetic coverage. |
 | Access | Existing dual-Pro gate still covers all cross-Lab reads, including DLTER. | Single-Pro approved Reality Map preferences are future work. Current canonical proof does not establish Nutrition access. |
 | Reality Types | Production deployment remains READY; health returned HTTP 200 / `nf_reality_types_health_v1` at 17:33:58 UTC. | No Reality Types backend release was made. |
-| Source handoff | website-files PR #14 and NeuformFitnessApp PR #434 contain the maintained changes and rollback evidence. GitHub's authenticated job annotation confirms an account payment/spending-limit blocker. | Both remain unmerged. Jobs cannot start until the account issue is resolved. Billing was not changed and checks were not bypassed. |
+| Source handoff | website-files PR #14 merged at `93572799b359b61b3d5d2d46f0a565a33804906b`; NeuformFitnessApp PR #434 merged at `2affa3f292b8dd3a35f51bb2fcec131d4da6f8b0`. | Owner explicitly chose to proceed without paid Actions using the local/live evidence. Normal merge API used; no billing, workflow or protection changes. |
 | Separate Nutrition Vercel build | Both the PR preview and pre-existing main deployment attempt fail in `run-one-pass-release-build.mjs`. | Build-log connector reports unavailable. Exact causes are unconfirmed; no CI bypass or new production app deployment was made. |
 
 See `releases/connected-labs-phase-a-20260929/production-receipt.json` for the publication, source hashes, browser checks and remaining gates. `release.json` retains the exact rollback preimages. `staging-receipt.json` is the historical pre-publication receipt.
@@ -87,7 +87,7 @@ The repository's existing `node scripts/nf-selfcheck.js` has six unchanged basel
 
 ## Remaining gates
 
-1. Resolve the GitHub account payment/spending-limit blocker before merging the maintained-source PRs. After secure browser sign-in, the inspected job annotation explicitly said it was not started because recent account payments failed or the spending limit needs to increase. This explains the absence of a runner, steps and logs. The exact billing condition was not inspected and no billing or spending settings were changed. Once resolved, rerun the required checks; no code-level CI pass is claimed.
+1. Preserve the owner's release decision: “ignore the github actions. im not increasing my spending limit”. The Actions jobs did not execute because of the account payment/spending-limit block. Both PRs have now merged through the normal API using local tests and live verification. Do not label these remote checks passed or make a spending increase a prerequisite for continuing. The separate pre-existing Nutrition Vercel build failure is an open follow-up; no app build pass is claimed.
 2. Before activating new sources, establish source-owned vocabularies, source-specific expiry, explicit purposes and actual publishers. The old generic `bridge/bridge` V1 publisher remains rejected. No Nutrition, DLTER or Readiness publisher was fabricated.
 3. Establish server-verified access for consuming context. The existing canonical namespace mapping is sufficient for stopping sharing when both settled identities match; it does not establish Nutrition entitlement and is not used to grant cross-Lab reads.
 4. Before activating connected recommendations, verify real populated-source stopping, account switching, simultaneous tabs and device behavior. Synthetic tests cover these boundaries but cannot substitute for live multi-account/device acceptance.
@@ -128,7 +128,7 @@ CodeRabbit CLI was installed from its official source, but authentication return
 | Nutrition account header | Actual Integration Core formerly claimed “Both Pro Labs are connected” from an unverified flag. | Published code says “Their connection has not been confirmed.” |
 | Other private states and cleanup failures | Source and synthetic tests reviewed. | Not all exercised in a live browser; full audit is not claimed. |
 
-The Phase A foundation is **released**. Remote source-check/merge work remains open. Phase B schema and new connected-product features have not started.
+The Phase A foundation is **released and merged**. Phase B schema work is staged separately in the maintained app repository; new connected-product features remain inactive.
 
 ## Continued execution: maintained-source integration
 
@@ -142,4 +142,4 @@ The release write list is exactly `docs/releases/connected-labs-phase-a-20260929
 
 The historical Strength builder reports 28 changed modules compared with its older reconstruction baseline; 25 are already deployed. Only three current module bodies change here. Its 50,000-character checks pass and the largest current replacement is under the limit. The production host policy only allows the exact production app origin, so Webflow's default staging subdomain cannot serve as signed-in Strength acceptance. That policy is preserved.
 
-All five exact provider readbacks matched before publication. Fresh published Strength and Nutrition HTML then contained the expected replacements exactly once. A signed-in Free account could stop Reality Map sharing while ordinary account saving stayed Saved. Logout returned to the separate guest workspace, and a subsequent stop attempt asked for sign-in. These observations do not prove revocation of a populated active record, second-account switching or cross-device synchronization. Phase B has not started.
+All five exact provider readbacks matched before publication. Fresh published Strength and Nutrition HTML then contained the expected replacements exactly once. A signed-in Free account could stop Reality Map sharing while ordinary account saving stayed Saved. Logout returned to the separate guest workspace, and a subsequent stop attempt asked for sign-in. These observations do not prove revocation of a populated active record, second-account switching or cross-device synchronization. Phase B's typed contract is separate and unconnected to production.

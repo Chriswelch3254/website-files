@@ -1,6 +1,6 @@
 {
   "schema": "nf_connected_labs_phase_a_production_receipt_v1",
-  "status": "foundation-published-source-merge-blocked",
+  "status": "foundation-published-source-merged",
   "publishedAt": "2026-09-29T17:21:04.962Z",
   "siteId": "65d26f254c0a038c1f9198e6",
   "customDomains": [
@@ -106,7 +106,8 @@
     },
     "builderNoOp": "passed",
     "packageVerifier": "passed",
-    "websiteSelfcheck": "6 unchanged baseline failures"
+    "websiteSelfcheck": "6 unchanged baseline failures",
+    "node22Reverification": "All 307 Phase A tests pass on Node 22.18.0"
   },
   "realityTypes": {
     "deployment": "dpl_3DgP71rzjJPJVv18zcsm9Z3vLJnD",
@@ -118,7 +119,7 @@
   "repositoryHandoff": {
     "websiteFilesPR": 14,
     "strengthPR": 434,
-    "merged": false,
+    "merged": true,
     "githubActions": {
       "codeCommit": "6c8e12367774fd75f38c7c0fcf2d637936bf6076",
       "failedJobs": 10,
@@ -143,10 +144,23 @@
       "buildLogs": "connector unavailable",
       "underlyingCause": "unconfirmed"
     },
-    "protectionBypassed": false
+    "protectionBypassed": false,
+    "websiteFilesMergeCommit": "93572799b359b61b3d5d2d46f0a565a33804906b",
+    "strengthMergeCommit": "2affa3f292b8dd3a35f51bb2fcec131d4da6f8b0",
+    "ownerReleaseDecision": {
+      "date": "2026-09-29",
+      "instruction": "ignore the github actions. im not increasing my spending limit",
+      "basis": "307 focused local tests, package verification, exact published-source matches and recorded live acceptance",
+      "remoteActionsResult": "NOT_RUN",
+      "mergePath": "normal merge API with expected head SHA",
+      "billingChanged": false,
+      "workflowsChanged": false,
+      "branchProtectionsChanged": false
+    }
   },
   "nextPhase": {
-    "started": false,
-    "blockedUntil": "Resolve source handoff checks; establish source-owned publishers, purpose/expiry and verified access before activating connected context"
+    "started": true,
+    "scope": "My NeuForm Profile v1 typed contract candidate in maintained app repository",
+    "productionActivated": false
   }
 }
