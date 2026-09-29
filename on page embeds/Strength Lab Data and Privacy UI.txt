@@ -1,0 +1,280 @@
+<script>
+(function(global){
+"use strict";
+var root=global.NF_STRENGTH_LAB_V3=global.NF_STRENGTH_LAB_V3||{};
+if(!root.__loaderGeneration)throw new Error('Strength Lab loader lifecycle unavailable');
+root.__registered=root.__registered||Object.create(null);
+root.__duplicateModules=root.__duplicateModules||[];
+root.__moduleLabels=root.__moduleLabels||Object.create(null);
+root.__embedOrderLog=root.__embedOrderLog||[];
+root.__expectedNextEmbedOrder=root.__expectedNextEmbedOrder||2;
+root.__recordEmbed=root.__recordEmbed||function(order,label){if(order!==root.__expectedNextEmbedOrder&&!root.__embedOrderError)root.__embedOrderError={expected:root.__expectedNextEmbedOrder,actual:order,label:label};root.__embedOrderLog.push({order:order,label:label});root.__expectedNextEmbedOrder=Math.max(root.__expectedNextEmbedOrder,order+1);};
+root.__resolve=root.__resolve||function(base,request){if(!/^\./.test(request))return request.replace(/\.js$/,"");var parts=base.split('/');parts.pop();request.split('/').forEach(function(part){if(!part||part==='.')return;if(part==='..')parts.pop();else parts.push(part);});return parts.join('/').replace(/\.js$/,"");};
+root.__define=root.__define||function(id,factory,dependencies){var result=root.__loaderGeneration.registerSync(id,factory,dependencies||[]);if(!result.ok){root.__duplicateModules.push(id);return false;}root.__registered[id]=true;return true;};
+root.__require=root.__require||function(id){return root.__loaderGeneration.requireModule(String(id||'').replace(/\.js$/,""));};
+root.__recordEmbed(43,"SLV3-22C Data Privacy UI");
+root.__define("pass6/ui-view",function(require,module,exports){
+"use strict";
+
+var accessPolicy = require("../access/access");
+var commercial = require("./commercial/commercial");
+
+function esc(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, function(ch) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[ch];
+  });
+}
+
+function attr(value) {
+  return esc(value).replace(/`/g, "");
+}
+
+function isPro(accessState) {
+  return accessPolicy.hasCurrentStrengthPro(accessState);
+}
+
+function panel(title, body, connectedLabsTarget) {
+  var targetAttributes = connectedLabsTarget ? " id=\"connected-labs\" data-nfsl-connected-labs tabindex=\"-1\" aria-labelledby=\"nfsl-connected-labs-title\"" : "";
+  var headingId = connectedLabsTarget ? " id=\"nfsl-connected-labs-title\"" : "";
+  return "<section class=\"nfsl-v3-panel nfsl-v3-pass6-panel\"" + targetAttributes + "><div class=\"nfsl-v3-panel-head\"><h3" + headingId + ">" + esc(title) + "</h3></div>" + body + "</section>";
+}
+
+function renderDataPortability(ui, accessState, options) {
+  ui = ui || {};
+  options = options || {};
+  var pro = isPro(accessState);
+  return [
+    "<div class=\"nfsl-v3-pass6\" data-nfsl-pass6>",
+    options.omitCloudPanel ? "" : cloudPanel(ui.cloud),
+    panel("Import training history", [
+      "<p class=\"nfsl-v3-note\">Choose a NeuForm, Strong or Hevy CSV file. Review the preview before adding any records. Imported sets need your review before they affect estimates.</p>",
+      "<label class=\"nfsl-v3-field\"><span>Choose CSV file (up to 1 MB)</span><input data-nfsl-import-file type=\"file\" accept=\"text/csv,.csv\"></label>",
+      "<details><summary>Paste CSV instead</summary><label class=\"nfsl-v3-field\"><span>CSV text</span><textarea data-nfsl-pass6-csv name=\"pass6Csv\">" + esc(ui.pass6CsvText || "") + "</textarea></label><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"pass6-import-preview\">Preview CSV import</button></details>",
+      importPreview(ui),
+      "<div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"pass6-import-commit\"" + (ui.pass6ImportPreview && ui.pass6ImportPreview.ok ? "" : " disabled") + ">Add reviewed import</button></div>",
+      importReviewQueue(ui)
+    ].join("")),
+    panel("Download and restore", [
+      "<p class=\"nfsl-v3-note\">Full backups include sessions, goals and drafts. The CSV contains completed sets saved in My Lifts. Downloads are available on Free.</p>",
+      "<div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-plain-backup\">Download full backup</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-evidence-csv\">Download My Lifts CSV</button></div>",
+      "<details><summary>Encrypted backup and restore</summary><label class=\"nfsl-v3-field\"><span>Backup passphrase</span><input name=\"pass6Passphrase\" type=\"password\" autocomplete=\"new-password\" placeholder=\"8 or more characters\"></label><p>Keep your passphrase somewhere safe; you need it to restore an encrypted backup.</p><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-encrypted-backup\">Download encrypted backup</button>",
+      "<label class=\"nfsl-v3-field\"><span>Choose backup to restore</span><input data-nfsl-restore-file type=\"file\" accept=\"application/json,.json\"></label><details><summary>Paste backup content instead</summary><label class=\"nfsl-v3-field\"><span>Backup content</span><textarea data-nfsl-restore-text name=\"pass6RestoreText\">" + esc(ui.pass6RestoreText || "") + "</textarea></label></details>",
+      "<p>Restore replaces this workspace after confirmation. Download a backup of your current work first.</p><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"restore-plain-backup\">Restore full backup</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"restore-encrypted-backup\">Restore encrypted backup</button></div></details>",
+      "<details><summary>Technical export details</summary><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"pass6-export-bundle\">View export details</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-raw-json\">Download raw JSON</button></div>" + (ui.pass6ExportText ? "<pre>" + esc(ui.pass6ExportText) + "</pre>" : "") + "</details>"
+    ].join("")),
+    ui.pass6RestorePreview ? panel("Review backup replacement", "<div data-nfsl-restore-preview><p>This backup contains " + esc(Object.keys(ui.pass6RestorePreview.state.liftProfiles || {}).length) + " lifts, " + esc(Object.keys(ui.pass6RestorePreview.state.evidenceObservations || {}).length) + " logged sets and " + esc(Object.keys(ui.pass6RestorePreview.state.sessions || {}).length) + " sessions. Restoring replaces this Strength workspace. A device backup is kept first.</p><label><input type=\"checkbox\" data-nfsl-restore-confirm> I understand this replaces my current Strength records.</label><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"confirm-restore-backup\">Confirm restore</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"cancel-restore-backup\">Cancel restore</button></div></div>") : "",
+    panel("Strength Passport", [
+      "<p class=\"nfsl-v3-note\">" + (pro ? "Create a report to keep or share. Choose whether to include your measurements." : "Strength Passport requires Strength Lab Pro because it includes an analysis of your training history.") + "</p>",
+      "<label><input type=\"checkbox\" name=\"pass6PassportSensitive\"> Include exact measurements in this download</label>",
+      "<div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"pass6-passport\">Generate Passport</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-passport-html\"" + (pro ? "" : " disabled") + ">Download Passport HTML</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"download-passport-json\"" + (pro ? "" : " disabled") + ">Download Passport JSON</button></div>",
+      ui.pass6PassportText ? "<pre>" + esc(ui.pass6PassportText) + "</pre>" : ""
+    ].join("")),
+    panel("Connected Labs", [
+      "<p class=\"nfsl-v3-note\">Connected insights are not available yet. Your training plan stays separate from other Labs. You can stop earlier sharing choices below.</p>",
+      "<p>These controls apply to this browser. They do not delete your saved Lab records or change your research choices.</p>",
+      "<div class=\"nfsl-v3-actions\">" + [["nutrition", "Nutrition"], ["dlter", "Reality Map"], ["readiness", "Readiness"], ["strength", "Strength"], ["all", "all Connected Labs"]].map(function(item) { return "<button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"pass6-context-consent\" data-context-source=\"stop:" + item[0] + "\">Stop sharing " + item[1] + "</button>"; }).join("") + "</div>",
+      ui.pass6ConnectionText ? "<p class=\"nfsl-v3-note\" data-nfsl-connection-status role=\"status\" aria-live=\"polite\">" + esc(ui.pass6ConnectionText) + "</p>" : ""
+    ].join(""), true),
+    panel("Free and Pro access", renderOffers(ui, accessState)),
+    "</div>"
+  ].join("");
+}
+
+function importPreview(ui) {
+  var preview = ui.pass6ImportPreview;
+  if (!preview) return "";
+  if (!preview.ok) return "<p data-nfsl-pass6-import-preview role=\"status\">This file could not be imported: " + esc(preview.reason || "check its column headings and values") + ". No history changed.</p>";
+  var s = preview.dryRun.summary;
+  return "<div data-nfsl-pass6-import-preview role=\"status\"><h4>Import preview</h4><p>" + esc(s.totalRows) + " rows found · " + esc(s.importableRows) + " ready to add · " + esc(s.exactDuplicates) + " exact duplicates skipped.</p><p>" + esc(s.reviewRequired + s.customRequired + s.notComparable + s.unsupported) + " rows need a different match or cannot be imported. Review details before continuing.</p><details><summary>Row decisions</summary><ul>" + preview.dryRun.decisions.map(function(row, index) { return "<li>Row " + (index + 1) + ": " + esc((row.classification || "review_required").replace(/_/g, " ")) + (row.duplicate ? " · " + esc(row.duplicate.replace(/_/g, " ")) : "") + "</li>"; }).join("") + "</ul></details></div>";
+}
+
+function cloudButton(action, label, enabled, extra) {
+  return "<button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"cloud-" + attr(action) + "\"" + (extra || "") + (enabled ? "" : " disabled") + ">" + esc(label) + "</button>";
+}
+
+function cloudSaveStatus(cloud, storage, accessState) {
+  cloud = cloud || {};
+  storage = storage || {};
+  var pending = cloud.pendingLocal === true || Number(cloud.queued) > 0 || cloud.localSavePending || cloud.localEditsPending;
+  if (storage.state === "storage-warning" || storage.state === "storage-limited") return { state: "attention", title: "Needs attention", detail: "This browser could not safely keep your changes. Keep this tab open and download your work in Saving settings." };
+  if (cloud.restoring) return { state: "saving", title: "Updating…", detail: "Opening your latest saved workspace." };
+  if (cloud.workspaceReviewPending) return { state: "attention", title: "Needs attention", detail: "Another tab has newer changes. Your current work is retained for review." };
+  if (cloud.recoveryPartial) return { state: "attention", title: "Needs attention", detail: "Some records need recovery. Open Saving settings to review them." };
+  if (accessState && accessState.kind === "guest" && !cloud.localSavePending && !cloud.localEditsPending) return { state: "device", title: "Saved on this device", detail: "Sign in for automatic account saving. Existing guest records stay separate." };
+  if (cloud.automaticPaused || cloud.saveState === "paused") return { state: "paused", title: "Account saving paused", detail: "Changes stay on this device. Resume in Saving settings to update your account." };
+  if (cloud.saveState === "attention") return { state: "attention", title: "Needs attention", detail: "Your work is retained. Open Saving settings to finish syncing." };
+  if (cloud.saveState === "offline") return { state: "offline", title: "Offline", detail: cloud.localSavePending ? "Finishing the device save. Keep this tab open." : "Changes saved on this device will sync automatically when you reconnect." };
+  if (pending || cloud.saveState === "saving") return { state: "saving", title: "Saving…", detail: cloud.available && cloud.consent ? "Your changes are being saved to your account." : "Your changes are being saved on this device." };
+  if (cloud.available && cloud.consent && cloud.currentAcknowledged === true) return { state: "saved", title: "Saved", detail: "Your latest changes are saved to your account and available on your other devices." };
+  if (accessState && accessState.kind === "guest") return { state: "device", title: "Saved on this device", detail: "Sign in for automatic account saving. Existing guest records stay separate." };
+  if (cloud.available && !cloud.consent) return { state: "checking", title: "Connecting…", detail: "Preparing automatic account saving. Your device keeps your current work." };
+  return { state: "checking", title: "Connecting…", detail: "Checking your account and latest saved work." };
+}
+
+function renderCloudSaveStatus(cloud, storage, accessState) {
+  var status = cloudSaveStatus(cloud, storage, accessState);
+  return [
+    "<div class=\"nfsl-v3-save-bar\" data-nfsl-cloud-save-bar data-save-state=\"" + attr(status.state) + "\">",
+    "<div id=\"nfsl-cloud-save-status\" data-nfsl-cloud-save-status role=\"status\" aria-live=\"polite\" aria-atomic=\"true\"><strong>" + esc(status.title) + "</strong><span>" + esc(status.detail) + "</span></div>",
+    "<button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"open-data\">Saving settings</button>",
+    "</div>"
+  ].join("");
+}
+
+function dateLabel(value) {
+  var date = new Date(value);
+  return value && Number.isFinite(date.getTime()) ? date.toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "Not recorded";
+}
+
+function trainingCopy(title, value, empty) {
+  var fields = [["Lifts", "lifts"], ["Logged sets", "sets"], ["Sessions", "sessions"]];
+  function count(key) {
+    if (empty) return 0;
+    return value && Number.isSafeInteger(value[key]) && value[key] >= 0 ? value[key] : "Not available";
+  }
+  return [
+    "<article class=\"nfsl-v3-cloud-copy\"><h4>" + esc(title) + "</h4>",
+    empty ? "<p>No training records saved yet.</p>" : "",
+    "<dl>" + fields.map(function(field) { return "<div><dt>" + esc(field[0]) + "</dt><dd>" + esc(count(field[1])) + "</dd></div>"; }).join("") + "</dl>",
+    "<p class=\"nfsl-v3-cloud-copy-updated\">Last saved: " + esc(dateLabel(value && value.updatedAt)) + "</p></article>"
+  ].join("");
+}
+
+function cloudPanel(cloud) {
+  if (!cloud) return "";
+  var enabled = cloud.available && !cloud.busy;
+  var review = cloud.review;
+  var choosing = cloud.automaticPaused || cloud.saveState === "paused";
+  var savingConfirmed = cloud.available && cloud.consent && !cloud.automaticPaused && !cloud.busy && !cloud.pendingLocal && !(Number(cloud.queued) > 0) && !review && !cloud.recoveryPartial && cloud.saveState === "saved" && cloud.currentAcknowledged === true;
+  var comparison = review ? [
+    "<h4>Choose which training records to use</h4>",
+    "<p>" + (review.empty ? "Your account has no saved training records. You can save this device's records to your account." : "Compare your device and account records below. Choosing a copy replaces the records in the other location; the copies are not combined.") + "</p>",
+    "<div class=\"nfsl-v3-cloud-comparison\">" + trainingCopy("On this device", review.deviceSummary, false) + trainingCopy("Saved in your account", review.cloudSummary, review.empty === true) + "</div>",
+    "<label class=\"nfsl-v3-cloud-confirm\"><input type=\"checkbox\" data-nfsl-cloud-confirm" + (enabled ? "" : " disabled") + "><span>I understand that my choice replaces the records in the other location.</span></label>",
+    "<div class=\"nfsl-v3-actions nfsl-v3-cloud-copy-actions\">" + (review.empty ? "" : cloudButton("use", "Use account records on this device", enabled)) + cloudButton("device", "Use device records in my account", enabled && cloud.cloudWrite && cloud.consent && !cloud.automaticPaused) + "</div>",
+    "<p class=\"nfsl-v3-note\">Using account records keeps a backup of this device's previous records. Using device records keeps the previous saved account version.</p>"
+  ].join("") : "";
+  return panel("Account saving", [
+    "<div data-nfsl-cloud-panel aria-busy=\"" + (cloud.busy ? "true" : "false") + "\">",
+    !savingConfirmed && cloud.message ? "<p data-nfsl-cloud-status>" + esc(cloud.message) + "</p>" : "",
+    "<p id=\"nfsl-cloud-scope\">Your signed-in Strength workspace saves automatically, including your profile, completed sets, sessions, goals, notes and unfinished form drafts. Use the same account to continue on another device. Nutrition has its own workspace.</p>",
+    choosing ? "<div class=\"nfsl-v3-cloud-activation\"><p>You paused account saving. Your device keeps your changes while saving is paused.</p><div class=\"nfsl-v3-actions\">" + cloudButton("grant", "Resume account saving", enabled && cloud.cloudWrite, " aria-describedby=\"nfsl-cloud-scope\"") + "</div></div>" : "<p>Changes save as you work. Other open devices update automatically when connected. If you go offline, this browser keeps a working copy when storage is available and retries when you reconnect.</p>",
+    !cloud.available ? "<p>Sign in to verify your account connection. Guest records are not uploaded automatically.</p><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"auth-login\">Sign in</button>" : "",
+    !cloud.cloudWrite && cloud.available ? "<p>Account uploads are unavailable right now. You can still check and export existing account records.</p>" : "",
+    Number(cloud.queued) > 0 ? "<p>" + esc(cloud.queued) + (Number(cloud.queued) === 1 ? " save is waiting to upload.</p>" : " saves are waiting to upload.</p>") : "",
+    "<div class=\"nfsl-v3-actions\">" + (cloud.saveState === "attention" || cloud.saveState === "offline" ? cloudButton("sync", "Retry saving", enabled && cloud.consent && cloud.cloudWrite && !cloud.automaticPaused) + cloudButton("connect", "Check connection", enabled) : "") + (cloud.consent && !cloud.automaticPaused ? cloudButton("revoke", "Pause account saving", cloud.available) : "") + "</div>",
+    "<p class=\"nfsl-v3-note\">Pausing keeps your existing account records and this device's working copy.</p>",
+    "<details class=\"nfsl-v3-cloud-details\" data-nfsl-cloud-review-details" + (review || cloud.saveState === "attention" && !cloud.recoveryPartial ? " open" : "") + "><summary>Compare training records</summary>" + (review ? comparison : "<p>Check the records saved on this device and in your account before choosing which copy to use.</p>") + "<div class=\"nfsl-v3-actions\">" + cloudButton("review", review ? "Refresh comparison" : "Compare device and account records", enabled) + "</div></details>",
+    "<details class=\"nfsl-v3-cloud-details\" data-nfsl-cloud-history-details" + (cloud.recoveryPartial ? " open" : "") + "><summary>Backups and saved versions</summary><p>Download a copy of your records. Downloads do not replace your current records.</p><div class=\"nfsl-v3-actions\">" + cloudButton("export", "Download account records", enabled) + cloudButton("history", "View saved account versions", enabled) + cloudButton("recoveries", "View upload recovery details", enabled) + "</div>" + renderRecoveryCopies(cloud, enabled) + renderCloudHistory(cloud, enabled) + "</details>",
+    renderCloudDeletion(cloud, enabled),
+    "</div>"
+  ].join(""));
+}
+
+function renderRecoveryCopies(cloud, enabled) {
+  var recoveries = cloud.recoveries;
+  if (!Array.isArray(recoveries)) return "";
+  if (!recoveries.length) return "<p>No saved upload recovery details were found for this account.</p>";
+  return "<p>These technical copies contain upload queues and status. Use Previous device records for a restorable training backup.</p><ul class=\"nfsl-v3-cloud-history\">" + recoveries.map(function(item) {
+    return "<li><div><strong>Upload recovery " + esc(Number(item.index) + 1) + "</strong><span>" + esc(dateLabel(item.createdAt)) + ". " + esc(item.queued || 0) + " unsent saves included.</span></div>" + cloudButton("recovery-export", "Download upload recovery " + (Number(item.index) + 1), enabled && Number.isSafeInteger(item.index) && item.index >= 0, " data-cloud-recovery-index=\"" + attr(item.index) + "\"") + "</li>";
+  }).join("") + "</ul>";
+}
+
+function renderCloudHistory(cloud, enabled) {
+  var history = cloud.history;
+  var versions = Array.isArray(history) ? history : history && history.versions;
+  if (!Array.isArray(versions)) return "";
+  if (!versions.length) return "<p>No saved account versions were found.</p>";
+  return "<ul class=\"nfsl-v3-cloud-history\">" + versions.map(function(item) {
+    return "<li><div><strong>Saved version " + esc(item.revision) + "</strong><span>" + esc(dateLabel(item.createdAt || item.updatedAt)) + "</span></div>" + cloudButton("history-export", "Download version " + item.revision, enabled && Number.isSafeInteger(item.revision) && item.revision > 0, " data-cloud-revision=\"" + attr(item.revision) + "\"") + "</li>";
+  }).join("") + "</ul>" + (history && Number.isSafeInteger(history.nextBeforeRevision) && history.nextBeforeRevision > 0 ? cloudButton("history", "Review older saved versions", enabled, " data-cloud-before-revision=\"" + attr(history.nextBeforeRevision) + "\"") : "");
+}
+
+function renderCloudDeletion(cloud, enabled) {
+  var deletion = cloud.deletion;
+  var pending = deletion && deletion.status === "pending";
+  var fulfilled = deletion && deletion.status === "fulfilled";
+  return [
+    "<details class=\"nfsl-v3-cloud-details\" data-nfsl-cloud-deletion-details" + (pending ? " open" : "") + "><summary>Delete Strength account records</summary>",
+    "<p>This applies only to Strength records stored in your account. Device records and Nutrition records are separate. Download any account records you want to keep first.</p>",
+    fulfilled ? "<p>Deletion was confirmed. This device's records have not been deleted or uploaded again automatically.</p>" : pending ? "<p>A deletion request is pending. Your account records have not been deleted yet.</p>" : "<p>Reviewing a deletion request does not delete records.</p>",
+    "<div class=\"nfsl-v3-actions\">" + cloudButton("deletion-status", "Check deletion status", enabled) + cloudButton("delete-request", "Review deletion request", enabled && !pending) + "</div>",
+    pending && deletion.requestId ? "<label class=\"nfsl-v3-field\"><span>Type DELETE STRENGTH CLOUD DATA to confirm</span><input name=\"cloudDeleteConfirmation\" data-nfsl-cloud-delete-confirm autocomplete=\"off\" spellcheck=\"false\"></label>" + cloudButton("delete-confirm", "Delete my Strength account records", enabled, " data-cloud-request-id=\"" + attr(deletion.requestId) + "\"") : "",
+    pending && deletion.requestId ? cloudButton("delete-cancel", "Cancel deletion request", enabled, " data-cloud-request-id=\"" + attr(deletion.requestId) + "\"") + "<p>Cancelling keeps the account records. Uploads stay stopped until you choose to resume them.</p>" : "",
+    "</details>"
+  ].join("");
+}
+
+function importReviewQueue(ui) {
+  var queue = ui && ui.pass6ImportReviewQueue || [];
+  if (!queue.length) return "";
+  return [
+    "<div class=\"nfsl-v3-review-panel\" data-nfsl-import-review-queue>",
+    "<h4>Imported evidence awaiting review</h4>",
+    queue.map(function(item) {
+      return [
+        "<article class=\"nfsl-v3-row-card\">",
+        "<span>Observation " + esc(item.observationId) + "</span>",
+        "<dl><div><dt>Lift match</dt><dd>" + esc(item.liftLabel || "Confirm") + "</dd></div><div><dt>Unit</dt><dd>" + esc(item.unit || "Confirm") + "</dd></div><div><dt>Load meaning</dt><dd>" + esc(item.loadMeaning || "Confirm") + "</dd></div><div><dt>Setup</dt><dd>" + esc(item.setupLabel || "Confirm") + "</dd></div><div><dt>Equipment</dt><dd>" + esc(item.equipmentLabel || "Confirm") + "</dd></div><div><dt>Effort</dt><dd>" + esc(item.effortLabel || "Confirm") + "</dd></div><div><dt>Source reliability</dt><dd>" + esc(item.sourceReliability || "Imported, needs review") + "</dd></div></dl>",
+        "<div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn nfsl-v3-btn--primary\" data-action=\"confirm-imported-evidence\" data-observation-id=\"" + attr(item.observationId) + "\">Confirm imported evidence</button><button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"reject-imported-evidence\" data-observation-id=\"" + attr(item.observationId) + "\">Archive import</button></div>",
+        "</article>"
+      ].join("");
+    }).join(""),
+    "</div>"
+  ].join("");
+}
+
+function formatMoney(cents) {
+  return "$" + (cents / 100).toFixed(2).replace(/\.00$/, "");
+}
+
+function renderOffers(ui, accessState) {
+  ui = ui || {};
+  accessState = accessState || {};
+  var bundle = ui.offerView === "bundle";
+  var product = bundle ? "nutrition_strength_pro" : "strength_lab_pro";
+  var verified = accessState.authoritative === true && accessState.current === true && accessState.stale !== true && accessState.restored !== true && ["shared_auth", "bounded_memberstack_fallback", "strength_bff"].indexOf(accessState.source) >= 0;
+  var recommendation = commercial.recommendOffer(verified ? accessState.kind : "unknown", product);
+  var monthly = commercial.OFFER_REGISTRY[bundle ? "nutrition_strength_monthly" : "strength_pro_monthly"];
+  var annual = commercial.OFFER_REGISTRY[bundle ? "nutrition_strength_annual" : "strength_pro_annual"];
+  var title = bundle ? "Nutrition + Strength Pro" : "Strength Lab Pro";
+  var prices = "<p><strong>" + formatMoney(monthly.amountCents) + "/month</strong> or <strong>" + formatMoney(annual.amountCents) + "/year</strong> USD.</p>";
+  var intro = bundle ? "One subscription includes both Pro Labs. Buying access does not connect or share your data. Connections are optional and require your permission." : "Pro adds more lift profiles, session guidance, and deeper progress review. Automatic account saving is included on Free when you sign in.";
+  var content;
+  if (!verified || recommendation.action === "refresh_access" || recommendation.action === "unavailable") {
+    content = prices + "<div role=\"status\"><p><strong>Your access is still being checked.</strong> Wait for verification before choosing a plan. A new purchase is not a fix for missing access.</p></div><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn nfsl-v3-btn--primary\" data-action=\"retry-access-verification\">Check access again</button><a class=\"nfsl-v3-btn\" href=\"/support?topic=strength-lab\">Get access help</a></div>";
+  } else if (bundle) {
+    content = prices + "<p>Contact support for help choosing or moving to both Labs. If you already subscribe to either Lab, review your current subscriptions before changing plans. No subscription changes here.</p><div class=\"nfsl-v3-actions\"><a class=\"nfsl-v3-btn nfsl-v3-btn--primary\" href=\"/support?topic=strength-lab\">Get both-Labs help</a>" + (accessState.kind === "guest" ? "" : "<button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"manage-billing\">Manage billing</button>") + "</div>";
+  } else if (recommendation.action === "manage") {
+    var hasBundle = commercial.productAccess(accessState.kind).bundle;
+    var text = bundle && !hasBundle ? "You already have a paid Lab subscription. Review your existing plan in billing or contact support before changing to both Labs. Your current subscription will not be changed here." : "Your account already has " + title + " access.";
+    content = "<p>" + esc(text) + "</p><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn nfsl-v3-btn--primary\" data-action=\"manage-billing\">Manage billing</button><a class=\"nfsl-v3-btn\" href=\"/support?topic=strength-lab\">Get billing help</a></div>";
+  } else {
+    var guest = accessState.kind === "guest";
+    content = "<div class=\"nfsl-v3-offer-grid\">" + offer(monthly, "Billed monthly.", guest, ui.offerInterval === "monthly", ui.pass6CheckoutBusy) + offer(annual, "Billed annually. " + commercial.deriveSavings(annual.id).savingsLabel + ".", guest, ui.offerInterval === "annual", ui.pass6CheckoutBusy) + "</div>";
+  }
+  return "<div class=\"nfsl-v3-pass6-offers\" data-nfsl-commercial-offer><p>" + esc(intro) + "</p>" + content + "</div>" + (ui.pass6CommercialText ? "<p role=\"status\" class=\"nfsl-v3-note\" data-nfsl-commercial-status>" + esc(ui.pass6CommercialText) + "</p>" : "") + "<p class=\"nfsl-v3-note\">Subscriptions renew until canceled. Checkout shows the final terms before you pay. Canceling Pro does not itself delete saved records.</p>";
+}
+
+function offer(entry, body, guest, selected, busy) {
+  var label = entry.billingInterval === "annual" ? "annual" : "monthly";
+  var primary = guest ? "Create account and continue" : "Continue with " + label;
+  return "<article class=\"nfsl-v3-pass6-offer\"><h3>" + esc((entry.billingInterval === "annual" ? "Annual" : "Monthly") + (selected ? " (selected)" : "")) + "</h3><p><strong>" + formatMoney(entry.amountCents) + (entry.billingInterval === "annual" ? "/year" : "/month") + " USD</strong></p><p>" + esc(body) + "</p><div class=\"nfsl-v3-actions\"><button type=\"button\" class=\"nfsl-v3-btn nfsl-v3-btn--primary\" data-action=\"" + (guest ? "start-checkout-signup" : "start-checkout") + "\" data-offer-id=\"" + attr(entry.id) + "\"" + (busy ? " disabled" : "") + ">" + primary + "</button>" + (guest ? "<button type=\"button\" class=\"nfsl-v3-btn\" data-action=\"start-checkout-login\" data-offer-id=\"" + attr(entry.id) + "\"" + (busy ? " disabled" : "") + ">Sign in and continue</button>" : "") + "</div></article>";
+}
+
+function renderOffersDialog(ui, accessState) {
+  ui = ui || {};
+  return "<div class=\"nfsl-v3-backdrop\" data-nfsl-dialog role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"nfsl-data-title\" tabindex=\"-1\"><div class=\"nfsl-v3-dialog nfsl-v3-dialog--offers\"><div class=\"nfsl-v3-panel-head\"><h2 id=\"nfsl-data-title\" tabindex=\"-1\">" + (ui.offerView === "bundle" ? "Nutrition + Strength Pro options" : "Strength Lab Pro options") + "</h2><button type=\"button\" class=\"nfsl-v3-icon-btn\" data-action=\"close-dialog\" aria-label=\"Close plan options\">x</button></div>" + renderOffers(ui, accessState) + "</div></div>";
+}
+
+module.exports = {
+  renderDataPortability: renderDataPortability,
+  renderOffers: renderOffers,
+  renderOffersDialog: renderOffersDialog,
+  renderCloudSettings: cloudPanel,
+  renderCloudSaveStatus: renderCloudSaveStatus,
+  cloudSaveStatus: cloudSaveStatus
+};
+},["access/access","pass6/commercial/commercial"]);
+})(window);
+</script>

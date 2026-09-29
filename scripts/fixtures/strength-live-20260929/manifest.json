@@ -1,0 +1,15 @@
+{
+  "source": "https://www.neuform-fitness.com/tools-strength-lab",
+  "capturedAt": "2026-09-29",
+  "purpose": "Unmodified published dependencies for integration regression tests. Not a second runtime implementation.",
+  "sha256": {
+    "runtime__index.js": "3984746981ef642283f28ac72134949abbe17a4fe516587fb261cc00266e8d73",
+    "contracts__contracts.js": "360d638e2a84cd986aad111d5d7a749eee31f290d4a42c05dcf4a123187fe21a",
+    "data__schema.js": "f4fdc2d8a63dbebe4d24c0f11adb02f9780092618888690ff477650bc0de3e5e",
+    "pass4__core.js": "cd7d479839b0f33f4cf8d0b03da1e8417ae9f5d8cab60a10f6fb1344e51931b8",
+    "pass4__contracts.js": "a52f9fad6fba8be6f08e7e7f69be2d8ba148fe27affdc4a25851e0b5615d3ce1",
+    "pass5__contracts.js": "14bf23dce817206587b4cd283e19d33e1af0861061f53f4a073efef643539c89",
+    "pass6__contracts.js": "ecba41cea4de62e69888a061f7af2de865a9cb9fb8f6d8ac2028dbac33e9a731",
+    "pass6__environment.js": "e9444eb96ebd428580cf08315b9882e09653318ae1d2eb4f3ed3c7f98880cc93"
+  }
+}

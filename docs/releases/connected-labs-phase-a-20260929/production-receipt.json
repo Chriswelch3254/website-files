@@ -1,0 +1,152 @@
+{
+  "schema": "nf_connected_labs_phase_a_production_receipt_v1",
+  "status": "foundation-published-source-merge-blocked",
+  "publishedAt": "2026-09-29T17:21:04.962Z",
+  "siteId": "65d26f254c0a038c1f9198e6",
+  "customDomains": [
+    "www.neuform-fitness.com",
+    "neuform-fitness.com"
+  ],
+  "publishToWebflowSubdomain": false,
+  "codeSourceCommit": "6c8e12367774fd75f38c7c0fcf2d637936bf6076",
+  "codeMirrorCommit": "683880eb230dbb2872c5ae9e6b2243ca1579cd58",
+  "stagedReceiptCommit": "564a514b5f1cd26149e21aa6a05374fad6aa105a",
+  "rollback": "release.json contains exact before/after strings and SHA-256 values. Restore only these targets after confirming their current hashes.",
+  "changes": [
+    {
+      "kind": "embed",
+      "pageId": "68d84107f5fa5f83c9e61823",
+      "elementId": "2b2b6718-1a13-f605-d79e-b272df3800e3",
+      "beforeSha256": "ab2c824927e3cf77466f56cb505b22d22eaf2d360fb92c9866cf6edfa85b0f6a",
+      "afterSha256": "17b69cf5f54ab0b23a4fb25966f154a632e83c9da127f585929804ce21b00ef0",
+      "providerReadbackExact": true
+    },
+    {
+      "kind": "embed",
+      "pageId": "68d84107f5fa5f83c9e61823",
+      "elementId": "14b0e905-27a9-36d9-e294-4f9581ecbf21",
+      "beforeSha256": "794b6b63d10b0233cc096b391a489d6b16cda09757f1d5bc289fd189e8234332",
+      "afterSha256": "275bb9a924dc03c1ec770c45173272b927dfe3fbfa274652fd0e550d6a175e78",
+      "providerReadbackExact": true
+    },
+    {
+      "kind": "embed",
+      "pageId": "68d84107f5fa5f83c9e61823",
+      "elementId": "55fb5ccb-a751-f2ac-5729-b3acd12dce48",
+      "beforeSha256": "7975453471e65630c3bf11d8fdc93144f40c0f6ed6850865ea4aa3dcf263f838",
+      "afterSha256": "6517b1757aa9a8ba1471cc5248174de85c5d0ea5dd18b92c72c17a7b7e2dea31",
+      "providerReadbackExact": true
+    },
+    {
+      "kind": "embed",
+      "pageId": "6921dd11ded6784dc3587d6c",
+      "elementId": "40bd871d-7c8b-7d21-9d8b-08ea3f43d5a2",
+      "beforeSha256": "a5fd9a0214fc919912fb85c0170d159e05bd078484c0af609d50cfbee7a8abcc",
+      "afterSha256": "46a60fc452766602697da199718b14a69d83738439cae311612209677c436526",
+      "providerReadbackExact": true
+    },
+    {
+      "kind": "site-footer",
+      "beforeSha256": "92eaf2c132ecf5b8ad700a880bde9339b8fcc6352ff2ec2fb02d0cb52cfb6b4f",
+      "afterSha256": "a49a5a2e540aac2b4eabc3c79f666797aa1b60c4aa52d892dca4db9d1aa54e08",
+      "providerReadbackExact": true
+    }
+  ],
+  "publicVerification": {
+    "strength": {
+      "path": "/tools-strength-lab",
+      "status": 200,
+      "htmlSha256": "924cfa5b19be0cf7a75bd31437e58608450a1127a32d9e99b143f50008faa30a",
+      "expectedChanges": 4,
+      "eachExactOccurrences": 1
+    },
+    "nutrition": {
+      "path": "/tools-nutrition-lab",
+      "status": 200,
+      "htmlSha256": "b7ed42ff62402db2dc341b3e03f18a5263a9083978a3cb2720dc27de21106194",
+      "expectedChanges": 2,
+      "eachExactOccurrences": 1
+    }
+  },
+  "unchanged": {
+    "hydrationSha256": "4f170894988abd37e5ab049c560f066a990d0eb59c776a3a413a8936a1ab052d",
+    "hydrationBytes": 886565,
+    "backendPin": "4421b1d08b161a9b2af24dcacca8dbc11d6cb64d",
+    "siteHeadWritten": false,
+    "backendDeployed": false,
+    "domainEngineChanged": false,
+    "pricingChanged": false,
+    "researchPermissionChanged": false
+  },
+  "browserAcceptance": {
+    "url": "https://www.neuform-fitness.com/tools-strength-lab",
+    "authenticatedAccountClass": "Free",
+    "panel": "Connected Labs rendered with source-specific and all-source stop controls",
+    "stopAction": "Stop sharing Reality Map",
+    "stopResult": "Reality Map sharing has stopped on this browser. Your saved Lab records have not changed. Other devices keep their own sharing choices.",
+    "ordinaryAccountSavingAfterStop": "Saved",
+    "logout": "Logged out; guest workspace; Saved on this device",
+    "guestStopResult": "Sign in to the same account in NeuForm and Strength Lab to manage sharing.",
+    "limits": [
+      "No previously populated active source record was used",
+      "No second real account switch acceptance",
+      "No live two-device acceptance",
+      "Storage failure and concurrent-tab scenarios tested synthetically"
+    ],
+    "consoleObservation": "Recent post-action error/warning sample contained extension metadata errors only; no app error was present in that sample"
+  },
+  "tests": {
+    "sharedBridgeAndConsumer": {
+      "passed": 40,
+      "failed": 0
+    },
+    "maintainedStrength": {
+      "passed": 267,
+      "failed": 0
+    },
+    "builderNoOp": "passed",
+    "packageVerifier": "passed",
+    "websiteSelfcheck": "6 unchanged baseline failures"
+  },
+  "realityTypes": {
+    "deployment": "dpl_3DgP71rzjJPJVv18zcsm9Z3vLJnD",
+    "deploymentState": "READY",
+    "healthAt": "2026-09-29T17:33:58Z",
+    "healthStatus": 200,
+    "healthSchema": "nf_reality_types_health_v1"
+  },
+  "repositoryHandoff": {
+    "websiteFilesPR": 14,
+    "strengthPR": 434,
+    "merged": false,
+    "githubActions": {
+      "codeCommit": "6c8e12367774fd75f38c7c0fcf2d637936bf6076",
+      "failedJobs": 10,
+      "inspectedRun": 36603420440,
+      "initialJob": 109526255011,
+      "runnerId": 0,
+      "executedSteps": 0,
+      "retriedJob": 109532014102,
+      "retryConclusion": "failure",
+      "mainAlsoHasFailedChecks": true,
+      "exactCause": "GitHub job annotation: recent account payments failed or spending limit needs to increase; job was not started",
+      "verifiedThrough": "Authenticated GitHub job annotations after secure browser sign-in",
+      "annotationUrl": "https://github.com/Chriswelch3254/NeuformFitnessApp/actions/runs/36603420440/job/109526255011",
+      "billingConditionInspected": false,
+      "billingSettingsChanged": false
+    },
+    "nutritionVercel": {
+      "preview": "dpl_AmFxFojNchtiHE5TeF2fcvXBegaF",
+      "existingMainAttempt": "dpl_CtPBAczBq3fGGBMw11q9kLat1eL9",
+      "bothState": "ERROR",
+      "bothFailingCommand": "node scripts/run-one-pass-release-build.mjs",
+      "buildLogs": "connector unavailable",
+      "underlyingCause": "unconfirmed"
+    },
+    "protectionBypassed": false
+  },
+  "nextPhase": {
+    "started": false,
+    "blockedUntil": "Resolve source handoff checks; establish source-owned publishers, purpose/expiry and verified access before activating connected context"
+  }
+}
