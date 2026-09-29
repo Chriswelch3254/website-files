@@ -1,0 +1,377 @@
+DLTER Reality Types Template Authority Embed
+LIVE WEBFLOW MIRROR
+Webflow Page ID: 692cde9c78f04f76b05e3f50
+Webflow Element ID: 920f4ef8-4870-e086-5693-ad2b1e8d15a3
+Experience layer: 3.2.1
+Synced: 2026-09-29
+Authority note: This file mirrors the production on-page authority embed. Historical-purchase guards are intentional.
+
+<!-- Reality Types V3 page-mode authority v1.0.0 -->
+<script>(()=>{"use strict";var w=window,L=w.location,D=w.document;if(!L.pathname.startsWith("/dlter-reality-types/")||w.__NF_RT_PAGE_MODE_AUTHORITY_V1__)return;var q=new URLSearchParams(L.search),x=(q.get("attempt")||q.get("attemptId")||"").trim(),u=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(x)?x:"",l=q.get("legacy")==="1",f=q.get("from")==="library",m=u?"saved-attempt":l?"historical-purchase":"reference-or-local",a=Object.freeze({version:"1.0.0",mode:m,attemptId:u,legacyRequested:l,fromLibrary:f});w.__NF_RT_PAGE_MODE_AUTHORITY_V1__=a;w.__NF_RT_LEGACY_BLUEPRINT_RENDERER_V1__=1;w.__NF_RT_LEGACY_BLUEPRINT_ISOLATION_V1__=1;if(m==="historical-purchase"){w.__NF_REALITY_TYPES_RESULT_V3__=!0;w.__NF_RT_BLUEPRINT_RENDERER_V1__=!0}else if(m==="reference-or-local"&&f){q.delete("from");var s=q.toString();w.history.replaceState(null,"",L.pathname+(s?"?"+s:"")+(L.hash||""))}function r(){D.documentElement.setAttribute("data-rt-page-mode",m);D.documentElement.setAttribute("data-rt-page-mode-version","1.0.0");if(D.body){D.body.setAttribute("data-rt-page-mode",m);D.body.setAttribute("data-rt-page-mode-version","1.0.0")}}r();D.body||D.addEventListener("DOMContentLoaded",r,{once:!0});D.dispatchEvent(new w.CustomEvent("rt:pageModeResolved",{detail:a}))})();</script>
+<!-- TEMP staging-only local-result QA fixture; remove before production -->
+<script id="nf-rt-staging-local-fixture-v1">(function(){
+"use strict";
+try{
+if(!/\.webflow\.io$/i.test(location.hostname)||!new URLSearchParams(location.search).has("nf_rt_fixture"))return;
+var slug=(document.documentElement.getAttribute("data-wf-item-slug")||location.pathname.split("/").filter(Boolean).pop()||"").toLowerCase();
+if(slug!=="structured-empathic-lens")return;
+var now=Date.now(),packet={schema:"nf.realityTypes.result.v2",assessment_version:"rt2.0",instrument_version:"rt-48-2026-08-04-v1",scoring_model_version:"rt2-archetypes-1.0",completed_at:new Date(now).toISOString(),completed_at_ms:now,expires_at_ms:now+86400000,duration_ms:180000,type_slug:slug,type_name:"The Structured Insight Lens",type_code:"IN-ST-TR",model_signature:"qa-fixture",saved:false,save_status:"local_only",scores:{RS:83,EC:47,SA:72,AR:55,CP:61,TR:76,BS:67,FS:63,ID:70},primary:{slug:slug,name:"The Structured Insight Lens",code:"IN-ST-TR",distance:9},resonances:[{slug:"internal-alchemist",name:"The Internal Alchemist",code:"IN-FL-TR",distance:15},{slug:"axis-synthesizer",name:"The Axis Synthesizer",code:"IN-(ST/FL)-TR",distance:21}],convergence:{label:"clear",margin:6,best_distance:9,differentiation:6},response_quality:{status:"interpretable",longest_same_response_run:3,most_used_response_count:12,response_sd:1.4}};
+var raw=JSON.stringify(packet);localStorage.setItem("nf.realityTypes.lastResult.v2",raw);sessionStorage.setItem("nf.realityTypes.lastResult.v2",raw);window.__DLTER_LAST_RESULT__={type_slug:packet.type_slug,type_code:packet.type_code,type_name:packet.type_name,quiz_version:packet.assessment_version,result_packet:packet};
+}catch(e){console.warn("RT staging fixture failed",e)}
+})();</script>
+<!-- /TEMP staging-only local-result QA fixture -->
+<!-- Reality Types reduced-motion root guard v1.0.0 -->
+<script>(function(){
+  "use strict";
+  if(window.__NF_RT_REDUCED_MOTION_ROOT_V1__) return;
+  window.__NF_RT_REDUCED_MOTION_ROOT_V1__ = true;
+  var query = "(prefers-reduced-motion: reduce)";
+  var media = typeof window.matchMedia === "function" ? window.matchMedia(query) : null;
+  var root = document.documentElement;
+  function apply(){
+    if(!root) root = document.documentElement;
+    if(!root) return;
+    if(media && media.matches){
+      root.style.setProperty("scroll-behavior","auto","important");
+      root.setAttribute("data-nf-rt-reduced-motion-root","true");
+    }else if(root.getAttribute("data-nf-rt-reduced-motion-root") === "true"){
+      root.style.removeProperty("scroll-behavior");
+      root.removeAttribute("data-nf-rt-reduced-motion-root");
+    }
+  }
+  apply();
+  if(media){
+    if(typeof media.addEventListener === "function") media.addEventListener("change",apply);
+    else if(typeof media.addListener === "function") media.addListener(apply);
+  }
+  window.addEventListener("pageshow",apply);
+})();</script>
+
+
+<!-- Reality Types experience layer 3.2.1 -->
+<style id="nf-rt-experience-v320">
+html body.dlter-type-body #rt-overview-view>#rt32-guide{grid-column:1/-1!important;order:16!important;width:100%!important;margin:0!important}
+html body.dlter-type-body .rt32-guide{display:grid;gap:16px;padding:clamp(19px,2.6vw,28px);border:1px solid rgba(121,200,255,.20);border-radius:18px;background:radial-gradient(540px 180px at 0 0,rgba(52,152,219,.075),transparent 72%),linear-gradient(180deg,rgba(10,29,41,.90),rgba(7,20,30,.88));box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025)}
+html body.dlter-type-body .rt32-guide__head{display:grid;gap:7px;max-width:78ch}
+html body.dlter-type-body .rt32-guide__eyebrow{color:#79c8ff;font:800 .76rem/1.2 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+html body.dlter-type-body .rt32-guide__title{margin:0;color:#f8fafc;font:800 clamp(1.25rem,2vw,1.65rem)/1.18 "Plus Jakarta Sans",Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__intro{margin:0;color:rgba(203,218,228,.82);font:500 .93rem/1.62 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+html body.dlter-type-body .rt32-guide__step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:11px;align-items:start;min-width:0;padding:14px;border:1px solid rgba(148,163,184,.15);border-radius:13px;background:rgba(3,11,18,.38)}
+html body.dlter-type-body .rt32-guide__num{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(121,200,255,.28);border-radius:10px;background:rgba(52,152,219,.10);color:#79c8ff;font:900 .78rem/1 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__step strong{display:block;margin:0 0 4px;color:#f8fafc;font:800 .88rem/1.3 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__step p{margin:0;color:rgba(188,203,214,.78);font:500 .80rem/1.52 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__boundary{margin:0;color:rgba(188,203,214,.76);font:500 .78rem/1.5 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-guide__boundary strong{color:rgba(226,236,243,.92)}
+html body.dlter-type-body .rt32-guide__boundary a{color:#79c8ff;font-weight:750;text-decoration:none}
+html body.dlter-type-body .rt32-guide__boundary a:hover{text-decoration:underline}
+html body.dlter-type-body .rt32-nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:2px}
+html body.dlter-type-body .rt32-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border:1px solid rgba(148,163,184,.18);border-radius:999px;background:rgba(255,255,255,.025);color:rgba(226,236,243,.88);font:750 .76rem/1.2 Inter,system-ui,sans-serif;text-decoration:none;transition:border-color .18s ease,background .18s ease,color .18s ease,transform .18s ease}
+html body.dlter-type-body .rt32-nav a:hover{border-color:rgba(121,200,255,.44);background:rgba(52,152,219,.08);color:#fff;transform:translateY(-1px)}
+html body.dlter-type-body :is(#rt-reality-map-section,#rt-match-section,#rt-native-section,#rt-verification,#rt-experiment-section,#rt-blueprint-offer-section){scroll-margin-top:calc(var(--nf-site-nav-offset,68px) + 20px)}
+html body.dlter-type-body .rt32-boundary{display:grid;gap:5px;margin:0 0 16px;padding:13px 15px;border:1px solid rgba(242,200,100,.20);border-left:3px solid rgba(242,200,100,.72);border-radius:11px;background:rgba(242,200,100,.035)}
+html body.dlter-type-body .rt32-boundary strong{color:#f4d98a;font:800 .78rem/1.25 Inter,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+html body.dlter-type-body .rt32-boundary p{margin:0;color:rgba(203,218,228,.82);font:500 .82rem/1.56 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-boundary a{color:#79c8ff;font-weight:750;text-decoration:none}
+html body.dlter-type-body .rt32-boundary a:hover{text-decoration:underline}
+html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] .rt-blueprint-copy>p{max-width:68ch}
+html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] #rt-blueprint-personalized-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;margin-top:17px}
+html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] #rt-blueprint-personalized-list li{min-width:0}
+html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] .dlter-price-card{align-self:stretch}
+html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] .rt-purchase-note{margin-top:16px}
+html body.dlter-type-body[data-rt-presentation-state="public-reference"] #rt-match-section .rt-match-grid.is-reference{grid-template-columns:1fr!important}\nhtml body.dlter-type-body[data-rt-presentation-state="public-reference"] #rt-match-section .rt-match-grid.is-reference>div:last-child{display:none!important}\nhtml body.dlter-type-body[data-rt-presentation-state="public-reference"] #rt-match-section .rt-primary-match{width:100%!important;max-width:none!important}\nhtml body.dlter-type-body #rt-overview-view>#rt-experiment-section{grid-column:1/-1!important;width:100%!important}
+html body.dlter-type-body #rt-experiment-section .rt-experiment{width:100%!important}
+html body.dlter-type-body .rt32-score-note{display:flex;gap:10px;align-items:flex-start;margin:13px 0 0;padding:11px 13px;border:1px solid rgba(121,200,255,.16);border-radius:11px;background:rgba(52,152,219,.045);color:rgba(203,218,228,.82);font:500 .79rem/1.52 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-score-note strong{flex:0 0 auto;color:#79c8ff;font-weight:800}
+html body.dlter-type-body #rt-overview-view>#rt32-explore-profiles{grid-column:1/-1!important;order:58!important;width:100%!important;margin:0!important}
+html body.dlter-type-body .rt32-explore{overflow:hidden;border:1px solid rgba(148,163,184,.17);border-radius:16px;background:rgba(6,17,26,.62);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+html body.dlter-type-body .rt32-explore>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:14px 17px;cursor:pointer;list-style:none;color:#f8fafc;font:800 .91rem/1.3 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-explore>summary::-webkit-details-marker{display:none}
+html body.dlter-type-body .rt32-explore>summary::after{content:"+";display:grid;place-items:center;flex:0 0 auto;width:28px;height:28px;border:1px solid rgba(121,200,255,.22);border-radius:9px;color:#79c8ff;font-size:1rem}
+html body.dlter-type-body .rt32-explore[open]>summary::after{content:"–"}
+html body.dlter-type-body .rt32-explore__body{display:grid;gap:13px;padding:0 17px 17px}
+html body.dlter-type-body .rt32-explore__intro{margin:0;color:rgba(188,203,214,.78);font:500 .80rem/1.52 Inter,system-ui,sans-serif}
+html body.dlter-type-body .rt32-explore__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+html body.dlter-type-body .rt32-explore__link{display:flex;align-items:center;min-height:43px;padding:10px 12px;border:1px solid rgba(148,163,184,.14);border-radius:10px;background:rgba(255,255,255,.018);color:rgba(226,236,243,.88);font:700 .78rem/1.28 Inter,system-ui,sans-serif;text-decoration:none}
+html body.dlter-type-body .rt32-explore__link:hover{border-color:rgba(121,200,255,.38);background:rgba(52,152,219,.07);color:#fff}
+html body.dlter-type-body .rt32-explore__link[aria-current="page"]{border-color:rgba(242,200,100,.30);background:rgba(242,200,100,.055);color:#f4d98a}
+html body.dlter-type-body #rt-overview-view>#rt32-public-blueprint{grid-column:1/-1!important;order:59!important;width:100%!important;margin:0!important}\nhtml body.dlter-type-body #rt32-public-blueprint{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.34fr);gap:22px;align-items:center;padding:clamp(22px,3.2vw,34px);border:1px solid rgba(242,200,100,.24);border-radius:18px;background:radial-gradient(620px 220px at 0 0,rgba(242,200,100,.075),transparent 72%),linear-gradient(180deg,rgba(14,27,35,.96),rgba(7,19,28,.94));box-shadow:0 16px 42px rgba(0,0,0,.26)}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__copy{display:grid;gap:8px;min-width:0}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__eyebrow{color:#f4d98a;font:850 .75rem/1.2 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+html body.dlter-type-body #rt32-public-blueprint h2{margin:0;color:#f8fafc;font:800 clamp(1.45rem,2.6vw,2rem)/1.12 "Plus Jakarta Sans",Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-public-blueprint p{margin:0;max-width:72ch;color:rgba(203,218,228,.84);font:500 .92rem/1.62 Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-public-blueprint ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px;margin:7px 0 0;padding-left:18px;color:rgba(226,236,243,.88);font:550 .82rem/1.5 Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__cta{display:grid;gap:9px;align-content:center;padding:16px;border:1px solid rgba(242,200,100,.20);border-radius:14px;background:rgba(0,0,0,.18)}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__price{color:#fff;font:850 1.65rem/1 "Plus Jakarta Sans",Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__price small{display:block;margin-bottom:5px;color:rgba(188,203,214,.76);font:750 .72rem/1.2 Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:11px 15px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:linear-gradient(180deg,#3498db,#2d86c2);color:#fff;font:850 .84rem/1.2 Inter,system-ui,sans-serif;text-decoration:none;box-shadow:0 10px 22px rgba(52,152,219,.20)}
+html body.dlter-type-body #rt32-public-blueprint .rt32-public-blueprint__note{color:rgba(188,203,214,.72);font:500 .74rem/1.45 Inter,system-ui,sans-serif}
+@media(max-width:760px){html body.dlter-type-body #rt32-public-blueprint{grid-template-columns:1fr;padding:20px 16px}html body.dlter-type-body #rt32-public-blueprint ul{grid-template-columns:1fr}}
+html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-result-state,html body.dlter-type-body[data-rt32-saved-auth="true"] .rt-result-actions,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-personal-banner,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-reference-banner,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt32-guide,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt32-explore-profiles,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-reality-map-section,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-match-section,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-native-section,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-verification,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-experiment-section,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-blueprint-offer-section,html body.dlter-type-body[data-rt32-saved-auth="true"] #rt-result-recovery{display:none!important}
+html body.dlter-type-body #rt32-saved-auth-gate{grid-column:1/-1!important;order:16!important;display:grid;gap:10px;padding:clamp(20px,3vw,30px);border:1px solid rgba(121,200,255,.24);border-left:3px solid #3498db;border-radius:18px;background:radial-gradient(620px 220px at 0 0,rgba(52,152,219,.09),transparent 72%),rgba(7,20,30,.92);box-shadow:0 16px 40px rgba(0,0,0,.28)}
+html body.dlter-type-body #rt32-saved-auth-gate[hidden]{display:none!important}
+html body.dlter-type-body #rt32-saved-auth-gate h2{margin:0;color:#f8fafc;font:800 clamp(1.35rem,2.4vw,1.8rem)/1.15 "Plus Jakarta Sans",Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-saved-auth-gate p{margin:0;max-width:72ch;color:rgba(203,218,228,.84);font:500 .92rem/1.62 Inter,system-ui,sans-serif}
+html body.dlter-type-body #rt32-saved-auth-gate .rt32-auth-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px}
+html body.dlter-type-body #rt32-saved-auth-gate :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border-radius:10px;border:1px solid rgba(121,200,255,.24);background:rgba(52,152,219,.10);color:#f8fafc;font:800 .82rem/1.2 Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer}
+html body.dlter-type-body[data-rt32-public-authority="true"] #rt-result-recovery{display:none!important}
+@media(max-width:760px){html body.dlter-type-body .rt32-guide{padding:18px 15px;border-radius:15px}html body.dlter-type-body .rt32-guide__steps{grid-template-columns:1fr}html body.dlter-type-body .rt32-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}html body.dlter-type-body .rt32-nav a{width:100%;min-height:44px}html body.dlter-type-body #rt-blueprint-offer-section[data-rt32-offer="1"] #rt-blueprint-personalized-list{grid-template-columns:1fr}html body.dlter-type-body .rt32-explore__grid{grid-template-columns:repeat(2,minmax(0,1fr))}html body.dlter-type-body .rt32-score-note{display:grid;gap:4px}}
+@media(max-width:430px){html body.dlter-type-body .rt32-nav{grid-template-columns:1fr}html body.dlter-type-body .rt32-explore__grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html body.dlter-type-body .rt32-nav a{transition:none!important}}
+@media print{html body.dlter-type-body #rt32-guide,html body.dlter-type-body #rt32-explore-profiles,html body.dlter-type-body .rt32-boundary{display:none!important}}
+</style>
+<script id="nf-rt-experience-js-v320">
+(function(){
+"use strict";
+if(window.__NF_RT_EXPERIENCE_V320__)return;
+window.__NF_RT_EXPERIENCE_V320__=true;
+var VERSION="3.2.1",PATH_PREFIX="/dlter-reality-types/",queued=false;
+function clean(v){return String(v==null?"":v).replace(/\s+/g," ").trim()}
+function byId(id){return document.getElementById(id)}
+function body(){return document.body}
+function setText(node,value){if(node&&clean(node.textContent)!==value)node.textContent=value}
+function state(){return clean(body()&&body().getAttribute("data-rt-presentation-state"))}
+function mode(){try{var a=window.__NF_RT_PAGE_MODE_AUTHORITY_V1__;if(a&&a.mode)return clean(a.mode)}catch(_){}return clean(body()&&body().getAttribute("data-rt-page-mode"))||clean(document.documentElement.getAttribute("data-rt-page-mode"))}
+function supported(){return String(location.pathname||"").indexOf(PATH_PREFIX)===0}
+function historical(){return state()==="historical-purchase"||mode()==="historical-purchase"}
+function personal(){var s=state();return s==="saved-result"||s==="local-result"||(body()&&body().classList.contains("rt-has-personal-result"))}
+function shellMember(){return clean(body()&&body().getAttribute("data-rt-template-shell-member")).toLowerCase()}
+function shellState(){return clean(body()&&body().getAttribute("data-rt-template-shell-state")).toLowerCase()}
+function savedAuthBlocked(){return mode()==="saved-attempt"&&(shellMember()==="absent"||shellState()==="signup-required"||shellState()==="signup-unavailable")}
+function publicReference(){return state()==="public-reference"&&mode()==="reference-or-local"}
+function handoffPublicAuthority(){
+if(!publicReference()||historical())return;
+if(clean(body()&&body().getAttribute("data-rt-presentation-lifecycle"))!=="settled")return;
+if(body().getAttribute("data-rt32-public-authority")==="true")return;
+try{var api=window.__NF_RT_PUBLIC_CLARITY_V160__;if(api&&typeof api.destroy==="function")api.destroy()}catch(_){}
+body().setAttribute("data-rt32-public-authority","true")
+}
+function setAuthHidden(hidden){
+var selector="#rt-result-state,.rt-result-actions,#rt-personal-banner,#rt-reference-banner,#rt32-guide,#rt32-explore-profiles,#rt-reality-map-section,#rt-match-section,#rt-native-section,#rt-verification,#rt-experiment-section,#rt-blueprint-offer-section,#rt-result-recovery";
+if(hidden){
+document.querySelectorAll(selector).forEach(function(el){el.setAttribute("data-rt32-auth-hidden","1");el.setAttribute("aria-hidden","true");el.setAttribute("inert","");el.style.setProperty("display","none","important")})
+}else{
+document.querySelectorAll("[data-rt32-auth-hidden='1']").forEach(function(el){el.removeAttribute("data-rt32-auth-hidden");el.removeAttribute("aria-hidden");el.removeAttribute("inert");el.style.removeProperty("display")})
+}
+}
+function ensureSavedAuthGate(){
+var root=byId("rt-overview-view");if(!root||historical())return;
+var blocked=savedAuthBlocked(),gate=byId("rt32-saved-auth-gate");
+if(!blocked){body().removeAttribute("data-rt32-saved-auth");setAuthHidden(false);if(gate)gate.hidden=true;return}
+body().setAttribute("data-rt32-saved-auth","true");
+if(!gate){
+gate=document.createElement("section");gate.id="rt32-saved-auth-gate";gate.setAttribute("aria-labelledby","rt32-saved-auth-title");
+gate.innerHTML='<h2 id="rt32-saved-auth-title">Sign in to view this saved Reality Map</h2><p>This link points to an account-protected result. Sign in with the NeuForm account that owns it. No personal scores are shown until access is verified.</p><div class="rt32-auth-actions"><button type="button" data-rt32-login>Sign in</button><a href="/library">Open My Library</a><a href="/support">Open Support</a></div>';
+var hero=root.querySelector(":scope>.rt-result-hero")||root.querySelector(".rt-result-hero");if(hero)hero.insertAdjacentElement("afterend",gate);else root.insertBefore(gate,root.firstChild);
+gate.querySelector("[data-rt32-login]").addEventListener("click",function(){var login=byId("rt-login-result");if(login){login.hidden=false;login.click();return}try{if(window.$memberstackDom&&typeof window.$memberstackDom.openModal==="function"){window.$memberstackDom.openModal("LOGIN");return}}catch(_){}location.href="/library"})
+}
+gate.hidden=false;gate.removeAttribute("aria-hidden");gate.removeAttribute("inert");gate.style.removeProperty("display");
+setAuthHidden(true)
+}
+function upgradeReferenceMapCopy(){
+if(!publicReference())return;
+setText(byId("rt-map-heading"),"Reference Reality Map");
+setText(byId("rt-map-intro"),"These nine values describe this reference profile. They are not your personal assessment scores.");
+setText(byId("rt-mode-heading"),"Six reference tendencies");
+setText(byId("rt-mode-intro"),"Each value shows how strongly a tendency is represented in this profile. Higher is not better.");
+setText(byId("rt-coordination-heading"),"Three coordination scores");
+setText(byId("rt-coordination-intro"),"These values describe how the paired tendencies are expected to coordinate in this reference profile.")
+}
+function currentTypeSlug(){
+var slug=clean(body()&&body().getAttribute("data-reality-type")).toLowerCase();
+if(!slug)slug=clean(document.documentElement.getAttribute("data-wf-item-slug")).toLowerCase();
+if(!slug){var parts=String(location.pathname||"").split("/").filter(Boolean);slug=clean(parts[parts.length-1]).toLowerCase()}
+return slug
+}
+function lockedNameSpan(current){
+var wrap=document.createElement("span");wrap.setAttribute("data-rt32-name-lock","1");
+var words=current.split(/\s+/),tail=words.pop()||"",head=words.join(" ");
+var a=document.createElement("span"),b=document.createElement("span");
+a.textContent=head+(head?" ":"");b.textContent=tail;wrap.appendChild(a);wrap.appendChild(b);return wrap
+}
+function lockNameText(root,def){
+if(!root||typeof NodeFilter==="undefined")return;
+var oldShort=def.oldShort,currentShort=def.current.replace(/^The\s+/,"");
+var candidates=[
+{from:def.oldFull,to:def.current},{from:oldShort,to:currentShort},
+{from:def.current,to:def.current},{from:currentShort,to:currentShort}
+];
+var nodes=[],walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(node){
+var parent=node.parentElement;
+if(!parent||parent.closest("[data-rt32-name-lock]")||/^(?:SCRIPT|STYLE|NOSCRIPT|TEXTAREA)$/i.test(parent.tagName))return NodeFilter.FILTER_REJECT;
+var value=String(node.nodeValue||"");
+for(var i=0;i<candidates.length;i++)if(value.indexOf(candidates[i].from)!==-1)return NodeFilter.FILTER_ACCEPT;
+return NodeFilter.FILTER_REJECT
+}});
+var node=walker.nextNode();while(node){nodes.push(node);node=walker.nextNode()}
+nodes.forEach(function(textNode){
+var value=String(textNode.nodeValue||""),frag=document.createDocumentFragment(),cursor=0,changed=false;
+while(cursor<value.length){
+var best=null,bestIndex=-1;
+for(var i=0;i<candidates.length;i++){var at=value.indexOf(candidates[i].from,cursor);if(at!==-1&&(bestIndex===-1||at<bestIndex)){best=candidates[i];bestIndex=at}}
+if(!best){frag.appendChild(document.createTextNode(value.slice(cursor)));break}
+if(bestIndex>cursor)frag.appendChild(document.createTextNode(value.slice(cursor,bestIndex)));
+frag.appendChild(lockedNameSpan(best.to));cursor=bestIndex+best.from.length;changed=true
+}
+if(changed&&textNode.parentNode)textNode.parentNode.replaceChild(frag,textNode)
+})
+}
+function normalizeCurrentNames(){
+if(historical())return;
+var defs={
+"structured-empathic-lens":{current:"The Structured Insight Lens",oldFull:"The Structured Empathic Lens",oldShort:"Structured Empathic Lens"},
+"resonant-fieldholder":{current:"The Resonant Integrator",oldFull:"The Resonant Fieldholder",oldShort:"Resonant Fieldholder"}
+};
+var def=defs[currentTypeSlug()];if(!def)return;
+lockNameText(byId("rt-match-section"),def);
+lockNameText(byId("rt-native-section"),def);
+lockNameText(byId("rt-blueprint-runtime"),def);
+lockNameText(byId("rt32-explore-profiles"),def)
+}
+function track(action,label,destination){try{if(window.neuform&&typeof window.neuform.track==="function")window.neuform.track("nf_reality_types_template_action",{action:action,label:clean(label).slice(0,120),destination:destination||"",nf_template_version:VERSION})}catch(_){}}
+function guideMarkup(p){
+var head=p?"How to use your Reality Map":"How to use this reference page";
+var intro=p?"Start with the nine scores, then use the type as a compact summary. The useful result is the pattern you can test against repeated experience.":"This page describes one of 12 comparison profiles. Use it to understand the framework, then take the free assessment to compare it with your own nine-score map.";
+var steps=p?[["01","Read the map","Start with all nine scores. They are separate tendencies and coordination measures, not grades."],["02","Use the type as a summary","Compare the closest reference with recurring examples from your life. Keep your scores more important than the label."],["03","Test one idea","Try one small change for seven days. Keep the interpretation only when it helps you notice or do something useful."]]:[["01","Read the reference","Notice which tendencies are emphasized and how the three domains are organized."],["02","Compare carefully","Treat the description as a hypothesis, not a verdict about who you are."],["03","Get your own map","Take the free assessment for six tendency scores, three coordination scores, and your closest reference matches."]];
+var stepHtml=steps.map(function(item){return '<div class="rt32-guide__step"><span class="rt32-guide__num">'+item[0]+'</span><div><strong>'+item[1]+'</strong><p>'+item[2]+'</p></div></div>'}).join("");
+var action=p?'<a href="#rt-reality-map-section" data-rt32-action="map">Start with my map</a>':'<a href="/dlter-quiz" data-rt32-action="assessment">Take the free assessment</a>';
+return '<div class="rt32-guide__head"><span class="rt32-guide__eyebrow">Reality Types reading guide</span><h2 class="rt32-guide__title">'+head+'</h2><p class="rt32-guide__intro">'+intro+'</p></div><div class="rt32-guide__steps">'+stepHtml+'</div><p class="rt32-guide__boundary"><strong>Boundary:</strong> Reality Types is an interpretive, educational reflection tool. It is not therapy, diagnosis, or a clinically validated personality test. <a href="/dlter-explained" data-rt32-action="explainer">See how the framework works</a>.</p><nav class="rt32-nav" aria-label="Reality Types page sections">'+action+'<a href="#rt-match-section" data-rt32-target="rt-match-section">Reference pattern</a><a href="#rt-native-section" data-rt32-target="rt-native-section">Everyday reflection</a><a href="#rt-experiment-section" data-rt32-target="rt-experiment-section">7-day experiment</a><a href="#rt-blueprint-offer-section" data-rt32-target="rt-blueprint-offer-section">Personal Blueprint</a></nav>'
+}
+function ensureGuide(){
+var root=byId("rt-overview-view");if(!root||historical())return;
+var guide=byId("rt32-guide"),desired=personal()?"personal":"reference";
+if(!guide){guide=document.createElement("section");guide.id="rt32-guide";guide.className="rt32-guide";guide.setAttribute("aria-label","How to use this Reality Types page");var hero=root.querySelector(":scope>.rt-result-hero")||root.querySelector(".rt-result-hero");if(hero)hero.insertAdjacentElement("afterend",guide);else root.insertBefore(guide,root.firstChild)}
+if(guide.getAttribute("data-rt32-mode")!==desired){guide.setAttribute("data-rt32-mode",desired);guide.innerHTML=guideMarkup(desired==="personal")}
+}
+function syncNav(){
+var guide=byId("rt32-guide");if(!guide)return;
+guide.querySelectorAll("[data-rt32-target]").forEach(function(link){var id=link.getAttribute("data-rt32-target"),target=byId(id),hidden=!target||target.hidden||target.getAttribute("aria-hidden")==="true";if(link.hidden!==hidden)link.hidden=hidden;link.setAttribute("aria-hidden",hidden?"true":"false");if(hidden)link.setAttribute("tabindex","-1");else link.removeAttribute("tabindex")})
+}
+function ensureBoundary(){
+var section=byId("rt-native-section");if(!section||historical()||section.querySelector(".rt32-boundary"))return;
+var head=section.querySelector(".rt-section-head"),note=document.createElement("div");note.className="rt32-boundary";note.innerHTML='<strong>Interpretation rule</strong><p>Treat these descriptions as possibilities to compare with repeated experience. A reference pattern can organize reflection, but it does not establish personality, mental health, ability, or relationship compatibility. <a href="/dlter-explained">Read the method and limits</a>.</p>';if(head)head.insertAdjacentElement("afterend",note);else section.insertBefore(note,section.firstChild)
+}
+function upgradeReferenceContext(){
+if(!publicReference())return;
+setText(byId("rt-reference-banner"),"This is one of 12 Reality Type reference profiles, not your personal result. Take the free assessment to compare it with your own nine-score Reality Map.");
+setText(byId("rt-result-kicker"),"Reality Type reference");
+setText(byId("rt-result-context"),"Reference pattern, not a personal result");
+setText(byId("rt-result-guidance"),"Read the reference map, compare it with recurring examples, then test one idea before deciding what is useful.");
+setText(byId("rt-result-version"),"Reference profile");
+setText(byId("rt-completed-at"),"Take the assessment for personal scores");setText(byId("rt-assessment-action"),"Take the Free Assessment");var recovery=byId("rt-result-recovery");if(recovery){recovery.hidden=true;recovery.setAttribute("aria-hidden","true");recovery.setAttribute("inert","")}
+}
+function ensureScoreNote(){
+if(historical())return;
+var section=byId("rt-reality-map-section"),intro=byId("rt-map-intro");if(!section||!intro)return;
+var note=byId("rt32-score-note");
+if(!note){note=document.createElement("p");note.id="rt32-score-note";note.className="rt32-score-note";intro.insertAdjacentElement("afterend",note)}
+var copy=personal()
+?"<strong>How to read the numbers</strong><span>Scores run from 0 to 100 and summarize this assessment response pattern. Higher is not better. The first six describe tendencies; the final three describe how related tendencies coordinate.</span>"
+:"<strong>How to read the numbers</strong><span>Scores run from 0 to 100 and describe this reference profile. Higher is not better. The first six describe tendencies; the final three describe how related tendencies coordinate.</span>";
+if(note.innerHTML!==copy)note.innerHTML=copy
+}
+function fixIdentityDomainHeading(){
+if(historical())return;
+document.querySelectorAll("#rt-mode-groups .rt-domain-head h3").forEach(function(heading){
+if(clean(heading.textContent).toLowerCase()!=="identity development")return;
+heading.textContent="Growing without losing yourself";
+heading.setAttribute("data-rt-plain-language","true");
+heading.setAttribute("title","Framework term: Identity development");
+var next=heading.nextElementSibling;
+if(!(next&&next.classList.contains("rt-framework-term"))){
+var note=document.createElement("small");note.className="rt-framework-term";note.textContent="Framework term: Identity development";heading.insertAdjacentElement("afterend",note)
+}
+})
+}
+function ensureExploreProfiles(){
+if(historical())return;
+var root=byId("rt-overview-view"),experiment=byId("rt-experiment-section");if(!root||!experiment)return;
+var host=byId("rt32-explore-profiles");
+if(!host){
+host=document.createElement("div");host.id="rt32-explore-profiles"
+}
+if(host.previousElementSibling!==experiment)experiment.insertAdjacentElement("afterend",host);
+if(host.getAttribute("data-rt32-ready")==="1")return;
+var profiles=[
+["inner-frameworker","The Inner Frameworker"],
+["internal-alchemist","The Internal Alchemist"],
+["dimensional-flowweaver","The Dimensional Flowweaver"],
+["external-catalyst","The External Catalyst"],
+["reality-architect","The Reality Architect"],
+["structured-empathic-lens","The Structured Insight Lens"],
+["analytical-evolver","The Analytical Evolver"],
+["fluxbound-weaver","The Fluxbound Weaver"],
+["axis-synthesizer","The Axis Synthesizer"],
+["resonant-fieldholder","The Resonant Integrator"],
+["dimensional-anchor","The Dimensional Anchor"],
+["horizon-breaker","The Horizon Breaker"]
+];
+var current=currentTypeSlug(),links=profiles.map(function(item){
+var currentAttr=item[0]===current?' aria-current="page"':"";
+return '<a class="rt32-explore__link" href="/dlter-reality-types/'+item[0]+'"'+currentAttr+'>'+item[1]+'</a>'
+}).join("");
+host.innerHTML='<details class="rt32-explore"><summary>Explore all 12 reference profiles</summary><div class="rt32-explore__body"><p class="rt32-explore__intro">Reference profiles are comparison landmarks, not categories you need to fit. Your nine scores remain the more precise result.</p><div class="rt32-explore__grid">'+links+'</div></div></details>';
+[["structured-empathic-lens","The Structured Insight Lens"],["resonant-fieldholder","The Resonant Integrator"]].forEach(function(item){
+var link=host.querySelector('a[href$="/'+item[0]+'"]');if(!link)return;
+link.textContent="";link.appendChild(lockedNameSpan(item[1]))
+});
+host.setAttribute("data-rt32-ready","1");
+host.addEventListener("click",function(event){var link=event.target&&event.target.closest&&event.target.closest("a");if(link)track("reference_profile_nav",link.textContent,link.getAttribute("href")||"")},{passive:true})
+}
+function ensurePublicBlueprintOffer(){
+var root=byId("rt-overview-view"),explore=byId("rt32-explore-profiles"),experiment=byId("rt-experiment-section"),host=byId("rt32-public-blueprint");
+if(!publicReference()||historical()){if(host)host.hidden=true;return}
+if(!root)return;
+if(!host){host=document.createElement("section");host.id="rt32-public-blueprint";host.setAttribute("aria-labelledby","rt32-public-blueprint-title")}
+var anchor=explore||experiment;
+if(anchor&&host.previousElementSibling!==anchor)anchor.insertAdjacentElement("afterend",host);
+else if(!anchor&&!host.parentNode)root.appendChild(host);
+var hero=document.querySelector(".dlter-hero-shell.rt-result-root,.rt-result-root"),price=clean(hero&&hero.getAttribute("data-rt-price-display"))||"$29";
+host.hidden=false;
+host.innerHTML='<div class="rt32-public-blueprint__copy"><span class="rt32-public-blueprint__eyebrow">Personal Reality Blueprint</span><h2 id="rt32-public-blueprint-title">Turn your own Reality Map into practical guidance</h2><p>The free assessment gives you six tendency scores, three coordination scores, and your closest reference matches. The Personal Reality Blueprint goes further with a 12-section, account-linked interpretation built from your saved map.</p><ul><li>All nine scores explained together</li><li>Closest matches and meaningful differences</li><li>Decision, stress, relationship, growth, and training reflections</li><li>Practical experiments and a focused 30-day direction</li></ul></div><div class="rt32-public-blueprint__cta"><div class="rt32-public-blueprint__price"><small>One-time purchase</small>'+price+'</div><a class="rt32-public-blueprint__button" href="/dlter-quiz" data-rt32-action="public_blueprint_assessment">Take the Free Assessment First</a><span class="rt32-public-blueprint__note">Account-linked web access. No subscription. Educational and nonclinical.</span></div>';
+if(host.getAttribute("data-rt32-bound")!=="1"){host.setAttribute("data-rt32-bound","1");host.addEventListener("click",function(event){var a=event.target&&event.target.closest&&event.target.closest("a");if(a)track("public_blueprint_assessment",a.textContent,a.getAttribute("href")||"")},{passive:true})}
+}
+function upgradeOffer(){
+var section=byId("rt-blueprint-offer-section");if(!section||historical())return;
+section.setAttribute("data-rt32-offer","1");
+setText(byId("rt-blueprint-heading"),"Go deeper with your Personal Reality Blueprint");
+setText(section.querySelector(".rt-blueprint-copy>p"),"A 12-section, account-linked guide built from your saved nine-score map. It explains the pattern in plain language, separates closest-match similarities from meaningful differences, and turns the result into practical reflection.");
+var price=clean((section.querySelector(".dlter-price-amount")||{}).textContent)||"$29";
+var note=section.querySelector(".rt-purchase-note");
+if(note&&note.getAttribute("data-rt32-note")!=="1"){note.innerHTML="<strong>"+price+" one-time.</strong> Account-linked web access. No subscription. Educational and nonclinical.";note.setAttribute("data-rt32-note","1")}
+setText(section.querySelector(".dlter-cta-note"),"One-time purchase. Account-linked web access. No subscription required.")
+}
+function augmentSchema(){
+if(historical())return;
+var script=byId("nf-rt-template-jsonld-v31");if(!script||script.getAttribute("data-rt32-schema")==="1")return;
+var data=null;try{data=JSON.parse(script.textContent||"")}catch(_){return}if(!data||!Array.isArray(data["@graph"]))return;
+var title=clean((document.querySelector("#rt-overview-view h1")||document.querySelector("h1")||{}).textContent);if(!title)return;
+var url=location.origin+location.pathname,desc=clean((document.querySelector('meta[name="description"]')||{}).content),id=url+"#reference-pattern";
+if(!data["@graph"].some(function(node){return node&&node["@id"]===id}))data["@graph"].push({"@type":"DefinedTerm","@id":id,"name":title,"description":desc,"url":url,"inDefinedTermSet":{"@type":"DefinedTermSet","@id":"https://www.neuform-fitness.com/dlter-explained#reality-types","name":"Reality Types by DLTER","url":"https://www.neuform-fitness.com/dlter-explained"}});
+data["@graph"].forEach(function(node){if(node&&node["@type"]==="WebPage"&&node.url===url)node.mainEntity={"@id":id}});
+script.textContent=JSON.stringify(data);script.setAttribute("data-rt32-schema","1")
+}
+function bindGuideTracking(){
+var guide=byId("rt32-guide");if(!guide||guide.getAttribute("data-rt32-bound")==="1")return;
+guide.setAttribute("data-rt32-bound","1");guide.addEventListener("click",function(event){var link=event.target&&event.target.closest&&event.target.closest("a");if(!link)return;track(link.getAttribute("data-rt32-action")||"section_nav",link.textContent,link.getAttribute("href")||"")},{passive:true})
+}
+function sync(){
+if(!supported()||!body()||historical())return;
+document.documentElement.setAttribute("data-rt-template-experience-version",VERSION);body().setAttribute("data-rt-template-experience-version",VERSION);
+handoffPublicAuthority();ensureSavedAuthGate();ensureGuide();ensureScoreNote();fixIdentityDomainHeading();ensureBoundary();upgradeReferenceContext();upgradeReferenceMapCopy();ensureExploreProfiles();ensurePublicBlueprintOffer();normalizeCurrentNames();upgradeOffer();syncNav();augmentSchema();bindGuideTracking()
+}
+function queue(){if(queued)return;queued=true;requestAnimationFrame(function(){queued=false;sync()})}
+function boot(){
+if(!supported()||!body())return;sync();
+var bodyObserver=new MutationObserver(queue);bodyObserver.observe(body(),{attributes:true,attributeFilter:["data-rt-presentation-state","data-rt-presentation-lifecycle","data-rt-page-mode","data-rt-blueprint-server-state","data-rt-template-shell-state","data-rt-template-shell-member"]});
+var root=byId("rt-overview-view");if(root){var domObserver=new MutationObserver(queue);domObserver.observe(root,{subtree:true,childList:true})}
+var resultState=byId("rt-result-state");if(resultState){var stateObserver=new MutationObserver(queue);stateObserver.observe(resultState,{subtree:true,childList:true,characterData:true})}
+var matchSection=byId("rt-match-section");if(matchSection){var matchObserver=new MutationObserver(queue);matchObserver.observe(matchSection,{subtree:true,childList:true,characterData:true})}
+document.addEventListener("rt:pageModeResolved",queue);document.addEventListener("rt:resultReady",queue);
+[180,500,1000,1800,3200,5200,7600,10000].forEach(function(ms){setTimeout(sync,ms)})
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot()
+})();
+</script>
+<!-- /Reality Types experience layer 3.2.1 -->
+
