@@ -1,6 +1,6 @@
 # Connected Labs Phase A: staged contract repair
 
-Status: **draft; not deployed and not ready for production publishing**. Verified 2026-09-29.
+Status: **coordinated candidate prepared; production acceptance pending**. Verified 2026-09-29.
 
 ## Current truth
 
@@ -62,7 +62,7 @@ Run:
 node --test scripts/nf-labs-contract.test.cjs scripts/nf-labs-strength-integration.test.cjs
 ```
 
-**39/39 passing** after the review fix pass. The original 21 bridge cases yielded 19 failures / 2 passes against production. Seven added review regressions initially failed against the first draft. Five consumer integration cases initially failed against the captured production module. The tests now cover the reported defects and preserve complete non-context domain state.
+**40/40 passing** after the review fix pass. The original 21 bridge cases yielded 19 failures / 2 passes against production. Seven added review regressions initially failed against the first draft. Five consumer integration cases initially failed against the captured production module. The tests now cover the reported defects and preserve complete non-context domain state.
 
 Integration tests execute the edited module from the actual Webflow embed and eight unmodified captured production dependencies. Fixture hashes, source URL, and purpose are recorded in `scripts/fixtures/strength-live-20260929/manifest.json`. These are test fixtures, not another deployed engine. Synthetic entitled accounts prove contract behavior; they do not establish that real account entitlements are correct.
 
@@ -75,7 +75,7 @@ The repository's existing `node scripts/nf-selfcheck.js` has six unchanged basel
 1. Deploy bridge and Strength module together only after their actual UI callers use the awaited API and current tokens. The old generic `bridge/bridge` V1 publisher is explicitly rejected by the stricter bridge. No Nutrition, DLTER, or Readiness producer was fabricated. Their source-owner mapping, approved use, and user action remain required before they can share.
 2. Resolve canonical Strength identity/capability mapping against server-issued access. Its BFF currently supplies an opaque canonical namespace and Strength capabilities, while the global bridge uses the settled shared Memberstack member. These are not interchangeable identity proofs. Never invent a join, infer Nutrition permission from the bridge, or weaken the current paid-access checks.
 3. Define source-specific vocabularies and expiry policies with actual publishers. Add explicit customer controls and purpose restrictions before publishing new context.
-4. Verify signed-in, logout, account switch, simultaneous tabs, storage failures, and two-device behavior in staging. Browser observation covered the guest workspace and Data and Privacy panel. Automatic approval review rejected the “Connect DLTER context” click because it may initiate consent/sharing; it did not execute. No signed-in ownership or sharing-action acceptance is claimed.
+4. Verify signed-in, logout, account switch, simultaneous tabs, storage failures, and two-device behavior in staging. Browser observation covered the guest workspace and Data and Privacy panel. The user subsequently authorized the guest “Connect DLTER context” click. It executed and the UI refused it with `dual_pro_required`. The raw error exposed a customer-copy defect, now fixed in the maintained workflow. No signed-in ownership acceptance is claimed.
 5. Add truthful failure/retry UX for `cleanupPending`. If local writes and deletes fail, another tab can retain old data until durable cleanup succeeds. If session storage also fails, a client cannot guarantee persistence of the pending stop through reload. No success receipt is returned in those cases. Do not claim all-device stopping or synchronization from this local transport.
 6. Complete dynamic customer-language review. Static HTML scan across both Labs' marketing/workspace pages, Reality Types, quiz, Library, and Support found no listed jargon; this does not cover generated private states. Current code still contains “Sanitized Strength Signal”, “Context consent saved”, and “Prescriptions are unchanged”. The draft corrects the Nutrition “Both Pro Labs are connected” claim to say its connection has not been confirmed. Strength recommendations now use plain wording. The other flow-specific copy remains in the customer workflow/UI embeds and must be replaced with truthful plain English when those flows are implemented.
 7. Re-read live Webflow immediately before any draft update. Replace only the captured bridge and the two identified embed bodies; verify rollback preimages and publish only after the combined release passes.
@@ -108,10 +108,24 @@ CodeRabbit CLI was installed from its official source, but authentication return
 | Surface | Evidence | Status |
 | --- | --- | --- |
 | Nutrition and Strength marketing/workspace, Reality Types template, quiz, Library, Support | Static rendered-text scan excludes scripts, styles, templates, and noscript content; no listed internal jargon found. | Static check only. |
-| Strength Data and Privacy | Guest live UI displays “NeuForm Connections”, “Connect DLTER context”, “Preview Strength Signal”, and “Include sensitive exact fields”. | Reviewed; sharing click blocked, no consent changed. |
+| Strength Data and Privacy | Guest live UI displays “NeuForm Connections”, “Connect DLTER context”, “Preview Strength Signal”, and “Include sensitive exact fields”. | Guest click executed after explicit approval; UI rejected sharing. Persistence was not inspected. |
 | Strength connection feedback | Actual dynamic source contains “Sanitized Strength Signal”, “Context consent saved”, and “Prescriptions are unchanged”. | Required replacements: “Training summary ready”, “Your sharing choice was saved”, and “Your training plan has not changed”, with actual receipt/error handling. |
 | Strength recommendation text | Actual Labs Context module. | Draft plain-English changes included. |
 | Nutrition account header | Actual Integration Core used “Both Pro Labs are connected” for an unverified flag. | Draft says “Their connection has not been confirmed.” |
 | Signed-in private states and cleanup failures | Not exercised in browser. | Release gate; cannot claim the full language audit passed. |
 
 Phase A is **not released**. Phase B schema and new connected-product features have not started.
+
+## Continued execution: maintained-source integration
+
+The maintained Strength source was located in `Chriswelch3254/NeuformFitnessApp` at `4421b1d08b161a9b2af24dcacca8dbc11d6cb64d`. Its 68 live inline modules match the captured source. All fetched files were checked against current Git blob hashes before edits. The existing source builder reproduces its historical baseline exactly.
+
+Three module bodies now carry the candidate: Labs Context, Customer Workflows, and Data and Privacy UI. **267 Strength tests pass**, including seven new sharing workflow cases. The immutable hydration asset and all backend, auth, access, cloud and domain-engine source files are unchanged. The renderer says connected insights are not yet available and offers explicit per-source/all-source stopping on this browser. It reports success only after an awaited durable receipt and a current-account check. Exact-measurement download copy is now plain English.
+
+The server-issued Strength namespace can verify ownership for stopping through the existing `subject.memberDigestForId` mapping and live canonical proof. This does not prove Nutrition entitlement. Ruling: preserve the existing closed cross-Lab access gate and remove the unavailable connection offer until source-owned publishers and verified joint access exist. Cost: this foundation release does not activate connected insights or single-Pro Reality Map preferences.
+
+The release write list is exactly `docs/releases/connected-labs-phase-a-20260929/release.json`: site footer plus three Strength embeds and one Nutrition embed. Its before/after strings and hashes are rollback evidence. Fresh Webflow reads found a newer Results analytics allowlist in the site footer. It is preserved; only the NF_LABS script is replaced against the live footer. The separate live Review analytics allowlist in the site head is outside this release; the head is not written.
+
+The historical Strength builder reports 28 changed modules compared with its older reconstruction baseline; 25 are already deployed. Only three current module bodies change here. Its 50,000-character checks pass and the largest current replacement is under the limit. The production host policy only allows the exact production app origin, so Webflow's default staging subdomain cannot serve as signed-in Strength acceptance. That policy is preserved.
+
+Release gates 1–3 above now describe activation of future sharing sources, not an invitation to weaken the foundation repair. Phase A deliberately keeps new connections unavailable. Browser acceptance, exact provider readbacks, and production rollout evidence remain outstanding. Phase B has not started.

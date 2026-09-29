@@ -166,3 +166,11 @@ test('cleanup and reconnect cannot reuse a token from an earlier storage generat
   assert.equal(reload.api.getState().revision, stale.revision, 'regression fixture revisits the same numeric revision');
   assert.equal(await reload.api.writeNutritionSignal(stale), false);
 });
+
+test('ready status requires an initialized account record after storage failure', async () => {
+  const h = harness(); h.failWrites();
+  assert.equal(await h.ready(), false);
+  assert.equal(h.api.getStatus().ready, false);
+  h.failWrites(false); await h.api.retryCleanup();
+  assert.equal(h.api.getStatus().ready, true);
+});
