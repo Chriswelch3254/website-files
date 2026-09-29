@@ -1,1386 +1,2636 @@
 DLTER Collection Page Page Settings Code
+LIVE WEBFLOW MIRROR
+Shared template: Reality Types by DLTER
+Webflow Page ID: 692cde9c78f04f76b05e3f50
+Template source version: 1.7.1
+Presentation polish authority: 3.1.6
+Synced: 2026-09-28
+Authority note: This file mirrors the currently published Webflow collection-template page settings. Git history preserves prior versions.
 
-Head:
-<!-- Basic meta -->
+==============================
+HEAD
+==============================
+<!-- Reality Types collection template 1.7.1 -->
+<!-- Webflow supplies charset, document title, meta description, and CMS-bound Open Graph title and description. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="theme-color" content="#0b0f12">
+<meta name="theme-color" content="#07111a">
+<meta name="color-scheme" content="dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<!-- Open Graph (CMS-driven) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NeuForm Fitness">
 <meta property="og:url" content="https://www.neuform-fitness.com/dlter-reality-types/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
-<meta property="og:title" content="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | DLTER Reality Types">
-<meta property="og:description" content="{{wf {&quot;path&quot;:&quot;one-line-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
-<meta property="og:image" content="{{wf {&quot;path&quot;:&quot;social-share-card-image&quot;,&quot;type&quot;:&quot;ImageRef&quot;\} }}">
-<meta property="og:image:alt" content="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} — DLTER Reality Type">
+<!-- Static crawler-visible fallback until all 12 CMS social cards are populated. -->
+<meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="DLTER Reality Types | NeuForm Fitness">
 <meta property="og:locale" content="en_US">
 
-<!-- Twitter (CMS-driven) -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} | DLTER Reality Types">
-<meta name="twitter:description" content="{{wf {&quot;path&quot;:&quot;one-line-tagline&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
-<meta name="twitter:image" content="{{wf {&quot;path&quot;:&quot;social-share-card-image&quot;,&quot;type&quot;:&quot;ImageRef&quot;\} }}">
-<meta name="twitter:image:alt" content="{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }} — DLTER Reality Type">
+<meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
+<meta name="twitter:image:alt" content="DLTER Reality Types | NeuForm Fitness">
 
-<!-- Performance niceties -->
 <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://neuform-reality-types.vercel.app" crossorigin>
 
-<style>
-/* ===============================
-   DLTER TYPE PAGE — SCOPED TOKENS
-   =============================== */
+<style id="nf-rt-collection-shell-v120">
+html{
+  scroll-behavior:smooth;
+}
+
 body.dlter-type-body{
-  --dlter-hero-right-width:280px;
-  --dlter-gold:#FCD34D;
-  --dlter-gold-soft:rgba(252,211,77,.12);
-  --dlter-frame:rgba(148,163,184,.45);
-  --dlter-frame-strong:rgba(203,213,225,.65);
-  --dlter-frame-gold:rgba(252,211,77,.55);
-  --dlter-glow:rgba(252,211,77,.18);
-  --dlter-title-glyph-size:56px;
-  --dlter-title-glyph-radius:14px;
-  --dlter-axis-bar-height:110px;
-  --dlter-axis-average:50%;
-
-  /* Default sticky top for wide screens (adjust once if nav height changes) */
-  --dlter-sticky-top: 92px;
-
-  /* Ensure native UI matches dark theme */
-  color-scheme:dark;
-
-  /* HS-1: do NOT wipe global background image layers; only set background-color */
-  background-color:#000;
-  color:rgba(243,244,246,.96);
-}
-
-/* HS-2: ambient field (scoped to DLTER type pages) */
-body.dlter-type-body::before,
-body.dlter-type-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
-}
-body.dlter-type-body::before{
-  background:
-    radial-gradient(1200px 600px at 22% 8%, rgba(252,211,77,.10), transparent 60%),
-    radial-gradient(900px 520px at 78% 18%, rgba(56,189,248,.08), transparent 62%),
-    radial-gradient(1200px 800px at 50% 92%, rgba(148,163,184,.06), transparent 65%);
-  opacity:.9;
-}
-body.dlter-type-body::after{
-  background:
-    radial-gradient(900px 520px at 50% 0%, rgba(0,0,0,.35), transparent 55%),
-    radial-gradient(1200px 900px at 50% 100%, rgba(0,0,0,.55), transparent 65%),
-    linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.65));
-  opacity:.55;
-}
-
-body.dlter-type-body .dlter-type-page{padding:30px 18px 60px;}
-body.dlter-type-body .dlter-type-inner{max-width:1100px;margin:0 auto;}
-body.dlter-type-body .dlter-type-inner,
-body.dlter-type-body .dlter-type-inner *,
-body.dlter-type-body .dlter-type-inner *::before,
-body.dlter-type-body .dlter-type-inner *::after{box-sizing:border-box;}
-
-body.dlter-type-body .dlter-card{
-  position:relative;border-radius:18px;padding:24px;
-  background:var(--nf-glass-bg,rgba(15,23,42,.6));
-  border:1px solid transparent;
-  box-shadow:var(--nf-glass-shadow,0 20px 35px rgba(0,0,0,.55)),inset 0 1px 0 rgba(255,255,255,.06);
-  overflow:hidden;
-}
-body.dlter-type-body .dlter-card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:18px;padding:1px;
-  background:
-    radial-gradient(1200px 500px at 18% 0%,rgba(252,211,77,.10),transparent 55%),
-    radial-gradient(800px 420px at 88% 25%,rgba(56,189,248,.08),transparent 60%),
-    linear-gradient(135deg,rgba(148,163,184,.45),rgba(148,163,184,.08),rgba(252,211,77,.18));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-}
-
-body.dlter-type-body .dlter-hero-shell{
-  position:relative;border-radius:20px;padding:22px;
-  background:var(--nf-glass-bg,rgba(15,23,42,.6));
-  border:1px solid transparent;
-  box-shadow:var(--nf-glass-shadow,0 20px 35px rgba(0,0,0,.55)),inset 0 1px 0 rgba(255,255,255,.06);
-  overflow:hidden;max-width:1100px;margin:0 auto 32px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) var(--dlter-hero-right-width);
-  grid-template-rows:auto auto auto;
-  column-gap:28px;row-gap:16px;
-}
-body.dlter-type-body .dlter-hero-shell::before{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:20px;
-  background:
-    radial-gradient(1100px 450px at 22% 0%,rgba(252,211,77,.12),transparent 58%),
-    radial-gradient(750px 420px at 86% 25%,rgba(56,189,248,.09),transparent 62%);
-  opacity:1;
-}
-body.dlter-type-body .dlter-hero-shell::after{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:20px;padding:1px;
-  background:linear-gradient(135deg,rgba(148,163,184,.45),rgba(148,163,184,.08),rgba(252,211,77,.18));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-}
-body.dlter-type-body .dlter-hero-shell>*{position:relative;z-index:1;}
-body.dlter-type-body .dlter-hero-main{display:contents;}
-body.dlter-type-body .dlter-hero-shell>div:first-child:not(.dlter-hero-main):not(.dlter-hero-left):not(.dlter-hero-bottom){
-  grid-column:1/-1;grid-row:1;margin:0;
-}
-body.dlter-type-body .dlter-hero-left{grid-column:1;grid-row:2;min-width:0;}
-body.dlter-type-body .dlter-hero-right{
-  grid-column:2;grid-row:2/span 2;align-self:start;
-  width:100%;display:flex;align-items:flex-start;justify-content:flex-end;
-}
-body.dlter-type-body .dlter-hero-bottom{grid-column:1;grid-row:3;margin-top:0;display:block;}
-
-/* POLISH: when unlocked, remove dead right-rail column */
-body.dlter-type-body.dlter-blueprint-unlocked .dlter-hero-shell{grid-template-columns:1fr !important;}
-body.dlter-type-body.dlter-blueprint-unlocked .dlter-hero-right{display:none !important;}
-
-@media(min-width:1101px){
-  body.dlter-type-body .dlter-price-card{position:sticky;top:var(--dlter-sticky-top);z-index:5;}
-}
-
-body.dlter-type-body .dlter-type-name,
-body.dlter-type-body .dlter-card h2,
-body.dlter-type-body .dlter-card h3{margin:0 0 10px;font-family:inherit;color:rgba(243,244,246,.96);}
-body.dlter-type-body .dlter-type-name{font-size:clamp(32px,4vw,44px);line-height:1.05;letter-spacing:-.02em;}
-
-body.dlter-type-body .dlter-title-row{display:flex;align-items:center;gap:16px;margin:6px 0 10px;}
-body.dlter-type-body .dlter-title-row .dlter-type-name{margin:0;transform:translateY(-2px);}
-body.dlter-type-body .dlter-title-glyph{
-  width:var(--dlter-title-glyph-size);height:var(--dlter-title-glyph-size);flex:0 0 auto;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:var(--dlter-title-glyph-radius);
-  background:rgba(2,6,23,.55);
-  border:1px solid rgba(148,163,184,.45);
-  box-shadow:0 10px 24px rgba(0,0,0,.55),0 0 22px rgba(252,211,77,.10);
-  overflow:hidden;
-}
-body.dlter-type-body .dlter-title-glyph img{width:64%;height:64%;object-fit:contain;display:block;}
-
-body.dlter-type-body .dlter-type-code{
-  display:inline-flex;align-items:center;width:fit-content;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(252,211,77,.92);
-  background:rgba(2,6,23,.55);
-  border:1px solid rgba(252,211,77,.22);
-  border-radius:999px;
-  padding:6px 10px 5px;
-  margin:0 0 12px;
-}
-
-body.dlter-type-body .dlter-tagline,
-body.dlter-type-body .dlter-type-tagline{
-  font-size:14px;line-height:1.6;color:rgba(209,213,219,.9);margin:0 0 14px;
-}
-
-body.dlter-type-body .dlter-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 10px;border-radius:999px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(2,6,23,.45);
-  font-size:12px;color:rgba(226,232,240,.9);
-}
-
-/* Button reset (axis chips + labels are now real <button>) */
-body.dlter-type-body .dlter-axis-chip,
-body.dlter-type-body .dlter-axis-label{
-  appearance:none;
-  -webkit-appearance:none;
-  border:0;
-  background:transparent;
-  font:inherit;
-  color:inherit;
-  padding:0;
   margin:0;
-  line-height:inherit;
-  text-align:inherit;
+  overflow-x:hidden;
+  background-color:transparent;
+  color:#f8fafc;
 }
 
-body.dlter-type-body .dlter-axis-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
-body.dlter-type-body .dlter-axis-chip{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 10px;border-radius:999px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(2,6,23,.35);
-  color:rgba(226,232,240,.9);
-  font-size:12px;letter-spacing:.01em;
-  cursor:pointer;user-select:none;
-  transition:transform .14s ease,border-color .14s ease,background .14s ease,box-shadow .14s ease;
-  -webkit-tap-highlight-color:transparent;
-}
-body.dlter-type-body .dlter-axis-chip:hover{
-  border-color:rgba(252,211,77,.45);
-  background:rgba(2,6,23,.55);
-  box-shadow:0 10px 18px rgba(0,0,0,.28);
-  transform:translateY(-.5px);
+body.dlter-type-body .dlter-type-page{
+  position:relative;
+  z-index:1;
+  width:100%;
+  min-height:60vh;
+  padding:1px 0 84px;
 }
 
-/* HS-3: visible focus ring for keyboard users */
-body.dlter-type-body .dlter-axis-chip:focus-visible,
-body.dlter-type-body .dlter-axis-label:focus-visible{
-  outline:2px solid var(--dlter-gold);
-  outline-offset:3px;
-  border-radius:999px;
+body.dlter-type-body .dlter-type-inner{
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0;
 }
 
-body.dlter-type-body .dlter-explained-link{
-  display:inline-flex;align-items:center;gap:8px;margin-top:12px;
-  padding:10px 12px;border-radius:12px;
-  border:1px solid rgba(252,211,77,.25);
-  background:rgba(2,6,23,.35);
-  color:rgba(252,211,77,.92);
-  text-decoration:none;font-size:12px;letter-spacing:.01em;
-  transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease;
-}
-body.dlter-type-body .dlter-explained-link:hover{
-  border-color:rgba(252,211,77,.45);
-  background:rgba(2,6,23,.55);
-  box-shadow:0 10px 22px rgba(0,0,0,.35);
-  transform:translateY(-.5px);
-}
-
-body.dlter-type-body .dlter-hero-right .dlter-glyph-card{display:none!important;}
-
-body.dlter-type-body .dlter-price-card{
-  position:relative;width:100%;
-  border-radius:18px;padding:18px 16px 16px;
-  background:
-    radial-gradient(800px 320px at 20% 0%,rgba(252,211,77,.12),transparent 55%),
-    rgba(2,6,23,.55);
-  border:1px solid rgba(252,211,77,.32);
-  box-shadow:0 18px 40px rgba(0,0,0,.75),0 0 60px -18px rgba(252,211,77,.18),inset 0 1px 0 rgba(255,255,255,.06);
-  overflow:hidden;
-}
-body.dlter-type-body .dlter-price-card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:18px;padding:1px;
-  background:linear-gradient(135deg,rgba(252,211,77,.55),rgba(148,163,184,.20),rgba(252,211,77,.25));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  opacity:.9;
-}
-body.dlter-type-body .dlter-price-card>*{position:relative;z-index:1;}
-body.dlter-type-body .dlter-price-label{
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(252,211,77,.92);margin-bottom:6px;
-}
-body.dlter-type-body .dlter-price-amount{
-  font-size:26px;font-weight:700;letter-spacing:-.02em;
-  color:rgba(243,244,246,.98);
-  margin:0 0 10px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-}
-body.dlter-type-body .dlter-blueprint-includes{margin-top:6px;padding-top:12px;border-top:1px solid rgba(148,163,184,.25);}
-body.dlter-type-body .dlter-blueprint-includes-title{font-size:12px;font-weight:600;color:rgba(243,244,246,.92);margin-bottom:8px;}
-body.dlter-type-body .dlter-blueprint-includes-list{margin:0;padding-left:18px;display:grid;gap:6px;}
-body.dlter-type-body .dlter-blueprint-includes-list li{font-size:12px;line-height:1.4;color:rgba(209,213,219,.9);}
-
-body.dlter-type-body .dlter-cta-button{
-  width:100%;display:inline-flex;justify-content:center;align-items:center;gap:10px;
-  padding:12px 14px;margin-top:14px;
-  border-radius:14px;border:1px solid rgba(252,211,77,.35);
-  background:linear-gradient(135deg,var(--dlter-gold),#fcd34d);
-  color:#020617;font-weight:700;font-size:14px;
-  cursor:pointer;text-decoration:none;
-  box-shadow:0 16px 34px rgba(0,0,0,.55);
-  transition:filter .14s ease,box-shadow .14s ease,transform .14s ease;
-  -webkit-tap-highlight-color:transparent;
-  appearance:none;-webkit-appearance:none;
-  font-family:inherit;
-  touch-action:manipulation;
-}
-body.dlter-type-body .dlter-cta-button:hover{filter:brightness(1.02);box-shadow:0 18px 38px rgba(0,0,0,.6);transform:translateY(-.5px);}
-body.dlter-type-body .dlter-cta-button:active{transform:translateY(0);box-shadow:0 12px 26px rgba(0,0,0,.55);}
-body.dlter-type-body .dlter-cta-button:focus-visible{outline:2px solid var(--dlter-gold);outline-offset:3px;}
-body.dlter-type-body .dlter-cta-guarantee{margin-top:10px;font-size:11px;line-height:1.45;color:rgba(209,213,219,.85);}
-
-/* ✅ FAILSAFE: never show the injected “secondary CTA” */
-body.dlter-type-body .dlter-secondary-cta-wrap{display:none !important;margin-top:18px;}
-
-body.dlter-type-body .dlter-axis-graph{
-  position:relative;border-radius:18px;padding:16px 16px 14px;
-  background:rgba(2,6,23,.45);
-  border:1px solid rgba(148,163,184,.30);
-  overflow:hidden;
-}
-body.dlter-type-body .dlter-axis-graph::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    repeating-linear-gradient(to bottom,rgba(148,163,184,.10) 0px,rgba(148,163,184,.10) 1px,transparent 1px,transparent 22px),
-    repeating-linear-gradient(to right,rgba(148,163,184,.08) 0px,rgba(148,163,184,.08) 1px,transparent 1px,transparent 22px),
-    radial-gradient(800px 260px at 20% 0%,rgba(252,211,77,.10),transparent 55%);
-  opacity:.35;
-}
-body.dlter-type-body .dlter-axis-graph::after{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:18px;padding:1px;
-  background:linear-gradient(135deg,rgba(148,163,184,.40),rgba(148,163,184,.08),rgba(252,211,77,.18));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-}
-body.dlter-type-body .dlter-axis-graph>*{position:relative;z-index:1;}
-body.dlter-type-body .dlter-axis-graph-title{
-  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(226,232,240,.9);margin:0 0 6px;
-}
-body.dlter-type-body .dlter-axis-graph-subtitle{
-  font-size:12px;line-height:1.55;color:rgba(209,213,219,.88);
-  margin:0 0 10px;max-width:80ch;
-}
-body.dlter-type-body .dlter-axis-bars{
-  position:relative;display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;max-width:560px;margin:0 auto;
-}
-body.dlter-type-body .dlter-axis-bar-wrapper{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;}
-body.dlter-type-body .dlter-axis-bar{
-  width:18px;height:var(--dlter-axis-bar-height);
-  border-radius:999px;
-  background:linear-gradient(to top,rgba(15,23,42,.92),rgba(15,23,42,.65));
-  border:1px solid rgba(148,163,184,.28);
-  overflow:hidden;position:relative;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
-}
-body.dlter-type-body .dlter-axis-bar::before{
-  content:"";position:absolute;inset:6px 4px 6px;pointer-events:none;
-  background-image:linear-gradient(to top,rgba(55,65,81,.7) 1px,transparent 1px);
-  background-size:100% 25%;
-  opacity:.35;
-}
-body.dlter-type-body .dlter-axis-bar::after{
-  content:"";position:absolute;left:2px;right:2px;
-  top:calc(100% - var(--dlter-axis-average));
-  height:1px;pointer-events:none;
-  background:repeating-linear-gradient(to right,rgba(148,163,184,.85) 0px,rgba(148,163,184,.85) 4px,transparent 4px,transparent 7px);
-  opacity:.55;
-}
-body.dlter-type-body .dlter-axis-bar-fill{
-  position:absolute;left:0;right:0;bottom:0;height:0%;
-  background:linear-gradient(to top,rgba(252,211,77,.95),rgba(252,211,77,.14));
-  transition:height 800ms cubic-bezier(.2,.9,.2,1);
-  box-shadow:0 -10px 20px rgba(252,211,77,.18);
-}
-body.dlter-type-body .dlter-axis-label{
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(209,213,219,.85);cursor:pointer;user-select:none;
-  text-decoration:underline dotted rgba(148,163,184,.55);
-  text-underline-offset:3px;
-  -webkit-tap-highlight-color:transparent;
-}
-body.dlter-type-body .dlter-axis-label:hover{color:rgba(243,244,246,.96);text-decoration-color:rgba(252,211,77,.65);}
-body.dlter-type-body .dlter-axis-score{
-  font-size:12px;color:rgba(243,244,246,.95);
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-}
-
-body.dlter-type-body .dlter-card.dlter-snapshot{
-  max-width:1100px;margin:32px auto 0;
-  box-shadow:var(--nf-glass-shadow-sm,0 8px 18px rgba(0,0,0,.35)),inset 0 1px 0 rgba(255,255,255,.05);
-}
-body.dlter-type-body .dlter-snapshot-grid,
-body.dlter-type-body .dlter-snapshot{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-body.dlter-type-body .dlter-section-heading{font-size:18px;margin:0 0 12px;color:rgba(243,244,246,.96);}
-body.dlter-type-body .dlter-subheading{
-  font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(226,232,240,.85);margin:18px 0 8px;
-}
-body.dlter-type-body .dlter-card p{margin:0 0 12px;font-size:13px;line-height:1.65;color:rgba(209,213,219,.88);}
-body.dlter-type-body .dlter-training-highlight{border-left:3px solid rgba(252,211,77,.55);padding-left:14px;}
-
-body.dlter-type-body .dlter-locked-teaser{
-  margin-top:18px;padding:14px;border-radius:14px;
-  background:rgba(2,6,23,.45);
-  border:1px dashed rgba(252,211,77,.45);
-}
-body.dlter-type-body .dlter-locked-teaser-title{font-size:13px;font-weight:700;color:rgba(243,244,246,.96);margin-bottom:6px;}
-body.dlter-type-body .dlter-locked-teaser-text{font-size:12px;color:rgba(209,213,219,.85);}
-
-body.dlter-type-body .dlter-card.dlter-blueprint{
-  max-width:100%;margin:32px auto 0;border-radius:18px;border:1px solid transparent;
-  position:relative;overflow:hidden;
-  box-shadow:var(--nf-glass-shadow,0 20px 35px rgba(0,0,0,.55)),inset 0 1px 0 rgba(255,255,255,.06);
-}
-body.dlter-type-body .dlter-card.dlter-blueprint::before{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:18px;padding:1px;
-  background:linear-gradient(135deg,rgba(252,211,77,.50),rgba(148,163,184,.15),rgba(252,211,77,.20));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  opacity:.9;
-}
-/* ✅ REMOVE the top-right pseudo badge (it duplicates your real “Premium Blueprint” label) */
-body.dlter-type-body .dlter-card.dlter-blueprint::after{
-  content:none !important;
+body.dlter-type-body [hidden]{
   display:none !important;
 }
 
-body.dlter-type-body .dlter-blueprint{position:relative;}
-body.dlter-type-body .dlter-blueprint.is-locked .dlter-blueprint-content{opacity:.12;filter:blur(2px);pointer-events:none;user-select:none;}
-
-body.dlter-type-body .dlter-blueprint-overlay{
-  position:absolute;inset:0;z-index:3;
-  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
-  padding:26px 24px;
-  pointer-events:auto;
-  background:linear-gradient(135deg,rgba(2,6,23,.82),rgba(2,6,23,.46));
-  backdrop-filter:blur(8px);
-}
-body.dlter-type-body .dlter-overlay-title{
-  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(252,211,77,.92);margin:0 0 8px;
-}
-body.dlter-type-body .dlter-overlay-heading{
-  font-size:18px;line-height:1.25;color:rgba(243,244,246,.96);
-  margin:0 0 8px;
-}
-body.dlter-type-body .dlter-overlay-text{
-  font-size:12px;line-height:1.65;color:rgba(209,213,219,.90);
-  margin:0 0 12px;max-width:62ch;
-}
-body.dlter-type-body .dlter-card.dlter-blueprint.is-locked{padding:32px 24px 22px;min-height:210px;}
-
-/* HS-4: locked blueprint should shrink to overlay copy height */
-body.dlter-type-body.dlter-blueprint-locked .dlter-card.dlter-blueprint{
-  min-height:0 !important;
-  height:auto !important;
-}
-body.dlter-type-body.dlter-blueprint-locked .dlter-card.dlter-blueprint.is-locked{
-  min-height:0 !important;
-  height:auto !important;
-  padding:0 !important;
-}
-body.dlter-type-body.dlter-blueprint-locked .dlter-blueprint-content{display:none !important;}
-body.dlter-type-body.dlter-blueprint-locked .dlter-blueprint-overlay{
-  position:relative !important;
-  inset:auto !important;
-  padding:26px 24px !important;
-  border-radius:18px;
-}
-body.dlter-type-body.dlter-blueprint-unlocked .dlter-blueprint-content{display:block !important;}
-
-body.dlter-type-body .dlter-blueprint-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:10px;}
-body.dlter-type-body .dlter-bp-section{padding:16px;border-radius:16px;background:rgba(2,6,23,.35);border:1px solid rgba(148,163,184,.22);}
-body.dlter-type-body .dlter-bp-section[data-dlter-chapter]::before{
-  content:"Chapter " attr(data-dlter-chapter);
-  display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(226,232,240,.85);padding:5px 8px;border-radius:999px;
-  border:1px solid rgba(148,163,184,.22);background:rgba(2,6,23,.35);margin-bottom:10px;
-}
-body.dlter-type-body .dlter-bp-section[data-dlter-action="true"]{border-color:rgba(252,211,77,.30);box-shadow:0 0 0 1px rgba(252,211,77,.12) inset;}
-
-body.dlter-type-body.dlter-blueprint-unlocked .dlter-price-card{display:none!important;}
-body.dlter-type-body.dlter-blueprint-unlocked .dlter-blueprint-overlay{display:none!important;}
-
-@media(max-width:1100px){
-  body.dlter-type-body .dlter-hero-shell{grid-template-columns:1fr;grid-template-rows:auto auto auto auto;row-gap:16px;}
-  body.dlter-type-body .dlter-hero-left{grid-column:1;grid-row:2;}
-  body.dlter-type-body .dlter-hero-right{grid-column:1;grid-row:3;justify-content:flex-start;}
-  body.dlter-type-body .dlter-hero-bottom{grid-column:1;grid-row:4;}
-  body.dlter-type-body .dlter-price-card{max-width:520px;margin:0;}
-  body.dlter-type-body .dlter-snapshot-grid,
-  body.dlter-type-body .dlter-snapshot{grid-template-columns:1fr;}
-  body.dlter-type-body .dlter-blueprint-grid{grid-template-columns:1fr;}
+body.dlter-type-body a{
+  text-underline-offset:3px;
 }
 
-@media(max-width:767px){
-  body.dlter-type-body{--dlter-title-glyph-size:44px;--dlter-axis-bar-height:100px;}
-  body.dlter-type-body .dlter-type-page{padding:22px 14px 50px;}
-  body.dlter-type-body .dlter-hero-shell{padding:18px;}
-  body.dlter-type-body .dlter-axis-bars{max-width:100%;gap:12px;}
-  body.dlter-type-body .dlter-secondary-cta-wrap{display:none !important;}
+body.dlter-type-body .dlter-card.dlter-snapshot:not([data-rt-native-richtext="mounted"]){
+  display:none !important;
 }
 
-@media(min-width:1101px){
-  body.dlter-type-body.dlter-blueprint-locked .dlter-card.dlter-blueprint.is-locked{padding:0 !important;}
-  body.dlter-type-body.dlter-blueprint-locked .dlter-blueprint-overlay{display:flex !important;}
-  body.dlter-type-body.dlter-blueprint-locked .dlter-card.dlter-blueprint.is-locked .dlter-cta-button{
-    margin-top:14px;
-    background:rgba(2,6,23,.35);
-    color:rgba(252,211,77,.95);
-    border:1px solid rgba(252,211,77,.55);
-    box-shadow:0 12px 28px rgba(0,0,0,.45);
+@media print{
+  body.dlter-type-body{
+    background:#fff !important;
+    color:#111827 !important;
   }
-  body.dlter-type-body.dlter-blueprint-locked .dlter-card.dlter-blueprint.is-locked .dlter-cta-button:hover{
-    box-shadow:0 16px 34px rgba(0,0,0,.55);
-    filter:brightness(1.06);
+
+  body.dlter-type-body .navbar,
+  body.dlter-type-body .footer,
+  body.dlter-type-body .rt-result-actions,
+  body.dlter-type-body .rt-blueprint-offer{
+    display:none !important;
   }
-}
 
-@media(prefers-reduced-motion:reduce){
-  body.dlter-type-body .dlter-axis-chip,
-  body.dlter-type-body .dlter-explained-link,
-  body.dlter-type-body .dlter-cta-button{transition:none!important;transform:none!important;}
-  body.dlter-type-body .dlter-axis-bar-fill{transition:none!important;}
-}
-
-/* ===============================
-   READABILITY SURFACES (FINAL)
-   =============================== */
-body.dlter-type-body .dlter-card.dlter-snapshot,
-body.dlter-type-body .dlter-card.dlter-blueprint{
-  background:linear-gradient(180deg,rgba(2,6,23,.88),rgba(2,6,23,.82)) !important;
-  border:1px solid rgba(148,163,184,0.25) !important;
-  box-shadow:0 24px 60px rgba(0,0,0,0.75),inset 0 1px 0 rgba(255,255,255,0.04) !important;
-}
-body.dlter-type-body .dlter-card.dlter-blueprint .dlter-bp-section,
-body.dlter-type-body .dlter-snapshot-grid > div{
-  background:rgba(2,6,23,0.55) !important;
-  border:1px solid rgba(148,163,184,0.22) !important;
-}
-
-/* ===============================
-   TEXT LEGIBILITY BOOST
-   =============================== */
-body.dlter-type-body .dlter-card p,
-body.dlter-type-body .dlter-rte p{
-  color:rgba(243,244,246,0.95) !important;
-  line-height:1.75;
-}
-body.dlter-type-body .dlter-card ul li,
-body.dlter-type-body .dlter-card ol li,
-body.dlter-type-body .dlter-rte ul li,
-body.dlter-type-body .dlter-rte ol li{
-  color:rgba(229,231,235,0.92) !important;
-  line-height:1.7;
-}
-body.dlter-type-body .dlter-card small,
-body.dlter-type-body .dlter-axis-graph-subtitle,
-body.dlter-type-body .dlter-locked-teaser-text{
-  color:rgba(203,213,225,0.85) !important;
-}
-body.dlter-type-body .dlter-subheading,
-body.dlter-type-body .dlter-section-heading{
-  color:rgba(248,250,252,0.98) !important;
-}
-
-/* ===============================
-   SCANABILITY (OPTIONAL, LIGHT)
-   =============================== */
-body.dlter-type-body .dlter-card p + p{margin-top:14px;}
-body.dlter-type-body .dlter-card ul{margin-top:14px;padding-left:1.2em;}
-body.dlter-type-body .dlter-card ul li::marker{color:rgba(252,211,77,0.70);}
-
-/* ===============================
-   MEMBER BAR RESPONSIVE FAILSAFE
-   =============================== */
-@media (max-width:1100px){
-  body.dlter-type-body #dlter-member-bar.dlter-auth-bar{
-    flex-direction:column !important;
-    align-items:stretch !important;
-    justify-content:flex-start !important;
-    gap:10px;
-  }
-  body.dlter-type-body #dlter-member-bar .dlter-auth-info{
-    justify-content:center !important;
-    text-align:center;
-  }
-  body.dlter-type-body #dlter-member-bar .dlter-auth-actions{
-    width:100%;
-    justify-content:center !important;
-  }
-}
-@media (max-width:480px){
-  body.dlter-type-body #dlter-member-bar .dlter-auth-actions button.btn{
-    flex:1 1 140px;
+  body.dlter-type-body .rt-result-hero,
+  body.dlter-type-body .rt-result-section,
+  body.dlter-type-body .rt-method-note,
+  body.dlter-type-body .dlter-card.dlter-blueprint{
+    break-inside:avoid;
+    border:1px solid #cbd5e1 !important;
+    background:#fff !important;
+    color:#111827 !important;
+    box-shadow:none !important;
   }
 }
 </style>
 
-Body:
-<script>
-(function(){
+
+<!-- Reality Types final overview authority styles 1.6.0.
+     Stable-ID selectors give this Head layer precedence over later provider classes. -->
+<style id="nf-rt-overview-authority-style-v160">
+html body.dlter-type-body{
+  --rt160-shell:#06111a;
+  --rt160-panel:#091923;
+  --rt160-panel-raised:#0b1d29;
+  --rt160-line:rgba(148,163,184,.18);
+  --rt160-line-strong:rgba(121,200,255,.30);
+  --rt160-text:#f8fafc;
+  --rt160-body:rgba(226,236,243,.90);
+  --rt160-muted:rgba(188,203,214,.76);
+  --rt160-blue:#79c8ff;
+  --rt160-blue-strong:#3498db;
+  --rt160-gold:#f2c864;
+}
+
+/* The synchronous page-mode authority resolves saved routes before body paint.
+   Never let the public-reference banner impersonate a protected saved result. */
+html[data-rt-page-mode="saved-attempt"] body.dlter-type-body #rt-reference-banner,
+html body.dlter-type-body[data-rt-page-mode="saved-attempt"] #rt-reference-banner{
+  display:none !important;
+}
+
+html body.dlter-type-body [data-rt-v160-hidden]{
+  display:none !important;
+}
+
+/* The selected Blueprint tab must remain capable of hiding the Overview panel. */
+html body.dlter-type-body #rt-overview-view[hidden]{
+  display:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:16px !important;
+  width:min(1180px,calc(100% - 32px)) !important;
+  max-width:1180px !important;
+  margin:clamp(26px,4vw,46px) auto 34px !important;
+  padding:clamp(10px,1.6vw,16px) !important;
+  overflow:visible !important;
+  border:1px solid rgba(121,200,255,.18) !important;
+  border-radius:28px !important;
+  background:
+    radial-gradient(720px 300px at 8% 0%,rgba(52,152,219,.06),transparent 68%),
+    linear-gradient(180deg,#07141e 0%,#06111a 100%) !important;
+  box-shadow:0 32px 90px rgba(0,0,0,.54),inset 0 1px 0 rgba(255,255,255,.035) !important;
+  isolation:isolate;
+}
+
+html body.dlter-type-body #rt-overview-view>*{
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+
+html body.dlter-type-body #rt-overview-view> :is(
+  .rt-result-root,
+  #rt-reality-map-section,
+  #rt-match-section,
+  #rt-native-section,
+  #rt-result-recovery,
+  #rt-blueprint-offer-section,
+  .rt-method-note
+){
+  grid-column:1/-1 !important;
+  width:100% !important;
+}
+
+html body.dlter-type-body #rt-overview-view>.rt-result-root{order:10}
+html body.dlter-type-body #rt-overview-view>#rt-result-recovery{order:15}
+html body.dlter-type-body #rt-overview-view>#rt-reality-map-section{order:20}
+html body.dlter-type-body #rt-overview-view>#rt-match-section{order:30}
+html body.dlter-type-body #rt-overview-view>#rt-native-section{order:40}
+html body.dlter-type-body #rt-overview-view>#rt-verification{order:50}
+html body.dlter-type-body #rt-overview-view>#rt-experiment-section{order:51}
+html body.dlter-type-body #rt-overview-view>#rt-blueprint-offer-section{order:60}
+html body.dlter-type-body #rt-overview-view>.rt-method-note{order:70}
+
+html body.dlter-type-body #rt-overview-view>#rt-verification,
+html body.dlter-type-body #rt-overview-view>#rt-experiment-section{
+  grid-column:span 1 !important;
+  align-self:start !important;
+  width:100% !important;
+  min-height:0 !important;
+  height:auto !important;
+}
+
+html body.dlter-type-body #rt-overview-view[data-rt-has-verification="false"]>#rt-experiment-section,
+html body.dlter-type-body #rt-overview-view>#rt-experiment-section:only-of-type{
+  grid-column:1/-1 !important;
+}
+
+html body.dlter-type-body #rt-overview-view>.rt-result-root{
+  padding:0 !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view :is(
+  .rt-result-section,
+  .rt-blueprint-offer,
+  .rt-method-note,
+  .rt-result-recovery
+){
+  width:100% !important;
+  max-width:none !important;
+  min-height:0 !important;
+  height:auto !important;
+  margin:0 !important;
+  overflow:visible !important;
+  border:1px solid var(--rt160-line) !important;
+  border-radius:19px !important;
+  background:
+    radial-gradient(560px 220px at 0 0,rgba(52,152,219,.035),transparent 70%),
+    var(--rt160-panel) !important;
+  box-shadow:0 14px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* Identity first, status second. Presentation 3.0.1 may add right-rail classes,
+   but this final cascade is intentionally later and scoped to the Overview only. */
+html body.dlter-type-body #rt-overview-view .rt-result-hero{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:20px !important;
+  width:100% !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding:clamp(26px,4vw,46px) !important;
+  overflow:hidden !important;
+  border:1px solid var(--rt160-line-strong) !important;
+  border-radius:22px !important;
+  background:
+    linear-gradient(rgba(121,200,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(121,200,255,.028) 1px,transparent 1px),
+    radial-gradient(720px 320px at 10% 0%,rgba(52,152,219,.12),transparent 70%),
+    linear-gradient(145deg,#0a1d29 0%,#07131d 72%,#06111a 100%) !important;
+  background-size:40px 40px,40px 40px,auto,auto !important;
+  box-shadow:0 20px 56px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-result-hero>.rt-result-hero-main,
+html body.dlter-type-body #rt-overview-view .rt-result-hero>.dlter-hero-left{
+  grid-column:1 !important;
+  grid-row:auto !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-result-hero>#rt-result-state,
+html body.dlter-type-body #rt-overview-view .rt-result-hero>.dlter-hero-right{
+  grid-column:1 !important;
+  grid-row:auto !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  align-self:start !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-result-state{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(190px,auto) !important;
+  grid-auto-rows:max-content !important;
+  gap:4px 24px !important;
+  align-items:center !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding:15px 17px !important;
+  border:1px solid rgba(121,200,255,.22) !important;
+  border-left:3px solid var(--rt160-blue-strong) !important;
+  border-radius:14px !important;
+  background:rgba(5,17,26,.78) !important;
+  box-shadow:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-result-state>span,
+html body.dlter-type-body #rt-overview-view #rt-result-state>strong,
+html body.dlter-type-body #rt-overview-view #rt-result-state>p{
+  grid-column:1 !important;
+  min-width:0 !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-result-state>p{
+  max-width:76ch !important;
+  margin:3px 0 0 !important;
+  color:var(--rt160-muted) !important;
+  font-size:.88rem !important;
+  line-height:1.55 !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-result-state .rt-result-state-meta{
+  grid-column:2 !important;
+  grid-row:1/4 !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:5px !important;
+  min-width:190px !important;
+  margin:0 !important;
+  padding:3px 0 3px 20px !important;
+  border-top:0 !important;
+  border-left:1px solid var(--rt160-line) !important;
+  color:var(--rt160-muted) !important;
+  font-size:.74rem !important;
+  line-height:1.45 !important;
+  text-align:right !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-result-title{
+  max-width:14ch !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-result-tagline{
+  max-width:62ch !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-result-section{
+  padding:clamp(22px,3vw,34px) !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-section-head{
+  align-items:end !important;
+  margin:0 0 20px !important;
+  padding:0 0 15px !important;
+  border-bottom:1px solid rgba(148,163,184,.14) !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-section-head h2{
+  max-width:24ch !important;
+  font-size:clamp(1.45rem,2.4vw,2rem) !important;
+  line-height:1.12 !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-section-head p{
+  max-width:74ch !important;
+  color:var(--rt160-muted) !important;
+  font-size:.9rem !important;
+  line-height:1.58 !important;
+}
+
+/* All six measured tendencies must render as independent natural-height cards. */
+html body.dlter-type-body #rt-overview-view #rt-mode-groups{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:12px !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-mode-groups>.rt-domain-card{
+  display:contents !important;
+  min-height:0 !important;
+  height:auto !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-mode-groups .rt-domain-head{
+  display:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-mode-groups .rt-mode-row{
+  align-self:start !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding:17px !important;
+  border:1px solid rgba(121,200,255,.17) !important;
+  border-radius:14px !important;
+  background:linear-gradient(180deg,#0a1c28,#091822) !important;
+  box-shadow:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-coordination-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:12px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view #rt-coordination-grid .rt-coordination-card{
+  align-self:start !important;
+  min-height:0 !important;
+  height:auto !important;
+  padding:18px !important;
+  border:1px solid rgba(148,163,184,.17) !important;
+  border-radius:14px !important;
+  background:#091923 !important;
+  box-shadow:none !important;
+}
+
+/* Closest match stays prominent while neighboring matches remain secondary. */
+html body.dlter-type-body #rt-overview-view .rt-match-grid{
+  display:grid !important;
+  grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:12px !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-match-grid>div{
+  align-self:start !important;
+  min-height:0 !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt-primary-match,
+html body.dlter-type-body #rt-overview-view .rt-fit-differences,
+html body.dlter-type-body #rt-overview-view .rt-convergence,
+html body.dlter-type-body #rt-overview-view .rt-resonance-card{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+/* One enhanced interpretation owns this surface. The source snapshot remains in
+   the DOM as a fail-safe, but it never displays beside its enhanced copy. */
+html body.dlter-type-body #rt-overview-view .rt141-interpretation{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:13px !important;
+  min-width:0 !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-pattern-card,
+html body.dlter-type-body #rt-overview-view .rt141-theory-details{
+  align-self:start !important;
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-pattern-card{
+  padding:clamp(19px,2.4vw,27px) !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-rte{
+  max-width:76ch !important;
+  color:var(--rt160-body) !important;
+  font-size:clamp(.94rem,.3vw + .91rem,1.02rem) !important;
+  line-height:1.68 !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:12px !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid>.rt141-pattern-card{
+  grid-column:auto !important;
+  align-self:start !important;
+  min-height:0 !important;
+  height:auto !important;
+}
+
+html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid>[data-rt-pattern-card="training"],
+html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid>.rt141-pattern-card:last-child:nth-child(odd){
+  grid-column:1/-1 !important;
+}
+
+/* Experience 1.4.1 inserts the enhanced interpretation immediately before the
+   source snapshot. These selectors avoid :has() and remain valid after reparenting. */
+html body.dlter-type-body #rt-overview-view #rt-native-snapshot-slot>
+:is(.rt141-interpretation,[data-rt-experience-interpretation]) ~ .dlter-card.dlter-snapshot,
+html body.dlter-type-body #rt-overview-view .dlter-card.dlter-snapshot[hidden],
+html body.dlter-type-body #rt-overview-view .dlter-card.dlter-snapshot[aria-hidden="true"],
+html body.dlter-type-body #rt-overview-view .dlter-card.dlter-snapshot[data-rt-v160-native-hidden="true"]{
+  display:none !important;
+}
+
+html body.dlter-type-body #rt-overview-view .dlter-snapshot[data-rt-enhancement-fallback="true"]{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-auto-rows:max-content !important;
+  align-items:start !important;
+  gap:12px !important;
+}
+
+html body.dlter-type-body #rt-overview-view .dlter-snapshot[data-rt-enhancement-fallback="true"] :is(
+  .dlter-snapshot-left,
+  .dlter-snapshot-right
+){
+  align-self:start !important;
+  min-height:0 !important;
+  height:auto !important;
+}
+
+/* Never allow a long-form reader to become a live announcement region. */
+html body.dlter-type-body :is(#rt-blueprint-runtime,#rt-legacy-blueprint-view)[aria-live]{
+  speak:none;
+}
+
+@media(max-width:920px){
+  html body.dlter-type-body #rt-overview-view .rt-match-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media(max-width:820px){
+  html body.dlter-type-body #rt-overview-view #rt-mode-groups,
+  html body.dlter-type-body #rt-overview-view #rt-coordination-grid,
+  html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid,
+  html body.dlter-type-body #rt-overview-view .dlter-snapshot[data-rt-enhancement-fallback="true"]{
+    grid-template-columns:1fr !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt141-pattern-support-grid>*{
+    grid-column:1 !important;
+  }
+}
+
+@media(max-width:760px){
+  html body.dlter-type-body #rt-overview-view{
+    grid-template-columns:1fr !important;
+    width:min(100% - 20px,1180px) !important;
+    padding:8px !important;
+    border-radius:21px !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view>*{
+    grid-column:1 !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-hero{
+    gap:17px !important;
+    padding:21px 17px !important;
+    border-radius:16px !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view #rt-result-state{
+    grid-template-columns:1fr !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view #rt-result-state .rt-result-state-meta{
+    grid-column:1 !important;
+    grid-row:auto !important;
+    min-width:0 !important;
+    margin-top:8px !important;
+    padding:10px 0 0 !important;
+    border-top:1px solid var(--rt160-line) !important;
+    border-left:0 !important;
+    text-align:left !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-section,
+  html body.dlter-type-body #rt-overview-view .rt-blueprint-offer{
+    padding:20px 17px !important;
+    border-radius:15px !important;
+  }
+}
+
+@media(max-width:480px){
+  html body.dlter-type-body #rt-overview-view .rt-title-line{
+    align-items:flex-start !important;
+    gap:12px !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-glyph{
+    width:52px !important;
+    height:52px !important;
+    border-radius:13px !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-title{
+    font-size:clamp(2rem,10vw,2.65rem) !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-actions{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view .rt-result-actions :is(a,button){
+    width:100% !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body.dlter-type-body #rt-overview-view *,
+  html body.dlter-type-body #rt-overview-view *::before,
+  html body.dlter-type-body #rt-overview-view *::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+@media print{
+  html body.dlter-type-body #rt-experience-switch,
+  html body.dlter-type-body #rt-overview-view>#rt-verification,
+  html body.dlter-type-body #rt-overview-view>#rt-blueprint-offer-section{
+    display:none !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view>*{
+    margin:0 0 12px !important;
+    break-inside:avoid;
+  }
+
+  html body.dlter-type-body #rt-overview-view :is(
+    .rt-result-hero,
+    .rt-result-section,
+    .rt-method-note,
+    .rt-result-recovery
+  ){
+    border:1px solid #cbd5e1 !important;
+    background:#fff !important;
+    color:#111827 !important;
+    box-shadow:none !important;
+  }
+
+  html body.dlter-type-body #rt-overview-view :is(h1,h2,h3,h4,p,li,span,strong){
+    color:#111827 !important;
+  }
+}
+</style>
+
+
+<!-- Reality Types shared template polish 3.1.2 -->
+<style id="nf-rt-template-polish-v310">
+/* Public-reference and current saved-result surfaces only.
+   Historical-purchase rendering is intentionally excluded. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+){
+  --rt31-text:#f8fafc;
+  --rt31-body:rgba(226,236,243,.90);
+  --rt31-muted:rgba(188,203,214,.78);
+  --rt31-blue:#79c8ff;
+  --rt31-green:#78d6a8;
+  --rt31-gold:#f2c864;
+  --rt31-line:rgba(121,200,255,.18);
+}
+
+/* Bring the result hierarchy into the current NeuForm type system. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) :is(
+  #rt-overview-view h1,
+  #rt-overview-view h2,
+  #rt-overview-view h3,
+  #rt-blueprint-runtime h2,
+  #rt-blueprint-runtime h3,
+  #rt-blueprint-runtime h4
+){
+  font-family:"Plus Jakarta Sans",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  letter-spacing:-.035em!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view .rt-result-title{
+  max-width:17ch!important;
+  font-size:clamp(2.65rem,5.3vw,3.9rem)!important;
+  line-height:1.00!important;
+  letter-spacing:-.055em!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view :is(
+  .rt-result-kicker,
+  .rt-result-context,
+  .rt-result-version,
+  .rt-framework-term,
+  .rt-mode-band,
+  .rt-coordination-card>strong,
+  .rt-primary-match>span,
+  .rt-resonance-card>span,
+  .rt-resonance-card>small,
+  .rt-experiment-number,
+  .rt-blueprint-copy>span,
+  .rt141-kicker,
+  .rt141-meta
+){
+  font-size:max(.75rem,12px)!important;
+}
+
+/* A saved/public Reality Map should read as 3 domains x 3 scores. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  padding:18px!important;
+  overflow:hidden!important;
+  border:1px solid rgba(121,200,255,.15)!important;
+  border-radius:15px!important;
+  background:
+    radial-gradient(420px 150px at 6% 0%,rgba(52,152,219,.065),transparent 70%),
+    rgba(7,20,30,.70)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card:nth-child(2){
+  border-top-color:rgba(120,214,168,.56)!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card:nth-child(3){
+  border-top-color:rgba(183,156,255,.54)!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rt-domain-head{
+  min-height:84px!important;
+  margin-bottom:11px!important;
+  padding-bottom:11px!important;
+  border-bottom:1px solid rgba(148,163,184,.12)!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rt-domain-head h3{
+  margin-bottom:5px!important;
+  font-size:1.02rem!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rt-domain-head p{
+  color:var(--rt31-muted)!important;
+  font-size:.82rem!important;
+  line-height:1.45!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rt-mode-row{
+  min-height:0!important;
+  margin:0!important;
+  padding:11px 0!important;
+  border:0!important;
+  border-bottom:1px solid rgba(148,163,184,.09)!important;
+  background:transparent!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rtv31-domain-coordination{
+  margin-top:auto!important;
+  padding:12px 0 0!important;
+  border:0!important;
+  border-top:1px solid rgba(242,200,100,.20)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rtv31-domain-coordination::before{
+  content:"Coordination";
+  display:block;
+  margin-bottom:6px;
+  color:rgba(242,200,100,.86);
+  font-size:.72rem;
+  font-weight:850;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rtv31-domain-coordination .rt-coordination-score{
+  float:right;
+  margin-left:10px;
+  color:var(--rt31-gold)!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rtv31-domain-coordination h3{
+  margin:0 0 4px!important;
+  color:#fff!important;
+  font-size:.92rem!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups .rtv31-domain-coordination p{
+  margin:0 0 5px!important;
+  color:var(--rt31-muted)!important;
+  font-size:.78rem!important;
+  line-height:1.42!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-section[data-rt-v31-integrated="true"]{
+  display:none!important;
+}
+
+/* Reference language and saved-result evidence check. */
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-verification{
+  padding:22px!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-verification .rt-verification-options{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-verification [data-rt-verify]{
+  min-height:46px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(121,200,255,.15)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.018)!important;
+  color:rgba(235,244,249,.90)!important;
+  font-size:.82rem!important;
+  line-height:1.38!important;
+  text-align:left!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-verification [data-rt-verify][aria-pressed="true"]{
+  border-color:rgba(120,214,168,.42)!important;
+  background:rgba(120,214,168,.08)!important;
+  color:#f5fff9!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="public-reference"] #rt-match-section .rt-primary-match>a[href="/dlter-quiz"]{
+  display:none!important;
+}
+
+/* Public/saved action hierarchy. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view .rt-result-actions{
+  gap:8px 10px!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view .rt-result-actions :is(a,button){
+  min-height:42px!important;
+  border-radius:10px!important;
+  font-size:.80rem!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-copy-summary,
+body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-library-link{
+  background:rgba(255,255,255,.025)!important;
+  box-shadow:none!important;
+}
+
+/* Seven-day experiment reads as one compact evidence test. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-experiment-section .rt-experiment{
+  grid-template-columns:64px minmax(0,1fr)!important;
+  gap:14px!important;
+  padding:15px!important;
+  border:1px solid rgba(120,214,168,.15)!important;
+  border-radius:12px!important;
+  background:rgba(120,214,168,.035)!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-experiment-section .rt-experiment-number{
+  color:var(--rt31-green)!important;
+}
+
+/* Standardized public interpretation blocks. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-native-section :is(.rt141-card,.rt141-tile,.dlter-card){
+  border-radius:12px!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-native-section :is(h3,h4){
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif!important;
+}
+
+/* Blueprint: preserve the 12 chapters, but remove the endless dark reading stripe.
+   Each reader phase becomes its own glass surface over the shared rocky background. */
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-reading::before{
+  content:none!important;
+  display:none!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-reader-v200.rtv3-blueprint-reader-v300{
+  width:min(100%,1120px)!important;
+  grid-template-columns:236px minmax(0,1fr)!important;
+  gap:24px!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-reader-v200>.rtv3-blueprint-content-v300{
+  width:min(100%,840px)!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300>.rtv3-blueprint-part-v300,
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv31-reassess-part{
+  margin:0 0 20px!important;
+  padding:24px 28px 10px!important;
+  border:1px solid rgba(121,200,255,.15)!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(620px 200px at 6% 0%,rgba(52,152,219,.07),transparent 70%),
+    rgba(5,13,20,.91)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300>.rtv3-blueprint-part-v300>.rtv3-blueprint-part-header,
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv31-reassess-part>.rtv3-blueprint-part-header{
+  margin:0!important;
+  padding:0 0 16px!important;
+  border-top:0!important;
+  border-bottom:1px solid rgba(121,200,255,.13)!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtv3-part-label{
+  color:var(--rt31-green)!important;
+  font-size:.76rem!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtv3-part-title{
+  font-size:clamp(1.5rem,3vw,2.05rem)!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtbp-section{
+  padding:25px 0 28px!important;
+  border-top:1px solid rgba(148,163,184,.15)!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtv3-blueprint-part-header+.rtbp-section,
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv31-reassess-part .rtv3-blueprint-part-header+.rtbp-section{
+  border-top:0!important;
+}
+
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtbp-section>h3{
+  max-width:29ch!important;
+  font-size:clamp(1.4rem,2.7vw,1.95rem)!important;
+  line-height:1.14!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300 .rtbp-block :is(p,li){
+  font-family:Inter,system-ui,sans-serif!important;
+  font-size:1rem!important;
+  line-height:1.68!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-toc .rtv3-toc-group-label{
+  font-size:.75rem!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-toc .rtv3-toc-link{
+  min-height:42px!important;
+  font-size:.82rem!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-cover .rtv3-cover-title{
+  font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif!important;
+  font-size:clamp(2.3rem,5vw,3.8rem)!important;
+  line-height:1.00!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] :is(
+  [data-rt-deep-dive],
+  [data-rt-result-generation]
+){
+  margin-top:14px!important;
+  border:1px solid rgba(121,200,255,.13)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.018)!important;
+}
+body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] :is(
+  [data-rt-deep-dive],
+  [data-rt-result-generation]
+)>summary{
+  min-height:46px!important;
+  padding:11px 13px!important;
+  color:#eaf6fc!important;
+  font-size:.82rem!important;
+  font-weight:800!important;
+}
+
+/* Historical purchase remains untouched. */
+@media(max-width:920px){
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"]
+  ) #rt-mode-groups{
+    grid-template-columns:1fr!important;
+  }
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"]
+  ) #rt-mode-groups .rt-domain-head{
+    min-height:0!important;
+  }
+}
+@media(max-width:760px){
+  body.dlter-type-body[data-rt-presentation-state="saved-result"] #rt-verification .rt-verification-options{
+    grid-template-columns:1fr!important;
+  }
+  body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-reader-v200.rtv3-blueprint-reader-v300{
+    display:block!important;
+    width:100%!important;
+  }
+  body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-reader-v200>.rtv3-blueprint-reader-rail-v300{
+    display:none!important;
+  }
+  body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] #rt-blueprint-reader-v200>.rtv3-blueprint-content-v300{
+    width:100%!important;
+  }
+  body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv3-blueprint-content-v300>.rtv3-blueprint-part-v300,
+  body.dlter-type-body[data-rt-presentation-state="saved-result"][data-rt-blueprint-server-state="unlocked"] .rtv31-reassess-part{
+    padding:20px 17px 8px!important;
+    border-radius:16px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.dlter-type-body[data-rt-template-polish-version="3.1.0"] *{
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+<!-- /Reality Types shared template polish 3.1.2 -->
+
+<style id="nf-rt-template-polish-hotfix-v311">
+/* v3.1.1 stability hotfix: preserve provider-owned Overview structure. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-section{
+  display:block!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-verification .rt-verification-options{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-verification [data-rt-verify]{
+  min-height:46px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(121,200,255,.15)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.018)!important;
+  color:rgba(235,244,249,.90)!important;
+  font-size:.82rem!important;
+  line-height:1.38!important;
+  text-align:left!important;
+}
+@media(max-width:760px){
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-verification .rt-verification-options{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
+<style id="nf-rt-template-polish-final-v312">
+/* Final legibility pass for overview metadata and supporting labels. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view :is(
+  .rt-product-line>*,
+  #rt-result-state>span,
+  #rt-result-state .rt-result-state-meta>span,
+  .rt-coordination-card>strong,
+  .rt-primary-match>span,
+  .rt-method-note>strong,
+  .rt-blueprint-copy>span,
+  .rt-purchase-note>strong,
+  .dlter-price-card>.rt-blueprint-next-step,
+  .dlter-price-card>p
+){
+  font-size:max(.75rem,12px)!important;
+  line-height:1.42!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view .rt-result-state-meta{
+  gap:4px!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view [data-rt-action-level="utility"]{
+  opacity:.86;
+  border-color:rgba(121,200,255,.12)!important;
+  background:rgba(255,255,255,.018)!important;
+}
+</style>
+
+<style id="nf-rt-template-domain-grid-v313">
+/* Align the result with the explainer's 3-domain mental model without moving provider-owned DOM nodes. */
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-reality-map-section{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-reality-map-section>.rt-section-head{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-reality-map-section :is(
+  #rt-mode-section,
+  #rt-mode-groups,
+  #rt-coordination-section,
+  #rt-coordination-grid
+){
+  display:contents!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-section>.rt-subsection-head{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  margin:2px 0 0!important;
+  padding:12px 2px 4px!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-section>.rt-subsection-head{
+  display:none!important;
+}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card{
+  grid-row:3!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card:nth-child(1){grid-column:1!important}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card:nth-child(2){grid-column:2!important}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-mode-groups>.rt-domain-card:nth-child(3){grid-column:3!important}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-grid>.rt-coordination-card{
+  grid-row:4!important;
+  align-self:stretch!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:14px!important;
+  border:1px solid rgba(242,200,100,.16)!important;
+  border-radius:13px!important;
+  background:
+    radial-gradient(360px 130px at 6% 0%,rgba(242,200,100,.045),transparent 70%),
+    rgba(7,18,27,.72)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-grid>.rt-coordination-card:nth-child(1){grid-column:1!important}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-grid>.rt-coordination-card:nth-child(2){grid-column:2!important}
+body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-coordination-grid>.rt-coordination-card:nth-child(3){grid-column:3!important}
+
+body.dlter-type-body:is(
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view [data-rt-action-level="secondary"]{
+  border-color:rgba(121,200,255,.20)!important;
+  background:rgba(52,152,219,.055)!important;
+  color:#d8effe!important;
+  box-shadow:none!important;
+}
+
+@media(max-width:760px){
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-reality-map-section{
+    grid-template-columns:1fr!important;
+  }
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-mode-groups>.rt-domain-card:nth-child(1){grid-column:1!important;grid-row:3!important}
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-coordination-grid>.rt-coordination-card:nth-child(1){grid-column:1!important;grid-row:4!important}
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-mode-groups>.rt-domain-card:nth-child(2){grid-column:1!important;grid-row:5!important}
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-coordination-grid>.rt-coordination-card:nth-child(2){grid-column:1!important;grid-row:6!important}
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-mode-groups>.rt-domain-card:nth-child(3){grid-column:1!important;grid-row:7!important}
+  body.dlter-type-body:is(
+    [data-rt-presentation-state="public-reference"],
+    [data-rt-presentation-state="saved-result"],
+    [data-rt-presentation-state="local-result"]
+  ) #rt-coordination-grid>.rt-coordination-card:nth-child(3){grid-column:1!important;grid-row:8!important}
+}
+</style>
+
+<style id="nf-rt-template-target-polish-v1">
+body.dlter-type-body a[href="/terms-privacy"]{
+  min-height:28px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  padding-block:4px!important;
+}
+</style>
+
+==============================
+BEFORE </body>
+==============================
+<script data-rt-template-shell-inline="1.2.1">
+/* NeuForm Reality Types Template Shell 1.2.1 */
+(function () {
   "use strict";
 
-  function boot(){
-    if(window.__DLTER_TYPE_BOOTSTRAP_V32) return;
-    window.__DLTER_TYPE_BOOTSTRAP_V32 = true;
+  var VERSION = "1.2.1";
+  var SHARED_PRICE_ID = "prc_dlter-premium-blueprint-2a110thx";
+  var PAGE_PREFIX = "/dlter-reality-types/";
+  var SUCCESS_PATH = "/dlter-purchase-complete";
+  var RETURN_KEY = "nf.dlter.returnTo";
+  var UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  var CHECKOUT_SELECTOR = "[data-rt-blueprint-checkout]";
+  var MAX_DISCOVERY_ATTEMPTS = 40;
+  var DISCOVERY_INTERVAL_MS = 250;
+  var SIGNUP_DEBOUNCE_MS = 1500;
+  var OBSERVED_ATTRIBUTES = [
+    "data-rt-page-mode",
+    "data-rt-presentation-state",
+    "data-rt-blueprint-server-state",
+    "data-rt-experience-view",
+    "class"
+  ];
 
-    try{ document.body.classList.add("dlter-type-body"); }catch(e){}
+  if (window.__NF_RT_TEMPLATE_SHELL_V1__) return;
 
-    var DLTER_EXPLAINED_URL="/dlter-explained";
-    var BLUEPRINT_INCLUDES=["30-Day Roadmap","Shadow Pattern & Integration Strategy","Decision Architecture","Training Translation","Integration Practices"];
-    var LOCKED_TEASER={title:"Shadow Integration Strategy 🔒",text:"Unlocked in the Blueprint"};
-    var TRAINING_BRIDGE="The Blueprint applies cyclical structure to support consistency and recovery.";
-    var AXIS_HELP={
-      perception:"Perception — How you take in information",
-      emergence:"Emergence — How you adapt to change",
-      identity:"Identity — How your sense of self updates"
-    };
+  var runtime = {
+    started: false,
+    destroyed: false,
+    memberStatus: "checking",
+    memberPresent: false,
+    memberPoll: 0,
+    capabilityPoll: 0,
+    memberSync: 0,
+    observer: null,
+    busyControl: null,
+    signupBusy: false,
+    signupTimer: 0,
+    checkoutState: "idle",
+    mountCount: 0,
+    lastControlState: ""
+  };
 
-    function clampToPercent(val){
-      var n=Number(val);
-      if(isNaN(n)) return 0;
-      if(n<0) return 0;
-      if(n>100) return 100;
-      return n;
-    }
-    function normText(s){ return String(s||"").toLowerCase().replace(/\s+/g," ").trim(); }
-    function safeAppend(parent,child){ if(parent&&child) parent.appendChild(child); }
-    function insertAfter(ref,newNode){
-      if(!ref||!ref.parentNode||!newNode) return;
-      if(ref.nextSibling) ref.parentNode.insertBefore(newNode,ref.nextSibling);
-      else ref.parentNode.appendChild(newNode);
-    }
-    function getTypeName(){
-      var el=document.getElementById("dlter-type-title")||document.querySelector(".dlter-type-name");
-      var t=el?String(el.textContent||"").replace(/\s+/g," ").trim():"";
-      return t||"this";
-    }
-    function getHeroCtaText(){
-      var btn=document.querySelector(".dlter-price-card .dlter-cta-button");
-      if(btn){
-        var t=String(btn.textContent||"").replace(/\s+/g," ").trim();
-        if(t) return t;
-      }
+  window.__NF_RT_TEMPLATE_SHELL_V1__ = Object.freeze({
+    version: VERSION,
+    sharedPriceId: SHARED_PRICE_ID,
+    get memberKnown() { return runtime.memberStatus === "known"; },
+    get memberPresent() { return runtime.memberPresent; },
+    get memberStatus() { return runtime.memberStatus; },
+    get checkoutState() { return runtime.checkoutState; },
+    get mountCount() { return runtime.mountCount; },
+    get controlState() { return runtime.lastControlState; },
+    get memberSync() { return runtime.memberSync; }
+  });
+
+  function clean(value) {
+    return String(value == null ? "" : value).replace(/\s+/g, " ").trim();
+  }
+
+  function resultRoot() {
+    return document.querySelector(".dlter-hero-shell.rt-result-root,.dlter-hero-shell");
+  }
+
+  function onTypePage() {
+    try {
+      if (String(window.location.pathname || "").indexOf(PAGE_PREFIX) === 0) return true;
+    } catch (_) {}
+    return !!resultRoot();
+  }
+
+  function pageMode() {
+    try {
+      var authority = window.__NF_RT_PAGE_MODE_AUTHORITY_V1__;
+      var value = clean(authority && authority.mode);
+      if (value) return value;
+    } catch (_) {}
+    try {
+      return clean(document.body && document.body.getAttribute("data-rt-page-mode"));
+    } catch (_) {
       return "";
     }
-    function isWebflowStaging(){
-      try{
-        var h=(window.location&&window.location.hostname)||"";
-        return !!(h&&h.endsWith("webflow.io"));
-      }catch(e){ return false; }
-    }
-    function warnOnce(key,msg){
-      try{
-        if(window[key]) return;
-        window[key]=true;
-        console.warn(msg);
-      }catch(e){}
-    }
-    function markMemberstackMissing(){
-      try{ document.body.classList.add("dlter-ms-missing"); }catch(e){}
-      warnOnce("__DLTER_MS_MISSING_WARNED",
-        "[DLTER] Memberstack v2 ($memberstackDom) did not load or never became ready. Login/Signup/Profile modals and checkout buttons will not function until Memberstack loads."
-      );
-    }
-    function markMissingPriceId(){
-      if(isWebflowStaging()){
-        try{ document.body.classList.add("dlter-missing-priceid"); }catch(e){}
-      }
-      warnOnce("__DLTER_MISSING_PRICEID_WARNED",
-        "[DLTER] STRONG WARNING: This Reality Type page is missing its Memberstack priceId (data-ms-price:add). Blueprint will remain locked and checkout buttons cannot work until the per-type priceId is present."
-      );
-    }
+  }
 
-    function getCurrentTypePriceId(){
-      var heroBtn=document.querySelector(".dlter-price-card .dlter-cta-button");
-      if(heroBtn){
-        var v1=heroBtn.getAttribute("data-ms-price:add");
-        if(v1) return String(v1).trim();
-        var v1b=heroBtn.getAttribute("data-ms-price");
-        if(v1b) return String(v1b).trim();
-      }
-      var buttons=document.querySelectorAll(".dlter-cta-button");
-      for(var i=0;i<buttons.length;i++){
-        var el=buttons[i];
-        var v=el.getAttribute("data-ms-price:add");
-        if(v) return String(v).trim();
-        var vb=el.getAttribute("data-ms-price");
-        if(vb) return String(vb).trim();
-      }
+  function presentationState() {
+    try {
+      return clean(document.body && document.body.getAttribute("data-rt-presentation-state"));
+    } catch (_) {
       return "";
     }
+  }
 
-    function syncCheckoutCtasForMemberState(hasMember){
-      var buttons=document.querySelectorAll(".dlter-cta-button");
-      for(var i=0;i<buttons.length;i++){
-        var el=buttons[i];
-        if(!el||el.nodeType!==1) continue;
+  function blueprintState() {
+    try {
+      return clean(document.body && document.body.getAttribute("data-rt-blueprint-server-state"));
+    } catch (_) {
+      return "";
+    }
+  }
 
-        var priceId=el.getAttribute("data-ms-price:add") || el.getAttribute("data-ms-price");
-        if(!priceId) continue;
+  function attemptId() {
+    try {
+      var authority = window.__NF_RT_PAGE_MODE_AUTHORITY_V1__;
+      var fromAuthority = clean(authority && authority.attemptId);
+      if (UUID.test(fromAuthority)) return fromAuthority;
+    } catch (_) {}
+    try {
+      var query = new URLSearchParams(window.location.search || "");
+      var fromQuery = clean(query.get("attempt") || query.get("attemptId"));
+      return UUID.test(fromQuery) ? fromQuery : "";
+    } catch (_) {
+      return "";
+    }
+  }
 
-        if(el.tagName==="A" && !el.getAttribute("href")) el.setAttribute("href","#");
+  function checkoutControls() {
+    return Array.prototype.slice.call(document.querySelectorAll(CHECKOUT_SELECTOR));
+  }
 
-        if(hasMember){
-          el.removeAttribute("data-ms-modal");
-          el.removeAttribute("data-ms-redirect");
-        }else{
-          el.setAttribute("data-ms-modal","signup");
-          el.setAttribute("data-ms-redirect","current-url");
-        }
+  function sharedPriceFromPage() {
+    var root = resultRoot();
+    return clean(root && root.getAttribute("data-rt-shared-price-id"));
+  }
 
-        el.setAttribute("aria-haspopup","dialog");
+  function resultComplete() {
+    var root = resultRoot();
+    return !!(root && root.getAttribute("data-rt-result-complete") === "true");
+  }
+
+  function blueprintContentReady() {
+    var runtime = document.getElementById("rt-blueprint-runtime") ||
+      document.querySelector("[data-rt-blueprint-runtime]");
+    if (!runtime) return false;
+    var sections = runtime.querySelectorAll(".rtbp-section,[data-rt-blueprint-section]");
+    return sections.length >= 12 && clean(runtime.textContent).length > 1200;
+  }
+
+  function pageEligibility() {
+    if (!onTypePage()) return "wrong-route";
+    if (pageMode() === "historical-purchase") return "historical";
+    if (pageMode() !== "saved-attempt") return "not-saved-attempt";
+    if (!attemptId()) return "missing-attempt";
+    if (presentationState() !== "saved-result") return "not-saved-result";
+    if (blueprintState() === "unlocked" || blueprintContentReady()) return "already-unlocked";
+    if (!resultComplete()) return "result-incomplete";
+    if (blueprintState() !== "locked") return "not-ready";
+    if (sharedPriceFromPage() !== SHARED_PRICE_ID) return "price-mismatch";
+    return "eligible";
+  }
+
+  function addMemberstackCandidate(list, candidate) {
+    if (!candidate) return;
+    for (var index = 0; index < list.length; index += 1) {
+      if (list[index] === candidate) return;
+    }
+    list.push(candidate);
+  }
+
+  function memberstackCandidates() {
+    var list = [];
+    try {
+      if (
+        window.neuform &&
+        window.neuform.memberstack &&
+        typeof window.neuform.memberstack.get === "function"
+      ) {
+        addMemberstackCandidate(list, window.neuform.memberstack.get());
       }
+    } catch (_) {}
+    try { addMemberstackCandidate(list, window.$memberstackDom); } catch (_) {}
+    try { addMemberstackCandidate(list, window.MemberStack); } catch (_) {}
+    return list;
+  }
+
+  function memberstackWith(methodName) {
+    var candidates = memberstackCandidates();
+    for (var index = 0; index < candidates.length; index += 1) {
+      if (typeof candidates[index][methodName] === "function") return candidates[index];
+    }
+    return null;
+  }
+
+  function memberstack() {
+    var lookupClient = memberstackWith("getCurrentMember");
+    var candidates;
+    if (lookupClient) return lookupClient;
+    candidates = memberstackCandidates();
+    return candidates.length ? candidates[0] : null;
+  }
+
+  function hasMemberLookup(client) {
+    return !!(client && typeof client.getCurrentMember === "function");
+  }
+
+  function requiredCapabilityReady() {
+    if (runtime.memberStatus !== "known") return false;
+    if (runtime.memberPresent) return !!memberstackWith("purchasePlansWithCheckout");
+    return !!memberstackWith("openModal");
+  }
+
+  function controlState() {
+    var pageReason = pageEligibility();
+    var client;
+    if (pageReason !== "eligible") return pageReason;
+    if (runtime.busyControl) return "opening";
+    if (runtime.signupBusy) return "signup-opening";
+    if (runtime.memberStatus === "checking") return "member-checking";
+    if (runtime.memberStatus === "unavailable") return "account-unavailable";
+    if (runtime.memberStatus !== "known") return "member-checking";
+    if (runtime.memberPresent) {
+      client = memberstackWith("purchasePlansWithCheckout");
+      return client ? "eligible" : "checkout-unavailable";
+    }
+    client = memberstackWith("openModal");
+    return client ? "signup-required" : "signup-unavailable";
+  }
+
+  function statusNode() {
+    var node = document.getElementById("rt-blueprint-next-step") ||
+      document.querySelector("[data-dlter-cta-note]");
+    if (node) {
+      node.setAttribute("role", "status");
+      node.setAttribute("aria-live", "polite");
+      node.setAttribute("aria-atomic", "true");
+    }
+    return node;
+  }
+
+  function announce(message) {
+    var node = statusNode();
+    if (node) node.textContent = message;
+  }
+
+  function labelNode(control) {
+    return control && control.querySelector(".dlter-cta-button-text");
+  }
+
+  function originalLabel(control) {
+    if (!control) return "Build My Personal Blueprint";
+    var stored = clean(control.getAttribute("data-rt-shell-label"));
+    if (stored) return stored;
+    var label = clean(labelNode(control) && labelNode(control).textContent) || "Build My Personal Blueprint";
+    control.setAttribute("data-rt-shell-label", label);
+    return label;
+  }
+
+  function setLabel(control, value) {
+    var label = labelNode(control);
+    if (label) label.textContent = value;
+    else if (control) control.textContent = value;
+  }
+
+  function labelForState(control, state) {
+    if (state === "member-checking") return "Checking Account...";
+    if (state === "account-unavailable") return "Account Check Unavailable";
+    if (state === "signup-required") return "Sign In or Create Account";
+    if (state === "signup-opening") return "Opening Account...";
+    if (state === "signup-unavailable") return "Sign-In Temporarily Unavailable";
+    if (state === "checkout-unavailable") return "Checkout Temporarily Unavailable";
+    if (state === "opening") return "Opening Secure Checkout...";
+    return originalLabel(control);
+  }
+
+  function titleForState(state) {
+    if (state === "member-checking") return "Checking your NeuForm account before enabling this action.";
+    if (state === "account-unavailable") return "Your NeuForm account could not be verified right now.";
+    if (state === "signup-unavailable") return "Account sign-in is temporarily unavailable.";
+    if (state === "checkout-unavailable") return "Secure checkout is temporarily unavailable.";
+    if (state === "result-incomplete") return "Your complete Reality Map is still loading.";
+    if (state === "not-ready" || state === "not-saved-result") return "Blueprint access is still being checked.";
+    if (state === "price-mismatch") return "Blueprint checkout is temporarily unavailable.";
+    return "";
+  }
+
+  function setCheckoutState(value) {
+    runtime.checkoutState = value;
+    try {
+      document.body.setAttribute("data-rt-template-shell-checkout", value);
+    } catch (_) {}
+  }
+
+  function stripNativeCommerce(control) {
+    if (!control) return;
+    control.removeAttribute("data-ms-price");
+    control.removeAttribute("data-ms-price:add");
+    control.removeAttribute("data-ms-modal");
+    control.removeAttribute("data-ms-redirect");
+    control.setAttribute("data-rt-blueprint-checkout", "");
+    control.setAttribute("href", "#");
+  }
+
+  function syncControl(control, state) {
+    var allowed;
+    var title;
+    if (!control) return;
+    stripNativeCommerce(control);
+    originalLabel(control);
+    allowed = runtime.memberStatus === "known" &&
+      (state === "eligible" || state === "signup-required");
+    control.setAttribute("data-rt-template-shell-state", state);
+    control.setAttribute("aria-disabled", allowed ? "false" : "true");
+    setLabel(control, labelForState(control, state));
+
+    if (allowed) {
+      control.removeAttribute("data-rt-template-shell-disabled");
+      control.removeAttribute("tabindex");
+      control.removeAttribute("title");
+    } else {
+      control.setAttribute("data-rt-template-shell-disabled", "true");
+      control.setAttribute("tabindex", "-1");
+      title = titleForState(state);
+      if (title) control.setAttribute("title", title);
+      else control.removeAttribute("title");
     }
 
-    function emitAccessState(unlocked){
-      var detail={unlocked:!!unlocked,priceId:getCurrentTypePriceId()||"",typeName:getTypeName()||""};
-      try{
-        document.dispatchEvent(new CustomEvent("dlter:accessState",{detail:detail}));
-      }catch(e){
-        try{
-          var ev=document.createEvent("CustomEvent");
-          ev.initCustomEvent("dlter:accessState",false,false,detail);
-          document.dispatchEvent(ev);
-        }catch(e2){}
-      }
+    if (state === "member-checking" || state === "opening" || state === "signup-opening") {
+      control.setAttribute("aria-busy", "true");
+    } else {
+      control.removeAttribute("aria-busy");
+    }
+  }
+
+  function dispatchStateChange(state) {
+    if (runtime.lastControlState === state) return;
+    runtime.lastControlState = state;
+    try {
+      document.dispatchEvent(new CustomEvent("rt:templateShellStateChanged", {
+        detail: {
+          version: VERSION,
+          state: state,
+          memberStatus: runtime.memberStatus,
+          memberPresent: runtime.memberPresent
+        }
+      }));
+    } catch (_) {}
+  }
+
+  function reconcileControls() {
+    var state;
+    var controls;
+    var memberAttribute;
+    if (runtime.destroyed) return;
+    state = controlState();
+    controls = checkoutControls();
+    for (var i = 0; i < controls.length; i += 1) syncControl(controls[i], state);
+
+    if (runtime.memberStatus === "known") {
+      memberAttribute = runtime.memberPresent ? "present" : "absent";
+    } else {
+      memberAttribute = runtime.memberStatus;
     }
 
-    (function ensureExplainedLink(){
-      if(document.querySelector(".dlter-explained-link")) return;
-      var chips=document.querySelector(".dlter-hero-left .dlter-axis-chips");
-      if(!chips||!chips.parentNode) return;
-      var a=document.createElement("a");
-      a.className="dlter-explained-link";
-      a.href=DLTER_EXPLAINED_URL;
-      a.setAttribute("aria-label","Learn how the DLTER framework works");
-      a.innerHTML='How DLTER Works <span aria-hidden="true">→</span>';
-      insertAfter(chips,a);
-    })();
+    try {
+      document.body.setAttribute("data-rt-template-shell-state", state);
+      document.body.setAttribute("data-rt-template-shell-version", VERSION);
+      document.body.setAttribute("data-rt-template-shell-member", memberAttribute);
+    } catch (_) {}
+    dispatchStateChange(state);
+  }
 
-    (function ensureBlueprintIncludes(){
-      var priceCard=document.querySelector(".dlter-price-card");
-      if(!priceCard) return;
-      if(priceCard.querySelector(".dlter-blueprint-includes")) return;
+  function mountNativeSnapshot() {
+    var slot = document.getElementById("rt-native-snapshot-slot");
+    var snapshot = document.querySelector(".dlter-card.dlter-snapshot");
+    if (!slot || !snapshot || slot.contains(snapshot)) return false;
+    slot.appendChild(snapshot);
+    snapshot.removeAttribute("hidden");
+    snapshot.setAttribute("data-rt-native-richtext", "mounted");
+    runtime.mountCount += 1;
+    return true;
+  }
 
-      var wrap=document.createElement("div");
-      wrap.className="dlter-blueprint-includes";
-      wrap.setAttribute("aria-label","Blueprint includes");
+  function saveReturnTarget() {
+    var path = "/dlter-quiz";
+    try {
+      path = window.location.pathname + window.location.search + "#blueprint";
+    } catch (_) {}
+    var payload = JSON.stringify({ path: path, ts: Date.now() });
+    try { window.localStorage.setItem(RETURN_KEY, payload); } catch (_) {}
+    try { window.sessionStorage.setItem(RETURN_KEY, payload); } catch (_) {}
+  }
 
-      var title=document.createElement("div");
-      title.className="dlter-blueprint-includes-title";
-      title.textContent="Includes:";
-      safeAppend(wrap,title);
+  function stopMemberPoll() {
+    if (!runtime.memberPoll) return;
+    window.clearInterval(runtime.memberPoll);
+    runtime.memberPoll = 0;
+  }
 
-      var ul=document.createElement("ul");
-      ul.className="dlter-blueprint-includes-list";
-      for(var i=0;i<BLUEPRINT_INCLUDES.length;i++){
-        var li=document.createElement("li");
-        li.textContent=BLUEPRINT_INCLUDES[i];
-        ul.appendChild(li);
-      }
-      safeAppend(wrap,ul);
+  function stopCapabilityPoll() {
+    if (!runtime.capabilityPoll) return;
+    window.clearInterval(runtime.capabilityPoll);
+    runtime.capabilityPoll = 0;
+  }
 
-      var guarantee=priceCard.querySelector(".dlter-cta-guarantee");
-      if(guarantee&&guarantee.parentNode) priceCard.insertBefore(wrap,guarantee);
-      else safeAppend(priceCard,wrap);
-    })();
-
-    (function renameTheoryContext(){
-      var headings=document.querySelectorAll(".dlter-subheading, .dlter-section-heading");
-      if(!headings||!headings.length) return;
-      for(var i=0;i<headings.length;i++){
-        var el=headings[i];
-        var t=normText(el.textContent);
-        if(t==="dlter theory context"||t==="theory context"||t.indexOf("dlter theory")!==-1){
-          el.textContent="How Your Architecture Works";
-        }
-      }
-    })();
-
-    (function enhanceTrainingSection(){
-      var subs=document.querySelectorAll(".dlter-subheading");
-      if(!subs||!subs.length) return;
-      for(var i=0;i<subs.length;i++){
-        var el=subs[i];
-        var t=normText(el.textContent);
-        if(t.indexOf("training")!==-1 && t.indexOf("recovery")!==-1){
-          var block=el.parentElement;
-          if(!block) continue;
-          if(block.classList && !block.classList.contains("dlter-training-highlight")){
-            block.classList.add("dlter-training-highlight");
-          }
-          if(!block.querySelector(".dlter-training-bridge")){
-            var p=document.createElement("p");
-            p.className="dlter-training-bridge";
-            p.textContent=TRAINING_BRIDGE;
-            p.style.marginTop="10px";
-            p.style.fontSize="12px";
-            p.style.lineHeight="1.6";
-            p.style.color="rgba(209, 213, 219, 0.92)";
-            safeAppend(block,p);
-          }
-        }
-      }
-    })();
-
-    var __dlterLockedTeaserEl=null;
-    (function injectLockedTeaser(){
-      var snap=document.querySelector(".dlter-card.dlter-snapshot");
-      if(!snap) return;
-
-      var existing=snap.querySelector(".dlter-locked-teaser");
-      if(existing){ __dlterLockedTeaserEl=existing; return; }
-
-      var teaser=document.createElement("div");
-      teaser.className="dlter-locked-teaser";
-      teaser.setAttribute("role","note");
-      teaser.setAttribute("aria-label","Locked blueprint teaser");
-
-      var t=document.createElement("div");
-      t.className="dlter-locked-teaser-title";
-      t.textContent=LOCKED_TEASER.title;
-
-      var d=document.createElement("div");
-      d.className="dlter-locked-teaser-text";
-      d.textContent=LOCKED_TEASER.text;
-
-      teaser.appendChild(t);
-      teaser.appendChild(d);
-
-      var subs=snap.querySelectorAll(".dlter-subheading");
-      var inserted=false;
-
-      for(var i=0;i<subs.length;i++){
-        var h=subs[i];
-        var ht=normText(h.textContent);
-        if(ht.indexOf("core challenges")!==-1 || ht==="core challenges"){
-          var block=h.parentElement;
-          if(block&&block.parentNode){
-            insertAfter(block,teaser);
-            inserted=true;
-            break;
-          }
-        }
-      }
-      if(!inserted){
-        var right=snap.querySelector(".dlter-snapshot-right");
-        if(right){ safeAppend(right,teaser); inserted=true; }
-      }
-      if(!inserted) safeAppend(snap,teaser);
-
-      __dlterLockedTeaserEl=teaser;
-    })();
-
-    (function initAxisTooltips(){
-      if(!document.getElementById("dlter-tooltip-styles")){
-        var st=document.createElement("style");
-        st.id="dlter-tooltip-styles";
-        st.textContent=".dlter-tooltip{position:fixed;z-index:9999;max-width:260px;padding:10px 12px;border-radius:12px;border:1px solid rgba(148,163,184,.45);background:rgba(2,6,23,.92);backdrop-filter:blur(10px);box-shadow:0 18px 40px rgba(0,0,0,.65);color:rgba(243,244,246,.96);font-size:12px;line-height:1.45;letter-spacing:.01em;opacity:0;transform:translateY(4px);transition:opacity .14s ease, transform .14s ease;pointer-events:none}.dlter-tooltip.is-visible{opacity:1;transform:translateY(0)}";
-        document.head.appendChild(st);
-      }
-
-      var tooltip=document.getElementById("dlter-tooltip");
-      if(!tooltip){
-        tooltip=document.createElement("div");
-        tooltip.className="dlter-tooltip";
-        tooltip.setAttribute("role","tooltip");
-        tooltip.setAttribute("aria-hidden","true");
-        tooltip.id="dlter-tooltip";
-        document.body.appendChild(tooltip);
-      }
-
-      var activeEl=null;
-
-      function getHelpText(el){
-        if(!el) return "";
-        var dataTip=el.getAttribute("data-dlter-tip");
-        if(dataTip) return dataTip;
-        var title=el.getAttribute("title");
-        if(title) return title;
-        var axis=el.getAttribute("data-axis");
-        if(axis&&AXIS_HELP[axis]) return AXIS_HELP[axis];
-        var txt=normText(el.textContent);
-        if(txt.indexOf("perception")!==-1) return AXIS_HELP.perception;
-        if(txt.indexOf("emergence")!==-1) return AXIS_HELP.emergence;
-        if(txt.indexOf("identity")!==-1) return AXIS_HELP.identity;
-        return "";
-      }
-
-      function positionTooltip(el){
-        if(!el) return;
-        var rect=el.getBoundingClientRect();
-        tooltip.style.left="0px";tooltip.style.top="0px";
-        var tipRect=tooltip.getBoundingClientRect();
-        var pad=10;
-        var top=rect.top-tipRect.height-10;
-        var left=rect.left+rect.width/2-tipRect.width/2;
-        if(top<pad) top=rect.bottom+10;
-        if(left<pad) left=pad;
-        if(left+tipRect.width>window.innerWidth-pad) left=window.innerWidth-pad-tipRect.width;
-        tooltip.style.left=Math.round(left)+"px";
-        tooltip.style.top=Math.round(top)+"px";
-      }
-
-      function show(el){
-        var text=getHelpText(el);
-        if(!text) return;
-        activeEl=el;
-        tooltip.textContent=text;
-        tooltip.setAttribute("aria-hidden","false");
-        tooltip.classList.add("is-visible");
-        try{ el.setAttribute("aria-describedby",tooltip.id); }catch(e){}
-        positionTooltip(el);
-      }
-
-      function hide(){
-        tooltip.classList.remove("is-visible");
-        tooltip.setAttribute("aria-hidden","true");
-        if(activeEl){ try{ activeEl.removeAttribute("aria-describedby"); }catch(e){} }
-        activeEl=null;
-      }
-
-      function isNaturallyFocusable(el){
-        if(!el || el.nodeType!==1) return false;
-        if(el.hasAttribute && el.hasAttribute("disabled")) return false;
-
-        var tag=(el.tagName||"").toUpperCase();
-        if(tag==="BUTTON" || tag==="INPUT" || tag==="SELECT" || tag==="TEXTAREA") return true;
-        if(tag==="A") return !!el.getAttribute("href");
-
-        var ti=el.getAttribute("tabindex");
-        if(ti != null && String(ti) !== "-1") return true;
-
-        return false;
-      }
-
-      function bind(el){
-        if(!el||el.__dlterTipBound) return;
-        el.__dlterTipBound=true;
-
-        if(!isNaturallyFocusable(el)){
-          try{ el.setAttribute("tabindex","0"); }catch(e){}
-        }
-
-        if(el.tagName==="BUTTON" && !el.getAttribute("type")){
-          try{ el.setAttribute("type","button"); }catch(e){}
-        }
-
-        var title=el.getAttribute("title");
-        if(title && !el.getAttribute("data-dlter-tip")){
-          el.setAttribute("data-dlter-tip",title);
-          try{ el.removeAttribute("title"); }catch(e){}
-        }
-
-        el.addEventListener("mouseenter",function(){ show(el); });
-        el.addEventListener("mouseleave",function(){ hide(); });
-        el.addEventListener("focus",function(){ show(el); });
-        el.addEventListener("blur",function(){ hide(); });
-
-        el.addEventListener("click",function(){ show(el); });
-      }
-
-      var chips=document.querySelectorAll(".dlter-axis-chip");
-      for(var i=0;i<chips.length;i++) bind(chips[i]);
-
-      var labels=document.querySelectorAll(".dlter-axis-label");
-      for(var j=0;j<labels.length;j++) bind(labels[j]);
-
-      window.addEventListener("scroll",hide,true);
-      window.addEventListener("resize",function(){ if(activeEl) positionTooltip(activeEl); });
-
-      document.addEventListener("click",function(e){
-        if(!activeEl) return;
-
-        try{
-          if(e && e.target){
-            if(e.target === activeEl) return;
-            if(activeEl.contains && activeEl.contains(e.target)) return;
-          }
-        }catch(err){}
-
-        hide();
-      });
-
-      document.addEventListener("keydown",function(e){
-        var k=e&&(e.key||e.keyCode);
-        if(k==="Escape"||k==="Esc"||k===27) hide();
-      });
-    })();
-
-    function initAxisGraph(graph){
-      if(!graph||graph.__dlterGraphInitialized) return;
-      graph.__dlterGraphInitialized=true;
-
-      if(!graph.hasAttribute("role")) graph.setAttribute("role","img");
-      if(!graph.hasAttribute("aria-label")){
-        graph.setAttribute("aria-label","DLTER axis profile showing Perception, Emergence, and Identity scores.");
-      }
-
-      var scores={
-        perception:clampToPercent(graph.getAttribute("data-perception")),
-        emergence:clampToPercent(graph.getAttribute("data-emergence")),
-        identity:clampToPercent(graph.getAttribute("data-identity"))
-      };
-
-      Object.keys(scores).forEach(function(key){
-        var value=scores[key];
-        var fill=graph.querySelector('.dlter-axis-bar-fill[data-bar="'+key+'"]');
-        if(fill){
-          fill.setAttribute("aria-valuemin","0");
-          fill.setAttribute("aria-valuemax","100");
-          fill.setAttribute("aria-valuenow",String(value));
-
-          var prefersReduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          var applyHeight=function(){ fill.style.height=value+"%"; };
-          if(prefersReduced) applyHeight();
-          else requestAnimationFrame(applyHeight);
-        }
-        var label=graph.querySelector('.dlter-axis-score[data-score="'+key+'"]');
-        if(label) label.textContent=value+"/100";
-      });
+  function clearSignupBusy() {
+    if (runtime.signupTimer) {
+      window.clearTimeout(runtime.signupTimer);
+      runtime.signupTimer = 0;
     }
+    runtime.signupBusy = false;
+  }
 
-    var graphs=document.querySelectorAll(".dlter-axis-graph");
-    if("IntersectionObserver" in window && !(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)){
-      var graphObserver=new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){
-            initAxisGraph(entry.target);
-            graphObserver.unobserve(entry.target);
-          }
-        });
-      },{threshold:.3});
-      for(var i=0;i<graphs.length;i++) graphObserver.observe(graphs[i]);
-      window.addEventListener('pagehide', function(){ try{ graphObserver.disconnect(); }catch(_){} }, { once:true });
-    }else{
-      for(var j=0;j<graphs.length;j++) initAxisGraph(graphs[j]);
+  function startCapabilityPoll() {
+    var attempts = 0;
+    if (runtime.destroyed || runtime.memberStatus !== "known") return;
+    if (requiredCapabilityReady()) {
+      stopCapabilityPoll();
+      reconcileControls();
+      return;
     }
-
-    (function injectUsageNote(){
-      var content=document.querySelector(".dlter-blueprint-content");
-      if(!content||content.querySelector(".dlter-usage-note")) return;
-      var note=document.createElement("div");
-      note.className="dlter-usage-note";
-      note.innerHTML='<span class="dlter-usage-note-title">How to use this Blueprint</span><ul class="dlter-usage-note-list"><li>First, read <strong>Welcome</strong> and <strong>Type Snapshot</strong> to anchor your core geometry.</li><li>Then move through <strong>Architecture &amp; Axes</strong> and <strong>Your Core Pattern</strong> to understand how your type behaves under change.</li><li>Finally, focus on <strong>Integration Practices</strong>, <strong>Reflection Prompts</strong>, and <strong>Your Next 30 Days</strong> to turn insight into action.</li></ul>';
-      var grid=content.querySelector(".dlter-blueprint-grid");
-      if(grid) content.insertBefore(note,grid);
-      else content.insertBefore(note,content.firstChild);
-    })();
-
-    function getSectionHeadingText(section){
-      if(!section) return "";
-      var h=section.querySelector(".dlter-subheading");
-      return h?normText(h.textContent):"";
-    }
-
-    (function applyBlueprintMetaByHeadings(){
-      var grid=document.querySelector(".dlter-blueprint-grid");
-      if(!grid) return;
-
-      var sections=Array.prototype.slice.call(grid.querySelectorAll(".dlter-bp-section"));
-      if(!sections.length) return;
-
-      sections.forEach(function(s){
-        s.removeAttribute("data-dlter-chapter");
-        s.removeAttribute("data-dlter-action");
-      });
-
-      function setFirstMatchChapter(chapterNum,matcherFn){
-        for(var i=0;i<sections.length;i++){
-          var t=getSectionHeadingText(sections[i]);
-          if(matcherFn(t)){
-            sections[i].setAttribute("data-dlter-chapter",String(chapterNum));
-            return true;
-          }
-        }
-        return false;
+    if (runtime.capabilityPoll) return;
+    runtime.capabilityPoll = window.setInterval(function () {
+      attempts += 1;
+      if (runtime.destroyed || runtime.memberStatus !== "known") {
+        stopCapabilityPoll();
+        return;
       }
-      function markActionByHeading(matcherFn){
-        for(var i=0;i<sections.length;i++){
-          var t=getSectionHeadingText(sections[i]);
-          if(matcherFn(t)) sections[i].setAttribute("data-dlter-action","true");
-        }
+      if (requiredCapabilityReady() || attempts >= MAX_DISCOVERY_ATTEMPTS) {
+        stopCapabilityPoll();
+        reconcileControls();
       }
+    }, DISCOVERY_INTERVAL_MS);
+  }
 
-      setFirstMatchChapter(1,function(t){return t==="welcome"||t.indexOf("welcome")!==-1;});
-      setFirstMatchChapter(2,function(t){return t.indexOf("architecture")!==-1||t.indexOf("axes")!==-1||t.indexOf("axis")!==-1;});
-      setFirstMatchChapter(3,function(t){return t.indexOf("core pattern")!==-1||t.indexOf("core reality pattern")!==-1;});
-      setFirstMatchChapter(4,function(t){return t.indexOf("decision architecture")!==-1;});
-      setFirstMatchChapter(5,function(t){return t==="growth path"||t.indexOf("growth path")!==-1;});
+  function settleMemberLookup(generation, status, present) {
+    if (runtime.destroyed || generation !== runtime.memberSync) return;
+    runtime.memberStatus = status;
+    runtime.memberPresent = status === "known" && !!present;
+    reconcileControls();
+    if (status === "known") startCapabilityPoll();
+  }
 
-      markActionByHeading(function(t){return t.indexOf("integration practices")!==-1;});
-      markActionByHeading(function(t){return t.indexOf("reflection prompts")!==-1;});
-      markActionByHeading(function(t){return t.indexOf("your next 30 days")!==-1||t.indexOf("next 30 days")!==-1;});
-    })();
+  function parseMemberLookup(result) {
+    if (!result || typeof result !== "object") return null;
+    if (!Object.prototype.hasOwnProperty.call(result, "data")) return null;
+    if (result.data === null) return { present: false };
+    if (result.data && typeof result.data === "object") return { present: true };
+    return null;
+  }
 
-    (function ensureBlueprintOverlayCTA(){
-      var btn=document.querySelector(".dlter-blueprint-overlay .dlter-cta-button");
-      if(!btn) return;
+  function syncMember() {
+    var client = memberstackWith("getCurrentMember");
+    var generation;
+    var pending;
+    if (runtime.destroyed || !hasMemberLookup(client)) return false;
 
-      var priceId=getCurrentTypePriceId();
-      if(priceId) btn.setAttribute("data-ms-price:add",priceId);
+    generation = runtime.memberSync + 1;
+    runtime.memberSync = generation;
+    runtime.memberStatus = "checking";
+    runtime.memberPresent = false;
+    stopCapabilityPoll();
+    reconcileControls();
 
-      var txt=getHeroCtaText()||"";
-      if(txt){
-        var tEl=btn.querySelector(".dlter-cta-button-text");
-        if(tEl) tEl.textContent=txt;
-        else btn.textContent=txt;
-      }
-
-      btn.setAttribute("aria-label","Unlock the "+getTypeName()+" Reality Blueprint");
-      if(btn.tagName==="A" && !btn.getAttribute("href")) btn.setAttribute("href","#");
-
-      btn.setAttribute("data-ms-modal","signup");
-      btn.setAttribute("data-ms-redirect","current-url");
-      btn.setAttribute("aria-haspopup","dialog");
-    })();
-
-    (function removeSecondaryCtaIfPresent(){
-      try{
-        var existing=document.querySelector(".dlter-secondary-cta-wrap");
-        if(existing && existing.parentNode) existing.parentNode.removeChild(existing);
-      }catch(e){}
-    })();
-
-    var __dlterBlueprintUnlocked=false;
-    syncCheckoutCtasForMemberState(false);
-
-    function setBodyAccessState(unlocked){
-      try{
-        document.body.classList.toggle("dlter-blueprint-unlocked",!!unlocked);
-        document.body.classList.toggle("dlter-blueprint-locked",!unlocked);
-      }catch(e){}
-    }
-
-    function updateConversionModulesAfterStateChange(){
-      if(__dlterLockedTeaserEl) __dlterLockedTeaserEl.style.display=__dlterBlueprintUnlocked?"none":"";
-      setBodyAccessState(__dlterBlueprintUnlocked);
-      try{
-        var el=document.querySelector(".dlter-secondary-cta-wrap");
-        if(el) el.style.display="none";
-      }catch(e){}
-    }
-
-    function lockBlueprint(){
-      __dlterBlueprintUnlocked=false;
-      var wrappers=document.querySelectorAll(".dlter-blueprint");
-      for(var i=0;i<wrappers.length;i++){
-        if(!wrappers[i].classList.contains("is-locked")) wrappers[i].classList.add("is-locked");
-      }
-      updateConversionModulesAfterStateChange();
-      emitAccessState(false);
-    }
-
-    function unlockBlueprint(){
-      __dlterBlueprintUnlocked=true;
-      var wrappers=document.querySelectorAll(".dlter-blueprint");
-      for(var i=0;i<wrappers.length;i++) wrappers[i].classList.remove("is-locked");
-      updateConversionModulesAfterStateChange();
-      emitAccessState(true);
-    }
-
-    function applyPreviewOverrides(){
-      if(!window.location||!window.location.hostname) return;
-      var hostname=window.location.hostname;
-      var search=window.location.search||"";
-      if(!hostname.endsWith("webflow.io")) return;
-
-      if(search.indexOf("previewBlueprint=true")!==-1){
-        if(typeof window.DLTR_unlockBlueprint==="function") window.DLTR_unlockBlueprint();
-      }else if(search.indexOf("previewLocked=true")!==-1){
-        if(typeof window.DLTR_lockBlueprint==="function") window.DLTR_lockBlueprint();
-      }
-    }
-
-    window.DLTR_unlockBlueprint=unlockBlueprint;
-    window.DLTR_lockBlueprint=lockBlueprint;
-    lockBlueprint();
-
-    function isDebugEnabled(){
-      try{
-        var s=window.location&&window.location.search||"";
-        return s.indexOf("dlterDebug=1")!==-1 || !!window.__DLTER_DEBUG__;
-      }catch(e){ return false; }
-    }
-
-    function collectOwnedPriceIds(member){
-      var out=new Set();
-      var seen;
-      try{ seen=new WeakSet(); }catch(e){ seen=null; }
-
-      function addVal(v){
-        if(!v) return;
-        if(typeof v==="string"){
-          var s=v.trim();
-          if(s && s.indexOf("prc_")===0) out.add(s);
-        }
-      }
-
-      function walk(node,depth){
-        if(!node || depth>8) return;
-        var t=typeof node;
-        if(t==="string"){ addVal(node); return; }
-        if(t!=="object") return;
-
-        if(seen){
-          try{ if(seen.has(node)) return; seen.add(node); }catch(e){}
-        }
-
-        if(Array.isArray(node)){
-          for(var i=0;i<node.length;i++) walk(node[i],depth+1);
-          return;
-        }
-
-        var keys=[];
-        try{ keys=Object.keys(node); }catch(e){}
-        for(var k=0;k<keys.length;k++){
-          var key=keys[k];
-          var val;
-          try{ val=node[key]; }catch(e2){ continue; }
-
-          var lk=String(key||"").toLowerCase();
-          if(lk==="priceid"||lk==="price_id"||lk.endsWith("priceid")||lk.endsWith("_priceid")) addVal(val);
-
-          walk(val,depth+1);
-        }
-      }
-
-      function addArraysFrom(obj){
-        if(!obj || typeof obj!=="object") return;
-        var keys=[];
-        try{ keys=Object.keys(obj); }catch(e){}
-        for(var i=0;i<keys.length;i++){
-          var k=keys[i];
-          var v;
-          try{ v=obj[k]; }catch(e2){ continue; }
-          if(!Array.isArray(v)) continue;
-          var lk=String(k||"").toLowerCase();
-          if(lk.indexOf("connection")!==-1 || lk.indexOf("purchase")!==-1 || lk.indexOf("order")!==-1 || lk.indexOf("checkout")!==-1 || lk.indexOf("payment")!==-1 || lk.indexOf("plan")!==-1){
-            walk(v,0);
-          }
-        }
-      }
-
-      if(member){
-        if(Array.isArray(member.planConnections)) walk(member.planConnections,0);
-        if(Array.isArray(member.plans)) walk(member.plans,0);
-        addArraysFrom(member);
-        if(member.data && typeof member.data==="object") addArraysFrom(member.data);
-      }
-
-      return out;
-    }
-
-    function memberOwnsPrice(member,requiredPriceId){
-      if(!member||!requiredPriceId) return false;
-      var req=String(requiredPriceId||"").trim();
-      if(!req) return false;
-      var set=collectOwnedPriceIds(member);
-      return set.has(req);
-    }
-
-    function syncUnlockStateOnce(){
-      var ms=window.$memberstackDom;
-      if(!ms || typeof ms.getCurrentMember!=="function") return false;
-
-      var priceId=getCurrentTypePriceId();
-      if(priceId) priceId=String(priceId).trim();
-      if(!priceId) markMissingPriceId();
-
-      var dbg=isDebugEnabled();
-
-      ms.getCurrentMember().then(function(result){
-        var member=result && result.data;
-
-        syncCheckoutCtasForMemberState(!!member);
-
-        if(dbg){
-          try{
-            console.log("[DLTER] required priceId:", priceId);
-            console.log("[DLTER] member present:", !!member);
-          }catch(e){}
-        }
-
-        var hasAccess=!!(member && priceId && memberOwnsPrice(member,priceId));
-
-        if(dbg && member){
-          try{
-            var owned=Array.from(collectOwnedPriceIds(member));
-            console.log("[DLTER] owned prc_ ids (candidate arrays):", owned);
-            console.log("[DLTER] access:", hasAccess);
-          }catch(e){}
-        }
-
-        if(hasAccess && typeof window.DLTR_unlockBlueprint==="function") window.DLTR_unlockBlueprint();
-        else if(typeof window.DLTR_lockBlueprint==="function") window.DLTR_lockBlueprint();
-
-      }).catch(function(err){
-        console.warn("[DLTER] getCurrentMember() failed:", err);
-        syncCheckoutCtasForMemberState(false);
-        if(typeof window.DLTR_lockBlueprint==="function") window.DLTR_lockBlueprint();
-      }).finally(function(){
-        applyPreviewOverrides();
-      });
-
+    try {
+      pending = client.getCurrentMember();
+    } catch (_) {
+      settleMemberLookup(generation, "unavailable", false);
       return true;
     }
 
-    (function unlockBootstrap(){
-      if(syncUnlockStateOnce()) return;
-
-      var attempts=0, maxAttempts=24;
-      var poll=setInterval(function(){
-        attempts++;
-        if(syncUnlockStateOnce()){ clearInterval(poll); return; }
-        if(attempts>=maxAttempts){
-          clearInterval(poll);
-          markMemberstackMissing();
-          applyPreviewOverrides();
-        }
-      },250);
-    })();
-
-    window.addEventListener("focus",function(){ syncUnlockStateOnce(); });
-    document.addEventListener("visibilitychange",function(){ if(!document.hidden) syncUnlockStateOnce(); });
+    Promise.resolve(pending).then(function (result) {
+      var parsed = parseMemberLookup(result);
+      if (!parsed) {
+        settleMemberLookup(generation, "unavailable", false);
+        return;
+      }
+      settleMemberLookup(generation, "known", parsed.present);
+    }).catch(function () {
+      settleMemberLookup(generation, "unavailable", false);
+    });
+    return true;
   }
 
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot);
-  else boot();
+  function discoverMemberstack() {
+    var attempts = 0;
+    if (runtime.destroyed) return;
+    if (hasMemberLookup(memberstackWith("getCurrentMember"))) {
+      stopMemberPoll();
+      syncMember();
+      return;
+    }
+    runtime.memberStatus = "checking";
+    runtime.memberPresent = false;
+    reconcileControls();
+    if (runtime.memberPoll) return;
+
+    runtime.memberPoll = window.setInterval(function () {
+      attempts += 1;
+      if (runtime.destroyed) {
+        stopMemberPoll();
+        return;
+      }
+      if (hasMemberLookup(memberstackWith("getCurrentMember"))) {
+        stopMemberPoll();
+        syncMember();
+        return;
+      }
+      if (attempts >= MAX_DISCOVERY_ATTEMPTS) {
+        stopMemberPoll();
+        runtime.memberStatus = "unavailable";
+        runtime.memberPresent = false;
+        reconcileControls();
+      }
+    }, DISCOVERY_INTERVAL_MS);
+  }
+
+  function revalidateMember() {
+    if (runtime.destroyed) return;
+    clearSignupBusy();
+    if (!syncMember()) discoverMemberstack();
+  }
+
+  function restoreCheckout(control, message) {
+    if (!control) return;
+    runtime.busyControl = null;
+    setCheckoutState("idle");
+    reconcileControls();
+    if (message) announce(message);
+  }
+
+  function beginCheckout(control) {
+    var client;
+    var checkout;
+    var result;
+    if (runtime.busyControl || runtime.signupBusy) return;
+    if (runtime.memberStatus !== "known" || !runtime.memberPresent) {
+      revalidateMember();
+      announce("Checking your NeuForm account before opening secure checkout.");
+      return;
+    }
+    client = memberstackWith("purchasePlansWithCheckout");
+    checkout = client && client.purchasePlansWithCheckout;
+    if (typeof checkout !== "function") {
+      startCapabilityPoll();
+      reconcileControls();
+      announce("Secure checkout is temporarily unavailable. Your saved result and access have not changed.");
+      return;
+    }
+
+    runtime.busyControl = control;
+    setCheckoutState("opening");
+    saveReturnTarget();
+    reconcileControls();
+    announce("Opening secure checkout...");
+
+    try {
+      result = checkout.call(client, {
+        priceId: SHARED_PRICE_ID,
+        successUrl: window.location.origin + SUCCESS_PATH,
+        cancelUrl: window.location.href,
+        autoRedirect: true
+      });
+      if (result && typeof result.catch === "function") {
+        result.catch(function () {
+          restoreCheckout(control, "Checkout did not open. Please try again. Your result and access have not changed.");
+        });
+      }
+    } catch (_) {
+      restoreCheckout(control, "Checkout did not open. Please try again. Your result and access have not changed.");
+    }
+  }
+
+  function restoreSignup(message) {
+    clearSignupBusy();
+    setCheckoutState("idle");
+    reconcileControls();
+    if (message) announce(message);
+  }
+
+  function beginSignup() {
+    var client;
+    var result;
+    if (runtime.signupBusy || runtime.busyControl) return;
+    if (runtime.memberStatus !== "known" || runtime.memberPresent) {
+      revalidateMember();
+      announce("Checking your NeuForm account before opening sign-in.");
+      return;
+    }
+    client = memberstackWith("openModal");
+    if (!client || typeof client.openModal !== "function") {
+      startCapabilityPoll();
+      reconcileControls();
+      announce("Account sign-in is temporarily unavailable. Refresh the page or open Support if the problem continues.");
+      return;
+    }
+
+    runtime.signupBusy = true;
+    setCheckoutState("signup-opening");
+    saveReturnTarget();
+    reconcileControls();
+    announce("Opening NeuForm account sign-in...");
+
+    try {
+      result = client.openModal("signup");
+      if (result && typeof result.catch === "function") {result.catch(function () {
+          restoreSignup("Account sign-in did not open. Please try again.");
+        });
+      }
+    } catch (_) {
+      restoreSignup("Account sign-in did not open. Please try again.");
+      return;
+    }
+
+    runtime.signupTimer = window.setTimeout(function () {
+      runtime.signupTimer = 0;
+      runtime.signupBusy = false;
+      setCheckoutState("idle");
+      reconcileControls();
+    }, SIGNUP_DEBOUNCE_MS);
+  }
+
+  function messageForBlockedState(state) {
+    if (state === "member-checking") return "Checking your NeuForm account before enabling the next step.";
+    if (state === "account-unavailable") return "Your NeuForm account could not be verified. Refresh the page or open Support. Your saved result has not changed.";
+    if (state === "checkout-unavailable") return "Secure checkout is temporarily unavailable. Your saved result remains available in My Library.";
+    if (state === "signup-unavailable") return "Account sign-in is temporarily unavailable. Refresh the page or open Support.";
+    if (state === "price-mismatch") return "Blueprint checkout is temporarily unavailable. Your saved result remains saved. Open Support for help.";
+    if (state === "result-incomplete") return "Your complete Reality Map is still loading. Checkout remains unavailable until all nine scores and the closest match are ready.";
+    if (state === "not-ready" || state === "not-saved-result") return "Blueprint access is still being checked. Please try again in a moment.";
+    return "This Blueprint action is not available in the current page state.";
+  }
+
+  function handleCheckoutClick(event) {
+    var target = event.target;
+    var control = target && typeof target.closest === "function" ? target.closest(CHECKOUT_SELECTOR) : null;
+    var state;
+    if (!control) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+
+    state = controlState();
+    reconcileControls();
+
+    if (state === "signup-required") {
+      beginSignup();
+      return;
+    }
+    if (state === "eligible") {
+      beginCheckout(control);
+      return;
+    }
+    announce(messageForBlockedState(state));
+  }
+
+  function reconcile() {
+    if (runtime.destroyed) return;
+    mountNativeSnapshot();
+    reconcileControls();
+  }
+
+  function observeState() {
+    if (!("MutationObserver" in window) || !document.body) return;
+    runtime.observer = new MutationObserver(reconcile);
+    runtime.observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: OBSERVED_ATTRIBUTES
+    });
+  }
+
+  function handleIdentityEvent() {
+    revalidateMember();
+  }
+
+  function handleVisibilityChange() {
+    if (!document.hidden) revalidateMember();
+  }
+
+  function handlePageShow(event) {
+    if (runtime.destroyed) return;
+    reconcile();
+    if (event && event.persisted) revalidateMember();
+  }
+
+  function handlePageHide(event) {
+    if (event && event.persisted) {
+      runtime.memberSync += 1;
+      runtime.memberStatus = "checking";
+      runtime.memberPresent = false;
+      runtime.busyControl = null;
+      clearSignupBusy();
+      stopMemberPoll();
+      stopCapabilityPoll();
+      setCheckoutState("idle");
+      reconcileControls();
+      return;
+    }
+    destroy();
+  }
+
+  function destroy() {
+    if (runtime.destroyed) return;
+    runtime.destroyed = true;
+    runtime.memberSync += 1;
+    stopMemberPoll();
+    stopCapabilityPoll();
+    clearSignupBusy();
+    try { if (runtime.observer) runtime.observer.disconnect(); } catch (_) {}
+    runtime.observer = null;
+    document.removeEventListener("click", handleCheckoutClick, true);
+    document.removeEventListener("rt:pageModeResolved", reconcile);
+    document.removeEventListener("rt:blueprintRendered", reconcile);
+    document.removeEventListener("rt:resultRendered", reconcile);
+    document.removeEventListener("memberstack:loggedIn", handleIdentityEvent);
+    document.removeEventListener("memberstack:loggedOut", handleIdentityEvent);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+    window.removeEventListener("memberstack:loggedIn", handleIdentityEvent);
+    window.removeEventListener("memberstack:loggedOut", handleIdentityEvent);
+    window.removeEventListener("focus", revalidateMember);
+    window.removeEventListener("pageshow", handlePageShow);
+    window.removeEventListener("pagehide", handlePageHide);
+  }
+
+  function start() {
+    if (runtime.started || runtime.destroyed || !document.body || !onTypePage()) return;
+    runtime.started = true;
+    document.body.classList.add("dlter-type-body");
+    document.addEventListener("click", handleCheckoutClick, true);
+    document.addEventListener("rt:pageModeResolved", reconcile);
+    document.addEventListener("rt:blueprintRendered", reconcile);
+    document.addEventListener("rt:resultRendered", reconcile);
+    document.addEventListener("memberstack:loggedIn", handleIdentityEvent);
+    document.addEventListener("memberstack:loggedOut", handleIdentityEvent);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("memberstack:loggedIn", handleIdentityEvent);
+    window.addEventListener("memberstack:loggedOut", handleIdentityEvent);
+    window.addEventListener("focus", revalidateMember);
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("pagehide", handlePageHide);
+    observeState();
+    reconcile();
+    discoverMemberstack();
+    document.dispatchEvent(new CustomEvent("rt:templateShellReady", { detail: { version: VERSION } }));
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();
 </script>
 
-<script>
-(function(){"use strict";
 
-function warnOnce(key,msg){
-  try{
-    if(window[key]) return;
-    window[key]=true;
-    console.warn(msg);
-  }catch(e){}
-}
+<!-- Reality Types shared template experience polish 3.1.5 -->
+<script id="nf-rt-template-polish-js-v310">
+(function(){
+  "use strict";
+  if(window.__NF_RT_TEMPLATE_POLISH_V310__) return;
+  window.__NF_RT_TEMPLATE_POLISH_V310__=true;
 
-function safeSetReturnTo(payloadStr){
-  try{
-    window.localStorage.setItem("nf.dlter.returnTo",payloadStr);
-    return true;
-  }catch(e1){
+  var VERSION="3.1.7";
+  var queued=false;
+  var seenSections=Object.create(null);
+  var trackedView=false;
+
+  function clean(v){return String(v==null?"":v).replace(/\s+/g," ").trim();}
+  function state(){return document.body.getAttribute("data-rt-presentation-state")||"";}
+  function supported(){var s=state();return s==="public-reference"||s==="saved-result"||s==="local-result";}
+  function saved(){var s=state();return s==="saved-result"||s==="local-result"||document.body.classList.contains("rt-has-personal-result");}
+  function byId(id){return document.getElementById(id);}
+  function setText(id,value){var el=byId(id);if(el&&clean(el.textContent)!==value)el.textContent=value;}
+
+  function track(name,data){
     try{
-      window.sessionStorage.setItem("nf.dlter.returnTo",payloadStr);
-      return true;
-    }catch(e2){
-      warnOnce("__DLTER_RETURNTO_WARNED","[DLTER] failed to save return path (localStorage/sessionStorage blocked)");
-      return false;
+      if(window.neuform&&typeof window.neuform.track==="function"){
+        return window.neuform.track(name,Object.assign({
+          surface:"reality_type_template",
+          template_polish_version:VERSION,
+          presentation_state:state(),
+          type_slug:document.body.getAttribute("data-reality-type")||"",
+          path:location.pathname||""
+        },data||{}));
+      }
+    }catch(e){}
+    return false;
+  }
+
+  function trackView(){
+    if(trackedView||!supported())return;
+    trackedView=true;
+    var key="nf.rt.template.view."+VERSION+"."+state()+"."+location.pathname;
+    try{
+      if(sessionStorage.getItem(key))return;
+      if(track("nf_reality_types_template_view",{view:document.body.getAttribute("data-rt-experience-view")||"overview"}))sessionStorage.setItem(key,"1");
+    }catch(e){track("nf_reality_types_template_view",{view:document.body.getAttribute("data-rt-experience-view")||"overview"});}
+  }
+
+  function replaceTextNodes(root,replacements){
+    if(!root)return;
+    var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    var node;
+    while((node=walker.nextNode())){
+      if(!node.nodeValue||!clean(node.nodeValue))continue;
+      var parent=node.parentElement;
+      if(parent&&/^(SCRIPT|STYLE|TEXTAREA)$/.test(parent.tagName))continue;
+      var value=node.nodeValue;
+      for(var i=0;i<replacements.length;i++){
+        if(value.indexOf(replacements[i][0])!==-1)value=value.split(replacements[i][0]).join(replacements[i][1]);
+      }
+      if(value!==node.nodeValue)node.nodeValue=value;
     }
   }
-}
 
-function rememberDlterPage(){
-  try{
-    var path=window.location.pathname+window.location.search;
-    var payload={path:path,ts:Date.now()};
-    safeSetReturnTo(JSON.stringify(payload));
-  }catch(e){
-    warnOnce("__DLTER_RETURNTO_WARNED","[DLTER] failed to save return path");
-  }
-}
+  function integrateDomains(){
+    var map=byId("rt-reality-map-section");
+    var groups=byId("rt-mode-groups");
+    var coordGrid=byId("rt-coordination-grid");
+    var coordSection=byId("rt-coordination-section");
+    if(!map||!groups||!coordGrid||!coordSection)return;
 
-function isDlterCheckoutButton(el){
-  if(!el||el.nodeType!==1) return false;
-  var cur=el;
-  while(cur&&cur!==document.body){
-    if(cur.classList&&cur.classList.contains("dlter-cta-button")){
-      var priceId=cur.getAttribute("data-ms-price:add")||cur.getAttribute("data-ms-price");
-      if(priceId) return true;
+    var domains=Array.from(groups.children).filter(function(x){return x.classList&&x.classList.contains("rt-domain-card");});
+    var freshCoords=Array.from(coordGrid.children).filter(function(x){return x.classList&&x.classList.contains("rt-coordination-card");});
+
+    if(domains.length===3&&freshCoords.length===3){
+      freshCoords.forEach(function(card,index){
+        card.classList.add("rtv31-domain-coordination");
+        card.setAttribute("data-rt-domain-coordination",String(index+1));
+        domains[index].appendChild(card);
+      });
     }
-    cur=cur.parentElement;
+
+    var nested=groups.querySelectorAll(".rtv31-domain-coordination");
+    if(domains.length===3&&nested.length===3){
+      coordSection.setAttribute("data-rt-v31-integrated","true");
+      map.setAttribute("data-rt-v31-integrated","true");
+    }
+
+    if(saved()){
+      setText("rt-map-heading","Your Reality Map");
+      setText("rt-map-intro","Your nine scores are grouped by domain so you can see both tendencies and how each pair coordinates.");
+      setText("rt-mode-heading","Three domains, nine scores");
+      setText("rt-mode-intro","Each domain shows two mode scores from your assessment plus one separately measured coordination score.");
+    }else{
+      setText("rt-map-heading","Reference Reality Map");
+      setText("rt-map-intro","These are reference values for this pattern. They are not personal assessment scores.");
+      setText("rt-mode-heading","Three-domain reference map");
+      setText("rt-mode-intro","Each domain shows two reference mode values plus one coordination value for this profile.");
+    }
   }
-  return false;
+
+  function restoreCoordinationStructure(){
+    var groups=byId("rt-mode-groups");
+    var coordGrid=byId("rt-coordination-grid");
+    var coordSection=byId("rt-coordination-section");
+    if(!groups||!coordGrid||!coordSection)return;
+    var moved=Array.from(groups.querySelectorAll(".rtv31-domain-coordination"));
+    if(moved.length){
+      moved.forEach(function(card){
+        card.classList.remove("rtv31-domain-coordination");
+        card.removeAttribute("data-rt-domain-coordination");
+        coordGrid.appendChild(card);
+      });
+    }
+    coordSection.removeAttribute("data-rt-v31-integrated");
+    var map=byId("rt-reality-map-section");
+    if(map)map.removeAttribute("data-rt-v31-integrated");
+  }
+
+  function restoreOverviewVisibility(){
+    if(!supported())return;
+    ["rt-reality-map-section","rt-match-section","rt-native-section","rt-experiment-section"].forEach(function(id){
+      var el=byId(id);
+      if(!el)return;
+      el.hidden=false;
+      el.removeAttribute("aria-hidden");
+      el.removeAttribute("inert");
+    });
+    var verification=byId("rt-verification");
+    if(verification){
+      verification.hidden=!saved();
+      if(saved()){verification.removeAttribute("aria-hidden");verification.removeAttribute("inert");}
+    }
+  }
+
+  function normalizeMapHeadings(){
+    if(saved()){
+      setText("rt-map-heading","Your Reality Map");
+      setText("rt-map-intro","Your nine scores are grouped into six mode scores and three coordination scores.");
+      setText("rt-mode-heading","Six mode scores across three domains");
+      setText("rt-mode-intro","Each domain contains two separately measured tendencies. Both can be high, low, or mixed.");
+      setText("rt-coordination-heading","Three coordination scores");
+      setText("rt-coordination-intro","These scores describe how consistently each paired set of tendencies appears to work together in your responses.");
+    }else{
+      setText("rt-map-heading","Reference Reality Map");
+      setText("rt-map-intro","These values describe this reference profile. They are not personal assessment scores.");
+      setText("rt-mode-heading","Six reference mode scores across three domains");
+      setText("rt-mode-intro","The two modes in each domain are separate values rather than opposite ends of one slider.");
+      setText("rt-coordination-heading","Three reference coordination scores");
+      setText("rt-coordination-intro","These values show how the paired tendencies are intended to coordinate in this reference profile.");
+    }
+  }
+
+  function normalizeCurrentTypeName(){
+    if(!supported())return;
+    var slug=document.body.getAttribute("data-reality-type")||document.documentElement.getAttribute("data-wf-item-slug")||"";
+    var names={
+      "structured-empathic-lens":{
+        current:"The Structured Insight Lens",
+        old:["The Structured Empathic Lens","Structured Empathic Lens"]
+      },
+      "resonant-fieldholder":{
+        current:"The Resonant Integrator",
+        old:["The Resonant Fieldholder","Resonant Fieldholder"]
+      }
+    };
+    var def=names[slug];
+    if(!def)return;
+    document.querySelectorAll("[data-rt-public-name],#dlter-type-title,.dlter-type-name").forEach(function(el){
+      if(clean(el.textContent)!==def.current)el.textContent=def.current;
+    });
+    replaceTextNodes(byId("rt-overview-view"),[
+      [def.old[0],def.current],
+      [def.old[1],def.current.replace(/^The\s+/,"")]
+    ]);
+  }
+
+  function normalizeReferenceLanguage(){
+    var match=byId("rt-match-section");
+    if(saved()){
+      setText("rt-match-heading","Reference matches");
+      setText("rt-match-intro","Reference profiles summarize a larger score pattern. Your nine scores remain the fuller result.");
+    }else{
+      setText("rt-match-heading","Reference pattern");
+      setText("rt-match-intro","This page describes one landmark in the larger Reality Types system. Complete the assessment to compare it with your own nine-score map.");
+    }
+
+    replaceTextNodes(match,[
+      ["Archetype reference","Reference pattern"],
+      ["Your archetype matches","Reference matches"],
+      ["Archetypes summarize a larger score pattern. They are landmarks, not boxes.","Reference profiles summarize a larger score pattern. Your nine scores remain the fuller result."],
+      ["This archetype is a memorable reference pattern, not a box.","This reference profile is a memorable comparison pattern, not a box."],
+      ["closest to this archetype","closest to this reference profile"],
+      ["than the archetype reference","than this reference profile"],
+      ["reference signature for this archetype","reference signature for this profile"],
+      ["Strongest match","Closest reference"]
+    ]);
+
+    var experiment=byId("rt-experiment-section");
+    replaceTextNodes(experiment,[
+      ["archetype description","reference-pattern description"],
+      ["Try this pattern for seven days","Try this reference pattern for seven days"]
+    ]);
+
+    var preview=byId("rt-blueprint-offer-section");
+    replaceTextNodes(preview,[
+      ["A deeper interpretation of all six modes and how they interact","A deeper interpretation of your nine-score Reality Map"],
+      ["Your decision, stability, and identity-development patterns","Your sensemaking, stability, and identity-development patterns"]
+    ]);
+  }
+
+  function normalizeInterpretation(){
+    var root=byId("rt-native-section");
+    if(!root)return;
+    var headings=root.querySelectorAll("h2,h3,h4,strong");
+    headings.forEach(function(el){
+      var t=clean(el.textContent);
+      if(t==="Primary Strengths")el.textContent="Where this pattern can help";
+      else if(t==="Common Friction Points")el.textContent="Where this pattern can create friction";
+      else if(t==="Training & Recovery Snapshot"||t==="Training and recovery")el.textContent="Training and recovery reflection";
+    });
+  }
+
+  function normalizeVerification(){
+    var section=byId("rt-verification");
+    if(!section||!saved())return;
+    setText("rt-verification-heading","How well does this match recurring examples from your experience?");
+    setText("rt-verification-intro","Compare the interpretation with repeated situations, not one isolated moment. Your choice does not change the scores.");
+    var labels={
+      primary:"Strong repeated fit",
+      secondary:"A nearby reference fits better",
+      context:"Different patterns fit in different situations",
+      dimensions:"My scores fit better than any one pattern",
+      uncertain:"Not sure yet"
+    };
+    section.querySelectorAll("[data-rt-verify]").forEach(function(btn){
+      var key=btn.getAttribute("data-rt-verify");
+      if(labels[key]&&clean(btn.textContent)!==labels[key])btn.textContent=labels[key];
+    });
+  }
+
+  function normalizeExperiment(){
+    var section=byId("rt-experiment-section");
+    if(!section)return;
+    if(saved()){
+      setText("rt-experiment-heading","Your seven-day experiment");
+      setText("rt-experiment-intro","Use one small real-world test to see whether the interpretation helps you notice or change something useful.");
+    }else{
+      setText("rt-experiment-heading","Try this reference pattern for seven days");
+      setText("rt-experiment-intro","Use this as a small real-world test of the reference-pattern description. Keep what proves useful and revise what does not.");
+    }
+    var title=clean((byId("rt-experiment-heading")||{}).textContent);
+    var seen=false;
+    section.querySelectorAll("h2,h3").forEach(function(h){
+      if(clean(h.textContent)!==title)return;
+      if(!seen){seen=true;return;}
+      h.hidden=true;
+      h.setAttribute("data-rt-v31-duplicate-heading","true");
+    });
+  }
+
+  function simplifyActions(){
+    var primary=byId("rt-assessment-action");
+    if(primary&&!saved())primary.textContent="Take the Free Assessment";
+    var offer=byId("rt-blueprint-assessment-action");
+    if(offer&&!saved())offer.textContent="Take the Free Assessment First";
+
+    if(saved()){
+      document.querySelectorAll(".rt-result-actions a,.rt-result-actions button").forEach(function(el){
+        var t=clean(el.textContent);
+        if(t==="Copy Result Summary")el.setAttribute("data-rt-action-level","utility");
+        else if(t==="Open My Library")el.setAttribute("data-rt-action-level","utility");
+        else if(t==="New Reality Types Map")el.setAttribute("data-rt-action-level","secondary");
+        else if(t==="Retake Assessment")el.setAttribute("data-rt-action-level","secondary");
+      });
+    }
+  }
+
+  function enhanceBlueprint(){
+    if(state()!=="saved-result"||document.body.getAttribute("data-rt-blueprint-server-state")!=="unlocked")return;
+    var root=byId("rt-blueprint-runtime");
+    if(!root)return;
+
+    var parts=[
+      ["v3-map","Part 1","Read Your Map"],
+      ["v3-pattern","Part 2","Understand the Pattern"],
+      ["v3-application","Part 3","Apply It"]
+    ];
+    parts.forEach(function(def){
+      var part=root.querySelector('[data-rt-blueprint-part="'+def[0]+'"]');
+      if(!part)return;
+      var label=part.querySelector(".rtv3-part-label");
+      var title=part.querySelector(".rtv3-part-title");
+      if(label)label.textContent=def[1];
+      if(title)title.textContent=def[2];
+    });
+
+  }
+
+  function injectSchema(){
+    if(!supported()||document.getElementById("nf-rt-template-jsonld-v31"))return;
+    var title=clean((document.querySelector("#rt-overview-view h1")||document.querySelector("h1")||{}).textContent);
+    if(!title)return;
+    var desc=(document.querySelector('meta[name="description"]')||{}).content||"";
+    var url=location.origin+location.pathname;
+    var script=document.createElement("script");
+    script.type="application/ld+json";
+    script.id="nf-rt-template-jsonld-v31";
+    script.textContent=JSON.stringify({
+      "@context":"https://schema.org",
+      "@graph":[
+        {
+          "@type":"WebPage",
+          "@id":url+"#webpage",
+          "url":url,
+          "name":document.title,
+          "description":desc,
+          "inLanguage":"en-US",
+          "isPartOf":{"@id":"https://www.neuform-fitness.com/#website"},
+          "publisher":{"@id":"https://www.neuform-fitness.com/#organization"},
+          "breadcrumb":{"@id":url+"#breadcrumb"}
+        },
+        {
+          "@type":"BreadcrumbList",
+          "@id":url+"#breadcrumb",
+          "itemListElement":[
+            {"@type":"ListItem","position":1,"name":"Home","item":"https://www.neuform-fitness.com/"},
+            {"@type":"ListItem","position":2,"name":"Reality Types","item":"https://www.neuform-fitness.com/dlter-quiz"},
+            {"@type":"ListItem","position":3,"name":title,"item":url}
+          ]
+        }
+      ]
+    });
+    document.head.appendChild(script);
+  }
+
+  function enhance(){
+    if(!supported())return;
+    document.documentElement.setAttribute("data-rt-template-polish-version",VERSION);
+    document.body.setAttribute("data-rt-template-polish-version",VERSION);
+    restoreCoordinationStructure();
+    restoreOverviewVisibility();
+    normalizeCurrentTypeName();
+    normalizeReferenceLanguage();
+    normalizeInterpretation();
+    normalizeVerification();
+    normalizeExperiment();
+    simplifyActions();
+    enhanceBlueprint();
+    injectSchema();
+    trackView();
+  }
+
+  function queue(){
+    if(queued)return;
+    queued=true;
+    requestAnimationFrame(function(){queued=false;enhance();});
+  }
+
+  document.addEventListener("click",function(event){
+    var copy=event.target&&event.target.closest&&event.target.closest("#rt-copy-summary");
+    if(!copy||!supported()||!saved())return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var packet=null;
+    try{packet=JSON.parse(localStorage.getItem("nf.realityTypes.lastResult.v2")||"null");}catch(e){}
+    var scores=packet&&packet.scores||null;
+    var typeName=clean((document.querySelector("#rt-match-content h3")||document.querySelector("#dlter-type-title")||{}).textContent);
+    var text="My closest Reality Types reference is "+typeName+".";
+    if(scores){
+      text+=" My nine-score map: RS "+Math.round(scores.RS)+", EC "+Math.round(scores.EC)+", BS "+Math.round(scores.BS)+", SA "+Math.round(scores.SA)+", AR "+Math.round(scores.AR)+", FS "+Math.round(scores.FS)+", CP "+Math.round(scores.CP)+", TR "+Math.round(scores.TR)+", ID "+Math.round(scores.ID)+".";
+    }
+    text+=" "+location.href;
+    function done(){var old=copy.textContent;copy.textContent="Copied";setTimeout(function(){copy.textContent=old;},1200);}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done).catch(function(){window.prompt("Copy your summary:",text);});
+    else window.prompt("Copy your summary:",text);
+    track("nf_reality_types_template_action",{action:"copy_summary",label:"Copy Result Summary"});
+  },true);
+  // nf-rt-copy-summary-v311
+
+  document.addEventListener("click",function(event){
+    var target=event.target&&event.target.closest&&event.target.closest("a,button,summary");
+    if(!target||!supported())return;
+    var data={label:clean(target.textContent).slice(0,120)};
+
+    if(target.matches("[data-rt-verify]")){
+      data.action="verification";
+      data.choice=target.getAttribute("data-rt-verify")||"";
+      track("nf_reality_types_template_action",data);
+      return;
+    }
+    if(target.matches("[data-rt-blueprint-checkout],.dlter-cta-button")){
+      data.action="blueprint_checkout";
+      track("nf_reality_types_template_action",data);
+      return;
+    }
+    if(target.matches("[data-rt-view-action],.rtv3-experience-tab")){
+      data.action="view_switch";
+      data.view=target.getAttribute("data-rt-view-action")||clean(target.textContent).toLowerCase();
+      track("nf_reality_types_template_action",data);
+      return;
+    }
+    var href=target.getAttribute("href")||"";
+    if(href==="/dlter-quiz")data.action="assessment";
+    else if(href==="/library")data.action="library";
+    else if(href.indexOf("/dlter-reality-types/")===0)data.action="reference_compare";
+    else if(href==="/dlter-explained")data.action="explainer";
+    else if(target.id==="rt-copy-summary")data.action="copy_summary";
+    else return;
+    data.destination=href;
+    track("nf_reality_types_template_action",data);
+  },{passive:true});
+
+  function installSectionTracking(){
+    if(!("IntersectionObserver" in window))return;
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting||entry.intersectionRatio<0.15)return;
+        var el=entry.target;
+        var key=el.getAttribute("data-rt-blueprint-section")||el.id||"";
+        if(!key||seenSections[key])return;
+        seenSections[key]=true;
+        track("nf_reality_types_template_section_view",{section:key,view:document.body.getAttribute("data-rt-experience-view")||"overview"});
+      });
+    },{rootMargin:"-15% 0px -60% 0px",threshold:[0.15]});
+    ["rt-reality-map-section","rt-match-section","rt-native-section","rt-verification","rt-experiment-section"].forEach(function(id){
+      var el=byId(id);if(el)observer.observe(el);
+    });
+    document.querySelectorAll("[data-rt-blueprint-section]").forEach(function(el){observer.observe(el);});
+  }
+
+  var observer=new MutationObserver(queue);
+  observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:[
+    "data-rt-presentation-state",
+    "data-rt-blueprint-server-state",
+    "data-rt-experience-view",
+    "data-rt-overview-status",
+    "class"
+  ]});
+
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){enhance();setTimeout(installSectionTracking,900);},{once:true});
+  else{enhance();setTimeout(installSectionTracking,900);}
+  setTimeout(enhance,250);
+  setTimeout(enhance,900);
+  setTimeout(enhance,1800);
+  setTimeout(enhance,3200);
+})();
+</script>
+<!-- /Reality Types shared template experience polish 3.1.5 -->
+
+<style id="nf-rt-template-final-cascade-v313">
+/* Final cascade lives after provider assets so the three-domain cards remain actual surfaces. */
+html body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view #rt-reality-map-section #rt-mode-groups>.rt-domain-card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:18px!important;
+  overflow:hidden!important;
+  border:1px solid rgba(121,200,255,.15)!important;
+  border-radius:15px!important;
+  background:
+    radial-gradient(420px 150px at 6% 0%,rgba(52,152,219,.065),transparent 70%),
+    rgba(7,20,30,.74)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
 }
 
-document.addEventListener("click",function(e){
-  if(isDlterCheckoutButton(e.target)) rememberDlterPage();
-});
+html body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view #rt-reality-map-section #rt-mode-groups>.rt-domain-card:nth-child(2){
+  border-top-color:rgba(120,214,168,.52)!important;
+}
+html body.dlter-type-body:is(
+  [data-rt-presentation-state="public-reference"],
+  [data-rt-presentation-state="saved-result"],
+  [data-rt-presentation-state="local-result"]
+) #rt-overview-view #rt-reality-map-section #rt-mode-groups>.rt-domain-card:nth-child(3){
+  border-top-color:rgba(183,156,255,.52)!important;
+}
+</style>
 
+<script id="nf-rt-current-name-finalizer-v1">
+(function(){
+  "use strict";
+  var names={
+    "structured-empathic-lens":"The Structured Insight Lens",
+    "resonant-fieldholder":"The Resonant Integrator"
+  };
+  function apply(){
+    var state=document.body&&document.body.getAttribute("data-rt-presentation-state")||"";
+    if(state==="historical-purchase")return;
+    var slug=document.body&&document.body.getAttribute("data-reality-type")||document.documentElement.getAttribute("data-wf-item-slug")||"";
+    var name=names[slug];
+    if(!name)return;
+    document.querySelectorAll("[data-rt-public-name],#dlter-type-title,.dlter-type-name").forEach(function(el){
+      if(String(el.textContent||"").trim()!==name)el.textContent=name;
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply,{once:true});else apply();
+  [120,350,800,1500,2600,4200,6000].forEach(function(ms){setTimeout(apply,ms);});
+})();
+</script>
+
+<script id="nf-rt-current-name-observer-v2">
+(function(){
+  "use strict";
+  var MAP={
+    "structured-empathic-lens":"The Structured Insight Lens",
+    "resonant-fieldholder":"The Resonant Integrator"
+  };
+  function apply(){
+    if(!document.body)return;
+    if((document.body.getAttribute("data-rt-presentation-state")||"")==="historical-purchase")return;
+    var slug=document.body.getAttribute("data-reality-type")||document.documentElement.getAttribute("data-wf-item-slug")||"";
+    var name=MAP[slug];
+    if(!name)return;
+    document.querySelectorAll("#dlter-type-title,[data-rt-public-name],.dlter-type-name").forEach(function(el){
+      if((el.textContent||"").trim()!==name)el.textContent=name;
+    });
+  }
+  function boot(){
+    apply();
+    var title=document.getElementById("dlter-type-title");
+    if(title && !title.__nfNameWatch){
+      var watcher=new MutationObserver(function(){apply();});
+      watcher.observe(title,{subtree:true,childList:true,characterData:true});
+      title.__nfNameWatch=watcher;
+    }
+    var root=document.getElementById("rt-overview-view")||document.body;
+    if(root && !root.__nfNameRootWatch){
+      var rootWatch=new MutationObserver(function(records){
+        var relevant=records.some(function(r){
+          return r.type==="childList"||r.type==="characterData";
+        });
+        if(relevant)apply();
+      });
+      rootWatch.observe(root,{subtree:true,childList:true,characterData:true});
+      root.__nfNameRootWatch=rootWatch;
+    }
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+  else boot();
+  setTimeout(boot,500);
 })();
 </script>
