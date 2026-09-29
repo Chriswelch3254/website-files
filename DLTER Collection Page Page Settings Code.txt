@@ -3,7 +3,7 @@ LIVE WEBFLOW MIRROR
 Shared template: Reality Types by DLTER
 Webflow Page ID: 692cde9c78f04f76b05e3f50
 Template source version: 1.7.1
-Presentation polish authority: 3.1.6
+Presentation polish authority: 3.1.7
 Synced: 2026-09-28
 Authority note: This file mirrors the currently published Webflow collection-template page settings. Git history preserves prior versions.
 
