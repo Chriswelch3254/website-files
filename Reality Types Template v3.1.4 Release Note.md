@@ -1,4 +1,4 @@
-# Reality Types Template v3.1.4 Release Note
+# Reality Types Template v3.1.7 Release Note
 
 Date: 2026-09-28
 Webflow site: 65d26f254c0a038c1f9198e6
@@ -6,7 +6,7 @@ Webflow collection template page: 692cde9c78f04f76b05e3f50
 
 ## Current production authority
 
-The published Webflow Reality Types collection template is currently on presentation-polish authority v3.1.4, layered over the existing result, presentation, experience, current Blueprint, and historical Blueprint runtimes.
+The published Webflow Reality Types collection template is currently on presentation-polish authority v3.1.7, layered over the existing result, presentation, experience, current Blueprint, and historical Blueprint runtimes.
 
 Until the historical raw-code mirror is refreshed, use the live Webflow template as the source of truth for this surface rather than restoring older template text from this repository.
 
@@ -39,3 +39,11 @@ Until the historical raw-code mirror is refreshed, use the live Webflow template
 - Historical purchase mode remained isolated: historical mount visible, current Blueprint mount hidden, no v3.1.x polish applied.
 - Copy Result Summary was verified to output closest-reference wording plus all nine scores.
 - Structured Insight Lens title, H1, and SEO metadata were verified live.
+
+
+## v3.1.7 final stabilization
+
+- Final production smoke test passed across all 12 public reference profiles.
+- Each page resolved HTTP 200, one H1, one canonical, one Twitter-card declaration, runtime JSON-LD, 3 mode-domain cards, 3 coordination cards, no duplicate IDs, no horizontal overflow, and zero visible Overview labels below 12px.
+- Current customer-facing names are aligned to The Structured Insight Lens and The Resonant Integrator while preserving historical slugs.
+- Historical purchase mode remains isolated from current-result polish.
