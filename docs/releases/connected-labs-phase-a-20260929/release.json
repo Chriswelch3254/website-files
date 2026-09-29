@@ -1,7 +1,7 @@
 {
   "version": "nf-connected-labs-phase-a.v1",
   "siteId": "65d26f254c0a038c1f9198e6",
-  "status": "published-foundation-source-merge-blocked",
+  "status": "published-source-merged",
   "sourceCommit": "4421b1d08b161a9b2af24dcacca8dbc11d6cb64d",
   "changes": [
     {
