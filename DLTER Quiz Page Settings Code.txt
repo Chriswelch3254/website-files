@@ -1,2343 +1,2100 @@
 DLTER Quiz Page Settings Code
-Head:
-<!-- Basic meta -->
+LIVE WEBFLOW MIRROR
+Webflow Page ID: 692cd9f802828a7c8ecf804a
+Synced: 2026-09-29
+Authority note: This file mirrors the currently staged Webflow page-level Head and Footer code.
+
+==============================
+HEAD
+==============================
+<!-- Reality Types Assessment by DLTER -->
+<!-- Quiz presentation 3.2.1. Assessment engine, scoring, storage, API, and result routing remain rt2.0. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="description" content="Answer 24 quick statements to discover your DLTER Reality Type across Perception, Emergence, and Identity axes. Takes ~4–6 minutes.">
-<meta name="theme-color" content="#0b0f12">
+<meta name="theme-color" content="#071018">
 <meta name="color-scheme" content="dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NeuForm Fitness">
 <meta property="og:url" content="https://www.neuform-fitness.com/dlter-quiz">
-<meta property="og:title" content="DLTER Reality Types Quiz — Discover Your Identity Geometry">
-<meta property="og:description" content="Answer 24 quick statements to discover your DLTER Reality Type across Perception, Emergence, and Identity axes. Takes ~4–6 minutes.">
+<meta property="og:title" content="Discover Your Reality Type | Reality Types by DLTER">
+<meta property="og:description" content="Explore how you build clarity, create stability, and adapt through change with a structured 48-statement assessment and nine-score Reality Map.">
 <meta property="og:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="DLTER Reality Types Quiz — NeuForm Fitness">
+<meta property="og:image:alt" content="Reality Types by DLTER">
 <meta property="og:locale" content="en_US">
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DLTER Reality Types Quiz — Discover Your Identity Geometry">
-<meta name="twitter:description" content="Answer 24 quick statements to discover your DLTER Reality Type across Perception, Emergence, and Identity axes. Takes ~4–6 minutes.">
+<meta name="twitter:title" content="Discover Your Reality Type | Reality Types by DLTER">
+<meta name="twitter:description" content="Explore how you build clarity, create stability, and adapt through change with a structured 48-statement assessment and nine-score Reality Map.">
 <meta name="twitter:image" content="https://cdn.prod.website-files.com/65d26f254c0a038c1f9198e6/68c723c44c0ae0a617190d39_A9367A02-E957-4E3B-A9DE-149D040FA908_L0_001%20-%20Edited.jpg">
-<meta name="twitter:image:alt" content="DLTER Reality Types Quiz — NeuForm Fitness">
+<meta name="twitter:image:alt" content="Reality Types by DLTER">
 
-<!-- Performance niceties -->
 <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 
 <style>
-  body {
+  :root {
     color-scheme: dark;
-
-    /* Glass + shadow system (NeuForm core) */
-    --nf-glass-bg: rgba(30, 41, 59, 0.7);
-    --nf-glass-border: 1px solid rgba(255, 255, 255, 0.08);
-    --nf-glass-blur: blur(12px);
-    --nf-glass-shadow: 0 18px 45px rgba(0,0,0,0.6);
-    --nf-glass-shadow-sm: 0 8px 24px rgba(0,0,0,0.45);
-
-    /* Dark mode palette */
-    --dm-bg-primary: #020617;
-    --dm-surface-primary: #111827;
-    --dm-surface-secondary: #1f2937;
-    --dm-border: #4b5563;
-    --dm-border-subtle: rgba(148,163,184,0.35);
-    --dm-border-interactive: #3498db;
-
-    --dm-text-primary: rgba(249,250,251,0.92);
-    --dm-text-secondary: rgba(229,231,235,0.70);
-    --dm-text-disabled: rgba(148,163,184,0.55);
-    --dm-text-on-accent: #fff;
-
-    --dm-accent-primary: #3498db;
-    --dm-accent-primary-hover: #2980b9;
-    --dm-accent-soft: rgba(52,152,219,0.16);
-
-    --nf-gold: #FCD34D;
-
-    --dlter-axis-perception: #38bdf8;
-    --dlter-axis-emergence: #22c55e;
-    --dlter-axis-identity: #eab308;
-
-    --nf-radius: 14px;
-    --nf-radius-sm: 10px;
-    --nf-radius-lg: 20px;
-
-    --nf-2: 8px;
-    --nf-3: 12px;
-    --nf-4: 16px;
-    --nf-5: 20px;
-    --nf-6: 24px;
-    --nf-8: 32px;
-
-    --nf-container-max: 1200px;
-    --nf-gutter: clamp(12px, 4vw, 24px);
-    --nf-card-content-max: 860px;
-
-    --nf-focus-ring: rgba(52,152,219,0.90);
+    --rt-blue: #3498db;
+    --rt-blue-bright: #79c8ff;
+    --rt-blue-deep: #176d9f;
+    --rt-gold: #fcd34d;
+    --rt-bg: #071018;
+    --rt-surface: rgba(6, 12, 18, 0.88);
+    --rt-surface-2: rgba(0, 0, 0, 0.48);
+    --rt-line: rgba(255, 255, 255, 0.11);
+    --rt-line-blue: rgba(52, 152, 219, 0.30);
+    --rt-text: rgba(249, 250, 251, 0.96);
+    --rt-muted: rgba(214, 225, 232, 0.76);
+    --rt-soft: rgba(159, 180, 194, 0.68);
+    --rt-danger: #fca5a5;
+    --rt-success: #86efac;
+    --rt-radius: 24px;
+    --rt-radius-sm: 16px;
+    --rt-shadow: 0 28px 78px rgba(0, 0, 0, 0.58);
+    --rt-max: 980px;
+    --rt-gutter: clamp(12px, 4vw, 24px);
   }
 
   html {
-    -webkit-text-size-adjust: 100%;
+    background: transparent !important;
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     margin: 0;
-    background-color: var(--dm-bg-primary);
-    color: var(--dm-text-secondary);
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    position: relative;
-    min-height: 100vh;
-    min-height: 100dvh;
+    background: transparent !important;
+  }
+
+  body.nf-reality-types-assessment {
+    color: var(--rt-muted);
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
 
-  @supports (overflow: clip) {
-    body { overflow-x: clip; }
+  /* Preserve the native Webflow Background component without a page-level tint. */
+  body.nf-reality-types-assessment::before,
+  body.nf-reality-types-assessment::after {
+    content: none !important;
+    display: none !important;
   }
 
-  body::before,
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::before {
-    background:
-      radial-gradient(circle at 20% -10%, rgba(15,23,42,0.65), transparent 55%),
-      radial-gradient(circle at 80% 110%, rgba(15,23,42,0.9), transparent 60%),
-      linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.95));
-    mix-blend-mode: multiply;
-  }
-
-  body::after {
-    background:
-      radial-gradient(circle at 50% 0%, rgba(0,0,0,0.7), transparent 55%),
-      radial-gradient(circle at 0% 50%, rgba(0,0,0,0.65), transparent 55%),
-      radial-gradient(circle at 100% 50%, rgba(0,0,0,0.65), transparent 55%);
-  }
-
-  .nf {
-    position: relative;
-    z-index: 1;
-  }
-
-  .nf, .nf * {
+  [data-rt-assessment],
+  [data-rt-assessment] * {
     box-sizing: border-box;
   }
 
-  .nf :is(button, input, select, textarea) {
+  [data-rt-assessment] {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: clamp(38px, 6vw, 78px) var(--rt-gutter) clamp(74px, 9vw, 120px);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--rt-muted);
+  }
+
+  [data-rt-assessment] [hidden] {
+    display: none !important;
+  }
+
+  [data-rt-assessment] a {
+    color: var(--rt-blue-bright);
+  }
+
+  [data-rt-assessment] button,
+  [data-rt-assessment] input {
     font: inherit;
   }
 
-  .nf {
-    background-color: transparent;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: var(--dm-text-secondary);
-    font-size: 1rem;
-    line-height: 1.65;
+  [data-rt-assessment] .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 
-  /* Headings (supports H1 upgrade on quiz embed) */
-  .nf h1, .nf h2, .nf h3, .nf h4 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    color: var(--dm-text-primary);
-    font-weight: 700;
-  }
-
-  .nf h1 {
-    font-size: clamp(1.6rem, 1.35rem + 0.95vw, 2.2rem);
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin: 0 0 0.35rem;
-  }
-
-  .nf h2 {
-    font-size: clamp(1.375rem, 1.29rem + .37vw, 1.6rem);
-    letter-spacing: -0.02em;
-  }
-
-  .nf-lab-container {
-    width: 100%;
-    max-width: var(--nf-container-max);
-    margin-inline: auto;
-    padding-left: var(--nf-gutter);
-    padding-right: var(--nf-gutter);
-    padding-top: clamp(40px, 8vh, 72px);
-    padding-bottom: clamp(64px, 10vh, 110px);
+  .rt-assessment-card {
     position: relative;
     isolation: isolate;
-  }
-
-  .nf-lab-container::before {
-    content: "";
-    position: absolute;
-    inset: 10% 5%;
-    background:
-      radial-gradient(circle at 20% 10%, rgba(52,152,219,0.14), transparent 60%),
-      radial-gradient(circle at 80% 90%, rgba(148,163,184,0.18), transparent 65%);
-    filter: blur(18px);
-    opacity: 0.7;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .nf-lab-container::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(15,23,42,0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15,23,42,0.2) 1px, transparent 1px);
-    background-size: 36px 36px;
-    opacity: 0.16;
-    mix-blend-mode: soft-light;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .nf .card {
-    position: relative;
-    background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-radius: var(--nf-radius-lg);
-    padding: clamp(18px, 3.5vw, 32px);
-    box-shadow:
-      0 22px 55px rgba(0,0,0,0.75),
-      0 0 0 1px rgba(15,23,42,0.8);
-    border: 1px solid rgba(148,163,184,0.35);
     overflow: hidden;
-    transition:
-      transform .22s ease-out,
-      box-shadow .22s ease-out,
-      border-color .22s ease-out,
-      background .22s ease-out;
-    z-index: 1;
+    width: min(var(--rt-max), 100%);
+    margin: 0 auto;
+    border: 1px solid var(--rt-line-blue);
+    border-radius: clamp(22px, 2.5vw, 32px);
+    background:
+      radial-gradient(980px 340px at 50% 0%, rgba(52, 152, 219, 0.16), transparent 70%),
+      radial-gradient(620px 260px at 12% 100%, rgba(255, 255, 255, 0.04), transparent 68%),
+      linear-gradient(180deg, rgba(4, 10, 16, 0.92), rgba(0, 0, 0, 0.97));
+    box-shadow: var(--rt-shadow), inset 0 1px 0 rgba(255,255,255,0.045);
   }
 
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .nf .card { background: rgba(15,23,42,0.98); }
-  }
-
-  .nf .card::before {
+  .rt-assessment-card::before {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%);
-    opacity: 0.35;
+    z-index: -1;
     pointer-events: none;
-    mix-blend-mode: soft-light;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.18), transparent 50%, rgba(0,0,0,0.24)),
+      radial-gradient(circle at 50% 100%, rgba(255,255,255,0.045), transparent 56%);
   }
 
-  .nf .card:hover {
-    transform: translateY(-3px);
-    border-color: var(--dm-border-interactive);
-    box-shadow:
-      0 26px 70px rgba(0,0,0,0.9),
-      0 0 0 1px rgba(52,152,219,0.32);
-    background: radial-gradient(circle at top left, rgba(15,23,42,1), rgba(15,23,42,0.98));
+  .rt-assessment-card::after {
+    content: "";
+    position: absolute;
+    left: clamp(20px, 4vw, 48px);
+    right: clamp(20px, 4vw, 48px);
+    top: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(121, 200, 255, 0.92), transparent);
   }
 
-  .nf .btn {
+  .rt-hero {
+    padding: clamp(24px, 4.6vw, 48px);
+    border-bottom: 1px solid rgba(52, 152, 219, 0.17);
+  }
+
+  .rt-brand-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .rt-brand-pill,
+  .rt-method-pill {
     display: inline-flex;
+    min-height: 36px;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border-radius: var(--nf-radius-sm);
-    padding: 0.75rem 1.1rem;
-    min-height: 44px;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--dm-surface-primary);
-    color: var(--dm-text-primary);
-    border: 1px solid var(--dm-border);
-    transition: all 0.18s ease-out;
+    gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid rgba(52, 152, 219, 0.35);
+    border-radius: 999px;
+    background: rgba(52, 152, 219, 0.10);
+    color: rgba(249, 250, 251, 0.92);
+    font-size: 0.78rem;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
     text-decoration: none;
+    text-transform: uppercase;
   }
 
-  .nf .btn:hover {
-    border-color: var(--dm-border-interactive);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  .rt-brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--rt-blue-bright);
+    box-shadow: 0 0 18px rgba(121,200,255,0.9);
+  }
+
+  .rt-method-pill {
+    background: rgba(0,0,0,0.32);
+    color: var(--rt-muted);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .rt-method-pill:hover,
+  .rt-method-pill:focus-visible {
+    border-color: rgba(121,200,255,0.70);
+    color: #fff;
+  }
+
+  .rt-title {
+    max-width: 850px;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(40px, 6.2vw, 74px);
+    font-weight: 950;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+    text-shadow: 0 14px 34px rgba(0,0,0,0.55);
+  }
+
+  .rt-subtitle {
+    max-width: 780px;
+    margin: 18px 0 0;
+    color: rgba(203, 221, 231, 0.92);
+    font-size: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+    line-height: 1.66;
+  }
+
+  .rt-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 24px 0 0;
+  }
+
+  .rt-fact {
+    min-height: 78px;
+    padding: 14px;
+    border: 1px solid var(--rt-line);
+    border-radius: var(--rt-radius-sm);
+    background: rgba(0,0,0,0.30);
+  }
+
+  .rt-fact strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #fff;
+    font-size: 0.94rem;
+  }
+
+  .rt-fact span {
+    color: var(--rt-soft);
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .rt-boundary {
+    margin: 16px 0 0;
+    padding: 13px 15px;
+    border-left: 3px solid var(--rt-blue);
+    border-radius: 0 12px 12px 0;
+    background: rgba(52, 152, 219, 0.08);
+    color: var(--rt-soft);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .rt-assessment-body {
+    padding: clamp(20px, 4vw, 42px);
+  }
+
+  .rt-resume {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid rgba(252, 211, 77, 0.32);
+    border-radius: 16px;
+    background: rgba(252, 211, 77, 0.07);
+  }
+
+  .rt-resume-copy strong {
+    display: block;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+
+  .rt-resume-copy span {
+    color: var(--rt-muted);
+    font-size: 0.84rem;
+  }
+
+  .rt-resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .rt-progress-shell {
+    margin-bottom: 22px;
+  }
+
+  .rt-progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+  }
+
+  .rt-progress-label,
+  .rt-part-label {
+    color: var(--rt-soft);
+    font-size: 0.8rem;
+    font-weight: 850;
+  }
+
+  .rt-progress-track {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.085);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .rt-progress-fill {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--rt-blue), var(--rt-blue-bright));
+    box-shadow: 0 0 18px rgba(52, 152, 219, 0.72);
+    transition: width 220ms ease;
+  }
+
+  .rt-question-stage {
+    min-height: 500px;
+  }
+
+  .rt-question-card,
+  .rt-review-card,
+  .rt-loading-card,
+  .rt-save-card {
+    position: relative;
+    min-inline-size: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: clamp(20px, 4vw, 36px);
+    border: 1px solid var(--rt-line);
+    border-radius: clamp(18px, 2vw, 24px);
+    background:
+      radial-gradient(680px 190px at 50% 0%, rgba(52, 152, 219, 0.085), transparent 72%),
+      rgba(0,0,0,0.38);
+    box-shadow: 0 18px 46px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.025);
+  }
+
+  .rt-question-number {
+    margin: 0 0 10px;
+    color: var(--rt-blue-bright);
+    font-size: 0.78rem;
+    font-weight: 950;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .rt-question-text {
+    max-width: 760px;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.28rem, 1.05rem + 1vw, 1.88rem);
+    font-weight: 850;
+    line-height: 1.28;
+    text-wrap: balance;
+  }
+
+  .rt-scale-help {
+    margin: 12px 0 0;
+    color: var(--rt-soft);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .rt-scale {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .rt-option {
+    position: relative;
+    min-height: 72px;
+  }
+
+  .rt-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .rt-option label {
+    display: flex;
+    min-height: 72px;
+    height: 100%;
+    cursor: pointer;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border: 1px solid rgba(52, 152, 219, 0.22);
+    border-radius: 15px;
+    background: rgba(0,0,0,0.38);
+    color: rgba(226, 237, 243, 0.84);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.23);
+    transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+
+  .rt-option label:hover {
+    transform: translateY(-1px);
+    border-color: rgba(121,200,255,0.55);
+    color: #fff;
+  }
+
+  .rt-option input:checked + label {
+    border-color: rgba(121,200,255,0.88);
+    background: linear-gradient(180deg, rgba(52,152,219,0.24), rgba(52,152,219,0.12));
+    color: #fff;
+    box-shadow: 0 14px 28px rgba(52,152,219,0.18), inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  .rt-option input:focus-visible + label {
+    outline: 3px solid rgba(121,200,255,0.82);
+    outline-offset: 3px;
+  }
+
+  .rt-option-number {
+    display: grid;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 950;
+  }
+
+  .rt-option-copy {
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  .rt-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .rt-nav-center {
+    color: var(--rt-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .rt-btn {
+    min-height: 46px;
+    display: inline-flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 17px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-decoration: none;
+    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+  }
+
+  .rt-btn:hover {
     transform: translateY(-1px);
   }
 
-  .nf .btn:focus-visible {
-    outline: 2px solid var(--nf-focus-ring);
+  .rt-btn:focus-visible {
+    outline: 3px solid rgba(121,200,255,0.82);
     outline-offset: 3px;
   }
 
-  .nf .btn[disabled],
-  .nf .btn[aria-disabled="true"] {
-    opacity: 0.62;
+  .rt-btn:disabled {
     cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
+    opacity: 0.45;
+    transform: none;
   }
 
-  .nf .btn.primary {
-    background: var(--dm-accent-primary);
-    color: var(--dm-text-on-accent);
-    border-color: var(--dm-accent-primary);
-    box-shadow: 0 12px 28px rgba(52,152,219,0.42);
+  .rt-btn-primary {
+    border-color: rgba(121,200,255,0.55);
+    background: linear-gradient(180deg, #3da7ea, #2585c3);
+    color: #fff;
+    box-shadow: 0 14px 30px rgba(52,152,219,0.24);
   }
 
-  .nf .btn.primary:hover {
-    background: var(--dm-accent-primary-hover);
-    box-shadow: 0 14px 36px rgba(52,152,219,0.60);
+  .rt-btn-ghost {
+    border-color: var(--rt-line);
+    background: rgba(0,0,0,0.34);
+    color: var(--rt-muted);
   }
 
-  .nf .btn.ghost {
-    background: transparent;
-    border-color: transparent;
+  .rt-review-card h2,
+  .rt-loading-card h2,
+  .rt-save-card h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.45rem, 1.1rem + 1vw, 2rem);
   }
 
-  .nf .btn.tiny {
-    padding: 0.35rem 0.75rem;
-    min-height: 32px;
-    font-size: 0.85rem;
-    line-height: 1.2;
-  }
-
-  .nf .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--nf-3);
-    margin-top: var(--nf-4);
-    flex-wrap: wrap;
-  }
-
-  .dlter-quiz-card {
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-  }
-
-  .nf .card.dlter-quiz-card {
-    overflow: visible;
-  }
-
-  .dlter-quiz-shell {
-    max-width: var(--nf-card-content-max);
-    margin: 0 auto;
-    padding: 1.5rem 0 3rem;
-  }
-
-  .dlter-header { margin-bottom: 1.2rem; }
-
-  .dlter-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.45);
-    background: rgba(15,23,42,0.9);
-    font-size: 0.7rem;
-    letter-spacing: 0.11em;
-    text-transform: uppercase;
-    color: var(--dm-text-disabled);
-    margin-bottom: 0.5rem;
-  }
-
-  .dlter-badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--dm-accent-primary);
-    box-shadow: 0 0 12px rgba(52,152,219,0.9);
-  }
-
-  .dlter-quiz-intro {
-    margin-bottom: 0.55rem;
-    font-size: 0.94rem;
-    color: var(--dm-text-secondary);
-  }
-
-  .dlter-progress-hint {
-    margin: 0 0 0.6rem;
-    font-size: 0.8rem;
-    color: var(--dm-text-disabled);
-  }
-
-  #dlter-geometry-preview {
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-  }
-
-  #dlter-geometry-preview.dlter-geometry-preview--visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .dlter-status-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 0.85rem;
-    font-size: 0.8rem;
-    color: var(--dm-text-disabled);
-  }
-
-  .dlter-progress-count { opacity: 0.9; }
-
-  .dlter-current-section-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.9);
-    border: 1px solid rgba(148,163,184,0.3);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-  }
-
-  .dlter-current-section-pill span { opacity: 0.85; }
-
-  .dlter-axis-icon {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    background: linear-gradient(135deg, rgba(148,163,184,0.8), rgba(30,64,175,0.9));
-  }
-
-  .dlter-current-section-pill--perception{
-    border-color: rgba(56,189,248,0.42);
-    box-shadow: 0 0 0 1px rgba(56,189,248,0.12);
-  }
-  .dlter-current-section-pill--perception .dlter-axis-icon{
-    background: var(--dlter-axis-perception);
-    box-shadow: 0 0 12px rgba(56,189,248,0.35);
-  }
-
-  .dlter-current-section-pill--emergence{
-    border-color: rgba(34,197,94,0.42);
-    box-shadow: 0 0 0 1px rgba(34,197,94,0.12);
-  }
-  .dlter-current-section-pill--emergence .dlter-axis-icon{
-    background: var(--dlter-axis-emergence);
-    box-shadow: 0 0 12px rgba(34,197,94,0.30);
-  }
-
-  .dlter-current-section-pill--identity{
-    border-color: rgba(234,179,8,0.42);
-    box-shadow: 0 0 0 1px rgba(234,179,8,0.12);
-  }
-  .dlter-current-section-pill--identity .dlter-axis-icon{
-    background: var(--dlter-axis-identity);
-    box-shadow: 0 0 12px rgba(234,179,8,0.28);
-  }
-
-  .dlter-progress-bar {
-    position: relative;
-    width: 100%;
-    height: 3px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.9);
-    overflow: hidden;
-    margin-bottom: 1.15rem;
-  }
-
-  .dlter-progress-bar-fill {
-    position: absolute;
-    inset: 0;
-    width: 0%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #38bdf8, #4f46e5, #a855f7);
-    box-shadow: 0 0 8px rgba(59,130,246,0.85);
-    transition: width 0.25s ease-out;
-  }
-
-  .dlter-axis-heading {
-    margin: 1.4rem 0 0.8rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--dm-text-disabled);
-    opacity: 0.9;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .dlter-axis-heading:first-of-type { margin-top: 1.0rem; }
-
-  .dlter-axis-heading::before {
-    content: "";
-    width: 18px;
-    height: 1px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(148,163,184,0.1), rgba(148,163,184,0.6));
-  }
-
-  .dlter-axis-heading[data-axis="PERCEPTION"]::before {
-    background: linear-gradient(90deg, rgba(56,189,248,0.1), rgba(56,189,248,0.9));
-  }
-  .dlter-axis-heading[data-axis="EMERGENCE"]::before {
-    background: linear-gradient(90deg, rgba(34,197,94,0.1), rgba(34,197,94,0.9));
-  }
-  .dlter-axis-heading[data-axis="IDENTITY"]::before {
-    background: linear-gradient(90deg, rgba(234,179,8,0.1), rgba(234,179,8,0.9));
-  }
-
-  .dlter-axis-heading,
-  .dlter-question,
-  #dlter-result {
-    scroll-margin-top: 90px;
-  }
-
-  @media (max-width: 640px) {
-    .dlter-axis-heading,
-    .dlter-question,
-    #dlter-result {
-      scroll-margin-top: 72px;
-    }
-  }
-
-  .dlter-question {
-    margin-bottom: 1.25rem;
-    padding: 0.9rem 1rem 0.85rem;
-    border-radius: var(--nf-radius-sm);
-    background: var(--dm-surface-primary);
-    border: 1px solid var(--dm-border-subtle);
-    box-shadow: var(--nf-glass-shadow-sm);
-    position: relative;
-    transition:
-      border-color 0.18s ease-out,
-      box-shadow 0.18s ease-out,
-      background 0.18s ease-out,
-      transform 0.1s ease-out;
-  }
-
-  .dlter-question-title {
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    font-size: 0.96rem;
-    line-height: 1.5;
-    color: var(--dm-text-primary);
-  }
-
-  .dlter-question-meta {
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dm-text-disabled);
-    margin-bottom: 0.55rem;
-  }
-
-  .dlter-scale-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .dlter-scale-option {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.35rem 0.9rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.7);
-    font-size: 0.86rem;
-    cursor: pointer;
-    user-select: none;
-    background: rgba(15,23,42,0.96);
-    color: var(--dm-text-secondary);
-    transition:
-      background 0.15s ease-out,
-      border-color 0.15s ease-out,
-      transform 0.08s ease-out,
-      color 0.15s ease-out,
-      box-shadow 0.15s ease-out;
-  }
-
-  .dlter-scale-option:hover {
-    border-color: var(--dm-border-interactive);
-    background: rgba(55,65,81,0.98);
-    transform: translateY(-0.5px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.5);
-  }
-
-  .dlter-scale-option input { margin: 0; }
-
-  .dlter-scale-option-input { accent-color: var(--dm-accent-primary); }
-
-  .dlter-scale-option span { white-space: nowrap; }
-
-  .dlter-scale-option-input:checked + span {
-    font-weight: 600;
-    color: var(--dm-text-primary);
-    text-shadow: 0 0 9px rgba(52,152,219,0.75);
-  }
-
-  .dlter-scale-option:focus-within {
-    box-shadow: 0 0 0 2px rgba(52,152,219,0.8);
-    outline: none;
-  }
-
-  @supports selector(.dlter-scale-option:has(input)) {
-    .dlter-scale-option:has(.dlter-scale-option-input:focus-visible) {
-      box-shadow: 0 0 0 2px rgba(52,152,219,0.8);
-      outline: none;
-    }
-  }
-
-  .dlter-question--answered {
-    border-color: rgba(56,189,248,0.7);
-    box-shadow:
-      0 12px 30px rgba(0,0,0,0.6),
-      0 0 0 1px rgba(56,189,248,0.35);
-    background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
-  }
-
-  .dlter-question--answered::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 10px;
-    right: 10px;
-    height: 2px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(56,189,248,0), rgba(56,189,248,0.75), rgba(56,189,248,0));
-    opacity: 0.9;
-  }
-
-  .dlter-question--error {
-    animation: dlterErrorPulse 0.7s ease-out;
-    border-color: rgba(248,113,113,0.9) !important;
-  }
-
-  @keyframes dlterErrorPulse {
-    0% { box-shadow: 0 0 0 0 rgba(248,113,113,0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(248,113,113,0.0); }
-    100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.0); }
-  }
-
-  #dlter-result {
-    margin-top: 2.5rem;
-    padding: 1.25rem 1.1rem 1.4rem;
-    border-radius: var(--nf-radius-lg);
-    border: 1px solid var(--dm-border);
-    background: var(--dm-surface-secondary);
-    color: var(--dm-text-secondary);
-    box-shadow: var(--nf-glass-shadow-sm);
-    opacity: 0;
-    transform: translateY(12px);
-    pointer-events: none;
-    transition:
-      opacity 0.24s ease-out,
-      transform 0.24s ease-out,
-      border-color 0.2s ease-out,
-      box-shadow 0.2s ease-out;
-  }
-
-  #dlter-result.dlter-result--visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  #dlter-result h2 {
-    margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-size: 1.05rem;
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    font-weight: 700;
-    color: var(--dm-text-primary);
-  }
-
-  #dlter-result p {
-    font-size: 0.9rem;
+  .rt-review-card p,
+  .rt-loading-card p,
+  .rt-save-card p {
+    color: var(--rt-muted);
     line-height: 1.6;
-    margin-bottom: 0.55rem;
   }
 
-  #dlter-result ul {
-    padding-left: 1.2rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.88rem;
+  .rt-review-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 22px 0;
   }
 
-  #dlter-result a {
-    color: var(--nf-gold);
-    text-decoration: none;
-    font-weight: 600;
+  .rt-review-stat {
+    padding: 12px;
+    border: 1px solid var(--rt-line);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.30);
+    text-align: center;
   }
 
-  #dlter-result a:hover { text-decoration: underline; }
-
-  #dlter-result a:focus-visible {
-    outline: 2px solid var(--nf-focus-ring);
-    outline-offset: 3px;
-    border-radius: 10px;
+  .rt-review-stat strong {
+    display: block;
+    color: #fff;
+    font-size: 1.05rem;
   }
 
-  .dlter-result-meta {
+  .rt-review-stat span {
+    color: var(--rt-soft);
+    font-size: 0.75rem;
+  }
+
+  .rt-review-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    margin: 6px 0 10px;
-    font-size: 0.82rem;
-    color: var(--dm-text-disabled);
+    gap: 10px;
   }
 
-  .dlter-match-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
+  .rt-error {
+    min-height: 1.4em;
+    margin: 12px 0 0;
+    color: var(--rt-danger);
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+
+  .rt-spinner {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 16px;
+    border: 3px solid rgba(255,255,255,0.12);
+    border-top-color: var(--rt-blue-bright);
     border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.35);
-    background: rgba(15,23,42,0.8);
-    color: rgba(229,231,235,0.9);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
+    animation: rt-spin 0.8s linear infinite;
   }
 
-  .dlter-theory-bridge {
-    margin-top: 0.35rem;
-    margin-bottom: 0.7rem;
-    color: rgba(229,231,235,0.78);
+  @keyframes rt-spin {
+    to { transform: rotate(360deg); }
   }
 
-  .dlter-result-note {
-    margin-top: 0.35rem;
-    color: rgba(148,163,184,0.85);
-    font-size: 0.82rem;
+  .rt-noscript {
+    width: min(720px, calc(100% - 24px));
+    margin: 40px auto;
+    padding: 18px;
+    border: 1px solid var(--rt-line-blue);
+    border-radius: 20px;
+    background: rgba(0,0,0,0.78);
+    color: var(--rt-muted);
+    font-family: Inter, system-ui, sans-serif;
+    line-height: 1.55;
   }
 
-  #dlter-result[class*="dlter-type-"] {
-    box-shadow:
-      0 18px 40px rgba(0,0,0,0.7),
-      0 0 0 1px rgba(148,163,184,0.4);
+  @media (max-width: 760px) {
+    .rt-facts,
+    .rt-review-summary {
+      grid-template-columns: 1fr;
+    }
+
+    .rt-scale {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .rt-question-stage {
+      min-height: 620px;
+    }
   }
 
-  #dlter-result.dlter-type-inner-frameworker { border-color: rgba(56,189,248,0.9); box-shadow: 0 20px 48px rgba(56,189,248,0.24), 0 0 0 1px rgba(56,189,248,0.55); }
-  #dlter-result.dlter-type-internal-alchemist { border-color: rgba(168,85,247,0.9); box-shadow: 0 20px 48px rgba(168,85,247,0.24), 0 0 0 1px rgba(168,85,247,0.55); }
-  #dlter-result.dlter-type-dimensional-flowweaver { border-color: rgba(34,211,238,0.9); box-shadow: 0 20px 48px rgba(34,211,238,0.24), 0 0 0 1px rgba(34,211,238,0.55); }
-  #dlter-result.dlter-type-external-catalyst { border-color: rgba(249,115,22,0.9); box-shadow: 0 20px 48px rgba(249,115,22,0.24), 0 0 0 1px rgba(249,115,22,0.55); }
-  #dlter-result.dlter-type-reality-architect { border-color: rgba(37,99,235,0.9); box-shadow: 0 20px 48px rgba(37,99,235,0.24), 0 0 0 1px rgba(37,99,235,0.55); }
-  #dlter-result.dlter-type-structured-empathic-lens { border-color: rgba(34,197,94,0.9); box-shadow: 0 20px 48px rgba(34,197,94,0.24), 0 0 0 1px rgba(34,197,94,0.55); }
-  #dlter-result.dlter-type-analytical-evolver { border-color: rgba(79,70,229,0.9); box-shadow: 0 20px 48px rgba(79,70,229,0.24), 0 0 0 1px rgba(79,70,229,0.55); }
-  #dlter-result.dlter-type-fluxbound-weaver { border-color: rgba(236,72,153,0.9); box-shadow: 0 20px 48px rgba(236,72,153,0.24), 0 0 0 1px rgba(236,72,153,0.55); }
-  #dlter-result.dlter-type-axis-synthesizer { border-color: rgba(14,165,233,0.9); box-shadow: 0 20px 48px rgba(14,165,233,0.24), 0 0 0 1px rgba(14,165,233,0.55); }
-  #dlter-result.dlter-type-resonant-fieldholder { border-color: rgba(139,92,246,0.9); box-shadow: 0 20px 48px rgba(139,92,246,0.24), 0 0 0 1px rgba(139,92,246,0.55); }
-  #dlter-result.dlter-type-dimensional-anchor { border-color: rgba(100,116,139,0.9); box-shadow: 0 20px 48px rgba(100,116,139,0.24), 0 0 0 1px rgba(100,116,139,0.55); }
-  #dlter-result.dlter-type-horizon-breaker { border-color: rgba(251,191,36,0.9); box-shadow: 0 20px 48px rgba(251,191,36,0.24), 0 0 0 1px rgba(251,191,36,0.55); }
+  @media (max-width: 520px) {
+    [data-rt-assessment] {
+      padding-left: 9px;
+      padding-right: 9px;
+      padding-top: 28px;
+    }
 
-  .dlter-share {
-    margin-top: 0.9rem;
-    border-top: 1px solid rgba(148,163,184,0.28);
-    padding-top: 0.7rem;
-    font-size: 0.85rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    justify-content: space-between;
-  }
+    .rt-hero,
+    .rt-assessment-body {
+      padding: 18px 14px;
+    }
 
-  .dlter-share-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+    .rt-title {
+      font-size: clamp(38px, 12vw, 54px);
+    }
 
-  .dlter-share-tag {
-    font-size: 0.78rem;
-    color: var(--dm-text-disabled);
-    cursor: pointer;
-    transition: color 0.16s ease-out;
-  }
-  .dlter-share-tag:hover { color: var(--dm-text-primary); }
+    .rt-scale {
+      grid-template-columns: 1fr;
+    }
 
-  .dlter-share-btn {
-    font-size: 0.8rem;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.5);
-    background: rgba(15,23,42,0.9);
-    color: var(--dm-text-secondary);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: all 0.16s ease-out;
-  }
+    .rt-option,
+    .rt-option label {
+      min-height: 58px;
+    }
 
-  .dlter-share-btn:hover {
-    border-color: var(--dm-border-interactive);
-    color: var(--dm-text-primary);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-  }
+    .rt-question-stage {
+      min-height: 720px;
+    }
 
-  .dlter-share-btn:focus-visible{
-    outline: 2px solid var(--nf-focus-ring);
-    outline-offset: 3px;
-  }
+    .rt-nav {
+      align-items: stretch;
+    }
 
-  #dlter-error {
-    margin-top: 0.4rem;
-    font-size: 0.82rem;
-    color: rgb(248,113,113);
+    .rt-nav .rt-btn {
+      flex: 1 1 0;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .rt-nav-center {
+      display: none;
+    }
+
+    .rt-review-actions .rt-btn,
+    .rt-resume-actions .rt-btn {
+      width: 100%;
+    }
   }
 
   @media (hover: none) {
-    .nf .card:hover,
-    .nf .btn:hover,
-    .dlter-scale-option:hover { transform: none; }
-  }
-
-  @media (max-width: 768px) {
-    .nf-lab-container { padding-top: 32px; padding-bottom: 56px; }
-    .nf .card { padding: 16px 14px 22px; }
-    .dlter-status-row { align-items: flex-start; }
-  }
-
-  @media (max-width: 640px) {
-    .dlter-question { padding: 0.85rem 0.85rem 0.8rem; }
-    .dlter-scale-options { flex-direction: column; align-items: flex-start; }
-    .dlter-scale-option { width: 100%; justify-content: flex-start; }
-    .nf .actions { justify-content: center; }
+    .rt-option label:hover,
+    .rt-btn:hover {
+      transform: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto !important; }
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
     }
   }
+
+
+  .rt-save-card {
+    border-color: rgba(52, 152, 219, 0.34);
+  }
+
+  .rt-save-card[data-state="saved"] {
+    border-color: rgba(134, 239, 172, 0.38);
+    background:
+      radial-gradient(680px 190px at 50% 0%, rgba(34, 197, 94, 0.10), transparent 72%),
+      rgba(0,0,0,0.40);
+  }
+
+  .rt-save-card[data-state="attention"] {
+    border-color: rgba(252, 211, 77, 0.34);
+    background:
+      radial-gradient(680px 190px at 50% 0%, rgba(252, 211, 77, 0.08), transparent 72%),
+      rgba(0,0,0,0.40);
+  }
+
+  .rt-save-eyebrow {
+    margin: 0 0 10px !important;
+    color: var(--rt-blue-bright) !important;
+    font-size: 0.76rem;
+    font-weight: 950;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .rt-save-card[data-state="saved"] .rt-save-eyebrow {
+    color: var(--rt-success) !important;
+  }
+
+  .rt-save-card[data-state="attention"] .rt-save-eyebrow {
+    color: var(--rt-gold) !important;
+  }
+
+  .rt-save-detail {
+    margin: 12px 0 0 !important;
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 13px;
+    background: rgba(0,0,0,0.28);
+    color: var(--rt-soft) !important;
+    font-size: 0.82rem;
+    line-height: 1.5 !important;
+  }
+
+  .rt-save-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .rt-save-actions .rt-btn {
+    min-width: 148px;
+  }
+
+  .rt-save-card.is-busy .rt-btn {
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  @media (max-width: 520px) {
+    .rt-save-actions .rt-btn {
+      width: 100%;
+    }
+  }
+
+
+
+  /* Final quiz-page visual polish */
+  body.nf-reality-types-assessment {
+    --nf-account-bridge-offset: 0px;
+  }
+
+  #dlter-member-bar,
+  #dlter-member-bar-spacer {
+    display: none !important;
+  }
+
+  .nf-lab-container[data-rt-assessment] {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+    overflow: visible;
+    background: transparent !important;
+    padding-top: clamp(30px, 4.4vw, 56px);
+    padding-bottom: clamp(34px, 4.8vw, 58px);
+  }
+
+  .nf-lab-container[data-rt-assessment]::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .rt-assessment-card {
+    width: min(1040px, 100%);
+    border-color: rgba(72, 172, 232, 0.36);
+    box-shadow:
+      0 30px 84px rgba(0, 0, 0, 0.62),
+      0 0 0 1px rgba(255, 255, 255, 0.025) inset;
+  }
+
+  .rt-hero {
+    padding-bottom: clamp(24px, 3.7vw, 40px);
+  }
+
+  .rt-assessment-body {
+    padding-top: clamp(22px, 3vw, 32px);
+    padding-bottom: clamp(22px, 3vw, 32px);
+  }
+
+  .rt-fact {
+    background: rgba(1, 7, 11, 0.44);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .rt-fact span,
+  .rt-boundary,
+  .rt-progress-label,
+  .rt-part-label,
+  .rt-scale-help,
+  .rt-nav-center {
+    color: rgba(190, 211, 223, 0.78);
+  }
+
+  .rt-question-stage {
+    min-height: 0 !important;
+  }
+
+  .rt-question-card,
+  .rt-review-card,
+  .rt-loading-card,
+  .rt-save-card {
+    background:
+      radial-gradient(680px 190px at 50% 0%, rgba(52, 152, 219, 0.10), transparent 72%),
+      rgba(1, 6, 10, 0.58);
+    border-color: rgba(255, 255, 255, 0.13);
+  }
+
+  .rt-question-text {
+    color: rgba(248, 252, 255, 0.99) !important;
+    font-weight: 900;
+    text-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+  }
+
+  .rt-scale {
+    gap: 11px;
+  }
+
+  .rt-option label {
+    border-color: rgba(52, 152, 219, 0.28);
+    background: rgba(0, 4, 8, 0.58);
+    color: rgba(235, 245, 251, 0.91);
+  }
+
+  .rt-option-copy {
+    font-size: 0.86rem;
+    line-height: 1.38;
+  }
+
+  .rt-option-number {
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  .rt-nav {
+    margin-top: 15px;
+  }
+
+  .rt-btn:disabled {
+    opacity: 0.52;
+  }
+
+  @media (max-width: 760px) {
+    .rt-question-stage {
+      min-height: 0 !important;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .nf-lab-container[data-rt-assessment] {
+      padding-top: 20px;
+      padding-bottom: 30px;
+    }
+
+    .rt-hero,
+    .rt-assessment-body {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .rt-question-stage {
+      min-height: 0 !important;
+    }
+
+    .rt-question-text {
+      font-size: clamp(1.22rem, 6.5vw, 1.55rem);
+      line-height: 1.24;
+    }
+
+    .rt-option-copy {
+      font-size: 0.84rem;
+    }
+  }
+
+
+
 </style>
 
 
-
-Body:
+==============================
+FOOTER
+==============================
 <script>
 (function () {
-  "use strict";
+"use strict";
 
-  if (window.__DLTER_QUIZ_SCRIPT_LOADED__ || window.__DLTER_QUIZ_BOOTED__) return;
-  window.__DLTER_QUIZ_SCRIPT_LOADED__ = true;
+if (window.__NF_REALITY_TYPES_ASSESSMENT_V2__) return;
+window.__NF_REALITY_TYPES_ASSESSMENT_V2__ = true;
 
-  window.NF_NL = window.NF_NL || {};
+var ASSESSMENT_VERSION = "rt2.0";
+var INSTRUMENT_VERSION = "rt-48-2026-08-04-v1";
+var SCORING_VERSION = "rt2-archetypes-1.0";
+var RESULT_SCHEMA = "nf.realityTypes.result.v2";
+var PROGRESS_KEY = "nf.realityTypes.progress.v2";
+var RESULT_KEY = "nf.realityTypes.lastResult.v2";
+var UNSAVED_KEY = "nf.realityTypes.unsavedAttempt.v1";
+var UNSAVED_SCHEMA = "nf.realityTypes.unsavedAttempt.v1";
+var API_URL = "https://neuform-reality-types.vercel.app/api/reality-types/attempts";
+var SAVE_TIMEOUT_MS = 12000;
+var MAX_API_RESPONSE_BYTES = 32768;
+var EXPLAINED_URL = "/dlter-explained";
+var TYPE_BASE = "/dlter-reality-types/";
+var PART_SIZE = 12;
+var AUTO_ADVANCE_MS = -1; // Manual Next navigation is intentional.
+var RESULT_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-  const BASE_TYPE_URL = "/dlter-reality-types/";
-  const EXPLAINED_URL = "/dlter-explained";
-  const DLTER_SAVE_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyof7-DsgWWdkZmyOPxEs7UxEWDog1Pip6KqCLykx-NK2ud0qGaFQsXnmE5p3QCYmSC/exec";
-  const DLTER_SAVE_CONFIG = {
-    DLTER_SAVE_MODE: "relay_preferred",
-    DLTER_RELAY_URL: "/api/dlter/save",
-    DLTER_LEGACY_URL: DLTER_SAVE_ENDPOINT_URL,
-    DLTER_REQUIRE_SIG: false, // Keep false for client-only; real signature enforcement belongs on the server relay.
-    DLTER_CLIENT_RATE_LIMIT_MS: 15000,
-    DLTER_REPLAY_WINDOW_SEC: 600
-  };
-  const QUIZ_VERSION = "v1";
-  const AUTO_REDIRECT = false;
+var SCALE_LABELS = [
+  "Very unlike me",
+  "Mostly unlike me",
+  "Slightly unlike me",
+  "Slightly like me",
+  "Mostly like me",
+  "Very like me"
+];
+var ITEMS = [
+  {id:1, scale:"RS", key:1, text:"Before an important response, I take time to organize what the situation means to me."},
+  {id:2, scale:"EC", key:1, text:"I understand a new process better after trying it myself."},
+  {id:3, scale:"SA", key:1, text:"I create repeatable routines for responsibilities that occur often."},
+  {id:4, scale:"AR", key:1, text:"When one approach becomes blocked, I generate other workable paths."},
+  {id:5, scale:"CP", key:1, text:"I understand my current direction as connected to earlier parts of my life."},
+  {id:6, scale:"TR", key:1, text:"I seriously consider different possible versions of my future self."},
+  {id:7, scale:"BS", key:1, text:"I compare my private interpretation with outside evidence before treating it as settled."},
+  {id:8, scale:"FS", key:1, text:"I identify which parts of a plan are essential and which parts may change."},
+  {id:9, scale:"ID", key:1, text:"When I change direction, I connect the new direction to parts of myself that still matter."},
+  {id:10, scale:"RS", key:1, text:"I form a clearer view after I have had time to think privately."},
+  {id:11, scale:"EC", key:1, text:"Talking through a problem often helps me discover what I think."},
+  {id:12, scale:"SA", key:1, text:"I work more effectively when I know the order of the next steps."},
 
-  const TOOL_CODE = "dlter_quiz";
-  const TOOL_SECTION = "dlter";
+  {id:13, scale:"AR", key:1, text:"I change methods when evidence shows the current method is no longer effective."},
+  {id:14, scale:"CP", key:1, text:"I try to carry my most important values into new roles and circumstances."},
+  {id:15, scale:"TR", key:1, text:"I revise an old self-description when my behavior and experience no longer support it."},
+  {id:16, scale:"BS", key:1, text:"I revise my view from feedback while continuing to use my own judgment."},
+  {id:17, scale:"FS", key:1, text:"After disruption, I establish a new workable pattern instead of remaining in improvisation."},
+  {id:18, scale:"ID", key:1, text:"I revise the parts of my identity that no longer fit while preserving the parts that still do."},
+  {id:19, scale:"RS", key:1, text:"I understand a situation by connecting its parts into an overall explanation."},
+  {id:20, scale:"EC", key:1, text:"I update my understanding when real-world results differ from what I expected."},
+  {id:21, scale:"SA", key:1, text:"I use clear criteria to judge whether important work is complete."},
+  {id:22, scale:"AR", key:1, text:"I keep making progress while some details remain uncertain."},
+  {id:23, scale:"CP", key:1, text:"I give meaningful commitments time to develop before replacing them."},
+  {id:24, scale:"TR", key:1, text:"I allow my sense of self to change when a new stage of life requires it."},
 
-  const MEMBERSTACK_LOGIN_MODAL_ATTR = "login";
-  const MS_LOGIN = "LOGIN";
+  {id:25, scale:"BS", key:-1, text:"Once an explanation feels coherent to me, I may stop looking for evidence that could challenge it."},
+  {id:26, scale:"FS", key:-1, text:"A change to the method can make the whole plan feel as though it has failed."},
+  {id:27, scale:"ID", key:1, text:"After exploring a new direction, I decide what I will actually carry forward."},
+  {id:28, scale:"RS", key:1, text:"I communicate more clearly after I have organized my thoughts."},
+  {id:29, scale:"EC", key:1, text:"When several options seem plausible, I learn by testing one."},
+  {id:30, scale:"SA", key:1, text:"I maintain a useful system after the excitement of starting has passed."},
+  {id:31, scale:"AR", key:1, text:"Changing the route feels compatible with keeping the goal."},
+  {id:32, scale:"CP", key:1, text:"I usually experience growth as becoming a more developed version of myself."},
+  {id:33, scale:"TR", key:1, text:"I sometimes reinterpret past experiences after learning something important about myself."},
+  {id:34, scale:"RS", key:-1, text:"I usually respond to complex information before I have formed an internal view."},
+  {id:35, scale:"EC", key:-1, text:"I can reach clarity without much interaction, action, or outside feedback."},
+  {id:36, scale:"SA", key:-1, text:"I usually leave recurring responsibilities without a stable process."},
 
-  const SAVE_BTN_LABEL_DEFAULT = "Save my result";
-  const SAVE_STATUS_LOGGED_OUT = "Free account required · no payment";
-  const SAVE_STATUS_NEEDS_LOGIN = "Log in (or create a free account) to save.";
-  const SAVE_STATUS_TRY_AGAIN = "Could not submit. Please try again.";
+  {id:37, scale:"AR", key:-1, text:"When a plan stops working, I tend to stay with it because it is familiar."},
+  {id:38, scale:"CP", key:-1, text:"I feel little need to connect a new direction to who I have been."},
+  {id:39, scale:"TR", key:-1, text:"I rarely reconsider a long-standing view of who I am."},
+  {id:40, scale:"BS", key:-1, text:"Strong outside reactions can replace my own judgment before I have evaluated them."},
+  {id:41, scale:"FS", key:-1, text:"Boredom sometimes leads me to replace a useful system before I have evaluated it."},
+  {id:42, scale:"ID", key:-1, text:"When an important role ends, I can lose track of the values that mattered within it."},
+  {id:43, scale:"RS", key:-1, text:"I rarely pause to check whether a new idea fits with what I already understand."},
+  {id:44, scale:"EC", key:-1, text:"Direct experience rarely changes my initial interpretation."},
+  {id:45, scale:"SA", key:-1, text:"After an interruption, I rarely return to an established routine."},
+  {id:46, scale:"AR", key:-1, text:"Changing the method often feels like abandoning the goal."},
+  {id:47, scale:"CP", key:-1, text:"Past commitments usually feel irrelevant once my circumstances change."},
+  {id:48, scale:"TR", key:-1, text:"I prefer to keep my self-definition unchanged even when it no longer fits."}
+];
+var ARCHETYPES = [
+  {slug:"inner-frameworker", name:"The Inner Frameworker", code:"IN-ST-FX", signature:"RT2-RSC", profile:[78,38,78,38,78,38,55,52,65]},
+  {slug:"internal-alchemist", name:"The Internal Alchemist", code:"IN-FL-TR", signature:"RT2-RAT", profile:[78,42,38,78,42,78,58,62,68]},
+  {slug:"dimensional-flowweaver", name:"The Dimensional Flowweaver", code:"EX-FL-TR", signature:"RT2-EAT", profile:[42,78,38,78,38,78,62,65,65]},
+  {slug:"external-catalyst", name:"The External Catalyst", code:"EX-FL-FX", signature:"RT2-EAC", profile:[38,78,42,78,78,38,50,60,62]},
+  {slug:"reality-architect", name:"The Reality Architect", code:"EX-ST-FX", signature:"RT2-ESC", profile:[38,78,78,38,78,38,58,52,65]},
+  {slug:"structured-empathic-lens", name:"The Structured Insight Lens", code:"IN-ST-TR", signature:"RT2-RST", profile:[78,42,78,38,42,78,55,58,68]},
+  {slug:"analytical-evolver", name:"The Analytical Evolver", code:"EX-ST-TR", signature:"RT2-EST", profile:[42,78,78,38,42,78,62,58,65]},
+  {slug:"fluxbound-weaver", name:"The Fluxbound Weaver", code:"IN-FL-FX", signature:"RT2-RAC", profile:[78,38,42,78,78,38,52,60,68]},
+  {slug:"axis-synthesizer", name:"The Axis Synthesizer", code:"IN-(ST/FL)-TR", signature:"RT2-RSAT-FS", profile:[72,52,70,70,52,70,62,76,70]},
+  {slug:"resonant-fieldholder", name:"The Resonant Integrator", code:"EX-(ST/FL)-TR", signature:"RT2-ESAT-FS", profile:[52,72,70,70,52,70,66,76,68]},
+  {slug:"dimensional-anchor", name:"The Dimensional Anchor", code:"(IN/EX)-ST-FX", signature:"RT2-RESC-BS", profile:[70,70,72,42,72,38,76,56,70]},
+  {slug:"horizon-breaker", name:"The Horizon Breaker", code:"(IN/EX)-FL-TR", signature:"RT2-REAT-BS", profile:[70,70,42,72,38,72,76,64,68]}
+];
 
-  function isTrackableEnv() {
-    try {
-      if (location.protocol !== "https:" && location.protocol !== "http:") return false;
-      var h = (location.hostname || "").toLowerCase();
-      if (!h) return false;
-      if (h === "localhost" || h === "127.0.0.1" || h === "[::1]") return false;
-      if (h.endsWith("webflow.io")) return false;
-      return true;
-    } catch (e) { return false; }
-  }
-  const TRACKING_ENABLED = isTrackableEnv();
+var SCORE_ORDER = ["RS","EC","SA","AR","CP","TR","BS","FS","ID"];
+var SCORE_WEIGHTS = {RS:1,EC:1,SA:1,AR:1,CP:1,TR:1,BS:0.78,FS:0.78,ID:0.72};
 
-  var REDUCE_MOTION = false;
-  try { REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
-  function prefersReducedMotion() { return !!REDUCE_MOTION; }
+var root, form, stage, progressTrack, progressFill, progressLabel, partLabel, backBtn, nextBtn;
+var resumeBanner, resumeCopy, resumeContinueBtn, startOverBtn, errorEl, loadingEl;
+var saveCard, saveEyebrow, saveTitle, saveCopy, saveDetail;
+var saveRetryBtn, saveSignupBtn, saveLoginBtn, saveContinueBtn;
+var answers = {};
+var answerTimes = {};
+var currentIndex = 0;
+var startedAt = Date.now();
+var autoAdvanceTimer = null;
+var saveInFlight = false;
+var assessmentCompleted = false;
+var currentCompletionPacket = null;
+var currentUnsavedAttempt = null;
+var savePanelMode = "";
+var authRecoveryRequested = false;
+var authRecoveryTimer = null;
+var redirectTimer = null;
+var reducedMotion = false;
 
-  const QUESTIONS = [
-    { id: 1,  text: "Before I respond to situations, I need time to think them through internally.", axis: "PERCEPTION", pole: "IN" },
-    { id: 2,  text: "I trust my own interpretations more than what is happening around me in the moment.", axis: "PERCEPTION", pole: "IN" },
-    { id: 3,  text: "I need to understand something internally before I feel ready to act on it.", axis: "PERCEPTION", pole: "IN" },
-    { id: 4,  text: "New information does not fully make sense to me until I fit it into my own mental framework.", axis: "PERCEPTION", pole: "IN" },
-    { id: 5,  text: "I feel most clear when I am actively engaging with people, tasks, or my surroundings.", axis: "PERCEPTION", pole: "EX" },
-    { id: 6,  text: "I understand things best by engaging directly, rather than thinking about them privately first.", axis: "PERCEPTION", pole: "EX" },
-    { id: 7,  text: "I figure things out by doing or interacting, rather than by thinking quietly on my own.", axis: "PERCEPTION", pole: "EX" },
-    { id: 8,  text: "I lose clarity if I spend too long without input from the outside world.", axis: "PERCEPTION", pole: "EX" },
-    { id: 9,  text: "Regular routines help me stay grounded and effective.", axis: "EMERGENCE", pole: "ST" },
-    { id: 10, text: "When something works, I prefer to keep doing it the same way.", axis: "EMERGENCE", pole: "ST" },
-    { id: 11, text: "Sudden changes to plans or structure feel draining to me.", axis: "EMERGENCE", pole: "ST" },
-    { id: 12, text: "I rely on clear rules, systems, or frameworks to make decisions.", axis: "EMERGENCE", pole: "ST" },
-    { id: 13, text: "I often change my approach, even when the current one works.", axis: "EMERGENCE", pole: "FL" },
-    { id: 14, text: "I feel energized when I can adapt quickly to changing situations.", axis: "EMERGENCE", pole: "FL" },
-    { id: 15, text: "Too much routine makes me feel constrained or stuck.", axis: "EMERGENCE", pole: "FL" },
-    { id: 16, text: "I am comfortable moving forward without having a detailed plan.", axis: "EMERGENCE", pole: "FL" },
-    { id: 17, text: "My sense of who I am has remained mostly consistent over time.", axis: "IDENTITY", pole: "FX" },
-    { id: 18, text: "Once I commit to an identity or belief, I rarely change it.", axis: "IDENTITY", pole: "FX" },
-    { id: 19, text: "I prefer small, gradual changes to my identity rather than major shifts.", axis: "IDENTITY", pole: "FX" },
-    { id: 20, text: "I focus more on refining who I already am than reinventing myself.", axis: "IDENTITY", pole: "FX" },
-    { id: 21, text: "My identity has changed significantly at different points in my life.", axis: "IDENTITY", pole: "TR" },
-    { id: 22, text: "Major life events often change how I see myself.", axis: "IDENTITY", pole: "TR" },
-    { id: 23, text: "I am drawn to experiences that could fundamentally change who I am.", axis: "IDENTITY", pole: "TR" },
-    { id: 24, text: "I regularly reflect on myself and update how I understand who I am.", axis: "IDENTITY", pole: "TR" }
-  ];
+try {
+  reducedMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+} catch (e) {}
 
-  const TYPES = [
-    { id: 1,  code: "IN–ST–FX",      slug: "inner-frameworker",        name: "The Inner Frameworker",        vec: [-1, -1, -1] },
-    { id: 2,  code: "IN–FL–TR",      slug: "internal-alchemist",       name: "The Internal Alchemist",       vec: [-1, +1, +1] },
-    { id: 3,  code: "EX–FL–TR",      slug: "dimensional-flowweaver",   name: "The Dimensional Flowweaver",   vec: [+1, +1, +1] },
-    { id: 4,  code: "EX–FL–FX",      slug: "external-catalyst",        name: "The External Catalyst",        vec: [+1, +1, -1] },
-    { id: 5,  code: "EX–ST–FX",      slug: "reality-architect",        name: "The Reality Architect",        vec: [+1, -1, -1] },
-    { id: 6,  code: "IN–ST–TR",      slug: "structured-empathic-lens", name: "The Structured Empathic Lens", vec: [-1, -1, +1] },
-    { id: 7,  code: "EX–ST–TR",      slug: "analytical-evolver",       name: "The Analytical Evolver",       vec: [+1, -1, +1] },
-    { id: 8,  code: "IN–FL–FX",      slug: "fluxbound-weaver",         name: "The Fluxbound Weaver",         vec: [-1, +1, -1] },
-    { id: 9,  code: "IN–(ST/FL)–TR", slug: "axis-synthesizer",         name: "The Axis Synthesizer",         vec: [-1,  0, +1] },
-    { id: 10, code: "EX–(ST/FL)–TR", slug: "resonant-fieldholder",     name: "The Resonant Fieldholder",     vec: [+1,  0, +1] },
-    { id: 11, code: "(IN/EX)–ST–FX", slug: "dimensional-anchor",       name: "The Dimensional Anchor",       vec: [ 0, -1, -1] },
-    { id: 12, code: "(IN/EX)–FL–TR", slug: "horizon-breaker",          name: "The Horizon Breaker",          vec: [ 0, +1, +1] }
-  ];
+function safeJSONParse(value) {
+  try { return JSON.parse(value); } catch (e) { return null; }
+}
 
-  const ALLOWED_TYPE_SLUGS = (function () {
-    var set = {};
-    for (var i = 0; i < TYPES.length; i++) set[TYPES[i].slug] = true;
-    return set;
-  })();
+function safeStorageGet(storage, key) {
+  try { return storage.getItem(key) || ""; } catch (e) { return ""; }
+}
 
-  const POLE_DIRECTION = {
-    PERCEPTION: { IN: -1, EX: +1 },
-    EMERGENCE:  { ST: -1, FL: +1 },
-    IDENTITY:   { FX: -1, TR: +1 }
-  };
+function safeStorageSet(storage, key, value) {
+  try { storage.setItem(key, value); return true; } catch (e) { return false; }
+}
 
-  let answersById = {};
-  let questionEls = [];
-  let axisHeadingEls = [];
-  let questionElById = {};
+function safeStorageRemove(storage, key) {
+  try { storage.removeItem(key); } catch (e) {}
+}
 
-  let formEl = null;
-  let questionsRootEl = null;
-  let resultEl = null;
-  let errorEl = null;
+function utf8Bytes(value) {
+  try { return new TextEncoder().encode(String(value || "")).length; }
+  catch (e) { return String(value || "").length; }
+}
 
-  let progressCountEl = null;
-  let progressBarFillEl = null;
-  let currentSectionLabelEl = null;
-  let geometryPreviewEl = null;
+function isPlainObject(value) {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
 
-  let saveRowEl = null;
-  let saveBtnEl = null;
-  let saveStatusEl = null;
-  let saveInFlight = false;
+function isIso(value) {
+  if (typeof value !== "string" || value.length > 40) return false;
+  var ms = Date.parse(value);
+  return isFinite(ms) && new Date(ms).toISOString() === value;
+}
 
-  let authWatchIntervalId = null;
-  let authWatchTimeoutId = null;
-  let authWatchPollInFlight = false;
-  let authWatchHandler = null;
+function newClientAttemptId() {
+  try {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+    if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+      var bytes = new Uint8Array(16);
+      window.crypto.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 15) | 64;
+      bytes[8] = (bytes[8] & 63) | 128;
+      var hex = Array.prototype.map.call(bytes, function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+      return hex.slice(0,8) + "-" + hex.slice(8,12) + "-" + hex.slice(12,16) + "-" + hex.slice(16,20) + "-" + hex.slice(20);
+    }
+  } catch (e) {}
+  return "";
+}
 
-  let activeQuestionIndex = 0;
+function getMemberstack() {
+  try {
+    if (window.neuform && window.neuform.memberstack && typeof window.neuform.memberstack.get === "function") {
+      return window.neuform.memberstack.get() || window.$memberstackDom || window.MemberStack || null;
+    }
+  } catch (e) {}
+  return window.$memberstackDom || window.MemberStack || null;
+}
 
-  let sectionObserver = null;
-  let headingRatios = null;
+async function sessionToken() {
+  try {
+    if (window.NF_LIBRARY && typeof window.NF_LIBRARY.sessionToken === "function") {
+      var shared = await window.NF_LIBRARY.sessionToken();
+      if (typeof shared === "string" && shared.trim()) return shared.trim();
+    }
+  } catch (e) {}
 
-  function escapeHtml(str) {
-    return String(str == null ? "" : str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function safeScrollIntoView(el, opts) {
-    if (!el || typeof el.scrollIntoView !== "function") return;
-    var o = opts || { behavior: "smooth", block: "center" };
-    try {
-      if (prefersReducedMotion() && o && o.behavior === "smooth") o = { behavior: "auto", block: o.block || "center", inline: o.inline };
-    } catch (e) {}
-    try { el.scrollIntoView(o); }
-    catch (e2) { try { el.scrollIntoView(); } catch (e3) {} }
-  }
-
-  function safeFocus(el) {
-    if (!el || typeof el.focus !== "function") return;
-    try { el.focus({ preventScroll: true }); }
-    catch (e) { try { el.focus(); } catch (e2) {} }
-  }
-
-  function getAnalytics() {
-    try {
-      if (window.NF_NL && window.NF_NL.analytics) return window.NF_NL.analytics;
-      if (window.neuform && window.neuform.analytics) return window.neuform.analytics;
-    } catch (e) {}
-    return null;
-  }
-
-  function trackToolView() {
-    if (!TRACKING_ENABLED) return;
-    try {
-      var a = getAnalytics();
-      if (a && typeof a.view === "function") a.view(TOOL_CODE, { section: TOOL_SECTION, quiz_version: QUIZ_VERSION });
-    } catch (e) {}
-  }
-
-  function trackToolAction(action, meta) {
-    if (!TRACKING_ENABLED) return;
-    try {
-      var a = getAnalytics();
-      if (!a || typeof a.action !== "function") return;
-      var payload = { section: TOOL_SECTION, quiz_version: QUIZ_VERSION };
-      var extra = meta && typeof meta === "object" ? meta : null;
-      if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
-      a.action(TOOL_CODE, action || "run", payload);
-    } catch (e) {}
-  }
-
-  function trackQuizCompleted(result) {
-    if (!result || !result.type) return;
-    trackToolAction("submit", {
-      type_code: result.type.code,
-      type_name: result.type.name,
-      type_slug: result.type.slug,
-      axis_perception: result.perception,
-      axis_emergence: result.emergence,
-      axis_identity: result.identity
-    });
-  }
-
-  function trackResultLinkClick(type) {
-    if (!type) return;
-    trackToolAction("result_click", { type_code: type.code, type_name: type.name, type_slug: type.slug });
-  }
-
-  function trackExplainedLinkClick(href, source) {
-    trackToolAction("explained_click", { href: href || EXPLAINED_URL, source: source || "unknown" });
-  }
-
-  function trackSaveEvent(action, meta) {
-    var m = meta && typeof meta === "object" ? meta : {};
-    m.quiz_version = QUIZ_VERSION;
-    trackToolAction("save_" + (action || "unknown"), m);
-  }
-
-  function trackShareCopy(type, method) {
-    trackToolAction("share_copy", { type_slug: type && type.slug ? type.slug : "unknown", method: method || "unknown" });
-  }
-
-  function announce(msg) {
-    try {
-      var nf = window.neuform;
-      if (nf && nf.a11y && typeof nf.a11y.announce === "function") nf.a11y.announce(msg);
-    } catch (e) {}
-  }
-
-  function normalizePrefetchHref(href) {
-    if (!href) return "";
-    try {
-      var u = new URL(href, window.location.origin);
-      if (u.origin !== window.location.origin) return "";
-      return u.pathname + u.search;
-    } catch (e) {}
-    return "";
-  }
-
-  function ensurePrefetch(key, href) {
-    if (!key || !href) return;
-    var safeHref = normalizePrefetchHref(href);
-    if (!safeHref) return;
-    try {
-      var existingPrefetch = document.querySelector('link[data-dlter-prefetch="' + key + '"]');
-      if (existingPrefetch) existingPrefetch.href = safeHref;
-      else {
-        var linkEl = document.createElement("link");
-        linkEl.rel = "prefetch";
-        linkEl.href = safeHref;
-        linkEl.setAttribute("data-dlter-prefetch", key);
-        document.head.appendChild(linkEl);
-      }
-    } catch (ePrefetch) {}
-  }
-
-  function setupExplainedTracking() {
-    if (window.__DLTER_EXPLAINED_TRACKING__) return;
-    window.__DLTER_EXPLAINED_TRACKING__ = true;
-
-    ensurePrefetch("explained", EXPLAINED_URL);
-
-    document.addEventListener("click", function (evt) {
-      var target = evt.target;
-      if (!target || !target.closest) return;
-
-      var a = target.closest("a");
-      if (!a) return;
-
-      var href = a.getAttribute("href") || "";
-      if (!href) return;
-
-      var normalized = normalizePrefetchHref(href);
-      if (!normalized) return;
-
-      var basePath = "";
-      try { basePath = normalized.split("?")[0].split("#")[0]; } catch (e) { basePath = normalized; }
-      if (basePath !== EXPLAINED_URL) return;
-
-      var source = "unknown";
+  var ms = getMemberstack();
+  var methods = ["getMemberCookie", "getMemberToken", "getToken"];
+  for (var i = 0; i < methods.length; i++) {
+    var name = methods[i];
+    if (ms && typeof ms[name] === "function") {
       try {
-        if (a.closest("#dlter-result")) source = "result";
-        else if (a.closest(".dlter-header")) source = "header";
-        else if (a.closest(".dlter-type-links")) source = "type_strip";
+        var value = await ms[name]();
+        if (typeof value === "string" && value.trim()) return value.trim();
+        if (value && typeof value.token === "string" && value.token.trim()) return value.token.trim();
       } catch (e2) {}
-
-      trackExplainedLinkClick(href || EXPLAINED_URL, source);
-    });
+    }
   }
 
-  function getMemberstackDom() {
-    return window.$memberstackDom || window.MemberStack || null;
-  }
+  return safeStorageGet(localStorage, "_ms-mid") || safeStorageGet(localStorage, "_ms_mid");
+}
 
-  function isMemberstackReady(ms) {
-    return !!(ms && typeof ms.getCurrentMember === "function");
-  }
-
-  function waitForMemberstackReady(timeoutMs, intervalMs) {
-    var timeout = typeof timeoutMs === "number" ? timeoutMs : 2000;
-    var interval = typeof intervalMs === "number" ? intervalMs : 100;
-
-    return new Promise(function (resolve) {
-      var start = Date.now();
-      (function tick() {
-        var ms = getMemberstackDom();
-        if (isMemberstackReady(ms)) { resolve(ms); return; }
-        if (Date.now() - start >= timeout) { resolve(null); return; }
-        setTimeout(tick, interval);
-      })();
-    });
-  }
-
-  function safeGetCurrentMemberNow() {
-    return new Promise(function (resolve) {
+function openMemberstackModal(name) {
+  var ms = getMemberstack();
+  var raw = String(name || "").trim();
+  if (!raw) return false;
+  var names = [raw, raw.toUpperCase(), raw.toLowerCase()];
+  var seen = {};
+  if (ms && typeof ms.openModal === "function") {
+    for (var i = 0; i < names.length; i++) {
+      var modalName = names[i];
+      if (!modalName || seen[modalName]) continue;
+      seen[modalName] = true;
       try {
-        var ms = getMemberstackDom();
-        if (!isMemberstackReady(ms)) { resolve(null); return; }
-        ms.getCurrentMember()
-          .then(function (res) { resolve(res && res.data ? res.data : null); })
-          .catch(function () { resolve(null); });
-      } catch (e) { resolve(null); }
-    });
-  }
-
-  function safeGetCurrentMember(timeoutMs) {
-    return waitForMemberstackReady(timeoutMs, 100).then(function (ms) {
-      if (!ms) return null;
-      return ms.getCurrentMember()
-        .then(function (res) { return res && res.data ? res.data : null; })
-        .catch(function () { return null; });
-    });
-  }
-
-  function tryOpenMemberstackModal(ms, key) {
-    try {
-      if (ms && typeof ms.openModal === "function") {
-        ms.openModal(key);
+        ms.openModal(modalName);
         return true;
-      }
-    } catch (e) {}
-    return false;
-  }
-
-  function openMemberstackLoginModalSoon() {
-    return waitForMemberstackReady(6000, 120).then(function (ms) {
-      if (!ms) return false;
-      if (tryOpenMemberstackModal(ms, MS_LOGIN)) return true;
-      if (tryOpenMemberstackModal(ms, MEMBERSTACK_LOGIN_MODAL_ATTR)) return true;
-      return false;
-    });
-  }
-
-  function setSaveStatus(msg) {
-    if (!saveStatusEl) return;
-    saveStatusEl.textContent = msg || "";
-  }
-
-  function showSaveRow() {
-    if (!saveRowEl) return;
-    saveRowEl.hidden = false;
-  }
-
-  function hideSaveRow() {
-    if (!saveRowEl) return;
-    saveRowEl.hidden = true;
-  }
-
-  function setSaveEnabled(enabled) {
-    if (!saveBtnEl) return;
-    saveBtnEl.disabled = !enabled;
-    if (!enabled) saveBtnEl.setAttribute("aria-disabled", "true");
-    else saveBtnEl.removeAttribute("aria-disabled");
-  }
-
-  function setSaveButtonLabel(label) {
-    if (!saveBtnEl) return;
-    var labelNode = saveBtnEl.querySelector("[data-dlter-save-label]");
-    if (labelNode) labelNode.textContent = label || "";
-    else saveBtnEl.textContent = label || "";
-  }
-
-  function setSaveButtonModal(modeAttr) {
-    if (!saveBtnEl) return;
-    if (modeAttr) saveBtnEl.setAttribute("data-ms-modal", modeAttr);
-    else saveBtnEl.removeAttribute("data-ms-modal");
-  }
-
-  function clearAuthWatch() {
-    if (authWatchIntervalId) { clearInterval(authWatchIntervalId); authWatchIntervalId = null; }
-    if (authWatchTimeoutId) { clearTimeout(authWatchTimeoutId); authWatchTimeoutId = null; }
-    authWatchPollInFlight = false;
-    if (authWatchHandler) {
-      try { document.removeEventListener("memberstack:loggedIn", authWatchHandler); } catch (e) {}
-      try { window.removeEventListener("memberstack:loggedIn", authWatchHandler); } catch (e2) {}
-      authWatchHandler = null;
-    }
-  }
-
-  function getLastResultPacket() {
-    try {
-      var p = window.__DLTER_LAST_RESULT__ || null;
-      if (!p || !p.type_slug || !ALLOWED_TYPE_SLUGS[p.type_slug]) return null;
-      return p;
-    } catch (e) {}
-    return null;
-  }
-
-  function refreshSaveAuthUI() {
-    if (!saveRowEl || saveRowEl.hidden) return;
-
-    var packet = getLastResultPacket();
-    if (!packet) { hideSaveRow(); return; }
-
-    setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
-
-    safeGetCurrentMember(800).then(function (member) {
-      if (member && member.id) {
-        setSaveButtonModal(null);
-        setSaveEnabled(true);
-        var cur = (saveStatusEl && saveStatusEl.textContent) ? saveStatusEl.textContent.trim() : "";
-        if (cur === SAVE_STATUS_LOGGED_OUT || cur === SAVE_STATUS_NEEDS_LOGIN) setSaveStatus("");
-      } else {
-        setSaveButtonModal(MEMBERSTACK_LOGIN_MODAL_ATTR);
-        setSaveEnabled(true);
-        var cur2 = (saveStatusEl && saveStatusEl.textContent) ? saveStatusEl.textContent.trim() : "";
-        if (!cur2) setSaveStatus(SAVE_STATUS_LOGGED_OUT);
-      }
-    });
-  }
-
-  function setLastResultPacket(type) {
-    if (!type || !type.slug || !ALLOWED_TYPE_SLUGS[type.slug]) { window.__DLTER_LAST_RESULT__ = null; return; }
-    window.__DLTER_LAST_RESULT__ = { type_slug: type.slug, type_code: type.code || "", type_name: type.name || "", quiz_version: QUIZ_VERSION };
-  }
-
-  function scoreDlterQuiz(answers) {
-    const axisScore = { PERCEPTION: 0, EMERGENCE: 0, IDENTITY: 0 };
-    const axisCount = { PERCEPTION: 0, EMERGENCE: 0, IDENTITY: 0 };
-
-    for (const q of QUESTIONS) {
-      const raw = Number(answers[q.id]);
-      if (!raw || raw < 1 || raw > 5) throw new Error("Please answer all questions before seeing your type.");
-      const v = raw - 3;
-      const sign = POLE_DIRECTION[q.axis][q.pole];
-      axisScore[q.axis] += v * sign;
-      axisCount[q.axis] += 1;
-    }
-
-    function norm(axis) {
-      const max = axisCount[axis] * 2;
-      return max === 0 ? 0 : axisScore[axis] / max;
-    }
-
-    const P = norm("PERCEPTION");
-    const E2 = norm("EMERGENCE");
-    const I2 = norm("IDENTITY");
-
-    let bestType = null;
-    let bestDist = Infinity;
-    let secondBest = null;
-    let secondDist = Infinity;
-
-    for (const t of TYPES) {
-      const dP = P - t.vec[0];
-      const dE = E2 - t.vec[1];
-      const dI = I2 - t.vec[2];
-      const dist = Math.sqrt(dP * dP + dE * dE + dI * dI);
-
-      if (dist < bestDist) {
-        secondBest = bestType;
-        secondDist = bestDist;
-        bestDist = dist;
-        bestType = t;
-      } else if (dist < secondDist) {
-        secondBest = t;
-        secondDist = dist;
-      }
-    }
-
-    return { perception: P, emergence: E2, identity: I2, type: bestType, bestDist: bestDist, secondType: secondBest, secondDist: secondDist };
-  }
-
-  function computeGeometryPreview(answers) {
-    const axisScore = { PERCEPTION: 0, EMERGENCE: 0, IDENTITY: 0 };
-    const axisCount = { PERCEPTION: 0, EMERGENCE: 0, IDENTITY: 0 };
-
-    for (const q of QUESTIONS) {
-      const raw = Number(answers[q.id]);
-      if (!raw || raw < 1 || raw > 5) continue;
-      const v = raw - 3;
-      const sign = POLE_DIRECTION[q.axis][q.pole];
-      axisScore[q.axis] += v * sign;
-      axisCount[q.axis] += 1;
-    }
-
-    function norm(axis) {
-      const max = axisCount[axis] * 2;
-      return max === 0 ? 0 : axisScore[axis] / max;
-    }
-
-    return { perception: norm("PERCEPTION"), emergence: norm("EMERGENCE"), identity: norm("IDENTITY") };
-  }
-
-  function getMatchStrength(bestDist, secondDist) {
-    var gap = (typeof secondDist === "number" ? secondDist : 0) - (typeof bestDist === "number" ? bestDist : 0);
-    if (gap >= 0.55) return "High";
-    if (gap >= 0.30) return "Moderate";
-    return "Exploratory";
-  }
-
-  function axisMetaLabel(q) {
-    if (q.axis === "PERCEPTION") return q.pole === "IN" ? "Perception Axis · IN (Internal Reality Framer)" : "Perception Axis · EX (External Reality Absorber)";
-    if (q.axis === "EMERGENCE") return q.pole === "ST" ? "Emergence Axis · ST (Structured Stabilizer)" : "Emergence Axis · FL (Fluid Transmuter)";
-    if (q.axis === "IDENTITY") return q.pole === "FX" ? "Identity Dynamics Axis · FX (Fixed Pattern Holder)" : "Identity Dynamics Axis · TR (Transformational Observer)";
-    return "";
-  }
-
-  function axisSectionNameFromAxis(axis) {
-    if (axis === "PERCEPTION") return "Perception Axis";
-    if (axis === "EMERGENCE") return "Emergence Axis";
-    if (axis === "IDENTITY") return "Identity Dynamics Axis";
-    return "";
-  }
-
-  function resetAnswers() {
-    answersById = {};
-    for (var i = 0; i < QUESTIONS.length; i++) answersById[QUESTIONS[i].id] = null;
-  }
-
-  function renderDlterQuiz() {
-    var container = questionsRootEl || document.getElementById("dlter-quiz-questions");
-    if (!container) return;
-
-    container.innerHTML = "";
-    questionEls = [];
-    axisHeadingEls = [];
-    questionElById = {};
-    resetAnswers();
-    activeQuestionIndex = 0;
-
-    var scaleLabels = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"];
-    var AXIS_FIRST_IDS = { PERCEPTION: 1, EMERGENCE: 9, IDENTITY: 17 };
-    var frag = document.createDocumentFragment();
-
-    QUESTIONS.forEach(function (q) {
-      if (AXIS_FIRST_IDS[q.axis] === q.id) {
-        var heading = document.createElement("h3");
-        heading.className = "dlter-axis-heading";
-        heading.textContent = axisSectionNameFromAxis(q.axis);
-        heading.dataset.axis = q.axis;
-        frag.appendChild(heading);
-        axisHeadingEls.push(heading);
-      }
-
-      var wrap = document.createElement("div");
-      wrap.className = "dlter-question";
-      wrap.dataset.axis = q.axis;
-      wrap.dataset.qid = String(q.id);
-
-      var titleId = "dlter-q-title-" + q.id;
-      var metaId = "dlter-q-meta-" + q.id;
-
-      wrap.setAttribute("role", "group");
-      wrap.setAttribute("aria-labelledby", titleId);
-      wrap.setAttribute("aria-describedby", metaId);
-
-      var title = document.createElement("p");
-      title.className = "dlter-question-title";
-      title.id = titleId;
-      title.textContent = "Q" + q.id + ". " + q.text;
-      wrap.appendChild(title);
-
-      var meta = document.createElement("p");
-      meta.className = "dlter-question-meta";
-      meta.id = metaId;
-      meta.textContent = axisMetaLabel(q);
-      wrap.appendChild(meta);
-
-      var optionsRow = document.createElement("div");
-      optionsRow.className = "dlter-scale-options";
-      optionsRow.setAttribute("role", "radiogroup");
-      optionsRow.setAttribute("aria-labelledby", titleId);
-      optionsRow.setAttribute("aria-describedby", metaId);
-
-      scaleLabels.forEach(function (labelText, index) {
-        var value = index + 1;
-        var id = "q" + q.id + "_opt" + value;
-
-        var label = document.createElement("label");
-        label.className = "dlter-scale-option";
-        label.htmlFor = id;
-
-        var radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = "q" + q.id;
-        radio.value = String(value);
-        radio.id = id;
-        radio.className = "dlter-scale-option-input";
-
-        var span = document.createElement("span");
-        span.textContent = value + " – " + labelText;
-
-        label.appendChild(radio);
-        label.appendChild(span);
-        optionsRow.appendChild(label);
-      });
-
-      wrap.appendChild(optionsRow);
-      frag.appendChild(wrap);
-
-      questionEls.push(wrap);
-      questionElById[q.id] = wrap;
-    });
-
-    container.appendChild(frag);
-
-    updateProgressUI();
-    updateGeometryPreview(answersById);
-    setupSectionObserver();
-    updateCurrentSectionLabel("PERCEPTION");
-  }
-
-  function formatAxis(value, negativeLabel, positiveLabel) {
-    if (value <= -0.33) return negativeLabel;
-    if (value >= 0.33) return positiveLabel;
-    return negativeLabel + "/" + positiveLabel + " blend";
-  }
-
-  function formatAxisScoreSuffix(value) {
-    var abs = Math.abs(value);
-    if (abs < 0.05) return " — score: ~0 (balanced)";
-    return " — score: " + value.toFixed(2);
-  }
-
-  function formatGeometryLabel(preview) {
-    if (!preview) return "";
-    var p = formatAxis(preview.perception, "IN", "EX");
-    var e2 = formatAxis(preview.emergence, "ST", "FL");
-    var i2 = formatAxis(preview.identity, "FX", "TR");
-    return "Current geometry: " + p + " · " + e2 + " · " + i2;
-  }
-
-  function updateProgressUI() {
-    if (!questionsRootEl) return;
-
-    var answeredCount = 0;
-    for (var i = 0; i < QUESTIONS.length; i++) {
-      var id = QUESTIONS[i].id;
-      var v = Number(answersById[id]);
-      if (v >= 1 && v <= 5) answeredCount++;
-    }
-
-    if (progressCountEl) progressCountEl.textContent = answeredCount + " of " + QUESTIONS.length + " answered";
-
-    if (progressBarFillEl) {
-      var pct = QUESTIONS.length > 0 ? (answeredCount / QUESTIONS.length) * 100 : 0;
-      progressBarFillEl.style.width = pct.toFixed(1) + "%";
-      progressBarFillEl.setAttribute("aria-valuenow", String(Math.round(pct)));
-    }
-  }
-
-  function updateCurrentSectionLabel(axis) {
-    if (!currentSectionLabelEl || !axis) return;
-    currentSectionLabelEl.textContent = axisSectionNameFromAxis(axis);
-
-    var pill = currentSectionLabelEl.closest(".dlter-current-section-pill");
-    if (!pill) return;
-
-    pill.classList.remove("dlter-current-section-pill--perception", "dlter-current-section-pill--emergence", "dlter-current-section-pill--identity");
-    if (axis === "PERCEPTION") pill.classList.add("dlter-current-section-pill--perception");
-    if (axis === "EMERGENCE") pill.classList.add("dlter-current-section-pill--emergence");
-    if (axis === "IDENTITY") pill.classList.add("dlter-current-section-pill--identity");
-  }
-
-  function setupSectionObserver() {
-    if (!("IntersectionObserver" in window)) return;
-
-    if (sectionObserver) { sectionObserver.disconnect(); sectionObserver = null; }
-    headingRatios = new Map();
-
-    sectionObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        headingRatios.set(entry.target, entry.intersectionRatio || 0);
-      });
-
-      var bestEl = null;
-      var bestRatio = 0;
-
-      axisHeadingEls.forEach(function (el) {
-        var r = headingRatios.get(el) || 0;
-        if (r > bestRatio) { bestRatio = r; bestEl = el; }
-      });
-
-      if (bestEl && bestEl.dataset && bestEl.dataset.axis) updateCurrentSectionLabel(bestEl.dataset.axis);
-    }, { root: null, threshold: [0, 0.25, 0.5, 0.75, 1] });
-
-    axisHeadingEls.forEach(function (el) { sectionObserver.observe(el); });
-  }
-
-  function updateGeometryPreview(answers) {
-    if (!geometryPreviewEl) return;
-
-    var preview = computeGeometryPreview(answers || {});
-    geometryPreviewEl.textContent = formatGeometryLabel(preview);
-
-    var hasAnyAnswer = false;
-    for (var i = 0; i < QUESTIONS.length; i++) {
-      var id = QUESTIONS[i].id;
-      var v = Number((answers || {})[id]);
-      if (v >= 1 && v <= 5) { hasAnyAnswer = true; break; }
-    }
-
-    if (hasAnyAnswer) geometryPreviewEl.classList.add("dlter-geometry-preview--visible");
-    else geometryPreviewEl.classList.remove("dlter-geometry-preview--visible");
-  }
-
-  function markQuestionAnswered(wrap) {
-    if (!wrap) return;
-    wrap.classList.add("dlter-question--answered");
-    wrap.classList.remove("dlter-question--error");
-    wrap.removeAttribute("aria-invalid");
-
-    var idx = questionEls.indexOf(wrap);
-    if (idx >= 0) activeQuestionIndex = idx;
-
-    if (wrap.dataset && wrap.dataset.axis) updateCurrentSectionLabel(wrap.dataset.axis);
-  }
-
-  function handleAnswerChange(evt) {
-    var target = evt.target;
-    if (!target || !target.classList || !target.classList.contains("dlter-scale-option-input")) return;
-
-    var name = target.name || "";
-    if (!name || name.charAt(0) !== "q") return;
-
-    var qid = parseInt(name.slice(1), 10);
-    if (!qid || isNaN(qid)) return;
-
-    var val = Number(target.value);
-    answersById[qid] = (val >= 1 && val <= 5) ? val : null;
-
-    var wrap = target.closest(".dlter-question");
-    markQuestionAnswered(wrap);
-
-    if (errorEl) errorEl.textContent = "";
-
-    updateProgressUI();
-    updateGeometryPreview(answersById);
-
-    if (wrap) {
-      var nextIdx = questionEls.indexOf(wrap) + 1;
-      if (nextIdx > 0 && nextIdx < questionEls.length) {
-        var nextEl = questionEls[nextIdx];
-        var vh = window.innerHeight || 800;
-        var rect = nextEl && nextEl.getBoundingClientRect ? nextEl.getBoundingClientRect() : null;
-        var visibleEnough = rect && rect.top >= 0 && rect.top <= (vh - 140);
-        if (!visibleEnough) setTimeout(function () { safeScrollIntoView(nextEl, { behavior: "smooth", block: "nearest" }); }, 60);
-      }
-    }
-  }
-
-  function handleQuestionClick(evt) {
-    var qWrap = evt.target && evt.target.closest ? evt.target.closest(".dlter-question") : null;
-    if (!qWrap) return;
-
-    var idx = questionEls.indexOf(qWrap);
-    if (idx >= 0) activeQuestionIndex = idx;
-
-    if (qWrap.dataset && qWrap.dataset.axis) updateCurrentSectionLabel(qWrap.dataset.axis);
-  }
-
-  function genClientNonce(){
-    try{
-      if (window.crypto && crypto.getRandomValues) {
-        var a = new Uint8Array(16);
-        crypto.getRandomValues(a);
-        return Array.from(a).map(function(b){ return ("0"+b.toString(16)).slice(-2); }).join("");
-      }
-    }catch(e){}
-    return (Date.now().toString(36) + Math.random().toString(36).slice(2));
-  }
-
-  function getOptionalSaveSig(){
-    try{
-      var nf = window.neuform || {};
-      if (nf.dlter && typeof nf.dlter.saveSig === "string" && nf.dlter.saveSig) return nf.dlter.saveSig;
-      if (typeof nf.dlterSaveSig === "string" && nf.dlterSaveSig) return nf.dlterSaveSig;
-    }catch(e){}
-    return "";
-  }
-
-  function parseJsonTextSafe(txt){
-    if (!txt) return null;
-    try { return JSON.parse(txt); } catch(e) { return null; }
-  }
-
-  const DLTER_SAVE_ERROR_MESSAGES = {
-    missing_member_id: "Unable to submit right now. Please log in again and retry.",
-    invalid_member_id: "Your account ID looks invalid. Please log out and back in.",
-    invalid_type_slug: "Your result type could not be validated. Please retake the quiz.",
-    invalid_sig: "Unable to submit securely. Please try again later.",
-    replay_detected: "That submission appears duplicated. Please wait and try again.",
-    rate_limited: "You're submitting too quickly. Please wait a moment and retry.",
-    unknown: SAVE_STATUS_TRY_AGAIN
-  };
-
-  var lastSubmitAttemptAt = 0;
-  var SESSION_LAST_SUBMISSION_KEY = "dlter:last_submission";
-
-  function emitDlterSaveTelemetry(eventName, payload) {
-    try {
-      var nf = window.neuform;
-      if (!nf || typeof nf.canTrack !== "function" || !nf.canTrack() || typeof nf.track !== "function") return;
-      nf.track(eventName, payload || {});
-    } catch (e) {}
-  }
-
-  function getErrorCode(err, fallbackCode) {
-    if (err && typeof err.error_code === "string" && err.error_code) return err.error_code;
-    if (fallbackCode) return fallbackCode;
-    return "unknown";
-  }
-
-  function getErrorMessage(err, fallbackCode) {
-    var code = getErrorCode(err, fallbackCode);
-    return DLTER_SAVE_ERROR_MESSAGES[code] || DLTER_SAVE_ERROR_MESSAGES.unknown;
-  }
-
-  function shouldFallbackToLegacy(err, status) {
-    if (!DLTER_SAVE_CONFIG.DLTER_LEGACY_URL) return false;
-    if (status === 404 || status === 501) return true;
-    if (err && err.isNetworkError) return true;
-    return false;
-  }
-
-  function shouldFallbackToRelay(err, status) {
-    if (!DLTER_SAVE_CONFIG.DLTER_RELAY_URL) return false;
-    if (status === 404 || status === 501) return true;
-    if (err && err.isNetworkError) return true;
-    return false;
-  }
-
-  function classifySaveError(err, status, fallbackCode) {
-    var code = getErrorCode(err, fallbackCode);
-    var wrapped = new Error(getErrorMessage(err, code));
-    wrapped.error_code = code;
-    wrapped.http_status = typeof status === "number" ? status : 0;
-    wrapped.raw_error = err || null;
-    return wrapped;
-  }
-
-  function parseSaveResponse(res, mode, latencyMs) {
-    var status = res && typeof res.status === "number" ? res.status : 0;
-    return (res ? res.text() : Promise.resolve(""))
-      .then(function (txt) {
-        var json = parseJsonTextSafe(txt) || null;
-        if (!res || !res.ok) {
-          var code = (json && typeof json.error === "string" && json.error) ? json.error : "unknown";
-          throw classifySaveError(json || null, status, code);
-        }
-        if (json && json.ok === false) {
-          throw classifySaveError(json, status, json.error || "unknown");
-        }
-        if (json && json.ok !== true) {
-          throw classifySaveError(json, status, "unknown");
-        }
-        return {
-          queued: true,
-          confirmed: true,
-          mode: mode,
-          latency_ms: latencyMs,
-          http_status: status,
-          resp: json
-        };
-      });
-  }
-
-  function asFormUrlEncoded(payload) {
-    try { return new URLSearchParams(payload).toString(); }
-    catch (eParams) {
-      var pairs = [];
-      for (var k in payload) {
-        if (!Object.prototype.hasOwnProperty.call(payload, k)) continue;
-        pairs.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(payload[k])));
-      }
-      return pairs.join("&");
-    }
-  }
-
-  function sendSaveRequest(url, mode, payload) {
-    var start = Date.now();
-    var fetchOptions = {
-      method: "POST",
-      mode: "cors",
-      credentials: "omit",
-      headers: { "Accept": "application/json" },
-      keepalive: true,
-      redirect: "follow"
-    };
-
-    if (mode === "relay") {
-      fetchOptions.headers["Content-Type"] = "application/json;charset=UTF-8";
-      fetchOptions.body = JSON.stringify(payload);
-    } else {
-      fetchOptions.headers["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
-      fetchOptions.body = asFormUrlEncoded(payload);
-    }
-
-    return fetch(url, fetchOptions)
-      .then(function (res) {
-        return parseSaveResponse(res, mode, Date.now() - start);
-      })
-      .catch(function (err) {
-        if (err && typeof err.http_status === "number") throw err;
-        var wrapped = classifySaveError(err, 0, "unknown");
-        wrapped.isNetworkError = true;
-        throw wrapped;
-      });
-  }
-
-  function readLastSubmissionSession() {
-    try {
-      var raw = sessionStorage.getItem(SESSION_LAST_SUBMISSION_KEY);
-      var parsed = parseJsonTextSafe(raw);
-      if (!parsed || typeof parsed.ts !== "number") return null;
-      return parsed;
-    } catch (e) { return null; }
-  }
-
-  function isClientRateLimited(nowMs) {
-    if ((nowMs - lastSubmitAttemptAt) < DLTER_SAVE_CONFIG.DLTER_CLIENT_RATE_LIMIT_MS) return true;
-    var prior = readLastSubmissionSession();
-    if (!prior || !prior.ts) return false;
-    return (nowMs - Number(prior.ts)) < DLTER_SAVE_CONFIG.DLTER_CLIENT_RATE_LIMIT_MS;
-  }
-
-  function saveResultToEndpoint(member, packet) {
-    return new Promise(function (resolve, reject) {
-      var relayUrl = DLTER_SAVE_CONFIG.DLTER_RELAY_URL;
-      var legacyUrl = DLTER_SAVE_CONFIG.DLTER_LEGACY_URL;
-      if (!relayUrl && !legacyUrl) { reject(new Error("Save endpoint not configured.")); return; }
-      if (!member || !member.id) { reject(classifySaveError(null, 0, "missing_member_id")); return; }
-      if (!packet || !packet.type_slug) { reject(classifySaveError(null, 0, "invalid_type_slug")); return; }
-      if (!ALLOWED_TYPE_SLUGS[String(packet.type_slug)]) { reject(classifySaveError(null, 0, "invalid_type_slug")); return; }
-
-      var nowSec = Math.floor(Date.now() / 1000);
-      var payload = {
-        member_id: String(member.id),
-        type_slug: String(packet.type_slug),
-        type_code: String(packet.type_code || ""),
-        quiz_version: String(packet.quiz_version || QUIZ_VERSION),
-        client_ts: String(nowSec),
-        client_nonce: genClientNonce(),
-        replay_window_sec: String(DLTER_SAVE_CONFIG.DLTER_REPLAY_WINDOW_SEC || 600)
-      };
-
-      var sig = getOptionalSaveSig();
-      var hasSig = !!sig;
-      if (sig) payload.sig = String(sig);
-      if (DLTER_SAVE_CONFIG.DLTER_REQUIRE_SIG && !hasSig) {
-        reject(classifySaveError({ error_code: "invalid_sig" }, 0, "invalid_sig"));
-        return;
-      }
-
-      var mode = DLTER_SAVE_CONFIG.DLTER_SAVE_MODE === "legacy_preferred" ? "legacy_preferred" : "relay_preferred";
-      var primaryMode = (mode === "legacy_preferred" && legacyUrl) ? "legacy" : "relay";
-      var primaryUrl = primaryMode === "relay" ? relayUrl : legacyUrl;
-      var secondaryMode = primaryMode === "relay" ? "legacy" : "relay";
-      var secondaryUrl = secondaryMode === "relay" ? relayUrl : legacyUrl;
-
-      emitDlterSaveTelemetry("dlter_save_attempt", { mode: primaryMode, has_sig: hasSig });
-      sendSaveRequest(primaryUrl, primaryMode, payload)
-        .then(function (resp) {
-          emitDlterSaveTelemetry("dlter_save_success", { mode: primaryMode, latency_ms: resp.latency_ms || 0 });
-          resolve(resp);
-        })
-        .catch(function (primaryErr) {
-          emitDlterSaveTelemetry("dlter_save_fail", {
-            mode: primaryMode,
-            error_code: getErrorCode(primaryErr),
-            http_status: primaryErr && primaryErr.http_status ? primaryErr.http_status : 0
-          });
-
-          var shouldFallback = primaryMode === "relay"
-            ? shouldFallbackToLegacy(primaryErr, primaryErr && primaryErr.http_status)
-            : shouldFallbackToRelay(primaryErr, primaryErr && primaryErr.http_status);
-          if (!secondaryUrl || !shouldFallback) {
-            reject(primaryErr);
-            return;
-          }
-
-          var fallbackReason = primaryErr && primaryErr.isNetworkError ? "network_error" : "http_" + String(primaryErr && primaryErr.http_status || 0);
-          if (secondaryMode === "legacy") emitDlterSaveTelemetry("dlter_save_fallback_to_legacy", { reason: fallbackReason });
-          if (secondaryMode === "relay") emitDlterSaveTelemetry("dlter_save_fallback_to_relay", { reason: fallbackReason });
-
-          emitDlterSaveTelemetry("dlter_save_attempt", { mode: secondaryMode, has_sig: hasSig });
-          sendSaveRequest(secondaryUrl, secondaryMode, payload)
-            .then(function (resp) {
-              emitDlterSaveTelemetry("dlter_save_success", { mode: secondaryMode, latency_ms: resp.latency_ms || 0 });
-              resolve(resp);
-            })
-            .catch(function (secondaryErr) {
-              emitDlterSaveTelemetry("dlter_save_fail", {
-                mode: secondaryMode,
-                error_code: getErrorCode(secondaryErr),
-                http_status: secondaryErr && secondaryErr.http_status ? secondaryErr.http_status : 0
-              });
-              reject(secondaryErr);
-            });
-        });
-    });
-  }
-
-  function finalizeSave(resp, packet, isAuto) {
-    var confirmed = !!(resp && resp.confirmed);
-    var mode = resp && resp.mode ? String(resp.mode) : "unknown";
-    setSaveStatus(confirmed ? "Saved ✓" : "Submitted (queued)");
-    setSaveButtonLabel(confirmed ? "Saved ✓" : "Submitted (queued)");
-    setTimeout(function () { setSaveButtonLabel("Submit again"); }, 1200);
-    announce(confirmed ? "Result saved." : "Result submitted.");
-    trackSaveEvent(isAuto ? (confirmed ? "auto_success" : "auto_queued") : (confirmed ? "success" : "queued"), {
-      type_slug: packet.type_slug,
-      member_id_present: true,
-      confirmed: confirmed,
-      via: mode
-    });
-    saveInFlight = false;
-    setSaveEnabled(true);
-  }
-
-  function failSave(err, packet, isAuto) {
-    setSaveStatus(getErrorMessage(err));
-    setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
-    trackSaveEvent(isAuto ? "auto_error" : "error", {
-      type_slug: packet && packet.type_slug ? packet.type_slug : "unknown",
-      msg: (err && err.message) ? String(err.message) : "unknown",
-      error_code: getErrorCode(err),
-      http_status: err && err.http_status ? err.http_status : 0
-    });
-    saveInFlight = false;
-    setSaveEnabled(true);
-  }
-
-  function doSaveWithMember(member, packet, isAuto) {
-    if (saveInFlight) return;
-    if (!member || !member.id || !packet || !packet.type_slug) return;
-
-    var nowMs = Date.now();
-    if (isClientRateLimited(nowMs)) {
-      setSaveStatus("Already submitting…");
-      return;
-    }
-    lastSubmitAttemptAt = nowMs;
-    try {
-      sessionStorage.setItem(SESSION_LAST_SUBMISSION_KEY, JSON.stringify({
-        nonce: genClientNonce(),
-        ts: nowMs
-      }));
-    } catch (eSession) {}
-
-    clearAuthWatch();
-    setSaveButtonModal(null);
-    saveInFlight = true;
-    setSaveEnabled(false);
-    setSaveStatus("Submitting…");
-    trackSaveEvent(isAuto ? "auto_attempt" : "attempt", { type_slug: packet.type_slug });
-
-    saveResultToEndpoint(member, packet)
-      .then(function (resp) { finalizeSave(resp, packet, isAuto); })
-      .catch(function (err) { failSave(err, packet, isAuto); });
-  }
-
-  function watchForLoginAndAutoSave(packet) {
-    clearAuthWatch();
-    if (!packet || !packet.type_slug) return;
-
-    trackSaveEvent("auto_watch_start", { type_slug: packet.type_slug });
-
-    var done = false;
-    function finish() {
-      if (done) return;
-      done = true;
-      clearAuthWatch();
-    }
-
-    function tryOnce() {
-      if (done) return;
-      safeGetCurrentMemberNow().then(function (member) {
-        if (!member || !member.id) return;
-        finish();
-        doSaveWithMember(member, packet, true);
-      });
-    }
-
-    authWatchHandler = function () { tryOnce(); };
-    try { document.addEventListener("memberstack:loggedIn", authWatchHandler); } catch (e) {}
-    try { window.addEventListener("memberstack:loggedIn", authWatchHandler); } catch (e2) {}
-
-    authWatchIntervalId = setInterval(function () {
-      if (done || authWatchPollInFlight) return;
-      authWatchPollInFlight = true;
-      safeGetCurrentMemberNow()
-        .then(function (member) {
-          if (!member || !member.id) return;
-          finish();
-          doSaveWithMember(member, packet, true);
-        })
-        .finally(function () { authWatchPollInFlight = false; });
-    }, 5000);
-
-    authWatchTimeoutId = setTimeout(function () {
-      clearAuthWatch();
-      refreshSaveAuthUI();
-      trackSaveEvent("auto_watch_timeout", { type_slug: packet.type_slug });
-    }, 90000);
-
-    tryOnce();
-  }
-
-  function handleSaveClick() {
-    if (saveInFlight) return;
-
-    var packet = getLastResultPacket();
-    if (!packet) { setSaveStatus("Take the quiz to generate a result first."); return; }
-
-    if (!DLTER_SAVE_CONFIG.DLTER_RELAY_URL && !DLTER_SAVE_CONFIG.DLTER_LEGACY_URL) {
-      setSaveStatus("Save is not enabled yet.");
-      trackSaveEvent("disabled", { type_slug: packet.type_slug });
-      return;
-    }
-
-    setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
-    setSaveStatus("Checking your account…");
-    setSaveEnabled(false);
-
-    safeGetCurrentMember(1500)
-      .then(function (member) {
-        if (!member || !member.id) {
-          setSaveButtonModal(MEMBERSTACK_LOGIN_MODAL_ATTR);
-          setSaveEnabled(true);
-          setSaveStatus(SAVE_STATUS_NEEDS_LOGIN);
-          trackSaveEvent("needs_login", { type_slug: packet.type_slug });
-          watchForLoginAndAutoSave(packet);
-          openMemberstackLoginModalSoon();
-          return;
-        }
-        doSaveWithMember(member, packet, false);
-      })
-      .catch(function (err) {
-        var packet2 = getLastResultPacket();
-        setSaveStatus(getErrorMessage(err));
-        setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
-        trackSaveEvent("error", { type_slug: packet2 && packet2.type_slug ? packet2.type_slug : "unknown", msg: "member_check_failed" });
-        saveInFlight = false;
-        setSaveEnabled(true);
-      });
-  }
-
-  function handleDlterSubmit() {
-    if (!formEl) return;
-
-    questionEls.forEach(function (el) {
-      el.classList.remove("dlter-question--error");
-      el.removeAttribute("aria-invalid");
-    });
-    if (errorEl) errorEl.textContent = "";
-
-    var unanswered = [];
-    for (var i = 0; i < QUESTIONS.length; i++) {
-      var q = QUESTIONS[i];
-      var v = Number(answersById[q.id]);
-      if (!(v >= 1 && v <= 5)) unanswered.push(q);
-    }
-
-    if (unanswered.length > 0) {
-      unanswered.forEach(function (q) {
-        var el = questionElById[q.id];
-        if (el) el.setAttribute("aria-invalid", "true");
-      });
-
-      var firstMissing = unanswered[0];
-      var firstEl = questionElById[firstMissing.id] || null;
-
-      if (firstEl) {
-        firstEl.classList.add("dlter-question--error");
-        safeScrollIntoView(firstEl, { behavior: "smooth", block: "center" });
-        var firstRadio = firstEl.querySelector("input[type='radio']");
-        if (firstRadio) setTimeout(function () { safeFocus(firstRadio); }, 260);
-      }
-
-      if (errorEl) errorEl.textContent = "Please answer all questions before viewing your DLTER Reality Type. " + unanswered.length + " remaining.";
-      else alert("Please answer all questions before viewing your DLTER Reality Type.");
-      return;
-    }
-
-    var result;
-    try { result = scoreDlterQuiz(answersById); }
-    catch (err) {
-      if (errorEl) errorEl.textContent = err.message || "Please answer all questions.";
-      else alert(err.message || "Please answer all questions.");
-      return;
-    }
-
-    var type = result.type;
-    var perception = result.perception;
-    var emergence = result.emergence;
-    var identity = result.identity;
-
-    if (type) trackQuizCompleted(result);
-
-    if (AUTO_REDIRECT && type && type.slug) {
-      window.location.href = BASE_TYPE_URL + type.slug;
-      return;
-    }
-
-    if (!resultEl) return;
-
-    var typeUrl = BASE_TYPE_URL + (type ? type.slug : "");
-    if (type && type.slug) ensurePrefetch("type", typeUrl);
-    ensurePrefetch("explained", EXPLAINED_URL);
-
-    var fullUrl = "";
-    try { fullUrl = window.location.origin + typeUrl; } catch (eUrl) { fullUrl = typeUrl; }
-
-    resultEl.className = resultEl.className.replace(/\bdlter-type-[\w-]+\b/g, "");
-
-    if (type && type.slug) {
-      resultEl.classList.add("dlter-type-" + type.slug);
-      resultEl.setAttribute("data-dlter-type", type.slug);
-    } else {
-      resultEl.removeAttribute("data-dlter-type");
-    }
-
-    var matchStrength = getMatchStrength(result.bestDist, result.secondDist);
-
-    var safeTypeName = escapeHtml(type ? type.name : "—");
-    var safeTypeCode = escapeHtml(type ? type.code : "");
-    var safeSecondName = result.secondType ? escapeHtml(result.secondType.name) : "";
-
-    resultEl.innerHTML =
-      '<h2>Your DLTER Reality Type</h2>' +
-      '<p><strong>' + safeTypeName + "</strong> " + (safeTypeCode ? "(" + safeTypeCode + ")" : "") + "</p>" +
-      '<div class="dlter-result-meta">' +
-      '<span class="dlter-match-pill">Match: ' + escapeHtml(matchStrength) + "</span>" +
-      (safeSecondName ? '<span class="dlter-result-note">Secondary resonance: <strong>' + safeSecondName + "</strong></span>" : "") +
-      "</div>" +
-      '<p class="dlter-theory-bridge"><strong>How this works:</strong> Your result reflects how you tend to stabilize, adapt, and update your identity under change across three axes. DLTER expresses these dynamics as identity geometry—your type is the closest match to your measured profile.</p>' +
-      "<p>Based on your answers, your identity geometry leans toward:</p>" +
-      "<ul>" +
-      "<li><strong>Perception:</strong> " + escapeHtml(formatAxis(perception, "IN", "EX")) + escapeHtml(formatAxisScoreSuffix(perception)) + "</li>" +
-      "<li><strong>Emergence:</strong> " + escapeHtml(formatAxis(emergence, "ST", "FL")) + escapeHtml(formatAxisScoreSuffix(emergence)) + "</li>" +
-      "<li><strong>Identity Dynamics:</strong> " + escapeHtml(formatAxis(identity, "FX", "TR")) + escapeHtml(formatAxisScoreSuffix(identity)) + "</li>" +
-      "</ul>" +
-      '<p><a href="' + escapeHtml(typeUrl) + '" id="dlter-view-type-link">Open your type page (free snapshot) →</a></p>' +
-      '<p class="dlter-result-note">Curious what this is based on? <a href="' + escapeHtml(EXPLAINED_URL) + '" id="dlter-explained-link">Read DLTER Explained →</a></p>' +
-      '<p class="dlter-result-note">Blueprints unlock per Reality Type on the type pages.</p>' +
-      '<div class="dlter-share">' +
-      '<span class="dlter-share-tag">Share your result</span>' +
-      '<div class="dlter-share-buttons">' +
-      '<button type="button" class="dlter-share-btn" id="dlter-copy-link"><span>Copy link</span></button>' +
-      "</div>" +
-      "</div>";
-
-    resultEl.classList.add("dlter-result--visible");
-    resultEl.setAttribute("tabindex", "-1");
-    safeFocus(resultEl);
-
-    clearAuthWatch();
-    setLastResultPacket(type);
-
-    if (saveRowEl) {
-      showSaveRow();
-      setSaveEnabled(true);
-      setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
-      setSaveStatus("");
-      refreshSaveAuthUI();
-    }
-
-    var typeLink = document.getElementById("dlter-view-type-link");
-    if (typeLink && type && !typeLink.__dlterTracked) {
-      typeLink.__dlterTracked = true;
-      typeLink.addEventListener("click", function () { trackResultLinkClick(type); });
-    }
-
-    var copyBtn = document.getElementById("dlter-copy-link");
-    var shareTag = resultEl.querySelector(".dlter-share-tag");
-
-    function handleCopyClick() {
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(fullUrl)
-            .then(function () {
-              trackShareCopy(type, "clipboard");
-              if (copyBtn) {
-                copyBtn.textContent = "Copied!";
-                setTimeout(function () { copyBtn.textContent = "Copy link"; }, 1200);
-              }
-            })
-            .catch(function () {
-              trackShareCopy(type, "prompt");
-              window.prompt("Copy this link:", fullUrl);
-            });
-        } else {
-          trackShareCopy(type, "prompt");
-          window.prompt("Copy this link:", fullUrl);
-        }
-      } catch (e) {
-        trackShareCopy(type, "prompt");
-        window.prompt("Copy this link:", fullUrl);
-      }
-    }
-
-    if (copyBtn && !copyBtn.__dlterCopyInit) {
-      copyBtn.__dlterCopyInit = true;
-      copyBtn.addEventListener("click", handleCopyClick);
-    }
-    if (shareTag && !shareTag.__dlterCopyInit) {
-      shareTag.__dlterCopyInit = true;
-      shareTag.addEventListener("click", handleCopyClick);
-    }
-
-    safeScrollIntoView(resultEl, { behavior: "smooth", block: "start" });
-  }
-
-  function focusQuestionByIndex(idx) {
-    if (!questionEls.length) return;
-    if (idx < 0) idx = 0;
-    if (idx >= questionEls.length) idx = questionEls.length - 1;
-
-    var qEl = questionEls[idx];
-    if (!qEl) return;
-
-    activeQuestionIndex = idx;
-
-    var firstRadio = qEl.querySelector("input[type='radio']");
-    if (firstRadio) {
-      safeFocus(firstRadio);
-      safeScrollIntoView(qEl, { behavior: "smooth", block: "nearest" });
-    } else {
-      safeScrollIntoView(qEl, { behavior: "smooth", block: "center" });
-    }
-  }
-
-  function isInDialogContext(el) {
-    if (!el || !el.closest) return false;
-    return !!el.closest('[role="dialog"], [aria-modal="true"]');
-  }
-
-  function syncActiveQuestionIndexFromEl(el) {
-    try {
-      if (!el || !questionEls || !questionEls.length) return;
-
-      var qWrap = null;
-      if (el.closest) qWrap = el.closest(".dlter-question");
-      if (!qWrap) return;
-
-      var idx = questionEls.indexOf(qWrap);
-      if (idx >= 0) {
-        activeQuestionIndex = idx;
-        if (qWrap.dataset && qWrap.dataset.axis) updateCurrentSectionLabel(qWrap.dataset.axis);
-      }
-    } catch (e) {}
-  }
-
-  function handleKeydown(evt) {
-    if (!formEl || !questionsRootEl) return;
-
-    var active = document.activeElement;
-    if (isInDialogContext(active)) return;
-
-    var inQuestions = active && questionsRootEl.contains(active);
-    if (!inQuestions) return;
-
-    if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
-
-    syncActiveQuestionIndexFromEl(active);
-
-    var key = evt.key || evt.code || "";
-
-    var isNumber = key === "1" || key === "2" || key === "3" || key === "4" || key === "5";
-    if (isNumber) {
-      evt.preventDefault();
-
-      var qEl = questionEls[activeQuestionIndex] || questionEls[0];
-      if (!qEl) return;
-
-      var radios = qEl.querySelectorAll("input[type='radio']");
-      var idx = parseInt(key, 10) - 1;
-
-      if (idx >= 0 && idx < radios.length) {
-        var r = radios[idx];
-        r.checked = true;
-        r.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-      return;
-    }
-
-    var activeIsRadio = active && active.matches && active.matches("input[type='radio']");
-    if (!activeIsRadio && (key === "ArrowDown" || key === "ArrowRight")) {
-      evt.preventDefault();
-      focusQuestionByIndex(activeQuestionIndex + 1);
-      return;
-    }
-
-    if (!activeIsRadio && (key === "ArrowUp" || key === "ArrowLeft")) {
-      evt.preventDefault();
-      focusQuestionByIndex(activeQuestionIndex - 1);
-      return;
-    }
-
-    if (key === "Enter" && !activeIsRadio) {
-      evt.preventDefault();
-      handleDlterSubmit();
-    }
-  }
-
-  function initDlterQuiz() {
-    formEl = document.getElementById("dlter-quiz-form");
-    questionsRootEl = document.getElementById("dlter-quiz-questions");
-    resultEl = document.getElementById("dlter-result");
-    errorEl = document.getElementById("dlter-error");
-
-    if (!formEl || !questionsRootEl) return;
-
-    window.__DLTER_QUIZ_BOOTED__ = true;
-
-    progressCountEl = document.getElementById("dlter-progress-count");
-    progressBarFillEl = document.querySelector(".dlter-progress-bar-fill");
-    currentSectionLabelEl = document.getElementById("dlter-current-section-label");
-    geometryPreviewEl = document.getElementById("dlter-geometry-preview");
-
-    saveRowEl = document.getElementById("dlter-save-row");
-    saveBtnEl = document.getElementById("dlter-save-result");
-    saveStatusEl = document.getElementById("dlter-save-status");
-
-    hideSaveRow();
-    setSaveStatus("");
-    setSaveEnabled(true);
-
-    if (saveStatusEl) {
-      try {
-        saveStatusEl.setAttribute("role", "status");
-        saveStatusEl.setAttribute("aria-live", "polite");
-        saveStatusEl.setAttribute("aria-atomic", "true");
       } catch (e) {}
     }
+  }
+  return false;
+}
 
-    if (saveBtnEl) {
-      saveBtnEl.type = "button";
-      setSaveButtonLabel(SAVE_BTN_LABEL_DEFAULT);
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function escapeHTML(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function canTrack() {
+  try {
+    var host = String(location.hostname || "").toLowerCase();
+    return (location.protocol === "https:" || location.protocol === "http:") &&
+      host && host !== "localhost" && host !== "127.0.0.1" && !host.endsWith("webflow.io");
+  } catch (e) {
+    return false;
+  }
+}
+
+function track(name, payload) {
+  if (!canTrack()) return;
+  var data = payload || {};
+  data.assessment_version = ASSESSMENT_VERSION;
+  data.scoring_version = SCORING_VERSION;
+  data.path = location.pathname || "";
+  try {
+    if (window.neuform && typeof window.neuform.canTrack === "function" && !window.neuform.canTrack()) return;
+    if (window.neuform && typeof window.neuform.track === "function") {
+      window.neuform.track(name, data);
+      return;
     }
-
-    if (progressBarFillEl) {
-      progressBarFillEl.setAttribute("role", "progressbar");
-      progressBarFillEl.setAttribute("aria-valuemin", "0");
-      progressBarFillEl.setAttribute("aria-valuemax", "100");
-      progressBarFillEl.setAttribute("aria-valuenow", "0");
-      progressBarFillEl.setAttribute("aria-label", "Quiz progress");
+  } catch (e) {}
+  try {
+    if (window.NF_NL && window.NF_NL.analytics && typeof window.NF_NL.analytics.action === "function") {
+      window.NF_NL.analytics.action("reality_types_assessment", name, data);
     }
+  } catch (e2) {}
+}
 
-    renderDlterQuiz();
-
-    if (formEl && !formEl.__dlterInit) {
-      formEl.__dlterInit = true;
-      formEl.addEventListener("submit", function (e) {
-        e.preventDefault();
-        handleDlterSubmit();
-      });
+function announce(message) {
+  try {
+    if (window.neuform && window.neuform.a11y && typeof window.neuform.a11y.announce === "function") {
+      window.neuform.a11y.announce(message);
     }
+  } catch (e) {}
+}
 
-    if (questionsRootEl && !questionsRootEl.__dlterChangeInit) {
-      questionsRootEl.__dlterChangeInit = true;
-      questionsRootEl.addEventListener("change", handleAnswerChange);
-      questionsRootEl.addEventListener("click", handleQuestionClick);
-    }
+function itemAt(index) {
+  return ITEMS[index] || null;
+}
 
-    if (saveBtnEl && !saveBtnEl.__dlterSaveInit) {
-      saveBtnEl.__dlterSaveInit = true;
-      saveBtnEl.addEventListener("click", function () { handleSaveClick(); });
-    }
+function answeredCount() {
+  var count = 0;
+  for (var i = 0; i < ITEMS.length; i++) {
+    if (answers[ITEMS[i].id] >= 1 && answers[ITEMS[i].id] <= 6) count++;
+  }
+  return count;
+}
 
-    window.addEventListener("focus", refreshSaveAuthUI);
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "visible") refreshSaveAuthUI();
+function partFor(index) {
+  return Math.min(4, Math.floor(index / PART_SIZE) + 1);
+}
+
+function saveProgress() {
+  try {
+    sessionStorage.setItem(PROGRESS_KEY, JSON.stringify({
+      assessment_version: ASSESSMENT_VERSION,
+      scoring_version: SCORING_VERSION,
+      answers: answers,
+      answer_times: answerTimes,
+      current_index: currentIndex,
+      started_at: startedAt,
+      saved_at: Date.now()
+    }));
+  } catch (e) {}
+}
+
+function clearProgress() {
+  try { sessionStorage.removeItem(PROGRESS_KEY); } catch (e) {}
+}
+
+function loadProgress() {
+  var data = null;
+  try { data = safeJSONParse(sessionStorage.getItem(PROGRESS_KEY)); } catch (e) {}
+  if (!data || data.assessment_version !== ASSESSMENT_VERSION || !data.answers) return null;
+  var clean = {};
+  var cleanTimes = {};
+  ITEMS.forEach(function (item) {
+    var value = Number(data.answers[item.id]);
+    if (value >= 1 && value <= 6) clean[item.id] = value;
+    var answeredAt = data.answer_times && data.answer_times[item.id];
+    if (isIso(answeredAt)) cleanTimes[item.id] = answeredAt;
+  });
+  if (!Object.keys(clean).length) return null;
+  return {
+    answers: clean,
+    answer_times: cleanTimes,
+    current_index: clamp(Number(data.current_index) || 0, 0, ITEMS.length - 1),
+    started_at: Number(data.started_at) || Date.now(),
+    saved_at: Number(data.saved_at) || Date.now()
+  };
+}
+
+function renderProgress() {
+  var count = answeredCount();
+  var percent = Math.round((count / ITEMS.length) * 100);
+  if (progressFill) progressFill.style.width = percent + "%";
+  if (progressTrack) {
+    progressTrack.setAttribute("aria-valuenow", String(percent));
+    progressTrack.setAttribute("aria-valuetext", count + " of " + ITEMS.length + " statements answered");
+  }
+  if (progressLabel) progressLabel.textContent = count + " of " + ITEMS.length + " answered";
+  if (partLabel) partLabel.textContent = "Part " + partFor(Math.min(currentIndex, ITEMS.length - 1)) + " of 4";
+}
+
+function renderQuestion() {
+  clearTimeout(autoAdvanceTimer);
+  var item = itemAt(currentIndex);
+  if (!item || !stage) return;
+
+  var selected = Number(answers[item.id]) || 0;
+  var options = "";
+  for (var i = 0; i < SCALE_LABELS.length; i++) {
+    var value = i + 1;
+    var id = "rt-q" + item.id + "-v" + value;
+    options +=
+      '<div class="rt-option">' +
+        '<input type="radio" id="' + id + '" name="rt-q' + item.id + '" value="' + value + '"' +
+          (selected === value ? ' checked' : '') + '>' +
+        '<label for="' + id + '">' +
+          '<span class="rt-option-number" aria-hidden="true">' + value + '</span>' +
+          '<span class="rt-option-copy">' + escapeHTML(SCALE_LABELS[i]) + '</span>' +
+        '</label>' +
+      '</div>';
+  }
+
+  stage.innerHTML =
+    '<fieldset class="rt-question-card" aria-describedby="rt-scale-help">' +
+      '<legend class="sr-only">Statement ' + (currentIndex + 1) + ' of ' + ITEMS.length + '</legend>' +
+      '<p class="rt-question-number">Statement ' + (currentIndex + 1) + ' of ' + ITEMS.length + '</p>' +
+      '<p class="rt-question-text" id="rt-question-text">' + escapeHTML(item.text) + '</p>' +
+      '<p class="rt-scale-help" id="rt-scale-help">Choose the response that best reflects your usual pattern. There are no better or worse answers.</p>' +
+      '<div class="rt-scale-orientation" aria-hidden="true">' +
+        '<span>Unlike me</span>' +
+        '<span class="rt-scale-orientation-steps">1 2 3 4 5 6</span>' +
+        '<span>Like me</span>' +
+      '</div>' +
+      '<div class="rt-scale" role="radiogroup" aria-labelledby="rt-question-text">' + options + '</div>' +
+    '</fieldset>';
+
+  backBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = !selected;
+  nextBtn.textContent = currentIndex === ITEMS.length - 1 ? "Review" : "Next";
+  renderProgress();
+
+  var radios = stage.querySelectorAll('input[type="radio"]');
+  radios.forEach(function (radio) {
+    radio.addEventListener("change", function () {
+      answers[item.id] = Number(radio.value);
+      answerTimes[item.id] = new Date().toISOString();
+      nextBtn.disabled = false;
+      saveProgress();
+      renderProgress();
+      announce("Response recorded.");
+      clearTimeout(autoAdvanceTimer);
+      if (AUTO_ADVANCE_MS >= 0) {
+        autoAdvanceTimer = setTimeout(function () {
+          if (currentIndex === ITEMS.length - 1) showReview();
+          else goTo(currentIndex + 1, false);
+        }, reducedMotion ? 0 : AUTO_ADVANCE_MS);
+      }
     });
+  });
 
-    document.addEventListener("keydown", handleKeydown);
+  var focusTarget = stage.querySelector('input:checked') || stage.querySelector('input');
+  if (focusTarget) {
+    setTimeout(function () {
+      try { focusTarget.focus({preventScroll:true}); } catch (e) { try { focusTarget.focus(); } catch (e2) {} }
+    }, 30);
+  }
+}
 
-    if (!window.__DLTER_AUTHWATCH_CLEANUP_BOUND__) {
-      window.__DLTER_AUTHWATCH_CLEANUP_BOUND__ = true;
-      try { window.addEventListener("pagehide", clearAuthWatch); } catch(e) {}
-      try { window.addEventListener("beforeunload", clearAuthWatch); } catch(e2) {}
+function goTo(index, scroll) {
+  currentIndex = clamp(index, 0, ITEMS.length - 1);
+  saveProgress();
+  renderQuestion();
+  if (scroll !== false && root) {
+    try { root.scrollIntoView({behavior: reducedMotion ? "auto" : "smooth", block:"start"}); } catch (e) {}
+  }
+}
+
+function showReview() {
+  clearTimeout(autoAdvanceTimer);
+  var count = answeredCount();
+  if (count !== ITEMS.length) {
+    var firstMissing = ITEMS.findIndex(function (item) { return !answers[item.id]; });
+    if (firstMissing >= 0) {
+      if (errorEl) errorEl.textContent = "Please answer every statement before viewing your Reality Map.";
+      goTo(firstMissing);
     }
-
-    setupExplainedTracking();
-
-    if (!window.__dlterQuizViewTracked) {
-      window.__dlterQuizViewTracked = true;
-      trackToolView();
-    }
-
-    updateGeometryPreview(answersById);
+    return;
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDlterQuiz, { once: true });
+  stage.innerHTML =
+    '<section class="rt-review-card" aria-labelledby="rt-review-title">' +
+      '<p class="rt-question-number">Assessment complete</p>' +
+      '<h2 id="rt-review-title">Ready to build your Reality Map?</h2>' +
+      '<p>Your responses will be converted into six mode scores, three coordination scores, and comparisons with all 12 reference patterns. The result is an interpretive map, not a diagnosis or permanent label.</p>' +
+      '<div class="rt-review-summary">' +
+        '<div class="rt-review-stat"><strong>48</strong><span>statements</span></div>' +
+        '<div class="rt-review-stat"><strong>6</strong><span>primary modes</span></div>' +
+        '<div class="rt-review-stat"><strong>3</strong><span>coordination processes</span></div>' +
+        '<div class="rt-review-stat"><strong>12</strong><span>reference-pattern comparisons</span></div>' +
+      '</div>' +
+      '<div class="rt-review-actions">' +
+        '<button type="button" class="rt-btn rt-btn-primary" id="rt-build-map">See My Reality Map</button>' +
+        '<button type="button" class="rt-btn rt-btn-ghost" id="rt-review-last">Review My Last Answer</button>' +
+        '<button type="button" class="rt-btn rt-btn-ghost" id="rt-start-over-review">Start Over</button>' +
+      '</div>' +
+    '</section>';
+
+  backBtn.hidden = true;
+  nextBtn.hidden = true;
+  if (partLabel) partLabel.textContent = "Review";
+  if (errorEl) errorEl.textContent = "";
+
+  var build = document.getElementById("rt-build-map");
+  var review = document.getElementById("rt-review-last");
+  var reset = document.getElementById("rt-start-over-review");
+  if (build) build.addEventListener("click", completeAssessment);
+  if (review) review.addEventListener("click", function () {
+    backBtn.hidden = false;
+    nextBtn.hidden = false;
+    goTo(ITEMS.length - 1);
+  });
+  if (reset) reset.addEventListener("click", startOver);
+  if (build) setTimeout(function () { try { build.focus(); } catch (e) {} }, 30);
+}
+
+function scaleScores() {
+  var sums = {}, counts = {};
+  SCORE_ORDER.forEach(function (scale) { sums[scale] = 0; counts[scale] = 0; });
+
+  ITEMS.forEach(function (item) {
+    var raw = Number(answers[item.id]);
+    if (!(raw >= 1 && raw <= 6)) throw new Error("Every statement must be answered.");
+    var adjusted = item.key === -1 ? 7 - raw : raw;
+    sums[item.scale] += adjusted;
+    counts[item.scale] += 1;
+  });
+
+  var scores = {};
+  SCORE_ORDER.forEach(function (scale) {
+    var mean = counts[scale] ? sums[scale] / counts[scale] : 3.5;
+    scores[scale] = Math.round(clamp(((mean - 1) / 5) * 100, 0, 100) * 10) / 10;
+  });
+  return scores;
+}
+
+function archetypeDistance(scores, archetype) {
+  var sum = 0, weightTotal = 0;
+  for (var i = 0; i < SCORE_ORDER.length; i++) {
+    var scale = SCORE_ORDER[i];
+    var weight = SCORE_WEIGHTS[scale] || 1;
+    var difference = Number(scores[scale]) - Number(archetype.profile[i]);
+    sum += weight * difference * difference;
+    weightTotal += weight;
+  }
+  return Math.sqrt(sum / weightTotal);
+}
+
+function classifyConvergence(firstDistance, secondDistance, scores) {
+  var margin = secondDistance - firstDistance;
+  var values = SCORE_ORDER.slice(0,6).map(function (scale) { return scores[scale]; });
+  var max = Math.max.apply(Math, values);
+  var min = Math.min.apply(Math, values);
+  var differentiation = max - min;
+  var label = "broad";
+  if (firstDistance <= 23 && margin >= 5) label = "clear";
+  else if (margin >= 2.75) label = "close";
+  return {
+    label: label,
+    margin: Math.round(margin * 10) / 10,
+    best_distance: Math.round(firstDistance * 10) / 10,
+    differentiation: Math.round(differentiation * 10) / 10
+  };
+}
+
+function domainSummary(scores, left, right) {
+  var a = scores[left], b = scores[right], diff = Math.abs(a - b);
+  var pattern = "balanced";
+  if (a >= 65 && b >= 65) pattern = "dual";
+  else if (diff >= 14) pattern = a > b ? "left" : "right";
+  else if (a < 45 && b < 45) pattern = "low";
+  return {left:a, right:b, difference:Math.round(diff * 10) / 10, pattern:pattern};
+}
+
+function responseQuality() {
+  var values = ITEMS.map(function (item) { return Number(answers[item.id]); });
+  var counts = {};
+  values.forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
+  var maxRun = 1, run = 1;
+  for (var i = 1; i < values.length; i++) {
+    if (values[i] === values[i - 1]) { run++; maxRun = Math.max(maxRun, run); }
+    else run = 1;
+  }
+  var mostUsed = Math.max.apply(Math, Object.keys(counts).map(function (k) { return counts[k]; }));
+  var mean = values.reduce(function (a,b) { return a+b; }, 0) / values.length;
+  var variance = values.reduce(function (a,b) { var d=b-mean; return a+d*d; }, 0) / values.length;
+  var status = "interpretable";
+  if (mostUsed / values.length >= 0.75 || maxRun >= 18 || Math.sqrt(variance) < 0.55) status = "low_differentiation";
+  return {
+    status: status,
+    longest_same_response_run: maxRun,
+    most_used_response_count: mostUsed,
+    response_sd: Math.round(Math.sqrt(variance) * 100) / 100
+  };
+}
+
+function buildResultPacket() {
+  var scores = scaleScores();
+  var ranked = ARCHETYPES.map(function (archetype) {
+    return {
+      slug: archetype.slug,
+      name: archetype.name,
+      code: archetype.code,
+      signature: archetype.signature,
+      distance: archetypeDistance(scores, archetype)
+    };
+  }).sort(function (a,b) { return a.distance - b.distance; });
+
+  var primary = ranked[0], secondary = ranked[1], tertiary = ranked[2];
+  var convergence = classifyConvergence(primary.distance, secondary.distance, scores);
+  var now = Date.now();
+
+  return {
+    schema: RESULT_SCHEMA,
+    assessment_version: ASSESSMENT_VERSION,
+    scoring_model_version: SCORING_VERSION,
+    completed_at: new Date(now).toISOString(),
+    completed_at_ms: now,
+    expires_at_ms: now + RESULT_TTL_MS,
+    duration_ms: Math.max(0, now - startedAt),
+    type_slug: primary.slug,
+    type_name: primary.name,
+    type_code: primary.code,
+    model_signature: primary.signature,
+    primary: primary,
+    resonances: [secondary, tertiary],
+    scores: scores,
+    domains: {
+      sensemaking: domainSummary(scores, "RS", "EC"),
+      stability: domainSummary(scores, "SA", "AR"),
+      identity: domainSummary(scores, "CP", "TR")
+    },
+    convergence: convergence,
+    response_quality: responseQuality()
+  };
+}
+
+function persistUnsavedAttempt(record) {
+  if (!record) return false;
+  var serialized = "";
+  try { serialized = JSON.stringify(record); } catch (e) { return false; }
+  if (!serialized || utf8Bytes(serialized) > 24576) return false;
+  var stored = safeStorageSet(localStorage, UNSAVED_KEY, serialized);
+  safeStorageSet(sessionStorage, UNSAVED_KEY, serialized);
+  return stored;
+}
+
+function clearUnsavedAttempt() {
+  safeStorageRemove(localStorage, UNSAVED_KEY);
+  safeStorageRemove(sessionStorage, UNSAVED_KEY);
+}
+
+function validUnsavedAttempt(record) {
+  if (!isPlainObject(record) || record.schema !== UNSAVED_SCHEMA) return false;
+  if (record.instrumentVersion !== INSTRUMENT_VERSION) return false;
+  if (typeof record.clientAttemptId !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(record.clientAttemptId)) return false;
+  if (!isFinite(Number(record.createdAt)) || !isFinite(Number(record.expiresAt)) || Date.now() > Number(record.expiresAt)) return false;
+  if (!isIso(record.clientStartedAt) || !isIso(record.clientCompletedAt)) return false;
+  if (!Array.isArray(record.responses) || record.responses.length !== ITEMS.length) return false;
+  for (var i = 0; i < ITEMS.length; i++) {
+    var row = record.responses[i];
+    var expectedId = "rt_" + String(ITEMS[i].id).padStart(3, "0");
+    if (!isPlainObject(row) || row.itemId !== expectedId || Number(row.position) !== i + 1) return false;
+    if (!(Number(row.value) >= 1 && Number(row.value) <= 6)) return false;
+    if (row.answeredAt != null && !isIso(row.answeredAt)) return false;
+  }
+  if (!isPlainObject(record.localResult) || record.localResult.schema !== RESULT_SCHEMA) return false;
+  if (!ARCHETYPES.some(function (a) { return a.slug === record.localResult.type_slug; })) return false;
+  return true;
+}
+
+function loadUnsavedAttempt() {
+  var raw = safeStorageGet(sessionStorage, UNSAVED_KEY) || safeStorageGet(localStorage, UNSAVED_KEY);
+  var record = safeJSONParse(raw);
+  if (!validUnsavedAttempt(record)) {
+    if (raw) clearUnsavedAttempt();
+    return null;
+  }
+  return record;
+}
+
+function pruneUnsavedAttempt() {
+  loadUnsavedAttempt();
+}
+
+function responseRows() {
+  return ITEMS.map(function (item, index) {
+    var row = {
+      itemId: "rt_" + String(item.id).padStart(3, "0"),
+      value: Number(answers[item.id]),
+      position: index + 1
+    };
+    if (isIso(answerTimes[item.id])) row.answeredAt = answerTimes[item.id];
+    return row;
+  });
+}
+
+function buildUnsavedAttempt(localPacket) {
+  var clientAttemptId = newClientAttemptId();
+  if (!clientAttemptId) return null;
+  var completedAt = localPacket.completed_at;
+  var startedIso = new Date(startedAt).toISOString();
+  return {
+    schema: UNSAVED_SCHEMA,
+    clientAttemptId: clientAttemptId,
+    instrumentVersion: INSTRUMENT_VERSION,
+    sourceSurface: "quiz",
+    clientStartedAt: startedIso,
+    clientCompletedAt: completedAt,
+    responses: responseRows(),
+    localResult: localPacket,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + RESULT_TTL_MS
+  };
+}
+
+function validServerResult(data) {
+  if (!isPlainObject(data) || data.schema !== RESULT_SCHEMA || data.saved !== true) return false;
+  if (typeof data.attemptId !== "string" || !/^[0-9a-f-]{36}$/i.test(data.attemptId)) return false;
+  if (!isIso(data.completedAt) || !isPlainObject(data.versions) || data.versions.instrument !== INSTRUMENT_VERSION) return false;
+  if (!isPlainObject(data.primary) || !ARCHETYPES.some(function (a) { return a.slug === data.primary.slug; })) return false;
+  if (!Array.isArray(data.resonances) || data.resonances.length !== 2 || !isPlainObject(data.scores)) return false;
+  for (var i = 0; i < SCORE_ORDER.length; i++) {
+    var value = Number(data.scores[SCORE_ORDER[i]]);
+    if (!isFinite(value) || value < 0 || value > 100) return false;
+  }
+  return true;
+}
+
+function legacyMatch(match) {
+  return {
+    slug: match.slug,
+    name: match.name,
+    code: match.legacyCode,
+    signature: match.profileCode,
+    distance: Number(match.distance)
+  };
+}
+
+function legacyDomain(domain) {
+  return {
+    left: Number(domain.leftScore),
+    right: Number(domain.rightScore),
+    difference: Number(domain.difference),
+    pattern: domain.pattern
+  };
+}
+
+function adaptServerResult(data, localPacket, unsaved) {
+  var completedMs = Date.parse(data.completedAt);
+  var result = Object.assign({}, localPacket, {
+    schema: RESULT_SCHEMA,
+    assessment_version: ASSESSMENT_VERSION,
+    instrument_version: data.versions.instrument,
+    scoring_model_version: data.versions.scoring,
+    archetype_version: data.versions.archetypes,
+    completed_at: data.completedAt,
+    completed_at_ms: completedMs,
+    expires_at_ms: completedMs + RESULT_TTL_MS,
+    client_attempt_id: unsaved.clientAttemptId,
+    attempt_id: data.attemptId,
+    saved: true,
+    save_status: "saved",
+    type_slug: data.primary.slug,
+    type_name: data.primary.name,
+    type_code: data.primary.legacyCode,
+    model_signature: data.primary.profileCode,
+    primary: legacyMatch(data.primary),
+    resonances: [legacyMatch(data.resonances[0]), legacyMatch(data.resonances[1])],
+    scores: data.scores,
+    domains: {
+      sensemaking: legacyDomain(data.domains.sensemaking),
+      stability: legacyDomain(data.domains.stability),
+      identity: legacyDomain(data.domains.identity)
+    },
+    convergence: {
+      label: data.convergence.label,
+      margin: Number(data.convergence.margin),
+      best_distance: Number(data.convergence.firstDistance),
+      differentiation: Number(data.differentiation)
+    },
+    response_quality: {
+      status: data.quality.status,
+      longest_same_response_run: Number(data.quality.longestRun),
+      most_used_response_count: Math.round(Number(data.quality.categoryShare) * ITEMS.length),
+      response_sd: Number(data.quality.rawStandardDeviation)
+    }
+  });
+  return result;
+}
+
+async function saveAttempt(unsaved, localPacket) {
+  if (!validUnsavedAttempt(unsaved)) return {kind:"invalid"};
+  var token = await sessionToken();
+  if (!token) {
+    track("nf_reality_types_save_result", { result: "guest_local_only" });
+    return {kind:"guest"};
+  }
+
+  var controller = typeof AbortController === "function" ? new AbortController() : null;
+  var timeout = setTimeout(function () { if (controller) controller.abort(); }, SAVE_TIMEOUT_MS);
+  try {
+    var response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      credentials: "omit",
+      cache: "no-store",
+      signal: controller ? controller.signal : undefined,
+      body: JSON.stringify({
+        instrumentVersion: unsaved.instrumentVersion,
+        clientAttemptId: unsaved.clientAttemptId,
+        sourceSurface: unsaved.sourceSurface,
+        clientStartedAt: unsaved.clientStartedAt,
+        clientCompletedAt: unsaved.clientCompletedAt,
+        responses: unsaved.responses
+      })
+    });
+    var raw = await response.text();
+    if (utf8Bytes(raw) > MAX_API_RESPONSE_BYTES) throw new Error("save_response_too_large");
+    var data = safeJSONParse(raw);
+    if ((response.status === 200 || response.status === 201) && validServerResult(data)) {
+      track("nf_reality_types_save_result", { result: "saved" });
+      return {kind:"saved", packet:adaptServerResult(data, localPacket, unsaved)};
+    }
+    var reason = data && typeof data.error === "string" ? data.error : "";
+    if (response.status === 401) {
+      track("nf_reality_types_save_result", { result: "auth_required" });
+      return {kind:"auth", reason:reason};
+    }
+    if (response.status === 409) {
+      track("nf_reality_types_save_result", { result: "idempotency_conflict" });
+      return {kind:"conflict", reason:reason};
+    }
+    if (response.status === 503) {
+      track("nf_reality_types_save_result", { result: "temporarily_unavailable" });
+      return {kind:"unavailable", reason:reason};
+    }
+    track("nf_reality_types_save_result", { result: "not_saved" });
+    return {kind:"invalid", reason:reason};
+  } catch (e) {
+    track("nf_reality_types_save_result", { result: "network_retryable" });
+    return {kind:"retry"};
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function persistResult(packet) {
+  var serialized = JSON.stringify(packet);
+  try { sessionStorage.setItem(RESULT_KEY, serialized); } catch (e) {}
+  try { localStorage.setItem(RESULT_KEY, serialized); } catch (e2) {}
+  window.__DLTER_LAST_RESULT__ = {
+    type_slug: packet.type_slug,
+    type_code: packet.type_code,
+    type_name: packet.type_name,
+    quiz_version: packet.assessment_version,
+    result_packet: packet
+  };
+}
+
+function setHidden(element, hidden) {
+  if (element) element.hidden = !!hidden;
+}
+
+function resultDestination(packet) {
+  var state = packet && packet.saved === true ? "saved" : "local";
+  return TYPE_BASE + packet.type_slug + "?from=assessment&save=" + state;
+}
+
+function continueToRealityMap() {
+  if (!currentCompletionPacket) return;
+  clearTimeout(redirectTimer);
+  location.assign(resultDestination(currentCompletionPacket));
+}
+
+async function refreshSaveActions(mode) {
+  if (!saveCard || mode === "saved") return;
+  var token = await sessionToken();
+  if (savePanelMode !== mode) return;
+  var signedIn = !!token;
+  if (mode === "auth") signedIn = false;
+  setHidden(saveRetryBtn, !signedIn);
+  setHidden(saveSignupBtn, signedIn);
+  setHidden(saveLoginBtn, signedIn);
+  if (saveRetryBtn) saveRetryBtn.textContent = mode === "retry" ? "Retry Save" : "Save to My Library";
+}
+
+function showSavePanel(mode, detail) {
+  if (!saveCard || !currentCompletionPacket) return;
+  savePanelMode = mode;
+  setHidden(form, true);
+  setHidden(loadingEl, true);
+  setHidden(saveCard, false);
+  saveCard.classList.remove("is-busy");
+  saveCard.setAttribute("data-state", mode === "saved" ? "saved" : "attention");
+  setHidden(saveRetryBtn, true);
+  setHidden(saveSignupBtn, true);
+  setHidden(saveLoginBtn, true);
+  setHidden(saveContinueBtn, false);
+
+  if (mode === "saved") {
+    if (saveEyebrow) saveEyebrow.textContent = "Saved to your account";
+    if (saveTitle) saveTitle.textContent = "Your Reality Map is saved";
+    if (saveCopy) saveCopy.textContent = "This result is linked to your NeuForm account and can be revisited from My Library.";
+    if (saveDetail) saveDetail.textContent = "Saving your Reality Map does not enroll you in research or change access to your result.";
+    if (saveContinueBtn) saveContinueBtn.textContent = "View My Reality Map";
+    announce("Your Reality Map is saved to your account.");
+    clearTimeout(redirectTimer);
+    redirectTimer = setTimeout(continueToRealityMap, reducedMotion ? 0 : 900);
+    return;
+  }
+
+  if (saveEyebrow) saveEyebrow.textContent = "Reality Map ready";
+  if (saveContinueBtn) saveContinueBtn.textContent = "View Without Saving";
+
+  if (mode === "guest") {
+    if (saveTitle) saveTitle.textContent = "Save this Reality Map to your account?";
+    if (saveCopy) saveCopy.textContent = "Create a free account or log in to save this exact completed result to My Library. You can also view it now without saving.";
+    if (saveDetail) saveDetail.textContent = "Until it is saved, this result and its responses remain only on this device for up to 30 days.";
+  } else if (mode === "auth") {
+    if (saveTitle) saveTitle.textContent = "Sign in again to save";
+    if (saveCopy) saveCopy.textContent = "Your account session could not be verified. Log in again, then this same completed result will be retried.";
+    if (saveDetail) saveDetail.textContent = "Your Reality Map is still safe on this device. No answers were lost.";
+  } else if (mode === "conflict") {
+    if (saveTitle) saveTitle.textContent = "This result is safe, but it was not saved";
+    if (saveCopy) saveCopy.textContent = "The save request could not be reused safely. View your local Reality Map now and contact support before trying to attach this exact attempt again.";
+    if (saveDetail) saveDetail.textContent = detail || "The local result remains available on this device for up to 30 days.";
+    setHidden(saveRetryBtn, true);
+    setHidden(saveSignupBtn, true);
+    setHidden(saveLoginBtn, true);
+    announce("Your Reality Map is ready but was not saved.");
+    return;
+  } else if (mode === "unavailable") {
+    if (saveTitle) saveTitle.textContent = "Saving is temporarily unavailable";
+    if (saveCopy) saveCopy.textContent = "Your Reality Map is complete and safe on this device. You may retry saving or view it now without saving.";
+    if (saveDetail) saveDetail.textContent = "No answers were lost. This local recovery copy expires after 30 days.";
+  } else if (mode === "recovery") {
+    if (saveTitle) saveTitle.textContent = "You have a Reality Map waiting to be saved";
+    if (saveCopy) saveCopy.textContent = "This completed result was recovered from this device. Save it to the account you intend to use, or view it locally.";
+    if (saveDetail) saveDetail.textContent = "Review the active NeuForm account before selecting Save to My Library.";
   } else {
-    initDlterQuiz();
+    if (saveTitle) saveTitle.textContent = "Your Reality Map is ready but not saved yet";
+    if (saveCopy) saveCopy.textContent = "A temporary connection problem prevented saving. Retry the same result or view it now without saving.";
+    if (saveDetail) saveDetail.textContent = "Your result and responses remain safe on this device for up to 30 days.";
   }
+
+  announce("Your Reality Map is ready. It has not been saved yet.");
+  refreshSaveActions(mode);
+}
+
+function showSaveBusy(message) {
+  if (!saveCard) return;
+  savePanelMode = "busy";
+  setHidden(form, true);
+  setHidden(loadingEl, true);
+  setHidden(saveCard, false);
+  saveCard.classList.add("is-busy");
+  saveCard.setAttribute("data-state", "attention");
+  if (saveEyebrow) saveEyebrow.textContent = "Saving";
+  if (saveTitle) saveTitle.textContent = message || "Saving your Reality Map";
+  if (saveCopy) saveCopy.textContent = "Verifying your NeuForm account and preserving this exact completed result.";
+  if (saveDetail) saveDetail.textContent = "Keep this page open for a moment. Your local recovery copy remains available if the request fails.";
+  setHidden(saveRetryBtn, true);
+  setHidden(saveSignupBtn, true);
+  setHidden(saveLoginBtn, true);
+  setHidden(saveContinueBtn, true);
+}
+
+function handleSaveOutcome(outcome) {
+  var kind = outcome && outcome.kind ? outcome.kind : "retry";
+  if (kind === "saved" && outcome.packet) {
+    currentCompletionPacket = outcome.packet;
+    persistResult(currentCompletionPacket);
+    clearUnsavedAttempt();
+    currentUnsavedAttempt = null;
+    showSavePanel("saved");
+    return;
+  }
+  showSavePanel(kind, outcome && outcome.reason ? outcome.reason : "");
+}
+
+async function retryCurrentSave() {
+  if (saveInFlight || !currentUnsavedAttempt || !currentCompletionPacket) return;
+  saveInFlight = true;
+  showSaveBusy("Saving your Reality Map");
+  try {
+    handleSaveOutcome(await saveAttempt(currentUnsavedAttempt, currentCompletionPacket));
+  } finally {
+    saveInFlight = false;
+    if (saveCard) saveCard.classList.remove("is-busy");
+  }
+}
+
+function stopAuthRecoveryPolling() {
+  if (authRecoveryTimer) {
+    clearInterval(authRecoveryTimer);
+    authRecoveryTimer = null;
+  }
+}
+
+function beginAuthRecoveryPolling() {
+  authRecoveryRequested = true;
+  stopAuthRecoveryPolling();
+  var attempts = 0;
+  authRecoveryTimer = setInterval(async function () {
+    attempts += 1;
+    if (!authRecoveryRequested || attempts > 80) {
+      stopAuthRecoveryPolling();
+      return;
+    }
+    var token = await sessionToken();
+    if (token) {
+      authRecoveryRequested = false;
+      stopAuthRecoveryPolling();
+      retryCurrentSave();
+    }
+  }, 750);
+}
+
+function requestAuthAndSave(mode) {
+  authRecoveryRequested = true;
+  var opened = openMemberstackModal(mode);
+  beginAuthRecoveryPolling();
+  return opened;
+}
+
+async function completeAssessment() {
+  if (saveInFlight) return;
+  if (answeredCount() !== ITEMS.length) {
+    showReview();
+    return;
+  }
+
+  assessmentCompleted = true;
+  if (loadingEl) loadingEl.hidden = false;
+  if (form) form.hidden = true;
+  if (saveCard) saveCard.hidden = true;
+  if (errorEl) errorEl.textContent = "";
+
+  var packet;
+  var unsaved = null;
+  try {
+    packet = buildResultPacket();
+    packet.instrument_version = INSTRUMENT_VERSION;
+    packet.saved = false;
+    packet.save_status = "local_only";
+    unsaved = buildUnsavedAttempt(packet);
+    if (!unsaved) {
+      throw new Error("This browser could not create a secure attempt identifier. Please try another browser before continuing.");
+    }
+    packet.client_attempt_id = unsaved.clientAttemptId;
+    if (!persistUnsavedAttempt(unsaved)) {
+      throw new Error("This browser could not create a safe local recovery copy. Please free storage space or try another browser before continuing.");
+    }
+    currentCompletionPacket = packet;
+    currentUnsavedAttempt = unsaved;
+    persistResult(packet);
+    clearProgress();
+  } catch (e) {
+    assessmentCompleted = false;
+    if (loadingEl) loadingEl.hidden = true;
+    if (form) form.hidden = false;
+    if (errorEl) errorEl.textContent = e && e.message ? e.message : "The result could not be calculated. Please try again.";
+    return;
+  }
+
+  track("nf_reality_types_assessment_complete", {
+    type_slug: packet.type_slug,
+    type_code: packet.type_code,
+    convergence: packet.convergence.label,
+    response_quality: packet.response_quality.status
+  });
+
+  saveInFlight = true;
+  try {
+    handleSaveOutcome(await saveAttempt(unsaved, packet));
+  } finally {
+    saveInFlight = false;
+  }
+}
+
+function startOver() {
+  clearTimeout(autoAdvanceTimer);
+  answers = {};
+  answerTimes = {};
+  currentIndex = 0;
+  startedAt = Date.now();
+  assessmentCompleted = false;
+  currentCompletionPacket = null;
+  currentUnsavedAttempt = null;
+  authRecoveryRequested = false;
+  stopAuthRecoveryPolling();
+  clearTimeout(redirectTimer);
+  clearProgress();
+  if (resumeBanner) resumeBanner.hidden = true;
+  if (form) form.hidden = false;
+  if (loadingEl) loadingEl.hidden = true;
+  if (saveCard) saveCard.hidden = true;
+  backBtn.hidden = false;
+  nextBtn.hidden = false;
+  renderQuestion();
+  track("nf_reality_types_assessment_restart", {});
+}
+
+function onKeydown(event) {
+  if (!root || !root.contains(document.activeElement)) return;
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
+  var key = event.key || "";
+  if (/^[1-6]$/.test(key) && stage && stage.querySelector(".rt-question-card")) {
+    var radio = stage.querySelector('input[value="' + key + '"]');
+    if (radio) {
+      event.preventDefault();
+      radio.checked = true;
+      radio.dispatchEvent(new Event("change", {bubbles:true}));
+    }
+  }
+}
+
+function init() {
+  document.documentElement.classList.add("nf-reality-types-assessment");
+  if (document.body) document.body.classList.add("nf-reality-types-assessment");
+
+  root = document.querySelector("[data-rt-assessment]");
+  if (!root) return;
+
+  form = document.getElementById("rt-assessment-form");
+  stage = document.getElementById("rt-question-stage");
+  progressTrack = document.getElementById("rt-progress-track");
+  progressFill = document.getElementById("rt-progress-fill");
+  progressLabel = document.getElementById("rt-progress-label");
+  partLabel = document.getElementById("rt-part-label");
+  backBtn = document.getElementById("rt-back");
+  nextBtn = document.getElementById("rt-next");
+  resumeBanner = document.getElementById("rt-resume");
+  resumeCopy = document.getElementById("rt-resume-copy");
+  resumeContinueBtn = document.getElementById("rt-resume-continue");
+  startOverBtn = document.getElementById("rt-start-over");
+  errorEl = document.getElementById("rt-error");
+  loadingEl = document.getElementById("rt-loading");
+  saveCard = document.getElementById("rt-save-card");
+  saveEyebrow = document.getElementById("rt-save-eyebrow");
+  saveTitle = document.getElementById("rt-save-title");
+  saveCopy = document.getElementById("rt-save-copy");
+  saveDetail = document.getElementById("rt-save-detail");
+  saveRetryBtn = document.getElementById("rt-save-retry");
+  saveSignupBtn = document.getElementById("rt-save-signup");
+  saveLoginBtn = document.getElementById("rt-save-login");
+  saveContinueBtn = document.getElementById("rt-save-continue");
+
+  if (!form || !stage || !backBtn || !nextBtn) return;
+
+  if (progressTrack) {
+    progressTrack.setAttribute("aria-valuenow", "0");
+    progressTrack.setAttribute("aria-valuetext", "0 of " + ITEMS.length + " statements answered");
+  }
+
+  pruneUnsavedAttempt();
+
+  var saved = loadProgress();
+  var pending = loadUnsavedAttempt();
+  if (saved) {
+    answers = saved.answers;
+    answerTimes = saved.answer_times || {};
+    currentIndex = saved.current_index;
+    startedAt = saved.started_at;
+    if (resumeBanner) resumeBanner.hidden = false;
+    if (resumeCopy) resumeCopy.textContent = answeredCount() + " of " + ITEMS.length + " statements are already answered in this tab.";
+  } else if (pending) {
+    assessmentCompleted = true;
+    currentUnsavedAttempt = pending;
+    currentCompletionPacket = pending.localResult;
+    persistResult(currentCompletionPacket);
+    if (form) form.hidden = true;
+    showSavePanel("recovery");
+  }
+
+  backBtn.addEventListener("click", function () {
+    if (currentIndex > 0) goTo(currentIndex - 1);
+  });
+
+  nextBtn.addEventListener("click", function () {
+    var item = itemAt(currentIndex);
+    if (!item || !answers[item.id]) {
+      if (errorEl) errorEl.textContent = "Choose the response that fits you best before continuing.";
+      return;
+    }
+    if (errorEl) errorEl.textContent = "";
+    if (currentIndex === ITEMS.length - 1) showReview();
+    else goTo(currentIndex + 1);
+  });
+
+  if (resumeContinueBtn) resumeContinueBtn.addEventListener("click", function () {
+    if (resumeBanner) resumeBanner.hidden = true;
+    goTo(currentIndex);
+  });
+
+  if (startOverBtn) startOverBtn.addEventListener("click", startOver);
+  if (saveRetryBtn) saveRetryBtn.addEventListener("click", retryCurrentSave);
+  if (saveSignupBtn) saveSignupBtn.addEventListener("click", function (event) {
+    if (requestAuthAndSave("signup")) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+  if (saveLoginBtn) saveLoginBtn.addEventListener("click", function (event) {
+    if (requestAuthAndSave("login")) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+  if (saveContinueBtn) saveContinueBtn.addEventListener("click", continueToRealityMap);
+
+  function retryAfterExplicitAuth() {
+    if (!authRecoveryRequested) return;
+    beginAuthRecoveryPolling();
+  }
+  document.addEventListener("memberstack:loggedIn", retryAfterExplicitAuth);
+  window.addEventListener("memberstack:loggedIn", retryAfterExplicitAuth);
+  window.addEventListener("focus", retryAfterExplicitAuth);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") retryAfterExplicitAuth();
+  });
+
+  document.addEventListener("keydown", onKeydown);
+  window.addEventListener("pagehide", function () {
+    stopAuthRecoveryPolling();
+    clearTimeout(redirectTimer);
+    if (!assessmentCompleted && !saveInFlight && form && !form.hidden && answeredCount() < ITEMS.length) saveProgress();
+  });
+
+  if (!assessmentCompleted) renderQuestion();
+  track("nf_reality_types_assessment_view", {});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init, {once:true});
+} else {
+  init();
+}
 })();
 </script>
+
