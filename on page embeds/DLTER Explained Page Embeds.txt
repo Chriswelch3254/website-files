@@ -609,7 +609,7 @@ Element ID: 1cfc4b3e-d1f0-b2c5-9fd6-1306bc50670c
               <a href="/dlter-reality-types/analytical-evolver">The Analytical Evolver</a>
               <a href="/dlter-reality-types/fluxbound-weaver">The Fluxbound Weaver</a>
               <a href="/dlter-reality-types/axis-synthesizer">The Axis Synthesizer</a>
-              <a href="/dlter-reality-types/resonant-fieldholder">The Resonant Fieldholder</a>
+              <a href="/dlter-reality-types/resonant-fieldholder">The Resonant Integrator</a>
               <a href="/dlter-reality-types/dimensional-anchor">The Dimensional Anchor</a>
               <a href="/dlter-reality-types/horizon-breaker">The Horizon Breaker</a>
             </div>
