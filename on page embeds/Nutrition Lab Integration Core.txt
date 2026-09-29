@@ -1,0 +1,190 @@
+<!-- Nutrition Lab Production Remediation Pass 1 Integration Core v1.0.0 -->
+<script>
+(function(window,document){
+  "use strict";
+  var KEY="__NF_NL_PASS1_INTEGRATION__",NF_NL=window.NF_NL=window.NF_NL||{},nf=window.neuform=window.neuform||{};
+  if(window[KEY]&&!window[KEY].destroyed)return;
+  var IDS={
+    nutritionPlans:["pln_premium-hi3a0gbh"],nutritionPrices:["prc_nutrition-lab-pro-oay0dz3","prc_nutrition-lab-pro-annual-8jpo0m9a"],
+    strengthPlans:["pln_strength-lab-pro-xc605j3"],strengthPrices:["prc_strength-lab-pro-monthly-bi10az3","prc_strength-lab-pro-annual-7a2050j"],
+    bundlePlans:["pln_nutrition-strength-pro-rypq0m57"],bundlePrices:["prc_nutrition-strength-pro-monthly-zho70nn9","prc_nutrition-strength-pro-annual-ffnx0mxm"],
+    adminPlans:["pln_admin-owner-internal--ihd80urt"],forbiddenPrices:["prc_nutrition-lab-pro-annual-kpnt0m5k"]
+  },ENTITLED=["active","trialing"],ACCESS_STATES=["current_authoritative","unresolved","transitioning","stale","subject_mismatch","unavailable"],subscribers=[],accessRevision=0,requestSequence=0,highestTrustedAuthRevision=-1,authUnsubscribe=null,pageHandlerUnsubscribe=null,fallbackTimer=null,labsStateHandler=null,lastAuth=null,lastPaid=false;
+  var accessSnapshot=freezeAccess({status:"unresolved",subjectId:null,authRevision:0,nutritionPro:false,strengthPro:false,bundle:false,dualStandalone:false,source:"none",reasonCode:"nutrition_access_unresolved",entitlementStatus:"none",kind:"guest",evaluatedAt:Date.now()});
+  var lastAppliedLogged=false,integration={destroyed:false};window[KEY]=integration;
+  function clean(value,limit){value=String(value==null?"":value).replace(/[\u0000-\u001f\u007f]/g," ").replace(/\s+/g," ").trim();return limit&&value.length>limit?value.slice(0,limit):value;}
+  function unique(values){var out=[];(Array.isArray(values)?values:[]).forEach(function(value){value=clean(value,180);if(value&&out.indexOf(value)<0)out.push(value);});return out;}
+  function memberId(member){return clean(member&&(member.id||member.memberId)||"",160)||null;}
+  function freezeAccess(value){
+    var status=clean(value.status,40);if(ACCESS_STATES.indexOf(status)<0)status="unavailable";
+    var nutrition=value.nutritionPro===true||value.hasNutritionPro===true,strength=value.strengthPro===true||value.hasStrengthPro===true,bundle=value.bundle===true||value.bundlePurchased===true,dual=value.dualStandalone===true||(nutrition&&strength&&!bundle),current=status==="current_authoritative"&&value.source==="shared_auth";
+    var reasonCode=clean(value.reasonCode,80)||"nutrition_access_unresolved",reasons=unique(value.reasonCodes&&value.reasonCodes.length?value.reasonCodes:[reasonCode]).slice(0,12);
+    var out={status:status,subjectId:value.subjectId?clean(value.subjectId,160):null,revision:Math.max(0,Number(value.revision)||0),authRevision:Math.max(0,Number(value.authRevision)||0),nutritionPro:current&&nutrition,strengthPro:current&&strength,bundle:current&&bundle,dualStandalone:current&&dual,source:current?"shared_auth":"none",reasonCode:reasonCode,evaluatedAt:Math.max(0,Number(value.evaluatedAt)||Date.now()),entitlementStatus:clean(value.entitlementStatus,40)||"none",kind:clean(value.kind,50)||"unknown",reasonCodes:reasons};
+    out.hasNutritionPro=out.nutritionPro;out.hasStrengthPro=out.strengthPro;out.bundlePurchased=out.bundle;out.crossLabEligible=out.nutritionPro&&out.strengthPro;out.authoritative=current;out.stale=status!=="current_authoritative";out.memberId=out.subjectId;
+    try{Object.freeze(out.reasonCodes);return Object.freeze(out);}catch(_){return out;}
+  }
+  function copyAccess(){return freezeAccess(accessSnapshot);}
+  function idOf(connection,type){
+    try{if(type==="plan")return clean(connection.planId||connection.plan&&(connection.plan.id||connection.plan.planId||connection.plan.plan_id)||"",180);return clean(connection.priceId||connection.connectedPriceId||connection.price&&(connection.price.id||connection.price.priceId)||connection.connectedPrice&&(connection.connectedPrice.id||connection.connectedPrice.priceId)||"",180);}catch(_){return"";}
+  }
+  function statusOf(connection){try{return clean(connection.status||connection.state||connection.subscriptionStatus||connection.subscription&&connection.subscription.status||"",40).toLowerCase();}catch(_){return"";}}
+  function matches(id,list){return !!id&&list.indexOf(id)>=0;}
+  function classifyTrustedPlanConnections(connections){
+    var list=Array.isArray(connections)?connections:[],plans=[],prices=[],reasons=[],nutrition=false,strength=false,bundle=false,admin=false,matchedStatus="none",matchingDeniedStatus="";
+    list.forEach(function(connection){
+      if(!connection||typeof connection!=="object"){reasons.push("malformed_connection");return;}
+      var plan=idOf(connection,"plan"),price=idOf(connection,"price"),status=statusOf(connection),entitled=ENTITLED.indexOf(status)>=0;
+      if(plan)plans.push(plan);if(price)prices.push(price);
+      var relevant=matches(plan,IDS.nutritionPlans)||matches(price,IDS.nutritionPrices)||matches(plan,IDS.strengthPlans)||matches(price,IDS.strengthPrices)||matches(plan,IDS.bundlePlans)||matches(price,IDS.bundlePrices)||matches(plan,IDS.adminPlans)||matches(price,IDS.forbiddenPrices);
+      if(matches(price,IDS.forbiddenPrices)){reasons.push("forbidden_archived_price");return;}
+      if(relevant&&!status){reasons.push("missing_status_denied");matchingDeniedStatus=matchingDeniedStatus||"missing";return;}
+      if(relevant&&!entitled){reasons.push("status_"+(status||"missing")+"_denied");matchingDeniedStatus=matchingDeniedStatus||status||"missing";return;}
+      if(!entitled)return;matchedStatus=status;
+      if(matches(plan,IDS.nutritionPlans)||matches(price,IDS.nutritionPrices))nutrition=true;
+      if(matches(plan,IDS.strengthPlans)||matches(price,IDS.strengthPrices))strength=true;
+      if(matches(plan,IDS.bundlePlans)||matches(price,IDS.bundlePrices))bundle=true;
+      if(matches(plan,IDS.adminPlans))admin=true;
+    });
+    if(bundle){nutrition=true;strength=true;reasons.push("bundle_active");}if(admin){nutrition=true;reasons.push("authorized_admin");}
+    var kind=bundle?"nutrition_strength_bundle":nutrition&&strength?"nutrition_and_strength_standalone":nutrition?"nutrition_pro":strength?"strength_pro":"free";
+    if(strength&&!nutrition)reasons.push("strength_only_no_nutrition_access");if(nutrition&&!reasons.length)reasons.push("nutrition_access_active");if(!nutrition&&!reasons.length)reasons.push("no_nutrition_plan");
+    return{kind:kind,nutritionPro:nutrition,strengthPro:strength,bundle:bundle,dualStandalone:nutrition&&strength&&!bundle,entitlementStatus:nutrition?(matchedStatus||"active"):(matchingDeniedStatus||"none"),reasonCodes:reasons};
+  }
+  function classifyPlanConnections(connections){
+    var candidate=classifyTrustedPlanConnections(connections);
+    return Object.freeze({authoritative:false,status:"unavailable",source:"none",reasonCode:"caller_payload_nonauthoritative",nutritionPro:false,hasNutritionPro:false,strengthPro:false,hasStrengthPro:false,bundle:false,bundlePurchased:false,dualStandalone:false,candidateKind:candidate.kind,candidateNutritionPro:candidate.nutritionPro===true,candidateStrengthPro:candidate.strengthPro===true,candidateBundle:candidate.bundle===true});
+  }
+  function notifyAccess(){var snapshot=copyAccess();subscribers.slice().forEach(function(callback){try{callback(snapshot);}catch(_){}});}
+  function acceptAccess(next,sequence){
+    if(integration.destroyed||sequence!==requestSequence)return copyAccess();
+    accessRevision+=1;next=Object.assign({},next,{revision:accessRevision,evaluatedAt:Date.now()});accessSnapshot=freezeAccess(next);notifyAccess();applyAcceptedState(lastAuth,accessSnapshot);return copyAccess();
+  }
+  function connectionsFromMember(member){try{return Array.isArray(member&&member.planConnections)?member.planConnections:null;}catch(_){return null;}}
+  function fetchConnections(member){
+    var direct=connectionsFromMember(member);if(direct)return Promise.resolve(direct);
+    var sdk;try{sdk=window.$memberstackDom||null;}catch(_){sdk=null;}
+    if(!sdk)return Promise.resolve([]);
+    try{if(typeof sdk.getPlanConnections==="function")return Promise.resolve(sdk.getPlanConnections()).then(function(value){return Array.isArray(value)?value:(value&&Array.isArray(value.data)?value.data:[]);});if(typeof sdk.getMemberPlans==="function")return Promise.resolve(sdk.getMemberPlans()).then(function(value){return Array.isArray(value)?value:(value&&Array.isArray(value.data)?value.data:[]);});}catch(_){return Promise.resolve([]);}
+    return Promise.resolve([]);
+  }
+  function reconcileTrustedAuth(snapshot){
+    snapshot=snapshot&&typeof snapshot==="object"?snapshot:{status:"loading",revision:0,settled:false,member:null};var revision=Math.max(0,Number(snapshot.revision)||0),id=memberId(snapshot.member);
+    if(revision<highestTrustedAuthRevision)return Promise.resolve(copyAccess());
+    highestTrustedAuthRevision=revision;lastAuth=snapshot;var sequence=++requestSequence;
+    if(snapshot.status==="logged-out"&&snapshot.settled===true)return Promise.resolve(acceptAccess({status:"current_authoritative",subjectId:null,authRevision:revision,nutritionPro:false,strengthPro:false,bundle:false,dualStandalone:false,source:"shared_auth",reasonCode:"logged_out",entitlementStatus:"logged-out",kind:"guest"},sequence));
+    if(snapshot.status==="error")return Promise.resolve(acceptAccess({status:"unavailable",subjectId:id,authRevision:revision,source:"none",reasonCode:"nutrition_access_unavailable",entitlementStatus:"error",kind:"unknown"},sequence));
+    if(snapshot.status!=="logged-in"||!id||snapshot.settled!==true)return Promise.resolve(acceptAccess({status:"unresolved",subjectId:null,authRevision:revision,source:"none",reasonCode:"nutrition_access_unresolved",entitlementStatus:"loading",kind:"unknown"},sequence));
+    acceptAccess({status:"transitioning",subjectId:id,authRevision:revision,source:"none",reasonCode:"nutrition_access_transitioning",entitlementStatus:"loading",kind:"unknown"},sequence);
+    return fetchConnections(snapshot.member).then(function(connections){
+      var current;try{current=nf.auth&&nf.auth.getSnapshot?nf.auth.getSnapshot():snapshot;}catch(_){current=snapshot;}
+      if(sequence!==requestSequence)return copyAccess();
+      if(Number(current.revision)!==revision)return acceptAccess({status:"stale",subjectId:id,authRevision:revision,source:"none",reasonCode:"nutrition_access_stale",entitlementStatus:"stale",kind:"unknown"},sequence);
+      if(memberId(current.member)!==id)return acceptAccess({status:"subject_mismatch",subjectId:id,authRevision:revision,source:"none",reasonCode:"nutrition_subject_mismatch",entitlementStatus:"mismatch",kind:"unknown"},sequence);
+      var classified=classifyTrustedPlanConnections(connections);
+      return acceptAccess({status:"current_authoritative",subjectId:id,authRevision:revision,nutritionPro:classified.nutritionPro,strengthPro:classified.strengthPro,bundle:classified.bundle,dualStandalone:classified.dualStandalone,source:"shared_auth",reasonCode:classified.reasonCodes[0]||"no_nutrition_plan",reasonCodes:classified.reasonCodes,entitlementStatus:classified.entitlementStatus,kind:classified.kind},sequence);
+    }).catch(function(){return acceptAccess({status:"unavailable",subjectId:id,authRevision:revision,source:"none",reasonCode:"nutrition_access_unavailable",entitlementStatus:"error",kind:"unknown"},sequence);});
+  }
+  function reconcileAuth(snapshot){var member=snapshot&&snapshot.member,connections=connectionsFromMember(member)||[];return Promise.resolve(classifyPlanConnections(connections));}
+  function denial(status){
+    if(status==="transitioning")return{ok:false,code:"nutrition_access_transitioning",message:"Your account is still updating. Try again in a moment."};
+    if(status==="subject_mismatch")return{ok:false,code:"nutrition_subject_mismatch",message:"We could not confirm access yet. Try again in a moment."};
+    if(status==="stale")return{ok:false,code:"nutrition_access_stale",message:"We could not confirm access yet. Try again in a moment."};
+    if(status!=="current_authoritative")return{ok:false,code:"nutrition_access_unresolved",message:"We could not confirm access yet. Try again in a moment."};
+    return{ok:false,code:"nutrition_pro_access_required",message:"Nutrition Lab Pro is required to save this planning feature."};
+  }
+  function authorize(capability){
+    var access=copyAccess(),auth;try{auth=nf.auth&&typeof nf.auth.getSnapshot==="function"?nf.auth.getSnapshot():null;}catch(_){auth=null;}
+    if(access.status!=="current_authoritative"||access.source!=="shared_auth"){var unavailable=denial(access.status);unavailable.status=access.status;return Object.freeze(unavailable);}
+    if(!auth||auth.settled!==true||auth.status!=="logged-in"){var unresolved=denial("unresolved");unresolved.status="unresolved";return Object.freeze(unresolved);}
+    var currentId=memberId(auth.member),currentRevision=Math.max(0,Number(auth.revision)||0);
+    if(!access.subjectId||currentId!==access.subjectId){var mismatch=denial("subject_mismatch");mismatch.status="subject_mismatch";return Object.freeze(mismatch);}
+    if(currentRevision!==access.authRevision){var stale=denial("stale");stale.status="stale";return Object.freeze(stale);}
+    try{if(!NF_NL.storage||typeof NF_NL.storage.matchesSubject!=="function"){var unavailable=denial("unresolved");unavailable.status="unavailable";return Object.freeze(unavailable);}if(!NF_NL.storage.matchesSubject(currentId)){var storageMismatch=denial("subject_mismatch");storageMismatch.status="subject_mismatch";return Object.freeze(storageMismatch);}}catch(_){var failed=denial("unresolved");failed.status="unavailable";return Object.freeze(failed);}
+    var proOnly=capability==="nutrition_planning_write"||capability==="nutrition_meal_planner_write"||capability==="nutrition_recipe_planner_write"||capability==="nutrition_history_expanded";
+    if(proOnly&&!access.nutritionPro){var required=denial("current_authoritative");required.status="current_authoritative";return Object.freeze(required);}
+    return Object.freeze({ok:true,code:"ok",status:"current_authoritative",subjectId:access.subjectId,revision:access.authRevision,capability:clean(capability,80)});
+  }
+  function accessSubscribe(callback){if(typeof callback!=="function"||integration.destroyed)return function(){};subscribers.push(callback);try{callback(copyAccess());}catch(_){}return function(){var index=subscribers.indexOf(callback);if(index>=0)subscribers.splice(index,1);};}
+  var accessApi=Object.freeze({version:"phase_b_v1",ids:Object.freeze(IDS),getSnapshot:copyAccess,subscribe:accessSubscribe,classifyPlanConnections:classifyPlanConnections,reconcileAuth:reconcileAuth,authorize:authorize,check:function(capability){return authorize(capability).ok===true;},crossLabStatusFromLabs:crossLabStatusFromLabs});
+  try{Object.defineProperty(NF_NL,"access",{value:accessApi,writable:false,configurable:false,enumerable:true});}catch(_){NF_NL.access=accessApi;}
+
+  var readinessRevision=0,readinessAccessor=false,readinessSnapshot=Object.freeze({version:"phase9_workspace_readiness_v1",state:"waiting",ready:false,revision:0});
+  try{Object.defineProperty(NF_NL,"workspaceReadiness",{configurable:true,enumerable:true,get:function(){return readinessSnapshot;}});readinessAccessor=true;}catch(_){}
+  function workspaceReadinessState(authSnapshot,access){
+    var authState=clean(authSnapshot&&authSnapshot.status||"loading",40),accessState=clean(access&&access.status||"unresolved",40);
+    if(authState==="error"||accessState==="unavailable"||accessState==="subject_mismatch"||accessState==="stale")return"blocked";
+    if(authSnapshot&&authSnapshot.settled===true&&authState==="logged-in"&&accessState==="current_authoritative"&&access&&access.source==="shared_auth")return"ready";
+    if(authSnapshot&&authSnapshot.settled===true&&authState==="logged-out")return"blocked";
+    return"waiting";
+  }
+  function publishWorkspaceReadiness(authSnapshot,access){
+    var state=workspaceReadinessState(authSnapshot,access);readinessRevision+=1;readinessSnapshot=Object.freeze({version:"phase9_workspace_readiness_v1",state:state,ready:state==="ready",revision:readinessRevision});
+    if(!readinessAccessor)try{NF_NL.workspaceReadiness=readinessSnapshot;}catch(_){}
+    try{window.dispatchEvent(new CustomEvent("nf:nutritionWorkspaceReadiness",{detail:readinessSnapshot}));}catch(_){}
+    return readinessSnapshot;
+  }
+  function setGate(loggedIn){
+    var body=document.body,gate=document.getElementById("nf-auth-gate"),main=document.querySelector("main#neuform-lab,main.nf-lab-container");if(!body)return;
+    body.classList.toggle("nf-lab-gated",!loggedIn);body.classList.remove("nf-member-tray-open");
+    if(loggedIn){if(NF_NL.ui&&NF_NL.ui.syncAuthGateFocus)NF_NL.ui.syncAuthGateFocus(false);body.style.overflow="";document.documentElement.style.overflow="";if(main){main.inert=false;main.removeAttribute("aria-busy");main.style.visibility="";main.style.pointerEvents="";}if(gate){gate.hidden=true;gate.inert=true;gate.setAttribute("aria-hidden","true");}}
+    else if(gate){if(NF_NL.ui&&NF_NL.ui.syncAuthGateFocus)NF_NL.ui.syncAuthGateFocus(true);else{gate.hidden=false;gate.inert=false;gate.setAttribute("aria-hidden","false");}}
+  }
+  function announce(message){try{if(nf.a11y&&typeof nf.a11y.announce==="function")return nf.a11y.announce(message);}catch(_){}var node=document.getElementById("nf-auth-announcer");if(node){node.textContent="";window.setTimeout(function(){node.textContent=message;},0);}}
+  function focusStart(){var node=document.querySelector(".nf.get-started-hub [data-nl-sticky-cta],.nf.get-started-hub button,.nf.get-started-hub a,#neuform-lab [data-nl-nav='tdee']");if(node&&typeof node.focus==="function")window.setTimeout(function(){try{node.focus({preventScroll:true});}catch(_){}},0);}
+  function bodyReconcile(authSnapshot,access){
+    try{if(NF_NL.authIntegration&&typeof NF_NL.authIntegration.reconcile==="function")NF_NL.authIntegration.reconcile("shared_auth",{authRevision:authSnapshot&&authSnapshot.revision,access:access});}catch(_){}
+    try{if(NF_NL.user){var logged=authSnapshot&&authSnapshot.status==="logged-in",current=access&&access.status==="current_authoritative"&&access.source==="shared_auth";NF_NL.user.loggedIn=!!logged;NF_NL.user.subjectType=logged?"member":"guest";NF_NL.user.tier=logged&&current&&access.nutritionPro?"premium":logged?"free":"guest";NF_NL.user.isPro=!!(logged&&current&&access.nutritionPro);}}catch(_){}
+    try{if(NF_NL.ui&&typeof NF_NL.ui.refreshAuthGate==="function")NF_NL.ui.refreshAuthGate();}catch(_){}
+  }
+  function readLabsState(){try{var labs=window.NF_LABS;return labs&&typeof labs.getState==="function"?labs.getState()||{}:{};}catch(_){return{};}}
+  function crossLabStatusFromLabs(labs){
+    labs=labs&&typeof labs==="object"?labs:{};var consent=labs.consent&&typeof labs.consent==="object"?labs.consent:{};
+    if(consent.enabled!==true)return"consent_off";
+    var sources=consent.sources&&typeof consent.sources==="object"?consent.sources:{};
+    if(sources.nutrition!==true||sources.dlter!==true||sources.readiness!==true)return"source_consent_incomplete";
+    var connection=labs.connection&&typeof labs.connection==="object"?labs.connection:{};
+    return connection.state==="connected"?"connected_unverified":"connection_unverified";
+  }
+  function crossLabDescription(status){
+    if(status==="source_consent_incomplete")return"Both Pro Labs are active. Finish choosing what each Lab may use.";
+    if(status==="connected_unverified")return"Both Pro Labs are active. Their connection has not been confirmed.";
+    if(status==="connection_unverified")return"Both Pro Labs are active. Their connection has not been confirmed.";
+    return"Nutrition Lab Pro and Strength Lab Pro are active. Connect them only if you want the Labs to use approved information together.";
+  }
+  function headerModel(authSnapshot,access){
+    var logged=authSnapshot&&authSnapshot.status==="logged-in",current=access&&access.status==="current_authoritative"&&access.source==="shared_auth",model={route:location.pathname,surface:"nutrition-lab",authState:authSnapshot&&authSnapshot.status||"loading",accessKind:logged&&current?access.kind:"unknown",contextLabel:"Nutrition Lab",reasonCodes:access.reasonCodes,revision:(access.revision||0)+1};
+    if(!logged){model.accountHeading="Your account";model.accountDescription="Log in to open My Library and check your access.";model.primaryAction={id:"login",href:null,authAction:"login"};model.drawerActions=["login","signup"];model.tone="neutral";return model;}
+    if(!current||!access.authoritative||access.stale){model.accountHeading="We couldn't check your access.";model.accountDescription="Try again or open Account.";model.primaryAction={id:"check_access",href:null};model.drawerActions=["try_again","account","support"];model.tone="error";return model;}
+    if(/^(past_due|unpaid|incomplete|sca)$/.test(access.entitlementStatus)){model.accountHeading="Payment needs attention.";model.accountDescription="Open Account to review your payment.";model.primaryAction={id:"update_payment",href:"/account"};model.drawerActions=["update_payment","account","support"];model.tone="warning";return model;}
+    if(/^(canceled|incomplete_expired)$/.test(access.entitlementStatus)){model.accountHeading="Pro access has ended.";model.accountDescription="My Library remains available.";model.primaryAction={id:"library",href:"/library"};model.drawerActions=["view_plans","library","account","logout"];model.tone="warning";return model;}
+    if(access.hasNutritionPro&&access.hasStrengthPro&&access.crossLabEligible){var crossLabStatus=crossLabStatusFromLabs(readLabsState());model.accountHeading="Both Pro Labs";model.accountDescription=crossLabDescription(crossLabStatus);model.accountBillingDescription=access.bundlePurchased?"Access is current through your Nutrition + Strength Pro bundle.":"Nutrition Lab Pro and Strength Lab Pro are active as separate subscriptions.";model.crossLabStatus=crossLabStatus;model.primaryAction={id:"library",href:"/library"};model.drawerActions=["library","connected_labs","manage_subscription","account","data_privacy","logout"];model.tone="pro";return model;}
+    if(access.hasNutritionPro){model.accountHeading="Nutrition Lab Pro";model.accountDescription="Access is active. Supported saved Nutrition Lab data syncs with your NeuForm account.";model.primaryAction={id:"library",href:"/library"};model.drawerActions=["library","manage_subscription","account","data_privacy","logout"];model.tone="pro";return model;}
+    model.accountHeading="Free account";model.accountDescription="My Library is ready. Supported saved Nutrition Lab data syncs with your NeuForm account.";model.primaryAction={id:"library",href:"/library"};model.drawerActions=["library","account","data_privacy","logout"];model.tone="free";return model;
+  }
+  function publishContext(authSnapshot,access){try{if(nf.headerContext&&typeof nf.headerContext.publish==="function")nf.headerContext.publish("nutrition-lab",headerModel(authSnapshot,access));}catch(_){}}
+  function clearDerivedOnDowngrade(){try{if(NF_NL.storage&&typeof NF_NL.storage.remove==="function")NF_NL.storage.remove("adaptiveMaintenance",{source:"nutrition-access-downgrade"});}catch(_){}try{document.querySelectorAll("[data-nl-pro-derived],#pd-suggestion-dialog").forEach(function(node){node.hidden=true;node.setAttribute("aria-hidden","true");});}catch(_){} }
+  function applyAcceptedState(authSnapshot,access){
+    var logged=authSnapshot&&authSnapshot.status==="logged-in",wasLogged=lastAppliedLogged,paid=logged&&access.status==="current_authoritative"&&access.source==="shared_auth"&&access.nutritionPro===true;
+    setGate(!!logged);bodyReconcile(authSnapshot,access);publishContext(authSnapshot,access);
+    if(lastPaid&&!paid)clearDerivedOnDowngrade();lastPaid=paid;
+    if(logged&&!wasLogged){announce("Signed in.");focusStart();}
+    if(!logged&&wasLogged)announce("Logged out.");
+    lastAppliedLogged=!!logged;
+    publishWorkspaceReadiness(authSnapshot,access);
+  }
+
+  function bindSharedAuth(){
+    if(authUnsubscribe||!nf.auth||typeof nf.auth.subscribe!=="function")return false;
+    if(fallbackTimer){clearTimeout(fallbackTimer);fallbackTimer=null;}
+    authUnsubscribe=nf.auth.subscribe(function(snapshot){reconcileTrustedAuth(snapshot);});
+    return true;
+  }
+  function boundedFallback(attempt){
+    if(integration.destroyed||bindSharedAuth())return;if(attempt<20){fallbackTimer=setTimeout(function(){boundedFallback(attempt+1);},150);return;}
+    lastAuth={status:"error",member:null,revision:0,settled:true,source:"shared-auth-unavailable"};acceptAccess({status:"unavailable",subjectId:null,authRevision:0,source:"none",reasonCode:"nutrition_access_unavailable",entitlementStatus:"error",kind:"unknown"},++requestSequence);
+  }
+  ["nf:kernelReady","nf:userReady","nf:auth-rehydrate"].forEach(function(name){document.addEventListener(name,function(){bindSharedAuth();});});window.addEventListener("pageshow",function(){bindSharedAuth();},{passive:true});document.addEventListener("visibilitychange",function(){if(!document.hidden)bindSharedAuth();},true);labsStateHandler=function(){if(!integration.destroyed)publishContext(lastAuth,copyAccess());};window.addEventListener("nf:labsStateUpdate",labsStateHandler);
+  publishWorkspaceReadiness(null,accessSnapshot);bindSharedAuth()||boundedFallback(0);
+  integration.destroy=function(){if(integration.destroyed)return;integration.destroyed=true;requestSequence+=1;if(fallbackTimer)clearTimeout(fallbackTimer);try{if(authUnsubscribe)authUnsubscribe();if(pageHandlerUnsubscribe)pageHandlerUnsubscribe();if(labsStateHandler)window.removeEventListener("nf:labsStateUpdate",labsStateHandler);}catch(_){}subscribers.length=0;try{if(nf.headerContext)nf.headerContext.clear("nutrition-lab");}catch(_){}delete window[KEY];};
+})(window,document);
+</script>

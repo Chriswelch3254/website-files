@@ -1,0 +1,304 @@
+<script>
+(function(global){
+"use strict";
+var root=global.NF_STRENGTH_LAB_V3=global.NF_STRENGTH_LAB_V3||{};
+if(!root.__loaderGeneration)throw new Error('Strength Lab loader lifecycle unavailable');
+root.__registered=root.__registered||Object.create(null);
+root.__duplicateModules=root.__duplicateModules||[];
+root.__moduleLabels=root.__moduleLabels||Object.create(null);
+root.__embedOrderLog=root.__embedOrderLog||[];
+root.__expectedNextEmbedOrder=root.__expectedNextEmbedOrder||2;
+root.__recordEmbed=root.__recordEmbed||function(order,label){if(order!==root.__expectedNextEmbedOrder&&!root.__embedOrderError)root.__embedOrderError={expected:root.__expectedNextEmbedOrder,actual:order,label:label};root.__embedOrderLog.push({order:order,label:label});root.__expectedNextEmbedOrder=Math.max(root.__expectedNextEmbedOrder,order+1);};
+root.__resolve=root.__resolve||function(base,request){if(!/^\./.test(request))return request.replace(/\.js$/,"");var parts=base.split('/');parts.pop();request.split('/').forEach(function(part){if(!part||part==='.')return;if(part==='..')parts.pop();else parts.push(part);});return parts.join('/').replace(/\.js$/,"");};
+root.__define=root.__define||function(id,factory,dependencies){var result=root.__loaderGeneration.registerSync(id,factory,dependencies||[]);if(!result.ok){root.__duplicateModules.push(id);return false;}root.__registered[id]=true;return true;};
+root.__require=root.__require||function(id){return root.__loaderGeneration.requireModule(String(id||'').replace(/\.js$/,""));};
+root.__recordEmbed(41,"SLV3-22 Labs Commerce");
+root.__define("pass6/labs-context/labs-context",function(require,module,exports){
+"use strict";
+
+var runtime = require("../../runtime/index");
+var contracts = require("../../contracts/contracts");
+var schema = require("../../data/schema");
+var pass6Contracts = require("../contracts");
+var environment = require("../environment");
+
+var CONTEXT_SOURCES = Object.freeze(["nutrition", "dlter", "readiness"]);
+var SIGNAL_ALLOWED_PAYLOAD = Object.freeze({ status: "tag", readinessBucket: "tag", trendBucket: "tag", loadStressBucket: "tag", reviewNeeded: "boolean", updatedBucket: "tag", reasonCodes: "tags", warningTags: "tags", explicitUserAction: "boolean" });
+var SIGNAL_BROAD_KEYS = Object.freeze({ loadStressBucket: true });
+
+function currentAccess(access) { return !!access && access.authoritative === true && access.stale !== true && access.current !== false && access.kind !== "unknown" && access.kind !== "stale"; }
+function hasNutrition(access) { return !!access && access.hasNutritionPro === true; }
+function hasStrength(access) { return !!access && access.hasStrengthPro === true; }
+function dualFailure(access) {
+  if (!access || access.kind === "unknown") return "access_unknown";
+  if (access.stale === true || access.current === false || access.authoritative !== true) return "access_stale";
+  if (!hasNutrition(access) && !hasStrength(access)) return "dual_pro_required";
+  if (!hasNutrition(access)) return "nutrition_pro_required";
+  if (!hasStrength(access)) return "strength_pro_required";
+  return "";
+}
+function strengthFailure(access) {
+  if (!access || access.kind === "unknown") return "access_unknown";
+  if (access.stale === true || access.current === false || access.authoritative !== true) return "access_stale";
+  if (!hasStrength(access)) return "strength_pro_required";
+  return "";
+}
+function boundedFailure(reason, source) { return { ok: false, reason: reason, sourceType: runtime.safeTag(source || "", 40) }; }
+
+function normalizedState(state, clock) {
+  var next = schema.normalizeState(state, { clock: clock }).state;
+  next.pass6 = pass6Contracts.normalizePass6(next.pass6, { clock: clock });
+  return next;
+}
+
+function consent(state, source, options) {
+  options = options || {};
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var failure = dualFailure(options.accessState);
+  if (failure) return boundedFailure(failure, source);
+  if (options.globalConsent !== true) return boundedFailure("cross_lab_consent_required", source);
+  if (CONTEXT_SOURCES.indexOf(source) < 0) return boundedFailure("source_invalid", source);
+  var raw = labsState(options.runtimeEnv), binding = bindingFailure(raw, options.accessState);
+  if (binding) return boundedFailure(binding, source);
+  if (!globalConsent(raw) || !sourceConsent(raw, source)) return boundedFailure("source_consent_required", source);
+  var permission = sourceRecord(raw, source);
+  if (!permission || !permission.permissionId) return boundedFailure("source_consent_required", source);
+  var next = normalizedState(state, clock);
+  var record = {
+    id: runtime.stableId("lab_context_consent", { memberId: options.accessState.memberId, permissionId: permission.permissionId, source: source, at: clock.now() }),
+    schemaVersion: pass6Contracts.ENTITY_SCHEMAS.LabContextConsent,
+    productVersion: contracts.PRODUCT_VERSION,
+    engineVersion: pass6Contracts.ENGINE_VERSIONS.labsContext,
+    createdAt: clock.now(), updatedAt: clock.now(), sourceType: source,
+    sourceVersion: "nf.labs.context.v2.1", permissionId: permission.permissionId, bridgeStateId: raw.stateId,
+    environment: environment.resolveEnvironment({ environment: options.environment, runtimeEnv: options.runtimeEnv }),
+    memberScope: runtime.safeTag(options.accessState.memberId || "member", 160),
+    authRevision: Number(options.accessState.authRevision) || 0,
+    userConfirmationState: "confirmed", redactionState: "broad_context_only", reasonCodes: ["dual_pro_current", "global_consent_active", "source_consent_active"]
+  };
+  next.pass6.labsContext.consents[record.id] = record;
+  return { ok: true, state: next, consent: record };
+}
+
+function latestConsent(state, source, memberId, raw) {
+  var consents = state && state.pass6 && state.pass6.labsContext && state.pass6.labsContext.consents || {};
+  return Object.keys(consents).map(function(id) { return consents[id]; }).filter(function(item) {
+    return item.sourceType === source && item.userConfirmationState === "confirmed" && (memberId && item.memberScope === memberId && item.bridgeStateId === raw.stateId && sourceRecord(raw, source) && item.permissionId === sourceRecord(raw, source).permissionId);
+  }).sort(function(a, b) { return String(b.createdAt || "").localeCompare(String(a.createdAt || "")); })[0] || null;
+}
+
+function labsApi(env) { return env && (env.NF_LABS || (env.window && env.window.NF_LABS)) || null; }
+function labsState(env) {
+  var labs = labsApi(env);
+  if (!labs || Number(labs.schemaVersion) !== 2 || typeof labs.getState !== "function") return null;
+  try { var state = labs.getState(); return state && Number(state.schemaVersion || labs.schemaVersion) === 2 ? state : null; } catch (_) { return null; }
+}
+function bindingFailure(raw, access) {
+  if (!raw || raw.contractVersion !== "nf.labs.context.v2.1" || !raw.stateId) return "source_unavailable";
+  if (!access || typeof access.memberId !== "string" || !access.memberId || raw.subjectId !== access.memberId) return "subject_mismatch";
+  if (!Number.isSafeInteger(access.authRevision) || raw.authRevision !== access.authRevision) return "access_stale";
+  return "";
+}
+function globalConsent(raw) { return !!(raw && raw.consent && raw.consent.enabled === true); }
+function sourceConsent(raw, source) { return !!(raw && raw.consent && raw.consent.sources && raw.consent.sources[source] === true); }
+function sourceRecord(raw, source) { return raw && raw.sources && raw.sources[source] || null; }
+function freshness(record, clock) {
+  var staleAt = Date.parse(record && record.staleAt || "");
+  var updatedAt = Date.parse(record && record.updatedAt || "");
+  if (!isFinite(updatedAt) || !isFinite(staleAt) || updatedAt > Date.parse(clock.now()) || staleAt <= updatedAt || staleAt - updatedAt > 30 * 86400000) return "invalid";
+  return Date.parse(clock.now()) < staleAt ? "fresh" : "stale";
+}
+
+function broadNutrition(record) {
+  var raw = record && (record.payload || record.value || record) || {};
+  return { statusTag: runtime.safeTag(record.status || raw.status || "", 80), phaseTag: runtime.safeTag(raw.phaseTag || raw.phase || "", 80), macroStyleTag: runtime.safeTag(raw.macroStyleTag || "", 80), warningTags: runtime.safeTags(raw.warningTags || raw.warnings || [], 8), updatedAt: runtime.safeISO(record.updatedAt || raw.updatedAt), staleAt: runtime.safeISO(record.staleAt || raw.staleAt) };
+}
+function broadDlter(record) {
+  var raw = record && (record.payload || record.value || record) || {};
+  return { statusTag: runtime.safeTag(record.status || raw.status || "", 80), typeTag: runtime.safeTag(raw.typeTag || raw.typeSlug || raw.typeCode || "", 80), supportFramingTag: runtime.safeTag(raw.supportFramingTag || raw.supportFraming || "", 80), frictionTags: runtime.safeTags(raw.frictionTags || raw.frictionWarnings || [], 8), updatedAt: runtime.safeISO(record.updatedAt || raw.updatedAt), staleAt: runtime.safeISO(record.staleAt || raw.staleAt) };
+}
+function broadReadiness(record) {
+  var raw = record && (record.payload || record.value || record) || {};
+  return { statusTag: runtime.safeTag(record.status || raw.status || "", 80), colorTag: runtime.safeTag(raw.colorTag || raw.color || "", 40), sleepBucket: runtime.safeTag(raw.sleepBucket || "", 80), stressBucket: runtime.safeTag(raw.stressBucket || "", 80), sorenessBucket: runtime.safeTag(raw.sorenessBucket || "", 80), warningTags: runtime.safeTags(raw.warningTags || raw.warnings || [], 8), updatedAt: runtime.safeISO(record.updatedAt || raw.updatedAt), staleAt: runtime.safeISO(record.staleAt || raw.staleAt) };
+}
+
+function readContext(state, env, source, options) {
+  options = options || {};
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var access = options.accessState;
+  var failure = dualFailure(access);
+  if (failure) return boundedFailure(failure, source);
+  if (CONTEXT_SOURCES.indexOf(source) < 0) return boundedFailure("source_invalid", source);
+  var raw = labsState(env);
+  var binding = bindingFailure(raw, access);
+  if (binding) return boundedFailure(binding, source);
+  if (!globalConsent(raw)) return boundedFailure("cross_lab_consent_required", source);
+  if (!sourceConsent(raw, source)) return boundedFailure("source_consent_required", source);
+  var currentState = normalizedState(state, clock);
+  if (!latestConsent(currentState, source, access.memberId, raw)) return boundedFailure("source_consent_required", source);
+  var record = sourceRecord(raw, source);
+  if (!record || record.available === false || record.status === "unavailable") return boundedFailure("source_unavailable", source);
+  var fresh = freshness(record, clock);
+  if (fresh !== "fresh") return boundedFailure(fresh === "stale" ? "source_unavailable" : "source_invalid", source);
+  var payload = source === "nutrition" ? broadNutrition(record) : (source === "dlter" ? broadDlter(record) : broadReadiness(record));
+  if (!payload.updatedAt || !payload.staleAt) return boundedFailure("source_invalid", source);
+  var snapshot = {
+    id: runtime.stableId("lab_context_snapshot", { memberId: access.memberId, source: source, payload: payload, at: clock.now() }),
+    schemaVersion: pass6Contracts.ENTITY_SCHEMAS.LabContextSnapshot, productVersion: contracts.PRODUCT_VERSION,
+    engineVersion: pass6Contracts.ENGINE_VERSIONS.labsContext, createdAt: clock.now(), updatedAt: clock.now(), sourceType: source,
+    sourceVersion: "nf.labs.context.v2.1", permissionId: record.permissionId, bridgeStateId: raw.stateId, environment: environment.resolveEnvironment({ environment: options.environment, runtimeEnv: options.runtimeEnv || env }),
+    memberScope: runtime.safeTag(access.memberId || "member", 160), authRevision: Number(access.authRevision) || 0,
+    payload: payload, freshness: "fresh", userConfirmationState: "confirmed_read", redactionState: "broad_context_only", doesNotAlterDecision: true,
+    reasonCodes: ["dual_pro_current", "global_consent_active", "source_consent_active", "source_fresh"]
+  };
+  currentState.pass6.labsContext.snapshots[snapshot.id] = snapshot;
+  return { ok: true, state: currentState, snapshot: snapshot };
+}
+
+function revoke(state, source, options) {
+  options = options || {};
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var next = normalizedState(state, clock);
+  var record = { id: runtime.stableId("lab_context_revocation", { source: source, at: clock.now() }), schemaVersion: pass6Contracts.ENTITY_SCHEMAS.LabContextRevocation, productVersion: contracts.PRODUCT_VERSION, engineVersion: pass6Contracts.ENGINE_VERSIONS.labsContext, createdAt: clock.now(), updatedAt: clock.now(), sourceType: source, sourceVersion: "nf_labs_schema_2_broad_context", environment: environment.resolveEnvironment({ environment: options.environment, runtimeEnv: options.runtimeEnv }), userConfirmationState: "confirmed", redactionState: "broad_context_only", reasonCodes: ["revoked_by_user"] };
+  next.pass6.labsContext.revocations[record.id] = record;
+  Object.keys(next.pass6.labsContext.consents).forEach(function(id) { if (next.pass6.labsContext.consents[id].sourceType === source) next.pass6.labsContext.consents[id].userConfirmationState = "revoked"; });
+  Object.keys(next.pass6.labsContext.recommendations || {}).forEach(function(id) { var item = next.pass6.labsContext.recommendations[id]; if ((item.sourceTypes || []).indexOf(source) >= 0) { item.reusable = false; item.reasonCodes = runtime.safeTags((item.reasonCodes || []).concat(["source_consent_revoked"]), 20); } });
+  return { ok: true, state: next, revocation: record };
+}
+
+function sanitizeSignalInput(input) {
+  var rejected = [], out = {};
+  if (!runtime.isPlainObject(input)) return { payload: out, rejected: rejected };
+  Object.keys(input).forEach(function(key) {
+    var type = SIGNAL_ALLOWED_PAYLOAD[key];
+    if (!type || (runtime.containsExactDataKey(key) && !SIGNAL_BROAD_KEYS[key])) { rejected.push(key); return; }
+    if (type === "tag") { var tag = runtime.safeTag(input[key], 80); if (tag) out[key] = tag; }
+    else if (type === "tags") out[key] = runtime.safeTags(input[key], 12);
+    else if (type === "boolean") out[key] = input[key] === true;
+  });
+  return { payload: out, rejected: rejected };
+}
+
+function previewStrengthSignal(input, options) {
+  options = options || {};
+  var failure = strengthFailure(options.accessState);
+  if (failure) return boundedFailure(failure, "strength");
+  var raw = labsState(options.runtimeEnv), binding = bindingFailure(raw, options.accessState);
+  if (binding) return boundedFailure(binding, "strength");
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var sanitized = sanitizeSignalInput(input);
+  if (sanitized.rejected.length) return { ok: false, reason: "exact_data_rejected", rejectedPayloadKeys: sanitized.rejected };
+  var payload = sanitized.payload;
+  var signal = { id: runtime.stableId("strength_signal_v2", { memberId: options.accessState.memberId, payload: payload, at: clock.now() }), schemaVersion: pass6Contracts.ENTITY_SCHEMAS.StrengthSignalV2, productVersion: contracts.PRODUCT_VERSION, engineVersion: pass6Contracts.ENGINE_VERSIONS.strengthSignal, createdAt: clock.now(), updatedAt: clock.now(), sourceType: "strength_lab_v3", sourceVersion: contracts.PRODUCT_VERSION, environment: environment.resolveEnvironment({ environment: options.environment, runtimeEnv: options.runtimeEnv }), status: payload.status || "generated", readinessBucket: payload.readinessBucket || "unknown", trendBucket: payload.trendBucket || "unknown", loadStressBucket: payload.loadStressBucket || "unknown", reviewNeeded: payload.reviewNeeded === true, updatedBucket: payload.updatedBucket || "recent", reasonCodes: payload.reasonCodes || [], warningTags: payload.warningTags || [], userConfirmationState: "preview_only", redactionState: "sanitized_signal_v2", exactDataIncluded: false, revocable: true };
+  signal.memberScope = options.accessState.memberId;
+  signal.authRevision = options.accessState.authRevision;
+  signal.bridgeToken = { subjectId: raw.subjectId, authRevision: raw.authRevision, revision: raw.revision, stateId: raw.stateId };
+  return { ok: true, signal: signal };
+}
+
+async function publishStrengthSignal(state, env, signal, options) {
+  options = options || {};
+  var failure = strengthFailure(options.accessState);
+  if (failure) return boundedFailure(failure, "strength");
+  if (options.confirmed !== true) return boundedFailure("explicit_confirmation_required", "strength");
+  if (!signal || signal.schemaVersion !== pass6Contracts.ENTITY_SCHEMAS.StrengthSignalV2 || signal.userConfirmationState !== "preview_only") return boundedFailure("source_invalid", "strength");
+  var raw = labsState(env), binding = bindingFailure(raw, options.accessState);
+  if (binding || signal.memberScope !== options.accessState.memberId || signal.authRevision !== options.accessState.authRevision) return boundedFailure(binding || "subject_mismatch", "strength");
+  if (!globalConsent(raw) || !sourceConsent(raw, "strength")) return boundedFailure("source_consent_required", "strength");
+  var api = labsApi(env);
+  if (!api || api.mutationMode !== "async" || typeof api.writeStrengthSignal !== "function" || !signal.bridgeToken) return boundedFailure("source_unavailable", "strength");
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var publication = runtime.merge(signal.bridgeToken, {
+    available: true, status: "ready", updatedAt: signal.updatedAt,
+    staleAt: new Date(Date.parse(signal.updatedAt) + 21 * 86400000).toISOString(),
+    payload: { readinessBucket: signal.readinessBucket, trendBucket: signal.trendBucket, loadStressBucket: signal.loadStressBucket, reviewNeeded: signal.reviewNeeded, updatedBucket: signal.updatedBucket, reasonCodes: signal.reasonCodes, warningTags: signal.warningTags }
+  });
+  var saved;
+  try { saved = await api.writeStrengthSignal(publication); } catch (_) { return boundedFailure("source_unavailable", "strength"); }
+  if (!saved || saved.available !== true || bindingFailure(labsState(env), options.accessState)) return boundedFailure("source_unavailable", "strength");
+  var next = normalizedState(state, clock), confirmed = runtime.merge(signal, { userConfirmationState: "confirmed" });
+  var receipt = { id: runtime.stableId("strength_signal_receipt", { signalId: confirmed.id, at: clock.now() }), schemaVersion: pass6Contracts.ENTITY_SCHEMAS.StrengthSignalReceipt, productVersion: contracts.PRODUCT_VERSION, engineVersion: pass6Contracts.ENGINE_VERSIONS.strengthSignal, createdAt: clock.now(), updatedAt: clock.now(), signalId: confirmed.id, sourceType: "strength_lab_v3", sourceVersion: contracts.PRODUCT_VERSION, environment: confirmed.environment, userConfirmationState: "confirmed", redactionState: "sanitized_signal_v2", contractVersion: "nf.labs.context.v2.1", exactDataIncluded: false, saved: true, reasonCodes: [] };
+  next.pass6.strengthSignals.published[confirmed.id] = confirmed;
+  next.pass6.strengthSignals.receipts[receipt.id] = receipt;
+  return { ok: true, state: next, signal: confirmed, receipt: receipt };
+}
+
+async function revokeStrengthSignal(state, env, signalId, options) {
+  options = options || {};
+  var next = normalizedState(state, options.clock), signal = next.pass6.strengthSignals.published[signalId];
+  if (!signal) return { ok: false, reason: "signal_not_found" };
+  var binding = bindingFailure(labsState(env), options.accessState);
+  if (binding || signal.memberScope !== options.accessState.memberId) return boundedFailure(binding || "subject_mismatch", "strength");
+  var stopped = await clearStrengthSignal(env, options);
+  if (!stopped.ok) return stopped;
+  delete next.pass6.strengthSignals.published[signalId];
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var receipt = { id: runtime.stableId("strength_signal_revoke", { signalId: signalId, at: clock.now() }), schemaVersion: pass6Contracts.ENTITY_SCHEMAS.StrengthSignalReceipt, productVersion: contracts.PRODUCT_VERSION, engineVersion: pass6Contracts.ENGINE_VERSIONS.strengthSignal, createdAt: clock.now(), updatedAt: clock.now(), signalId: signalId, userConfirmationState: "confirmed_revoke", redactionState: "sanitized_signal_v2", reasonCodes: ["revoked_by_user"] };
+  next.pass6.strengthSignals.revoked[receipt.id] = receipt;
+  return { ok: true, state: next, receipt: receipt };
+}
+
+async function clearStrengthSignal(env) {
+  var api = labsApi(env);
+  if (!api || api.mutationMode !== "async" || typeof api.revokeSource !== "function") return { ok: false, reason: "source_unavailable" };
+  try { var result = await api.revokeSource("strength"); return result ? { ok: true, status: "revoked" } : { ok: false, reason: "cleanup_pending" }; }
+  catch (_) { return { ok: false, reason: "cleanup_pending" }; }
+}
+
+function generateRecommendation(state, env, sourceTypes, options) {
+  options = options || {};
+  sourceTypes = Array.isArray(sourceTypes) ? sourceTypes.slice() : ["nutrition"];
+  var failure = dualFailure(options.accessState);
+  if (failure) return boundedFailure(failure, "cross_lab");
+  var current = state, snapshots = [];
+  for (var i = 0; i < sourceTypes.length; i += 1) {
+    var read = readContext(current, env, sourceTypes[i], options);
+    if (!read.ok) return read;
+    current = read.state; snapshots.push(read.snapshot);
+  }
+  var clock = options.clock || runtime.createClock(options.fixedNow);
+  var fingerprint = runtime.stableId("cross_lab_input", snapshots.map(function(item) { return { sourceType: item.sourceType, payload: item.payload, sourceVersion: item.sourceVersion }; }));
+  var notes = [], reasons = [];
+  snapshots.forEach(function(item) {
+    var p = item.payload;
+    if (item.sourceType === "readiness" && (p.colorTag === "red" || p.sleepBucket === "low" || p.stressBucket === "high" || p.sorenessBucket === "high")) {
+      notes.push("Readiness reports " + (p.colorTag === "red" ? "red" : p.sleepBucket === "low" ? "low sleep" : p.stressBucket === "high" ? "high stress" : "high soreness") + ". Review how you feel in Today and record your warm-up response before deciding on working sets."); reasons.push("readiness_context_review");
+    } else if (item.sourceType === "nutrition" && /^(cutting|cut|fat_loss|deficit)$/.test(p.phaseTag)) {
+      notes.push("Nutrition Lab shows your goal is to lose weight. Keep that context with your session notes and compare completed sets before changing your plan."); reasons.push("nutrition_phase_context");
+    } else if (item.sourceType === "dlter" && p.frictionTags.length) {
+      notes.push("Your shared Reality Map suggests some parts of training may be difficult. Choose a practical session and use Today to review the work you can complete."); reasons.push("training_friction_context");
+    }
+  });
+  var recommendation = { id: runtime.stableId("cross_lab_recommendation", { memberId: options.accessState.memberId, fingerprint: fingerprint, at: clock.now() }), schemaVersion: pass6Contracts.ENTITY_SCHEMAS.CrossLabRecommendation, productVersion: contracts.PRODUCT_VERSION, evaluatorVersion: "strength-cross-lab-evaluator.v2", createdAt: clock.now(), updatedAt: clock.now(), memberScope: runtime.safeTag(options.accessState.memberId || "member", 160), authRevision: Number(options.accessState.authRevision) || 0, inputFingerprint: fingerprint, sourceTypes: sourceTypes, sources: snapshots.map(function(item) { return { sourceType: item.sourceType, updatedAt: item.payload.updatedAt, staleAt: item.payload.staleAt, permissionId: item.permissionId, bridgeStateId: item.bridgeStateId }; }), summary: notes.length ? notes.join(" ") : "This information does not suggest changing your training. Keep using your session results to review your plan.", action: notes.length ? "review_context" : "no_change", doesNotAlterDecision: true, method: "These suggestions use information you chose to share. They do not change your training plan.", eligibilityReasonCodes: ["dual_pro_current", "authoritative_access", "global_consent_active", "all_source_consents_active"], userConfirmationState: "generated_while_eligible", redactionState: "broad_recommendation_only", reusable: true, reasonCodes: reasons };
+  current.pass6.labsContext.recommendations[recommendation.id] = recommendation;
+  return { ok: true, state: current, recommendation: recommendation };
+}
+
+function recommendationHistory(state, accessState, options) {
+  options = options || {};
+  var failure = dualFailure(accessState);
+  if (failure) return boundedFailure(failure, "cross_lab");
+  var env = options.runtimeEnv, raw = labsState(env), binding = bindingFailure(raw, accessState);
+  if (binding || !globalConsent(raw)) return boundedFailure(binding || "cross_lab_consent_required", "cross_lab");
+  var records = state && state.pass6 && state.pass6.labsContext && state.pass6.labsContext.recommendations || {};
+  var items = Object.keys(records).map(function(id) { return records[id]; }).filter(function(item) {
+    if (item.memberScope !== accessState.memberId || item.reusable !== true || item.schemaVersion !== pass6Contracts.ENTITY_SCHEMAS.CrossLabRecommendation || !Array.isArray(item.sources) || !item.sources.length) return false;
+    return item.sources.every(function(previous) {
+      var current = readContext(state, env, previous.sourceType, Object.assign({}, options, { accessState: accessState }));
+      return current.ok && previous.permissionId === current.snapshot.permissionId && previous.bridgeStateId === current.snapshot.bridgeStateId && previous.updatedAt === current.snapshot.payload.updatedAt && previous.staleAt === current.snapshot.payload.staleAt;
+    });
+  });
+  return { ok: true, recommendations: runtime.clone(items) };
+}
+
+function revokeRecommendations(state, accessState, reason, options) {
+  options = options || {};
+  var clock = options.clock || runtime.createClock(options.fixedNow), next = normalizedState(state, clock);
+  Object.keys(next.pass6.labsContext.recommendations).forEach(function(id) { var item = next.pass6.labsContext.recommendations[id]; if (!accessState || !accessState.memberId || item.memberScope === accessState.memberId) { item.reusable = false; item.updatedAt = clock.now(); item.reasonCodes = runtime.safeTags((item.reasonCodes || []).concat([reason || "eligibility_lost"]), 20); } });
+  return { ok: true, state: next };
+}
+
+module.exports = { CONTEXT_SOURCES: CONTEXT_SOURCES, consent: consent, readContext: readContext, revoke: revoke, previewStrengthSignal: previewStrengthSignal, publishStrengthSignal: publishStrengthSignal, revokeStrengthSignal: revokeStrengthSignal, clearStrengthSignal: clearStrengthSignal, sanitizeSignalInput: sanitizeSignalInput, generateRecommendation: generateRecommendation, recommendationHistory: recommendationHistory, revokeRecommendations: revokeRecommendations };
+},["contracts/contracts","data/schema","pass6/contracts","pass6/environment","runtime/index"]);
+})(window);
+</script>
