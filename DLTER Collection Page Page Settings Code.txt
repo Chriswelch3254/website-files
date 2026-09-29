@@ -4,21 +4,19 @@ Shared template: Reality Types by DLTER
 Webflow Page ID: 692cde9c78f04f76b05e3f50
 Template source version: 1.7.1
 Presentation polish authority: 3.1.7
-Synced: 2026-09-28
-Authority note: This file mirrors the currently published Webflow collection-template page settings. Git history preserves prior versions.
+Synced: 2026-09-29
+Authority note: This file mirrors the currently staged Webflow collection-template page settings. Git history preserves prior versions.
 
 ==============================
 HEAD
 ==============================
 <!-- Reality Types collection template 1.7.1 -->
 <!-- Webflow supplies charset, document title, meta description, and CMS-bound Open Graph title and description. -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#07111a">
 <meta name="color-scheme" content="dark">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<meta property="og:type" content="website">
 <meta property="og:site_name" content="NeuForm Fitness">
 <meta property="og:url" content="https://www.neuform-fitness.com/dlter-reality-types/{{wf {&quot;path&quot;:&quot;slug&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}">
 <!-- Static crawler-visible fallback until all 12 CMS social cards are populated. -->
@@ -1342,7 +1340,7 @@ body.dlter-type-body a[href="/terms-privacy"]{
 </style>
 
 ==============================
-BEFORE </body>
+FOOTER
 ==============================
 <script data-rt-template-shell-inline="1.2.1">
 /* NeuForm Reality Types Template Shell 1.2.1 */
