@@ -129,7 +129,11 @@
       "retriedJob": 109532014102,
       "retryConclusion": "failure",
       "mainAlsoHasFailedChecks": true,
-      "exactCause": "unknown; logs 404, annotations unsupported by connector, private browser requires sign-in"
+      "exactCause": "GitHub job annotation: recent account payments failed or spending limit needs to increase; job was not started",
+      "verifiedThrough": "Authenticated GitHub job annotations after secure browser sign-in",
+      "annotationUrl": "https://github.com/Chriswelch3254/NeuformFitnessApp/actions/runs/36603420440/job/109526255011",
+      "billingConditionInspected": false,
+      "billingSettingsChanged": false
     },
     "nutritionVercel": {
       "preview": "dpl_AmFxFojNchtiHE5TeF2fcvXBegaF",
